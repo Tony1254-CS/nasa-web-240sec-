@@ -40,10 +40,17 @@ Output a concise 4-line status update in this format:
 
 ---
 
-#### ⚡ STEP 3: AUTONOMOUS EXECUTION
-1. Immediately implement the identified active task according to the exact contracts in `plan.md`.
+#### ⚡ STEP 3: AUTONOMOUS EXECUTION & ATOMIC FEATURE PUSH
+For every feature or subtask implemented:
+1. Implement the specific component/endpoint according to the exact contracts in `plan.md`.
 2. Write clean, modular, typed code with unit tests/validation.
-3. Update `PROGRESS.md` checkboxes (`[x]`) and progress meter upon completing the subtask.
-4. Make atomic git commits with clear semantic commit messages.
-5. Continue until the milestone's acceptance criteria are satisfied, then report the verification evidence.
+3. Update relevant documentation in `docs/` (`ARCHITECTURE.md`, `DECISIONS.md`, etc.) if any architectural choice or contract evolved.
+4. Update `PROGRESS.md` checkboxes (`[x]`) and the live progress meter.
+5. **MANDATORY GIT PUSH:** Commit and push immediately to GitHub after each completed feature:
+   ```bash
+   git add .
+   git commit -m "feat(scope): concise description of completed feature"
+   git push origin main
+   ```
+6. Continue to the next subtask until the milestone's acceptance criteria are satisfied, then report the verification evidence.
 ```
