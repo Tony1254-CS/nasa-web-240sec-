@@ -76,19 +76,21 @@ export const MapWorkspace: React.FC = () => {
     }
   };
 
-  // Dynamic fill opacity management: Outlines Only = 0.0 fill opacity (100% clean satellite view)
+  // Dynamic fill opacity management:
+  // Water layers maintain realistic hydrologic fill so flood vs recession is clearly visible during swipe!
   const applyOverlayFills = (map: maplibregl.Map | null) => {
     if (!map || !map.isStyleLoaded()) return;
     const isOutlines = overlayStyle === 'outlines';
 
     const fillLayers = [
-      { id: 'layer-jamuna-water-sep', opacity: isOutlines ? 0.0 : 0.15 },
-      { id: 'layer-jamuna-water-aug', opacity: isOutlines ? 0.0 : 0.18 },
-      { id: 'layer-jamuna-erosion', opacity: isOutlines ? 0.0 : 0.22 },
-      { id: 'layer-jamuna-accretion', opacity: isOutlines ? 0.0 : 0.18 },
-      { id: 'layer-sundarbans-water', opacity: isOutlines ? 0.0 : 0.15 },
-      { id: 'layer-sundarbans-canopy', opacity: isOutlines ? 0.0 : 0.10 },
-      { id: 'layer-sundarbans-pulse', opacity: isOutlines ? 0.0 : 0.22 },
+      { id: 'layer-jamuna-water-aug', opacity: isOutlines ? 0.38 : 0.48 }, // Peak flood covers char
+      { id: 'layer-jamuna-water-sep', opacity: isOutlines ? 0.28 : 0.38 }, // Receded channel
+      { id: 'layer-jamuna-erosion', opacity: isOutlines ? 0.12 : 0.28 },   // Collapsing cutbank
+      { id: 'layer-jamuna-accretion', opacity: isOutlines ? 0.10 : 0.24 }, // Emergent char
+      { id: 'layer-sundarbans-water', opacity: isOutlines ? 0.28 : 0.38 },
+      { id: 'layer-sundarbans-water-aug', opacity: isOutlines ? 0.28 : 0.38 },
+      { id: 'layer-sundarbans-canopy', opacity: isOutlines ? 0.08 : 0.20 },
+      { id: 'layer-sundarbans-pulse', opacity: isOutlines ? 0.30 : 0.42 }, // High spring tide sub-canopy surge
     ];
 
     fillLayers.forEach(({ id, opacity }) => {
@@ -156,8 +158,9 @@ export const MapWorkspace: React.FC = () => {
         paint: {
           'raster-opacity': 1.0,
           'raster-saturation': -1.0, // High-contrast microwave radar backscatter
-          'raster-contrast': 0.65,
-          'raster-brightness-min': 0.05,
+          'raster-contrast': 0.85,
+          'raster-brightness-min': 0.0,
+          'raster-brightness-max': 0.85,
         },
       },
       {
@@ -464,6 +467,8 @@ export const MapWorkspace: React.FC = () => {
           });
         }
       });
+
+      applyOverlayFills(mapB);
     });
 
     // Load Data Layers onto Map A (Left Side: Pre-Flood Aug 26 Flood Peak / Pure Optical Satellite)
