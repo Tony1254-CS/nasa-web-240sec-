@@ -13,6 +13,15 @@ export interface MapCamera {
   bearing?: number;
 }
 
+export interface PixelSample {
+  lon: number;
+  lat: number;
+  value: number | null;
+  unit: string;
+  masked: boolean;
+  reason?: string | null;
+}
+
 export interface WorkspaceState {
   // Navigation & Region
   regionId: RegionId;
@@ -38,6 +47,7 @@ export interface WorkspaceState {
   // Finding & Selection
   selectedFindingId: string | null;
   selectedPatch: any | null;
+  selectedSample: PixelSample | null;
   
   // Map State
   camera: MapCamera;
@@ -53,6 +63,7 @@ export interface WorkspaceState {
   setSelectedPair: (pair: [string, string] | null) => void;
   toggleLayer: (layerId: string) => void;
   setSelectedFinding: (findingId: string | null) => void;
+  setSelectedSample: (sample: PixelSample | null) => void;
   setCamera: (camera: MapCamera) => void;
 }
 
@@ -94,6 +105,13 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   },
   selectedFindingId: null,
   selectedPatch: null,
+  selectedSample: {
+    lon: 89.75,
+    lat: 25.575,
+    value: -14.2,
+    unit: 'dB',
+    masked: false,
+  },
   camera: {
     center: [89.75, 25.575],
     zoom: 6.8, // View of full Bangladesh for M0 Atlas
@@ -110,6 +128,7 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
         viewId: def.defaultView,
         selectedFindingId: null,
         selectedPatch: null,
+        selectedSample: null,
         camera: {
           center: def.center,
           zoom: def.zoom,
@@ -132,5 +151,6 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
       },
     })),
   setSelectedFinding: (selectedFindingId) => set({ selectedFindingId }),
+  setSelectedSample: (selectedSample) => set({ selectedSample }),
   setCamera: (camera) => set({ camera }),
 }));

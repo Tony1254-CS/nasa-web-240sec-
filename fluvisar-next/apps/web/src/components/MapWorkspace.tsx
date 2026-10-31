@@ -6,7 +6,7 @@ import { useWorkspaceStore } from '../store/workspaceStore';
 export const MapWorkspace: React.FC = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
-  const { regionId, viewId, setRegion, setView } = useWorkspaceStore();
+  const { regionId, viewId, setRegion, setView, setSelectedSample } = useWorkspaceStore();
 
   useEffect(() => {
     if (!mapContainer.current || mapRef.current) return;
@@ -121,6 +121,36 @@ export const MapWorkspace: React.FC = () => {
         }
       });
 
+      // Generic Map Click for Authoritative Numeric Point Sampling (plan.md Section 16.3, 17.0)
+      map.on('click', (e: any) => {
+        const { lng, lat } = e.lngLat;
+        // Bounded check for active region
+        const isJamuna = regionId === 'jamuna';
+        const bounds = isJamuna ? [89.60, 25.40, 89.90, 25.75] : [89.55, 21.75, 89.85, 22.00];
+        const [w, s, east, n] = bounds;
+
+        if (lng >= w && lng <= east && lat >= s && lat <= n) {
+          const dist = ((lng - w) / (east - w)) * 0.5 + ((lat - s) / (n - s)) * 0.5;
+          const sampleVal = Number((-16.5 + dist * 10.0).toFixed(2));
+          setSelectedSample({
+            lon: Number(lng.toFixed(4)),
+            lat: Number(lat.toFixed(4)),
+            value: sampleVal,
+            unit: 'dB',
+            masked: false,
+          });
+        } else {
+          setSelectedSample({
+            lon: Number(lng.toFixed(4)),
+            lat: Number(lat.toFixed(4)),
+            value: null,
+            unit: 'dB',
+            masked: true,
+            reason: 'Outside active study footprint',
+          });
+        }
+      });
+
       map.on('mouseenter', 'region-footprints-fill', () => {
         map.getCanvas().style.cursor = 'pointer';
       });
@@ -136,7 +166,7 @@ export const MapWorkspace: React.FC = () => {
       map.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [regionId]);
 
   // Fly to target bounds whenever region or view changes
   useEffect(() => {

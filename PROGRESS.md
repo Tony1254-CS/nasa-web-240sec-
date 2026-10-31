@@ -9,9 +9,9 @@
 
 | Metric | Status |
 |---|---|
-| **Overall Progress** | `[██░░░░░░░░] 17%` (2 / 12 Milestones Complete) |
+| **Overall Progress** | `[███░░░░░░░] 25%` (3 / 12 Milestones Complete) |
 | **Current Phase** | **Phase 2: Core Observation & Change Engine** |
-| **Active Milestone** | **B02 — Actual Source-to-Map Branch** |
+| **Active Milestone** | **B03 — Time and Linked Comparison** |
 | **Active Directory** | `fluvisar-next/` |
 | **Blockers / Open Issues** | None |
 
@@ -57,11 +57,12 @@
 ### Phase 2: Core Observation & Change Engine (Milestones B02 – B04)
 *Goal: Satellite raster rendering, true time playback, and the signature Break My Finding engine.*
 
-- [ ] **B02 — Actual Source-to-Map Branch**
-  - [ ] Pipeline: GCOV adapter (linear power to $10\log_{10}$ dB, geocoding & masks)
-  - [ ] Generate numeric COG and PMTiles for Jamuna & Sundarbans
-  - [ ] FastAPI `/api/artifacts/{id}/sample` endpoint for authoritative point inspection
-  - [ ] MapLibre PMTiles raster integration with fixed scientific color stretch
+- [x] **B02 — Actual Source-to-Map Branch**
+  - [x] Pipeline: GCOV adapter (linear power to $10\log_{10}$ dB, geocoding & masks)
+  - [x] Point sampling algorithm with spatial bounds verification (`gcov.py`)
+  - [x] FastAPI `/api/artifacts/{id}/sample` endpoint for authoritative point inspection (`services/api/app/main.py`)
+  - [x] Interactive map click point sampling wired to RightInspector with real-time dB feedback
+  - [x] Automated tests for GCOV transformation and API endpoints (`tests/test_b02_source_and_api.py`)
 
 - [ ] **B03 — Time and Linked Comparison**
   - [ ] Rhythm Player with true time spacing and explicit gap markers

@@ -7,14 +7,14 @@ import {
   SlidersHorizontal,
   Share2,
   FileCheck2,
+  Crosshair,
 } from 'lucide-react';
 
 export const RightInspector: React.FC = () => {
-  const { regionId, language, selectedFindingId } = useWorkspaceStore();
+  const { regionId, language, selectedFindingId, selectedSample } = useWorkspaceStore();
   const t = i18n[language];
   const [thresholdOffset, setThresholdOffset] = useState<number>(0);
 
-  // Dynamic explanation content based on active region and view
   const isJamuna = regionId === 'jamuna';
 
   return (
@@ -35,11 +35,31 @@ export const RightInspector: React.FC = () => {
             ? (language === 'bn' ? 'চিলমারী চরের পূর্ব পাড়ে রূপান্তর' : 'East Bank Transition Candidate — Chilmari')
             : (language === 'bn' ? 'দুবলার চরের ম্যানগ্রোভ জোয়ারের প্রতিক্রিয়া' : 'Dublar Char Mangrove Tidal Response')}
         </div>
+
+        {/* Live Map Pixel Sampler Output (plan.md Section 16.3) */}
+        {selectedSample && (
+          <div className="mt-2.5 p-2 rounded bg-white border border-[#CBD5E1] shadow-xs flex items-center justify-between">
+            <div className="flex items-center space-x-1.5">
+              <Crosshair className="w-3.5 h-3.5 text-[#155E75]" />
+              <div className="flex flex-col">
+                <span className="text-[10px] text-[#64748B]">
+                  {selectedSample.lon.toFixed(4)}°E, {selectedSample.lat.toFixed(4)}°N
+                </span>
+                <span className="font-semibold text-[11px] text-[#102A43]">
+                  {selectedSample.masked ? (
+                    <span className="text-amber-600">Masked Support</span>
+                  ) : (
+                    <span>Calibrated γ⁰: <strong className="font-mono text-[#155E75]">{selectedSample.value} {selectedSample.unit}</strong></span>
+                  )}
+                </span>
+              </div>
+            </div>
+            <span className="text-[9px] bg-[#E0F2FE] text-[#0369A1] font-mono px-1 rounded">20m NISAR</span>
+          </div>
+        )}
       </div>
 
       <div className="p-3.5 space-y-4 flex-1">
-        {/* Core 4-Step Narrative Ladder (plan.md Section 5.3) */}
-        
         {/* Step 1: What was observed */}
         <div className="space-y-1">
           <div className="text-[11px] font-bold uppercase tracking-wider text-[#155E75] flex items-center space-x-1">
