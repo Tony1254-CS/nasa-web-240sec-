@@ -55,3 +55,16 @@ This document records the foundational architectural, scientific, and product de
   - Build the **CHARKEEP** topological network graph modeling roads, ferry crossings, community clinic hubs, and primary schools across Chilmari and Roumari.
   - Implement a budget-constrained **Decision Flip Engine**: given an inspection quota (e.g., $15,000 / 3 teams), prioritize sites where an erroneous satellite classification (e.g. wet sand misclassified as open water) would flip an aid or evacuation decision.
   - Compute verifiable **Decision Flip Receipts** displaying topological impact, cost, and people safeguarded.
+
+
+---
+
+### ADR-007: InSAR Phase-to-Motion, SWOT Reach Heights, and Decoupled Compound View (Milestone B07)
+* **Status:** ACCEPTED
+* **Context:** InSAR interferometry and altimetry provide high-value motion and surface water elevations, but suffer from phase decorrelation over water/vegetation and overpasses restricted by orbital tracks. Presenting combined "multi-hazard vulnerability" scores obscures the distinct physical limits of each sensor.
+* **Decision:**
+  - Standardize phase-to-LOS displacement on $\Delta d = -\frac{\lambda}{4\pi} \Delta \phi$ with explicit wavelength parameters ($\lambda = 0.2384$ m for NISAR L-band, $\lambda = 0.0555$ m for Sentinel-1 C-band).
+  - Mask decorrelated pixels ($\gamma < 0.35$) and enforce connected component boundaries so relative displacement is never projected across ambiguous phase steps.
+  - Implement transect profiler with explicit break markers for river crossings.
+  - Retain SWOT KaRIn water surface elevations at reach level, explicitly declaring pending dependencies outside overpass windows.
+  - Implement a 3-axis decoupled Compound Observation Profile (Radar backscatter, Optical greenness, LOS motion) without uncalibrated aggregate risk formulas.

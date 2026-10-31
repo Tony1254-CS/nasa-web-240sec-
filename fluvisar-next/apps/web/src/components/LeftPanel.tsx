@@ -5,6 +5,7 @@ import { i18n } from '../i18n/translations';
 import { Layers, Activity } from 'lucide-react';
 import { SundarbansPolarizationPanel } from './SundarbansPolarizationPanel';
 import { JamunaDecisionPanel } from './JamunaDecisionPanel';
+import { InSARSpecialtyPanel } from './InSARSpecialtyPanel';
 
 export const LeftPanel: React.FC = () => {
   const { regionId, viewId, setView, language, layerVisibility, toggleLayer } = useWorkspaceStore();
@@ -28,32 +29,34 @@ export const LeftPanel: React.FC = () => {
         ];
 
   return (
-    <aside className="w-64 border-r border-[#CBD5E1] bg-white flex flex-col h-full select-none text-xs overflow-y-auto">
-      {/* Views Switcher Section */}
+    <div className="w-[340px] bg-white border-r border-[#CBD5E1] flex flex-col h-full overflow-y-auto shrink-0 select-none">
+      {/* View Switcher Section */}
       <div className="p-3 border-b border-[#F1F5F9]">
         <div className="flex items-center justify-between text-[#64748B] font-bold uppercase tracking-wider text-[11px] mb-2">
           <span className="flex items-center space-x-1.5">
             <Activity className="w-3.5 h-3.5 text-[#155E75]" />
-            <span>Map Views ({regionId})</span>
+            <span>Investigation Lenses</span>
           </span>
-          <span className="text-[10px] bg-[#E2E8F0] px-1.5 py-0.5 rounded font-mono">{viewId}</span>
+          <span className="font-mono text-[10px] text-[#0284C7] bg-[#E0F2FE] px-1.5 py-0.5 rounded">
+            {views.length} MODES
+          </span>
         </div>
 
-        <div className="space-y-1">
+        <div className="grid grid-cols-1 gap-1">
           {views.map((v) => (
             <button
               key={v.id}
               onClick={() => setView(v.id)}
-              className={`w-full text-left px-2.5 py-2 rounded-lg font-medium transition-all flex flex-col ${
+              className={`flex flex-col text-left px-2.5 py-1.5 rounded transition-all ${
                 viewId === v.id
-                  ? 'bg-[#155E75] text-white shadow-xs'
-                  : 'text-[#102A43] hover:bg-[#F8FAFC] hover:text-[#0E7490]'
+                  ? 'bg-[#155E75] text-white shadow-xs font-semibold'
+                  : 'text-[#334155] hover:bg-[#F8FAFC]'
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="font-semibold text-xs">{v.label}</span>
+                <span className="text-[12px] leading-tight">{v.label}</span>
                 <span
-                  className={`text-[10px] font-mono px-1 py-0.2 rounded ${
+                  className={`text-[10px] font-mono px-1 rounded ${
                     viewId === v.id ? 'bg-white/20 text-white' : 'bg-[#F1F5F9] text-[#64748B]'
                   }`}
                 >
@@ -68,9 +71,15 @@ export const LeftPanel: React.FC = () => {
         </div>
       </div>
 
-      {/* Regional Specialized Panels */}
-      {regionId === 'jamuna' && <JamunaDecisionPanel />}
-      {regionId === 'sundarbans' && <SundarbansPolarizationPanel />}
+      {/* Specialized Panels */}
+      {viewId === 'X1' || viewId === 'C1' ? (
+        <InSARSpecialtyPanel />
+      ) : (
+        <>
+          {regionId === 'jamuna' && <JamunaDecisionPanel />}
+          {regionId === 'sundarbans' && <SundarbansPolarizationPanel />}
+        </>
+      )}
 
       {/* Layers & Lenses Section */}
       <div className="p-3 border-b border-[#F1F5F9] flex-1">
@@ -119,6 +128,6 @@ export const LeftPanel: React.FC = () => {
           CRS: EPSG:32645 (UTM 45N) | Method: v1.0.0
         </div>
       </div>
-    </aside>
+    </div>
   );
 };

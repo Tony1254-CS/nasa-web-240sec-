@@ -9,9 +9,9 @@
 
 | Metric | Status |
 |---|---|
-| **Overall Progress** | `[███████░░░] 58%` (7 / 12 Milestones Complete) |
-| **Current Phase** | **Phase 3: Regional Missions & Deep Science** |
-| **Active Milestone** | **B07 — Specialty and Research Cases** |
+| **Overall Progress** | `[████████░░] 67%` (8 / 12 Milestones Complete) |
+| **Current Phase** | **Phase 4: Intelligence, Stories & Decision Lab** |
+| **Active Milestone** | **B08 — Evidence, Passport and Reports** |
 | **Active Directory** | `fluvisar-next/` |
 | **Blockers / Open Issues** | None |
 
@@ -102,12 +102,14 @@
   - [x] Interactive Jamuna Decision Panel in frontend LeftPanel (`JamunaDecisionPanel.tsx`)
   - [x] Automated tests for recurrence, CHARKEEP network, and Decision Flip engine (`tests/test_b06_jamuna_decisions.py`)
 
-- [ ] **B07 — Specialty and Research Cases**
-  - [ ] Local InSAR (GUNW) wrapped/unwrapped phase & coherence inspector (X1)
-  - [ ] Transect profiler with source-resolution sampling
-  - [ ] SWOT water-elevation adapter (if observation matches)
-  - [ ] Compound observation view (water + vegetation + LOS motion)
-  - [ ] NISAR contribution benchmark protocol (baseline vs. added NISAR)
+- [x] **B07 — Specialty and Research Cases**
+  - [x] Local InSAR (GUNW) wrapped/unwrapped phase & coherence inspector (X1) (`pipeline/fluvisar/methods/insar.py`)
+  - [x] Transect profiler with source-resolution sampling and water-break markers
+  - [x] SWOT water-elevation adapter with explicit quality flags and pending overpass handling
+  - [x] Compound observation view (water + vegetation + LOS motion) on independent physical axes
+  - [x] NISAR contribution benchmark protocol (Sentinel-1 C-band baseline vs. added NISAR L-band)
+  - [x] Interactive InSAR & Specialty panel in frontend LeftPanel (`InSARSpecialtyPanel.tsx`)
+  - [x] Automated tests for phase conversion, coherence, referencing, transects, SWOT, and benchmark (`tests/test_b07_specialty.py`)
 
 ---
 
