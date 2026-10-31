@@ -9,9 +9,9 @@
 
 | Metric | Status |
 |---|---|
-| **Overall Progress** | `[█████░░░░░] 42%` (5 / 12 Milestones Complete) |
+| **Overall Progress** | `[██████░░░░] 50%` (6 / 12 Milestones Complete) |
 | **Current Phase** | **Phase 3: Regional Missions & Deep Science** |
-| **Active Milestone** | **B05 — Sundarbans Investigation** |
+| **Active Milestone** | **B06 — Jamuna Recovery and Service Decisions** |
 | **Active Directory** | `fluvisar-next/` |
 | **Blockers / Open Issues** | None |
 
@@ -84,13 +84,14 @@
 ### Phase 3: Regional Missions & Deep Science (Milestones B05 – B07)
 *Goal: Specialized algorithms for Sundarbans mangrove dynamics, Jamuna char connectivity, and InSAR.*
 
-- [ ] **B05 — Sundarbans Investigation**
-  - [ ] Dual-pol (HH/HV) channel switcher & ratio analysis
-  - [ ] Pauli RGB covariance composite implementation (from valid co-pol/cross-pol terms)
-  - [ ] Sentinel-2 optical quality screening & NDVI calculation
-  - [ ] Joint optical–radar patch trajectories
-  - [ ] Tide-context filtering & matched-condition comparison adapter
-  - [ ] Forest boundary metrics and patch configuration
+- [x] **B05 — Sundarbans Investigation**
+  - [x] Dual-pol (HH/HV) cross-polarization ratio in dB (`sundarbans.py`)
+  - [x] Real Pauli RGB covariance composite implementation per Section 11.1
+  - [x] Optical NDVI quality screening and reflectance extraction
+  - [x] Tidal stage observation filter (High Tide vs Low Tide matched conditions)
+  - [x] ROOTRETURN 4-quadrant response fingerprint (tidal sub-canopy vs disturbance)
+  - [x] Interactive Sundarbans Radar Switchboard in frontend LeftPanel (`SundarbansPolarizationPanel.tsx`)
+  - [x] Automated tests for dual-pol, Pauli, NDVI, and tide filtering (`tests/test_b05_sundarbans.py`)
 
 - [ ] **B06 — Jamuna Recovery and Service Decisions**
   - [ ] Floodplain water recurrence ($N_{wet} / N_{valid}$)

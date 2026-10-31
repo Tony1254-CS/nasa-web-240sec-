@@ -3,6 +3,7 @@ import { useWorkspaceStore } from '../store/workspaceStore';
 import type { ViewId } from '../store/workspaceStore';
 import { i18n } from '../i18n/translations';
 import { Layers, Activity } from 'lucide-react';
+import { SundarbansPolarizationPanel } from './SundarbansPolarizationPanel';
 
 export const LeftPanel: React.FC = () => {
   const { regionId, viewId, setView, language, layerVisibility, toggleLayer } = useWorkspaceStore();
@@ -26,7 +27,7 @@ export const LeftPanel: React.FC = () => {
         ];
 
   return (
-    <aside className="w-64 border-r border-[#CBD5E1] bg-white flex flex-col h-full select-none text-xs">
+    <aside className="w-64 border-r border-[#CBD5E1] bg-white flex flex-col h-full select-none text-xs overflow-y-auto">
       {/* Views Switcher Section */}
       <div className="p-3 border-b border-[#F1F5F9]">
         <div className="flex items-center justify-between text-[#64748B] font-bold uppercase tracking-wider text-[11px] mb-2">
@@ -66,8 +67,11 @@ export const LeftPanel: React.FC = () => {
         </div>
       </div>
 
+      {/* Special Sundarbans Polarization Panel (if region is sundarbans) */}
+      {regionId === 'sundarbans' && <SundarbansPolarizationPanel />}
+
       {/* Layers & Lenses Section */}
-      <div className="p-3 border-b border-[#F1F5F9] flex-1 overflow-y-auto">
+      <div className="p-3 border-b border-[#F1F5F9] flex-1">
         <div className="flex items-center justify-between text-[#64748B] font-bold uppercase tracking-wider text-[11px] mb-2">
           <span className="flex items-center space-x-1.5">
             <Layers className="w-3.5 h-3.5 text-[#155E75]" />
