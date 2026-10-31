@@ -31,7 +31,10 @@ export const MapWorkspace: React.FC = () => {
     regionId,
     viewId,
     basemapType,
+    overlayStyle,
+    layerVisibility,
     setBasemapType,
+    setOverlayStyle,
     setRegion,
     setView,
     setSelectedSample,
@@ -71,6 +74,28 @@ export const MapWorkspace: React.FC = () => {
       if (mapA) applyBasemap(mapA, basemapType);
       if (mapB) applyBasemap(mapB, basemapType);
     }
+  };
+
+  // Dynamic fill opacity management: Outlines Only = 0.0 fill opacity (100% clean satellite view)
+  const applyOverlayFills = (map: maplibregl.Map | null) => {
+    if (!map || !map.isStyleLoaded()) return;
+    const isOutlines = overlayStyle === 'outlines';
+
+    const fillLayers = [
+      { id: 'layer-jamuna-water-sep', opacity: isOutlines ? 0.0 : 0.15 },
+      { id: 'layer-jamuna-water-aug', opacity: isOutlines ? 0.0 : 0.18 },
+      { id: 'layer-jamuna-erosion', opacity: isOutlines ? 0.0 : 0.22 },
+      { id: 'layer-jamuna-accretion', opacity: isOutlines ? 0.0 : 0.18 },
+      { id: 'layer-sundarbans-water', opacity: isOutlines ? 0.0 : 0.15 },
+      { id: 'layer-sundarbans-canopy', opacity: isOutlines ? 0.0 : 0.10 },
+      { id: 'layer-sundarbans-pulse', opacity: isOutlines ? 0.0 : 0.22 },
+    ];
+
+    fillLayers.forEach(({ id, opacity }) => {
+      if (map.getLayer(id)) {
+        map.setPaintProperty(id, 'fill-opacity', opacity);
+      }
+    });
   };
 
   // Initialize both MapLibre maps
@@ -256,28 +281,28 @@ export const MapWorkspace: React.FC = () => {
       });
 
       // 2. Jamuna Post-Flood Data Layers
-      // Receded Water (Semi-transparent marine blue, allowing riverbed textures to remain visible)
+      // Receded Water (Clean line-only by default, 0.0 fill opacity preserves 100% satellite visibility)
       mapB.addSource('jamuna-water-sep', { type: 'geojson', data: JAMUNA_WATER_SEP19 as any });
       mapB.addLayer({
         id: 'layer-jamuna-water-sep',
         type: 'fill',
         source: 'jamuna-water-sep',
-        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.28 },
+        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.0 },
       });
       mapB.addLayer({
         id: 'layer-jamuna-water-sep-line',
         type: 'line',
         source: 'jamuna-water-sep',
-        paint: { 'line-color': '#38BDF8', 'line-width': 1.5 },
+        paint: { 'line-color': '#38BDF8', 'line-width': 1.8 },
       });
 
-      // Active Riverbank Erosion (Semi-transparent crimson hazard fill with bold dashed bankline retreat cut)
+      // Active Riverbank Erosion (Glowing dashed retreat line along collapsing cutbank)
       mapB.addSource('jamuna-erosion', { type: 'geojson', data: JAMUNA_EROSION_ZONES as any });
       mapB.addLayer({
         id: 'layer-jamuna-erosion',
         type: 'fill',
         source: 'jamuna-erosion',
-        paint: { 'fill-color': '#DC2626', 'fill-opacity': 0.38 },
+        paint: { 'fill-color': '#DC2626', 'fill-opacity': 0.0 },
       });
       mapB.addLayer({
         id: 'layer-jamuna-erosion-line',
@@ -285,24 +310,24 @@ export const MapWorkspace: React.FC = () => {
         source: 'jamuna-erosion',
         paint: {
           'line-color': '#EF4444',
-          'line-width': 2.5,
+          'line-width': 2.8,
           'line-dasharray': [4, 2],
         },
       });
 
-      // Silt / Char Accretion (Semi-transparent emerald crop stipple)
+      // Silt / Char Accretion (Crisp emerald boundary contour line)
       mapB.addSource('jamuna-accretion', { type: 'geojson', data: JAMUNA_ACCRETION_ZONES as any });
       mapB.addLayer({
         id: 'layer-jamuna-accretion',
         type: 'fill',
         source: 'jamuna-accretion',
-        paint: { 'fill-color': '#059669', 'fill-opacity': 0.30 },
+        paint: { 'fill-color': '#059669', 'fill-opacity': 0.0 },
       });
       mapB.addLayer({
         id: 'layer-jamuna-accretion-line',
         type: 'line',
         source: 'jamuna-accretion',
-        paint: { 'line-color': '#10B981', 'line-width': 2.0 },
+        paint: { 'line-color': '#10B981', 'line-width': 2.2, 'line-dasharray': [3, 2] },
       });
 
       // Jamuna Critical Infrastructure Assets (Schools, Clinics, Ferries)
@@ -325,7 +350,13 @@ export const MapWorkspace: React.FC = () => {
         id: 'layer-sundarbans-water',
         type: 'fill',
         source: 'sundarbans-water',
-        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.28 },
+        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.0 },
+      });
+      mapB.addLayer({
+        id: 'layer-sundarbans-water-line',
+        type: 'line',
+        source: 'sundarbans-water',
+        paint: { 'line-color': '#38BDF8', 'line-width': 1.8 },
       });
 
       mapB.addSource('sundarbans-canopy', { type: 'geojson', data: SUNDARBANS_PAULI_CANOPY as any });
@@ -333,7 +364,13 @@ export const MapWorkspace: React.FC = () => {
         id: 'layer-sundarbans-canopy',
         type: 'fill',
         source: 'sundarbans-canopy',
-        paint: { 'fill-color': '#15803D', 'fill-opacity': 0.22 },
+        paint: { 'fill-color': '#15803D', 'fill-opacity': 0.0 },
+      });
+      mapB.addLayer({
+        id: 'layer-sundarbans-canopy-line',
+        type: 'line',
+        source: 'sundarbans-canopy',
+        paint: { 'line-color': '#15803D', 'line-width': 2.0, 'line-dasharray': [3, 2] },
       });
 
       mapB.addSource('sundarbans-pulse', { type: 'geojson', data: SUNDARBANS_TIDAL_PULSE as any });
@@ -341,7 +378,7 @@ export const MapWorkspace: React.FC = () => {
         id: 'layer-sundarbans-pulse',
         type: 'fill',
         source: 'sundarbans-pulse',
-        paint: { 'fill-color': '#EA580C', 'fill-opacity': 0.35 },
+        paint: { 'fill-color': '#EA580C', 'fill-opacity': 0.0 },
       });
       mapB.addLayer({
         id: 'layer-sundarbans-pulse-line',
@@ -439,13 +476,13 @@ export const MapWorkspace: React.FC = () => {
         id: 'layer-jamuna-water-aug',
         type: 'fill',
         source: 'jamuna-water-aug',
-        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.35 },
+        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.0 },
       });
       mapA.addLayer({
         id: 'layer-jamuna-water-aug-line',
         type: 'line',
         source: 'jamuna-water-aug',
-        paint: { 'line-color': '#38BDF8', 'line-width': 1.8 },
+        paint: { 'line-color': '#38BDF8', 'line-width': 1.8, 'line-dasharray': [4, 2] },
       });
 
       mapA.addSource('sundarbans-water', { type: 'geojson', data: SUNDARBANS_WATER as any });
@@ -453,10 +490,17 @@ export const MapWorkspace: React.FC = () => {
         id: 'layer-sundarbans-water-aug',
         type: 'fill',
         source: 'sundarbans-water',
-        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.28 },
+        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.0 },
+      });
+      mapA.addLayer({
+        id: 'layer-sundarbans-water-aug-line',
+        type: 'line',
+        source: 'sundarbans-water',
+        paint: { 'line-color': '#38BDF8', 'line-width': 1.8 },
       });
 
       updateMapALayerVisibilities(mapA, regionId, comparisonMode);
+      applyOverlayFills(mapA);
     });
 
     mapRefB.current = mapB;
@@ -494,15 +538,23 @@ export const MapWorkspace: React.FC = () => {
     }
   }, [basemapType, comparisonMode]);
 
-  // Update layers & fly to active region
+  // Dynamic overlay style (Outlines vs Tinted)
+  useEffect(() => {
+    applyOverlayFills(mapRefB.current);
+    applyOverlayFills(mapRefA.current);
+  }, [overlayStyle]);
+
+  // Update layers & fly to active region & sync layer stack checkboxes
   useEffect(() => {
     const mapB = mapRefB.current;
     const mapA = mapRefA.current;
     if (!mapB || !mapB.isStyleLoaded()) return;
 
     updateMapBLayerVisibilities(mapB, regionId);
+    applyOverlayFills(mapB);
     if (mapA && mapA.isStyleLoaded()) {
       updateMapALayerVisibilities(mapA, regionId, comparisonMode);
+      applyOverlayFills(mapA);
     }
 
     if (viewId === 'M0') {
@@ -517,37 +569,61 @@ export const MapWorkspace: React.FC = () => {
       if (mapRefB.current) mapRefB.current.resize();
       if (mapRefA.current) mapRefA.current.resize();
     }, 250);
-  }, [regionId, viewId, comparisonMode]);
+  }, [regionId, viewId, comparisonMode, layerVisibility, overlayStyle]);
 
   const updateMapBLayerVisibilities = (map: maplibregl.Map, activeRegion: string) => {
     const isJamuna = activeRegion === 'jamuna';
-    const jamunaLayers = [
-      'layer-jamuna-water-sep',
-      'layer-jamuna-water-sep-line',
+    const showWater = layerVisibility['water'] ?? true;
+    const showTransitions = layerVisibility['transitions'] ?? true;
+    const showAssets = layerVisibility['assets'] ?? true;
+
+    // Jamuna layers
+    const jamunaWaterLayers = ['layer-jamuna-water-sep', 'layer-jamuna-water-sep-line'];
+    jamunaWaterLayers.forEach((id) => {
+      if (map.getLayer(id)) {
+        map.setLayoutProperty(id, 'visibility', isJamuna && showWater ? 'visible' : 'none');
+      }
+    });
+
+    const jamunaTransitionLayers = [
       'layer-jamuna-erosion',
       'layer-jamuna-erosion-line',
       'layer-jamuna-accretion',
       'layer-jamuna-accretion-line',
-      'layer-jamuna-assets-circle',
     ];
-    jamunaLayers.forEach((id) => {
+    jamunaTransitionLayers.forEach((id) => {
       if (map.getLayer(id)) {
-        map.setLayoutProperty(id, 'visibility', isJamuna ? 'visible' : 'none');
+        map.setLayoutProperty(id, 'visibility', isJamuna && showTransitions ? 'visible' : 'none');
       }
     });
 
-    const sundarbansLayers = [
-      'layer-sundarbans-water',
-      'layer-sundarbans-canopy',
-      'layer-sundarbans-pulse',
-      'layer-sundarbans-pulse-line',
-      'layer-sundarbans-assets-circle',
-    ];
-    sundarbansLayers.forEach((id) => {
+    if (map.getLayer('layer-jamuna-assets-circle')) {
+      map.setLayoutProperty('layer-jamuna-assets-circle', 'visibility', isJamuna && showAssets ? 'visible' : 'none');
+    }
+
+    // Sundarbans layers
+    const sundarbansWaterLayers = ['layer-sundarbans-water', 'layer-sundarbans-water-line'];
+    sundarbansWaterLayers.forEach((id) => {
       if (map.getLayer(id)) {
-        map.setLayoutProperty(id, 'visibility', !isJamuna ? 'visible' : 'none');
+        map.setLayoutProperty(id, 'visibility', !isJamuna && showWater ? 'visible' : 'none');
       }
     });
+
+    const sundarbansCanopyLayers = ['layer-sundarbans-canopy', 'layer-sundarbans-canopy-line'];
+    sundarbansCanopyLayers.forEach((id) => {
+      if (map.getLayer(id)) {
+        map.setLayoutProperty(id, 'visibility', !isJamuna && showTransitions ? 'visible' : 'none');
+      }
+    });
+    const sundarbansPulseLayers = ['layer-sundarbans-pulse', 'layer-sundarbans-pulse-line'];
+    sundarbansPulseLayers.forEach((id) => {
+      if (map.getLayer(id)) {
+        map.setLayoutProperty(id, 'visibility', !isJamuna && showTransitions ? 'visible' : 'none');
+      }
+    });
+    if (map.getLayer('layer-sundarbans-assets-circle')) {
+      map.setLayoutProperty('layer-sundarbans-assets-circle', 'visibility', !isJamuna && showAssets ? 'visible' : 'none');
+    }
   };
 
   const updateMapALayerVisibilities = (
@@ -556,28 +632,34 @@ export const MapWorkspace: React.FC = () => {
     mode: 'dates' | 'sensors'
   ) => {
     const isJamuna = activeRegion === 'jamuna';
-    // In 'sensors' mode: Map A is PURE optical satellite photo without any radar masks!
-    const showRadarLayers = mode === 'dates';
+    const showWater = (layerVisibility['water'] ?? true) && mode === 'dates';
 
     if (map.getLayer('layer-jamuna-water-aug')) {
       map.setLayoutProperty(
         'layer-jamuna-water-aug',
         'visibility',
-        showRadarLayers && isJamuna ? 'visible' : 'none'
+        showWater && isJamuna ? 'visible' : 'none'
       );
     }
     if (map.getLayer('layer-jamuna-water-aug-line')) {
       map.setLayoutProperty(
         'layer-jamuna-water-aug-line',
         'visibility',
-        showRadarLayers && isJamuna ? 'visible' : 'none'
+        showWater && isJamuna ? 'visible' : 'none'
       );
     }
     if (map.getLayer('layer-sundarbans-water-aug')) {
       map.setLayoutProperty(
         'layer-sundarbans-water-aug',
         'visibility',
-        showRadarLayers && !isJamuna ? 'visible' : 'none'
+        showWater && !isJamuna ? 'visible' : 'none'
+      );
+    }
+    if (map.getLayer('layer-sundarbans-water-aug-line')) {
+      map.setLayoutProperty(
+        'layer-sundarbans-water-aug-line',
+        'visibility',
+        showWater && !isJamuna ? 'visible' : 'none'
       );
     }
   };
@@ -743,6 +825,19 @@ export const MapWorkspace: React.FC = () => {
           </button>
         </div>
 
+        {/* Clean Outlines vs Subtle Tint Toggle (Solves colored polygon blocking satellite view) */}
+        <button
+          onClick={() => setOverlayStyle(overlayStyle === 'outlines' ? 'tinted' : 'outlines')}
+          className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-xl border font-bold text-xs shadow-lg transition-all cursor-pointer ${
+            overlayStyle === 'outlines'
+              ? 'bg-[#0284C7] text-white border-[#0284C7]'
+              : 'bg-white/95 backdrop-blur-md text-[#475569] border-[#CBD5E1] hover:bg-[#F1F5F9]'
+          }`}
+          title="Toggle between Clean Outlines (100% Unobstructed Satellite) and Subtle Thematic Tint"
+        >
+          <span>{overlayStyle === 'outlines' ? (isBn ? '✏️ শুধু আউটলাইন' : '✏️ Outlines Only') : (isBn ? '🎨 হালকা রঙ' : '🎨 Tinted')}</span>
+        </button>
+
         {/* 📸 Instant Map Snapshot Button */}
         <button
           onClick={handleCaptureSnapshot}
@@ -769,15 +864,27 @@ export const MapWorkspace: React.FC = () => {
           {regionId === 'jamuna' ? (
             <>
               <div className="flex items-center space-x-2">
-                <div className="w-3.5 h-3.5 rounded bg-[#0284C7]/30 border border-[#0284C7]" />
+                {overlayStyle === 'outlines' ? (
+                  <div className="w-4 h-0.5 bg-[#38BDF8] rounded-full" />
+                ) : (
+                  <div className="w-3.5 h-3.5 rounded bg-[#0284C7]/30 border border-[#0284C7]" />
+                )}
                 <span className="text-[#334155] text-[11px]">{isBn ? 'নদীর চ্যানেল জলভাগ (γ⁰ ≤ -১৪ dB)' : 'Receded Thalweg Braids (γ⁰ ≤ -14 dB)'}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3.5 h-3.5 rounded bg-[#DC2626]/40 border-2 border-[#EF4444] border-dashed" />
+                {overlayStyle === 'outlines' ? (
+                  <div className="w-4 border-t-2 border-dashed border-[#EF4444]" />
+                ) : (
+                  <div className="w-3.5 h-3.5 rounded bg-[#DC2626]/40 border-2 border-[#EF4444] border-dashed" />
+                )}
                 <span className="text-[#334155] text-[11px] font-semibold text-[#DC2626]">{isBn ? 'চিলমারী ভাঙন বলয় (১৪৫.৮ হেক্টর)' : 'Chilmari Erosion Cut (145.8 ha)'}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3.5 h-3.5 rounded bg-[#059669]/35 border border-[#10B981]" />
+                {overlayStyle === 'outlines' ? (
+                  <div className="w-4 border-t-2 border-dashed border-[#10B981]" />
+                ) : (
+                  <div className="w-3.5 h-3.5 rounded bg-[#059669]/35 border border-[#10B981]" />
+                )}
                 <span className="text-[#334155] text-[11px]">{isBn ? 'মন্ডলের চর নতুন পলি (৮৮.৪ হেক্টর)' : 'Mandaler Char Emergent Silt (88.4 ha)'}</span>
               </div>
               <div className="flex items-center space-x-2">
@@ -788,15 +895,27 @@ export const MapWorkspace: React.FC = () => {
           ) : (
             <>
               <div className="flex items-center space-x-2">
-                <div className="w-3.5 h-3.5 rounded bg-[#0284C7]/30 border border-[#0284C7]" />
+                {overlayStyle === 'outlines' ? (
+                  <div className="w-4 h-0.5 bg-[#38BDF8] rounded-full" />
+                ) : (
+                  <div className="w-3.5 h-3.5 rounded bg-[#0284C7]/30 border border-[#0284C7]" />
+                )}
                 <span className="text-[#334155] text-[11px]">{isBn ? 'পশুর মোহনা ও খাঁড়ি জলপথ' : 'Passur Estuary Thalweg'}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3.5 h-3.5 rounded bg-[#15803D]/25 border border-[#15803D]" />
+                {overlayStyle === 'outlines' ? (
+                  <div className="w-4 border-t-2 border-dashed border-[#15803D]" />
+                ) : (
+                  <div className="w-3.5 h-3.5 rounded bg-[#15803D]/25 border border-[#15803D]" />
+                )}
                 <span className="text-[#334155] text-[11px]">{isBn ? 'ঘন ম্যানগ্রোভ ক্যানোপি (Pauli HV)' : 'Mangrove Canopy (Volume Scattering)'}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3.5 h-3.5 rounded bg-[#EA580C]/40 border-2 border-[#F97316] border-dashed" />
+                {overlayStyle === 'outlines' ? (
+                  <div className="w-4 border-t-2 border-dashed border-[#F97316]" />
+                ) : (
+                  <div className="w-3.5 h-3.5 rounded bg-[#EA580C]/40 border-2 border-[#F97316] border-dashed" />
+                )}
                 <span className="text-[#334155] text-[11px] font-semibold text-[#EA580C]">{isBn ? 'দুবলার চরে জোয়ার প্লাবন (+৩.৫ dB)' : 'Sub-Canopy Tidal Pulse (+3.5 dB HH)'}</span>
               </div>
               <div className="flex items-center space-x-2">

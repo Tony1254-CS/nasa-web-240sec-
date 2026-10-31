@@ -7,6 +7,7 @@ export type Language = 'en' | 'bn';
 export type Audience = 'public' | 'decision' | 'analyst';
 export type ActiveTab = 'atlas' | 'investigate' | 'stories' | 'learn' | 'reports';
 export type BasemapType = 'satellite' | 'sar' | 'carto';
+export type OverlayStyle = 'outlines' | 'tinted';
 
 export interface MapCamera {
   center: [number, number];
@@ -35,6 +36,7 @@ export interface WorkspaceState {
   
   // Basemap & Visualization
   basemapType: BasemapType;
+  overlayStyle: OverlayStyle;
   swipePosition: number; // 0 - 100 percentage
   comparisonMode: 'dates' | 'sensors';
 
@@ -66,6 +68,7 @@ export interface WorkspaceState {
   // Actions
   setActiveTab: (tab: ActiveTab) => void;
   setBasemapType: (basemap: BasemapType) => void;
+  setOverlayStyle: (style: OverlayStyle) => void;
   setSwipePosition: (pos: number) => void;
   setComparisonMode: (mode: 'dates' | 'sensors') => void;
   setRegion: (regionId: RegionId) => void;
@@ -106,6 +109,7 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   viewId: 'J1', // Direct to Jamuna investigation by default
   mode: 'explore',
   basemapType: 'satellite', // Default to REAL satellite imagery!
+  overlayStyle: 'outlines', // Default to crisp OUTLINES ONLY so satellite photo is 100% visible!
   swipePosition: 50,
   comparisonMode: 'dates',
   language: 'en', // Default English with toggle to BN
@@ -140,6 +144,7 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
 
   setActiveTab: (activeTab) => set({ activeTab }),
   setBasemapType: (basemapType) => set({ basemapType }),
+  setOverlayStyle: (overlayStyle) => set({ overlayStyle }),
   setSwipePosition: (swipePosition: number) => set({ swipePosition }),
   setComparisonMode: (comparisonMode: 'dates' | 'sensors') => set({ comparisonMode }),
   setRegion: (regionId) =>

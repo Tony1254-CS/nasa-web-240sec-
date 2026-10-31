@@ -23,3 +23,7 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Graphify
+graphify-out/cache/
+
+
