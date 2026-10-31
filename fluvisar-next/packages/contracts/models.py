@@ -276,3 +276,4 @@ class FieldTask(BaseModel):
     guide: BilingualText = Field(...)
     pack_version: str = Field("1.0.0")
     lifecycle: Literal["open", "in-progress", "submitted", "reviewed", "closed"] = Field("open")
+

@@ -82,3 +82,4 @@ if __name__ == "__main__":
     test_metric_validation_rule()
     test_region_configs_parseable()
     print("All contract unit tests PASSED successfully.")
+

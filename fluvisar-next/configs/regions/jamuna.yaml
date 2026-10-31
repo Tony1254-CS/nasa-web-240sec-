@@ -40,3 +40,4 @@ capabilities:
   network_graph: required
   soil_moisture: retrieval-dependent
 readiness: metadata-found
+

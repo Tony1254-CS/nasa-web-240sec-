@@ -9,9 +9,9 @@
 
 | Metric | Status |
 |---|---|
-| **Overall Progress** | `[█░░░░░░░░░] 8%` (1 / 12 Milestones Complete) |
-| **Current Phase** | **Phase 1: Foundation & Architecture** |
-| **Active Milestone** | **B01 — Visual Shell with Real Geography** |
+| **Overall Progress** | `[██░░░░░░░░] 17%` (2 / 12 Milestones Complete) |
+| **Current Phase** | **Phase 2: Core Observation & Change Engine** |
+| **Active Milestone** | **B02 — Actual Source-to-Map Branch** |
 | **Active Directory** | `fluvisar-next/` |
 | **Blockers / Open Issues** | None |
 
@@ -43,13 +43,14 @@
   - [x] Build `fluvisar doctor` CLI command
   - [x] Contract unit tests & validation tests (`tests/test_contracts.py`)
 
-- [ ] **B01 — Visual Shell with Real Geography**
-  - [ ] Setup React + Vite + Tailwind/Tokens + MapLibre GL JS
-  - [ ] M0 Atlas view: Bangladesh locator map with Jamuna & Sundarbans footprints
-  - [ ] Bilingual support (English & Noto Sans Bengali typography)
-  - [ ] Desktop (1440px) & Mobile (390px) responsive layout skeleton
-  - [ ] Navigation tabs: Atlas, Investigate, Stories, Learn, Reports
-  - [ ] Empty state / Data-readiness badges for unpopulated data
+- [x] **B01 — Visual Shell with Real Geography**
+  - [x] Setup React + Vite + Tailwind + MapLibre GL JS (`apps/web/`)
+  - [x] M0 Atlas view: Bangladesh locator map with Jamuna & Sundarbans footprints
+  - [x] Bilingual support (English & Noto Sans Bengali typography)
+  - [x] Desktop (1440px) & Mobile (390px) responsive layout skeleton
+  - [x] Navigation tabs: Atlas, Investigate, Stories, Learn, Reports
+  - [x] Left view switcher, Right inspector (4-step lead narrative), Rhythm player timeline
+  - [x] Production build passes cleanly with zero TypeScript errors
 
 ---
 

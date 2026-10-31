@@ -34,3 +34,4 @@ capabilities:
   restoration: intervention-and-reference-dependent
   soil_moisture: retrieval-dependent
 readiness: metadata-found
+

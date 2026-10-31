@@ -292,3 +292,4 @@ def generate_typescript_types():
 if __name__ == "__main__":
     generate_json_schemas()
     generate_typescript_types()
+
