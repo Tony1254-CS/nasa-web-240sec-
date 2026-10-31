@@ -83,6 +83,7 @@ export interface WorkspaceState {
   setSelectedFinding: (findingId: string | null) => void;
   setSelectedSample: (sample: PixelSample | null) => void;
   toggleSonification: () => void;
+  togglePlayback: () => void;
   setCamera: (camera: MapCamera) => void;
 }
 
@@ -172,7 +173,20 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   setMode: (mode) => set({ mode }),
   setLanguage: (language) => set({ language }),
   setAudience: (audience) => set({ audience }),
-  setSelectedDate: (selectedDate) => set({ selectedDate }),
+  setSelectedDate: (selectedDate) =>
+    set((state) => {
+      const currentPair = state.selectedPair;
+      let newPair: [string, string] | null = currentPair;
+      if (currentPair) {
+        if (selectedDate !== currentPair[0]) {
+          newPair = [currentPair[0], selectedDate];
+        } else {
+          const nextIdx = (state.availableDates.indexOf(selectedDate) + 1) % state.availableDates.length;
+          newPair = [selectedDate, state.availableDates[nextIdx]];
+        }
+      }
+      return { selectedDate, selectedPair: newPair };
+    }),
   setSelectedPair: (selectedPair) => set({ selectedPair }),
   toggleLayer: (layerId) =>
     set((state) => ({
@@ -184,5 +198,6 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   setSelectedFinding: (selectedFindingId) => set({ selectedFindingId }),
   setSelectedSample: (selectedSample) => set({ selectedSample }),
   toggleSonification: () => set((state) => ({ isSonificationEnabled: !state.isSonificationEnabled })),
+  togglePlayback: () => set((state) => ({ isPlaying: !state.isPlaying })),
   setCamera: (camera) => set({ camera }),
 }));

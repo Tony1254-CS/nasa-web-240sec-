@@ -120,6 +120,91 @@ export const JAMUNA_WATER_SEP19: GeoFeatureCollection = {
   ],
 };
 
+// Date-Indexed Jamuna Flood & Water Masks for All 6 Satellite Passes (Rhythm Player Dynamic Sync)
+export const JAMUNA_WATER_BY_DATE: Record<string, GeoFeatureCollection> = {
+  // 1. 2026-06-23: Early Monsoon Onset (Stage 14.1m, lean braided channels)
+  '2026-06-23': {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: { name: 'Early Monsoon Lean Channels (Jun 23)', stage_m: 14.1, sensor: 'NISAR L-GCOV' },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [[89.6845, 25.69], [89.695, 25.675], [89.7125, 25.645], [89.7405, 25.615], [89.772, 25.585], [89.7895, 25.555], [89.786, 25.515], [89.7615, 25.48], [89.737, 25.475], [89.716, 25.5], [89.7006, 25.535], [89.6894, 25.565], [89.6796, 25.6], [89.6775, 25.645], [89.6845, 25.69]],
+          ],
+        },
+      },
+    ],
+  },
+
+  // 2. 2026-07-17: Monsoon Rising Pulse (Stage 16.2m, river expanding)
+  '2026-07-17': {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: { name: 'Monsoon Rising Channels (Jul 17)', stage_m: 16.2, sensor: 'NISAR L-GCOV' },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [[89.6728, 25.69], [89.686, 25.675], [89.708, 25.645], [89.7432, 25.615], [89.7828, 25.585], [89.8048, 25.555], [89.8004, 25.515], [89.7696, 25.48], [89.7388, 25.475], [89.7124, 25.5], [89.693, 25.535], [89.679, 25.565], [89.6666, 25.6], [89.664, 25.645], [89.6728, 25.69]],
+          ],
+        },
+      },
+    ],
+  },
+
+  // 3. 2026-08-10: Pre-Peak Flood Swell (Stage 17.8m, broad inundation)
+  '2026-08-10': {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: { name: 'Pre-Peak Inundation (Aug 10)', stage_m: 17.8, sensor: 'NISAR L-GCOV' },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [[89.6533, 25.69], [89.671, 25.675], [89.7005, 25.645], [89.7477, 25.615], [89.8008, 25.585], [89.8303, 25.555], [89.8244, 25.515], [89.7831, 25.48], [89.7418, 25.475], [89.7064, 25.5], [89.6804, 25.535], [89.6616, 25.565], [89.645, 25.6], [89.6415, 25.645], [89.6533, 25.69]],
+          ],
+        },
+      },
+    ],
+  },
+
+  // 4. 2026-08-26: Monsoon Peak Flood Crest (Stage 18.9m, Mandaler Char submerged)
+  '2026-08-26': JAMUNA_WATER_AUG26,
+
+  // 5. 2026-09-19: Post-Monsoon Flood Recession (Stage 16.4m, char emerges, 145.8 ha cutbank)
+  '2026-09-19': JAMUNA_WATER_SEP19,
+
+  // 6. 2026-10-21: Winter Low-Water Dry Season (Stage 13.6m, dry chars, vegetation recovery)
+  '2026-10-21': {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: { name: 'Winter Low-Water Braids (Oct 21)', stage_m: 13.6, sensor: 'NISAR L-GCOV' },
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [[89.6923, 25.69], [89.701, 25.675], [89.7155, 25.645], [89.7387, 25.615], [89.7648, 25.585], [89.7793, 25.555], [89.7764, 25.515], [89.7561, 25.48], [89.7358, 25.475], [89.7184, 25.5], [89.7056, 25.535], [89.6964, 25.565], [89.6882, 25.6], [89.6865, 25.645], [89.6923, 25.69]],
+          ],
+        },
+      },
+    ],
+  },
+};
+
+export const getJamunaWaterForDate = (date: string): GeoFeatureCollection => {
+  return JAMUNA_WATER_BY_DATE[date] ?? JAMUNA_WATER_AUG26;
+};
+
+export const getSundarbansWaterForDate = (_date: string): GeoFeatureCollection => {
+  return SUNDARBANS_WATER;
+};
+
 // Active Riverbank Erosion Candidate (145.8 ha Robust Core)
 // A crescent-shaped bank collapse along the Chilmari West Embankment where backscatter dropped by -8.2 dB
 export const JAMUNA_EROSION_ZONES: GeoFeatureCollection = {

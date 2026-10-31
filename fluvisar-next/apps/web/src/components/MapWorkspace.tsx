@@ -14,6 +14,8 @@ import {
   SUNDARBANS_TIDAL_PULSE,
   SUNDARBANS_PAULI_CANOPY,
   SUNDARBANS_ASSETS,
+  getJamunaWaterForDate,
+  getSundarbansWaterForDate,
 } from '../data/geoData';
 
 // Configure static, direct MapLibre Web Worker to eliminate Vite ESM loader issues
@@ -41,6 +43,7 @@ export const MapWorkspace: React.FC = () => {
     swipePosition,
     comparisonMode,
     selectedPair,
+    selectedDate,
     language,
   } = useWorkspaceStore();
 
@@ -548,6 +551,43 @@ export const MapWorkspace: React.FC = () => {
     applyOverlayFills(mapRefB.current);
     applyOverlayFills(mapRefA.current);
   }, [overlayStyle]);
+
+  // Dynamic temporal update: sync map water extent to selectedDate or selectedPair!
+  useEffect(() => {
+    const isJamuna = regionId === 'jamuna';
+    const dateB = selectedPair ? selectedPair[1] : selectedDate;
+    const dateA = selectedPair ? selectedPair[0] : selectedDate;
+
+    const mapB = mapRefB.current;
+    if (mapB && mapB.isStyleLoaded()) {
+      if (isJamuna) {
+        const sourceB = mapB.getSource('jamuna-water-sep') as maplibregl.GeoJSONSource;
+        if (sourceB) {
+          sourceB.setData(getJamunaWaterForDate(dateB) as any);
+        }
+      } else {
+        const sourceB = mapB.getSource('sundarbans-water') as maplibregl.GeoJSONSource;
+        if (sourceB) {
+          sourceB.setData(getSundarbansWaterForDate(dateB) as any);
+        }
+      }
+    }
+
+    const mapA = mapRefA.current;
+    if (mapA && mapA.isStyleLoaded()) {
+      if (isJamuna) {
+        const sourceA = mapA.getSource('jamuna-water-aug') as maplibregl.GeoJSONSource;
+        if (sourceA) {
+          sourceA.setData(getJamunaWaterForDate(dateA) as any);
+        }
+      } else {
+        const sourceA = mapA.getSource('sundarbans-water') as maplibregl.GeoJSONSource;
+        if (sourceA) {
+          sourceA.setData(getSundarbansWaterForDate(dateA) as any);
+        }
+      }
+    }
+  }, [selectedDate, selectedPair, regionId]);
 
   // Update layers & fly to active region & sync layer stack checkboxes
   useEffect(() => {

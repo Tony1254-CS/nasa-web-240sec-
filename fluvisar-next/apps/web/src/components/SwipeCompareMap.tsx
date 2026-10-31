@@ -7,11 +7,23 @@ interface SwipeCompareProps {
   dateB: string;
 }
 
+const DATE_METRICS: Record<string, { stage: string; desc: string; descBn: string }> = {
+  '2026-06-23': { stage: '14.1m', desc: 'Early Monsoon (Lean Channel)', descBn: 'প্রাক-মনসুন স্বাভাবিক প্রবাহ — ১৪.১মি' },
+  '2026-07-17': { stage: '16.2m', desc: 'Monsoon Onset (Rising Channel)', descBn: 'মনসুন প্লাবন শুরু — ১৬.২মি' },
+  '2026-08-10': { stage: '17.8m', desc: 'Pre-Peak Flood Swell', descBn: 'বন্যার বিস্তার — ১৭.৮মি' },
+  '2026-08-26': { stage: '18.9m', desc: 'Flood Crest (Char Submerged)', descBn: 'মনসুন বন্যা শিখর — ১৮.৯মি' },
+  '2026-09-19': { stage: '16.4m', desc: 'Recession (-2.5m) & Bank Retreat', descBn: 'পানি হ্রাস ও ১৪৫.৮ হে. ভাঙন — ১৬.৪মি' },
+  '2026-10-21': { stage: '13.6m', desc: 'Winter Low Water & Dry Chars', descBn: 'শীতকালীন শুষ্ক চর — ১৩.৬মি' },
+};
+
 export const SwipeCompareMap: React.FC<SwipeCompareProps> = ({ dateA, dateB }) => {
   const { swipePosition, setSwipePosition, comparisonMode, setComparisonMode, language } = useWorkspaceStore();
   const [isDualSplit, setIsDualSplit] = React.useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isBn = language === 'bn';
+
+  const metaA = DATE_METRICS[dateA] ?? { stage: '18.9m', desc: 'Monsoon Flood Peak', descBn: 'মনসুন বন্যা' };
+  const metaB = DATE_METRICS[dateB] ?? { stage: '16.4m', desc: 'Post-Flood Recession', descBn: 'পানি হ্রাস' };
 
   // Responsive 1:1 mouse drag handler
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -153,7 +165,7 @@ export const SwipeCompareMap: React.FC<SwipeCompareProps> = ({ dateA, dateB }) =
         <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] ring-4 ring-[#E0F2FE]" />
         <span>
           {comparisonMode === 'dates'
-            ? `◀ ${isBn ? 'পূর্বে' : 'Before'}: ${dateA} (${isBn ? 'মনসুন বন্যা শিখর — ১৮.৯মি' : 'Flood Peak — Stage 18.9m'})`
+            ? `◀ ${isBn ? 'পূর্বে' : 'Before'}: ${dateA} (${isBn ? metaA.descBn : `${metaA.desc} — ${metaA.stage}`})`
             : `◀ ${isBn ? 'বাম' : 'Left'}: 🛰️ ${isBn ? 'হাই-রেজ অপটিক্যাল স্যাটেলাইট' : 'High-Res Optical Satellite (Esri/NASA)'}`}
         </span>
       </div>
@@ -162,7 +174,7 @@ export const SwipeCompareMap: React.FC<SwipeCompareProps> = ({ dateA, dateB }) =
         <span className="w-2.5 h-2.5 rounded-full bg-[#EF4444] ring-4 ring-[#FEE2E2]" />
         <span>
           {comparisonMode === 'dates'
-            ? `▶ ${isBn ? 'পরে' : 'After'}: ${dateB} (${isBn ? 'পানি হ্রাস ও ১৪৫.৮ হেক্টর ভাঙন' : 'Recession & 145.8 ha Bank Retreat'})`
+            ? `▶ ${isBn ? 'পরে' : 'After'}: ${dateB} (${isBn ? metaB.descBn : `${metaB.desc} — ${metaB.stage}`})`
             : `▶ ${isBn ? 'ডান' : 'Right'}: 📡 ${isBn ? 'মাইক্রোওয়েভ রাডার ও নদীভাঙন' : 'NISAR SAR Radar Microwave & Erosion'}`}
         </span>
       </div>

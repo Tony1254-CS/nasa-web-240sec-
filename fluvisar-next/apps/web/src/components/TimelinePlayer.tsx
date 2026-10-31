@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useWorkspaceStore } from '../store/workspaceStore';
 import { i18n } from '../i18n/translations';
-import { Play, SkipBack, SkipForward, Clock, AlertCircle, Sliders } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Clock, AlertCircle, Sliders } from 'lucide-react';
 import { PairSelectorModal } from './PairSelectorModal';
 
 export const TimelinePlayer: React.FC = () => {
@@ -11,9 +11,29 @@ export const TimelinePlayer: React.FC = () => {
     availableDates,
     selectedPair,
     setSelectedDate,
+    isPlaying,
+    togglePlayback,
   } = useWorkspaceStore();
   const t = i18n[language];
+  const isBn = language === 'bn';
   const [isPairModalOpen, setIsPairModalOpen] = useState<boolean>(false);
+
+  // Auto-play timer effect (advances date every 1800ms)
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(() => {
+      const currentIndex = availableDates.indexOf(selectedDate);
+      const nextIndex = (currentIndex + 1) % availableDates.length;
+      setSelectedDate(availableDates[nextIndex]);
+    }, 1800);
+    return () => clearInterval(interval);
+  }, [isPlaying, selectedDate, availableDates, setSelectedDate]);
+
+  const handleStep = (direction: -1 | 1) => {
+    const currentIndex = availableDates.indexOf(selectedDate);
+    const nextIndex = (currentIndex + direction + availableDates.length) % availableDates.length;
+    setSelectedDate(availableDates[nextIndex]);
+  };
 
   const formatDate = (d: string) => {
     const parts = d.split('-');
@@ -96,14 +116,26 @@ export const TimelinePlayer: React.FC = () => {
         {/* Bottom Timeline Controls */}
         <div className="flex items-center justify-between text-[11px] text-[#64748B] pt-1 border-t border-[#F1F5F9]">
           <div className="flex items-center space-x-2">
-            <button className="p-1 rounded hover:bg-[#F1F5F9] text-[#475569]">
+            <button
+              onClick={() => handleStep(-1)}
+              className="p-1 rounded hover:bg-[#F1F5F9] text-[#475569] cursor-pointer"
+              title="Previous Satellite Pass"
+            >
               <SkipBack className="w-3.5 h-3.5" />
             </button>
-            <button className="flex items-center space-x-1 px-2.5 py-0.5 rounded bg-[#155E75] text-white font-medium hover:bg-[#0E7490]">
-              <Play className="w-3 h-3 fill-current" />
-              <span>{t.timeline.play}</span>
+            <button
+              onClick={togglePlayback}
+              className="flex items-center space-x-1 px-2.5 py-0.5 rounded bg-[#155E75] text-white font-medium hover:bg-[#0E7490] cursor-pointer"
+              title={isPlaying ? 'Pause Rhythm Player' : 'Play Satellite Evolution'}
+            >
+              {isPlaying ? <Pause className="w-3 h-3 fill-current" /> : <Play className="w-3 h-3 fill-current" />}
+              <span>{isPlaying ? (isBn ? 'থামুন' : 'Pause') : t.timeline.play}</span>
             </button>
-            <button className="p-1 rounded hover:bg-[#F1F5F9] text-[#475569]">
+            <button
+              onClick={() => handleStep(1)}
+              className="p-1 rounded hover:bg-[#F1F5F9] text-[#475569] cursor-pointer"
+              title="Next Satellite Pass"
+            >
               <SkipForward className="w-3.5 h-3.5" />
             </button>
           </div>
