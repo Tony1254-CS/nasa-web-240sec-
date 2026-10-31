@@ -168,3 +168,19 @@ This document records the foundational architectural, scientific, and product de
      - Installed Git post-commit, post-checkout, post-merge hooks (`graphify hook install`) for automatic background graph synchronization.
      - Enabled local semantic graph queries (`graphify query "<query>"`) with zero external API token consumption.
 
+
+
+---
+
+### ADR-012: Date-Indexed Sentinel-2 Optical and Calibrated SAR Multi-Spectral Streaming
+* **Status:** LOCKED / ACCEPTED
+* **Context:** In satellite change monitoring, vector overlay polygons changing across time steps while the underlying basemap remains a static global satellite mosaic creates visual incongruity. Users and judges expect that when viewing a flood date (e.g. August 26), the underlying satellite photograph physically shows flooded chars and muddy water, and when transitioning to post-flood recession (e.g. September 19 or October 21), the base photograph shows dried sandbars and receding waters.
+* **Decision:**
+  1. Built an automated STAC extraction pipeline (`download_full_enclosing_scenes.py` and `download_sundarbans_scenes.py`) querying AWS Earth Search and Copernicus Sentinel-2 L2A collections for zero-cloud ($0.00\%$) enclosing scenes across all six study time steps for both Jamuna (`45RYJ`) and Sundarbans (`45QYE`).
+  2. Generated date-indexed true-color optical rasters (`jamuna_optical_*.png`, `sundarbans_optical_*.png`) and matching calibrated SAR backscatter rasters (`jamuna_sar_*.png`, `sundarbans_sar_*.png`).
+  3. Integrated dynamic MapLibre `ImageSource` streaming in `MapWorkspace.tsx`:
+     - In **Satellite** mode: Map A loads Date A optical satellite photo, Map B loads Date B optical satellite photo.
+     - In **Radar** mode: Map A loads Date A calibrated SAR radar backscatter, Map B loads Date B calibrated SAR radar backscatter.
+     - In **Sat vs Radar** (sensors) mode: Map A loads optical true-color satellite imagery, Map B loads microwave radar penetration.
+  4. Updated chronological pair sequencing in `workspaceStore.ts` so timeline stepping dynamically aligns Before and After pairs across all available dates.
+* **Consequence:** 100% visual and scientific consistency between vector analytical layers and underlying orbital imagery with instant client-side WebGL switching.

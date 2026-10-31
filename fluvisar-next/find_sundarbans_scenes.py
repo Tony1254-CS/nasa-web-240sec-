@@ -40,3 +40,4 @@ with urllib.request.urlopen(req, timeout=15) as resp:
 
     with open('fluvisar-next/sundarbans_scenes.json', 'w') as out:
         json.dump(enclosing, out, indent=2)
+

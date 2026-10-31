@@ -111,3 +111,4 @@ neap_rgb = make_sar_simulated(extract_window(TARGET_SCENES['2026-09-19']['url'],
 Image.fromarray(neap_rgb).save(OUTPUT_DIR / 'sundarbans_sar_neap.png', optimize=True)
 
 print("\nALL 6 SUNDARBANS DATES HAVE 100% RECTANGLE SEAMLESS REAL OPTICAL & SAR SATELLITE IMAGERY!")
+

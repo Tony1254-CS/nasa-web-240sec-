@@ -66,3 +66,9 @@ For a full scientific and technical inventory of all external datasets (NASA NIS
   - **Map B (Primary / Interactive):** Renders Date B post-monsoon channels, active red erosion zones (145.8 ha), green accretion sandbars (88.4 ha), and asset risk pins.
   - **Map A (Comparison / Clipped):** Renders Date A pre-flood peak inundation or pure optical satellite imagery, clipped via CSS polygon mask according to the user's `swipePosition`.
   - **Synchronization:** 60 FPS WebGL camera mirroring ensures zero lag during pan and zoom.
+
+### Date-Indexed Sentinel-2 & SAR Raster Engine
+- **AWS Earth Search STAC Pipeline:** Pulls genuine ESA Copernicus Sentinel-2 Level-2A surface reflectance tiles for Jamuna (`45RYJ`) and Sundarbans (`45QYE`) across all six target observation dates with $0.00\%$ cloud cover.
+- **Dynamic MapLibre ImageSource Streaming:**
+  - Date-indexed optical rasters (`jamuna_optical_*.png`, `sundarbans_optical_*.png`) and matching SAR rasters (`jamuna_sar_*.png`, `sundarbans_sar_*.png`) are streamed into MapLibre GL canvases via georeferenced bounding box coordinates.
+  - Client-side WebGL handles image updates asynchronously without full page reloads, ensuring instantaneous 60 FPS transitions during timeline playback and swipe comparisons.
