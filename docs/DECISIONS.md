@@ -68,3 +68,15 @@ This document records the foundational architectural, scientific, and product de
   - Implement transect profiler with explicit break markers for river crossings.
   - Retain SWOT KaRIn water surface elevations at reach level, explicitly declaring pending dependencies outside overpass windows.
   - Implement a 3-axis decoupled Compound Observation Profile (Radar backscatter, Optical greenness, LOS motion) without uncalibrated aggregate risk formulas.
+
+
+---
+
+### ADR-008: Change Passport Cryptographic Lineage & Impact Ledger (Milestone B08)
+* **Status:** ACCEPTED
+* **Context:** Remote sensing platforms frequently suffer from unverifiable claims or silent data alterations. Furthermore, damage assessments often project arbitrary per-hectare loss formulas without identifying specific named infrastructure.
+* **Decision:**
+  - Implement **Change Passport** (`W10`): every finding has an immutable cryptographic SHA-256 lineage hash binding observation granules, Otsu threshold, Robust Core vs Contested Fringe hectares, and the 7 Check Groups audit.
+  - Implement **Append-Only Revision Ledger** (`R18`): field validation or expert comments are appended with unique revision IDs and prior state preservation. Prior versions cannot be overwritten or deleted.
+  - Implement **Impact Ledger** (`W09`, `E16`): directly intersect candidate inundation masks with OSM primary schools, clinics, and severed road segments. Population is derived from BBS 2022 Census Mauza bounds with explicit uncertainty caveats rather than speculative per-hectare multipliers.
+  - Generate one-page print-ready bilingual **Decision Brief** (`E17`, `W14`) with embedded mobile field inspection task QR contracts (`A01–A12`).

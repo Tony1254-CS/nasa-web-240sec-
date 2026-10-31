@@ -11,12 +11,16 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { BreakMyFindingModal } from './BreakMyFindingModal';
+import { ChangePassportModal } from './ChangePassportModal';
+import { DecisionBriefModal } from './DecisionBriefModal';
 
 export const RightInspector: React.FC = () => {
   const { regionId, language, selectedFindingId, selectedSample } = useWorkspaceStore();
   const t = i18n[language];
   const [thresholdOffset, setThresholdOffset] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isPassportOpen, setIsPassportOpen] = useState<boolean>(false);
+  const [isBriefOpen, setIsBriefOpen] = useState<boolean>(false);
 
   const isJamuna = regionId === 'jamuna';
 
@@ -43,26 +47,24 @@ export const RightInspector: React.FC = () => {
           {/* Live Map Pixel Sampler Output (plan.md Section 16.3) */}
           {selectedSample && (
             <div className="mt-2.5 p-2 rounded bg-white border border-[#CBD5E1] shadow-xs flex items-center justify-between">
-              <div className="flex items-center space-x-1.5">
-                <Crosshair className="w-3.5 h-3.5 text-[#155E75]" />
-                <div className="flex flex-col">
-                  <span className="text-[10px] text-[#64748B]">
-                    {selectedSample.lon.toFixed(4)}°E, {selectedSample.lat.toFixed(4)}°N
-                  </span>
-                  <span className="font-semibold text-[11px] text-[#102A43]">
-                    {selectedSample.masked ? (
-                      <span className="text-amber-600">Masked Support</span>
-                    ) : (
-                      <span>Calibrated γ⁰: <strong className="font-mono text-[#155E75]">{selectedSample.value} {selectedSample.unit}</strong></span>
-                    )}
-                  </span>
-                </div>
+              <div className="flex items-center space-x-1.5 text-[11px]">
+                <Crosshair className="w-3.5 h-3.5 text-[#0284C7]" />
+                <span className="font-mono text-[#475569]">
+                  {selectedSample.lat.toFixed(4)}°N, {selectedSample.lon.toFixed(4)}°E
+                </span>
               </div>
-              <span className="text-[9px] bg-[#E0F2FE] text-[#0369A1] font-mono px-1 rounded">20m NISAR</span>
+              <div className="font-mono font-bold text-xs">
+                {selectedSample.masked ? (
+                  <span className="text-[#EF4444]">Masked ({selectedSample.reason ?? 'Nodata'})</span>
+                ) : (
+                  <span className="text-[#0369A1]">{selectedSample.value?.toFixed(1)} {selectedSample.unit}</span>
+                )}
+              </div>
             </div>
           )}
         </div>
 
+        {/* 4-Step Narrative Lead (plan.md Section 7.1) */}
         <div className="p-3.5 space-y-4 flex-1">
           {/* Step 1: What was observed */}
           <div className="space-y-1">
@@ -72,18 +74,18 @@ export const RightInspector: React.FC = () => {
               </span>
               <span>{t.inspector.leadQuestion}</span>
             </div>
-            <p className="text-xs text-[#102A43] leading-relaxed bg-[#F8FAFC] p-2.5 rounded-lg border border-[#E2E8F0]">
+            <p className="text-xs text-[#334155] leading-relaxed">
               {isJamuna
                 ? (language === 'bn'
-                    ? '২৬ আগস্ট ও ১৯ সেপ্টেম্বর ২০২৬-এর L-band GCOV পর্যবেক্ষণে রাডার ব্যাকস্ক্যাটার -৭.২ dB থেকে কমে -১৬.৮ dB হয়েছে (পানির সমতুল্য মসৃণ প্রতিফলন)।'
-                    : 'L-band GCOV backscatter dropped from -7.2 dB to -16.8 dB between 26 Aug & 19 Sep 2026 on 14.8 ha of riverbank.')
+                    ? '২৬ আগস্ট এবং ১৯ সেপ্টেম্বরের মধ্যে যমুনার পূর্ব তীরে ব্যাকস্ক্যাটার -৭.২ dB থেকে কমে -১৫.৪ dB এ নেমেছে।'
+                    : 'Between 26 Aug and 19 Sep 2026, calibrated backscatter dropped by 8.2 dB (from -7.2 dB to -15.4 dB).')
                 : (language === 'bn'
-                    ? 'উচ্চ জোয়ারের সময়ে HV পোলারাইজেশনে সিগন্যাল ২.৩ dB বৃদ্ধি পেয়েছে, যা ক্যানোপির নিচে পানির কারণে ডাবল-বাউন্স স্ক্যাটারিং নির্দেশ করে।'
-                    : 'HV backscatter increased by +2.3 dB during high tide, indicating double-bounce scattering from water beneath the mangrove canopy.')}
+                    ? 'পূর্ণ জোয়ারের সময় সুন্দরবনের ক্যানোপির নিচে ডাবল-বাউন্স সিগন্যাল ৩.৫ dB বৃদ্ধি পেয়েছে।'
+                    : 'During high spring tide, HH-polarized return increased by 3.5 dB across sub-canopy root network.')}
             </p>
           </div>
 
-          {/* Step 2: What it may mean */}
+          {/* Step 2: What is supported vs unresolved */}
           <div className="space-y-1">
             <div className="text-[11px] font-bold uppercase tracking-wider text-[#155E75] flex items-center space-x-1">
               <span className="w-4 h-4 rounded-full bg-[#E0F2FE] text-[#0369A1] flex items-center justify-center text-[10px]">
@@ -91,18 +93,27 @@ export const RightInspector: React.FC = () => {
               </span>
               <span>{t.inspector.meaning}</span>
             </div>
-            <p className="text-xs text-[#334155] leading-relaxed">
-              {isJamuna
-                ? (language === 'bn'
-                    ? 'প্রাথমিক বিশ্লেষণ অনুযায়ী এটি একটি সম্ভাব্য নদীভাঙন (Erosion Candidate)। জমি পানিতে পরিণত হয়েছে।'
-                    : 'Categorical transition: non-water to water. Consistent with bankline recession or saturated active channel formation.')
-                : (language === 'bn'
-                    ? 'ম্যানগ্রোভের ভেতর পানি প্রবেশ করেছে কিন্তু বন ধ্বংস হয়নি। এটি স্বাভাবিক টাইডাল পালস।'
-                    : 'Tidal pulse: inundation beneath standing vegetation rather than canopy loss or defoliation.')}
-            </p>
+            <div className="space-y-1.5">
+              <div className="flex items-start space-x-1.5 text-xs text-[#0F172A]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#009E73] mt-1.5 shrink-0" />
+                <span>
+                  {isJamuna
+                    ? (language === 'bn' ? 'সমর্থিত: এটি একটি সক্রিয় পানি/প্লাবন রূপান্তর।' : 'Supported: Open water surface presence verified.')
+                    : (language === 'bn' ? 'সমর্থিত: জোয়ারের পানিতে ক্যানোপির তলদেশ নিমজ্জন।' : 'Supported: Sub-canopy water presence verified.')}
+                </span>
+              </div>
+              <div className="flex items-start space-x-1.5 text-xs text-[#64748B]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#D55E00] mt-1.5 shrink-0" />
+                <span>
+                  {isJamuna
+                    ? (language === 'bn' ? 'অমীমাংসিত: স্থায়ী নদীভাঙন নাকি সাময়িক প্লাবন।' : 'Unresolved: Permanent erosion vs. transient sandbar submergence.')
+                    : (language === 'bn' ? 'অমীমাংসিত: ঘূর্ণিঝড়ের ক্ষত নাকি নিয়মিত উচ্চ জোয়ার।' : 'Unresolved: Cyclonic canopy loss vs. regular spring tide.')}
+                </span>
+              </div>
+            </div>
           </div>
 
-          {/* Step 3: What remains uncertain */}
+          {/* Step 3: Main source of uncertainty */}
           <div className="space-y-1">
             <div className="text-[11px] font-bold uppercase tracking-wider text-[#D55E00] flex items-center space-x-1">
               <span className="w-4 h-4 rounded-full bg-[#FFEDD5] text-[#C2410C] flex items-center justify-center text-[10px]">
@@ -152,7 +163,7 @@ export const RightInspector: React.FC = () => {
               </span>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="flex items-center space-x-1 text-[11px] text-[#155E75] hover:text-[#0E7490] font-semibold"
+                className="flex items-center space-x-1 text-[11px] text-[#155E75] hover:text-[#0E7490] font-semibold cursor-pointer"
               >
                 <span>Full Test & Checks</span>
                 <ExternalLink className="w-3 h-3" />
@@ -185,7 +196,8 @@ export const RightInspector: React.FC = () => {
         {/* Inspector Bottom Actions */}
         <div className="p-3 border-t border-[#CBD5E1] bg-[#F8FAFC] flex items-center space-x-2">
           <button
-            className="flex-1 flex items-center justify-center space-x-1.5 px-3 py-2 rounded-lg bg-[#155E75] hover:bg-[#0E7490] text-white font-semibold text-xs shadow-xs"
+            onClick={() => setIsPassportOpen(true)}
+            className="flex-1 flex items-center justify-center space-x-1.5 px-3 py-2 rounded-lg bg-[#155E75] hover:bg-[#0E7490] text-white font-semibold text-xs shadow-xs transition-colors cursor-pointer"
             title="Open Immutable Provenance Chain"
           >
             <FileCheck2 className="w-3.5 h-3.5" />
@@ -193,7 +205,8 @@ export const RightInspector: React.FC = () => {
           </button>
 
           <button
-            className="flex items-center space-x-1 px-3 py-2 rounded-lg border border-[#CBD5E1] bg-white hover:bg-[#F1F5F9] text-[#102A43] font-medium text-xs"
+            onClick={() => setIsBriefOpen(true)}
+            className="flex items-center space-x-1 px-3 py-2 rounded-lg border border-[#CBD5E1] bg-white hover:bg-[#F1F5F9] text-[#102A43] font-medium text-xs transition-colors cursor-pointer"
             title="Export Decision Brief"
           >
             <Share2 className="w-3.5 h-3.5 text-[#64748B]" />
@@ -203,6 +216,12 @@ export const RightInspector: React.FC = () => {
 
       {/* Break My Finding Full Modal */}
       <BreakMyFindingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      
+      {/* Change Passport Modal */}
+      <ChangePassportModal isOpen={isPassportOpen} onClose={() => setIsPassportOpen(false)} />
+
+      {/* Decision Brief Modal */}
+      <DecisionBriefModal isOpen={isBriefOpen} onClose={() => setIsBriefOpen(false)} />
     </>
   );
 };

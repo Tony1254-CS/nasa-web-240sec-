@@ -9,9 +9,9 @@
 
 | Metric | Status |
 |---|---|
-| **Overall Progress** | `[████████░░] 67%` (8 / 12 Milestones Complete) |
+| **Overall Progress** | `[████████░░] 75%` (9 / 12 Milestones Complete) |
 | **Current Phase** | **Phase 4: Intelligence, Stories & Decision Lab** |
-| **Active Milestone** | **B08 — Evidence, Passport and Reports** |
+| **Active Milestone** | **B09 — Stories, Learn and Translation** |
 | **Active Directory** | `fluvisar-next/` |
 | **Blockers / Open Issues** | None |
 
@@ -116,11 +116,13 @@
 ### Phase 4: Intelligence, Stories & Decision Lab (Milestones B08 – B10)
 *Goal: Evidence management, one-page briefs, guided storytelling, and educational labs.*
 
-- [ ] **B08 — Evidence, Passport and Reports**
-  - [ ] Change Passport: immutable finding lineage and claim records
-  - [ ] Evidence review workspace with revision history
-  - [ ] One-page bilingual Decision Brief generator (HTML/print-ready PDF)
-  - [ ] Complete reproducible manifest and export package
+- [x] **B08 — Evidence, Passport and Reports**
+  - [x] Change Passport: immutable finding lineage with SHA-256 cryptographic hash (`evidence_passport.py`)
+  - [x] Evidence review workspace with append-only revision history ledger (R18)
+  - [x] Impact Ledger (What Changed for Whom): OSM schools, clinics, severed roads, BBS census population (W09, E16)
+  - [x] One-page bilingual Decision Brief generator (print-ready PDF/HTML) with mobile task QR contract (`DecisionBriefModal.tsx`)
+  - [x] Complete reproducible manifest and JSON export package (`ChangePassportModal.tsx`)
+  - [x] Automated tests for passport generation, revision ledger, impact ledger, and brief manifest (`tests/test_b08_evidence_and_reports.py`)
 
 - [ ] **B09 — Stories, Learn and Translation**
   - [ ] Five localized story chapters (River change, Agriculture, Service, Mangrove, Motion)
