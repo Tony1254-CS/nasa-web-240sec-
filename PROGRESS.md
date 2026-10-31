@@ -9,9 +9,9 @@
 
 | Metric | Status |
 |---|---|
-| **Overall Progress** | `[░░░░░░░░░░] 0%` (0 / 12 Milestones Complete) |
+| **Overall Progress** | `[█░░░░░░░░░] 8%` (1 / 12 Milestones Complete) |
 | **Current Phase** | **Phase 1: Foundation & Architecture** |
-| **Active Milestone** | **B00 — Contracts and Inventory** |
+| **Active Milestone** | **B01 — Visual Shell with Real Geography** |
 | **Active Directory** | `fluvisar-next/` |
 | **Blockers / Open Issues** | None |
 
@@ -34,14 +34,14 @@
 ### Phase 1: Foundation & Architecture (Milestones B00 – B01)
 *Goal: System skeleton, Pydantic/TypeScript contract generation, two-region Atlas and layout shell.*
 
-- [ ] **B00 — Contracts and Inventory**
-  - [ ] Initialize workspace `fluvisar-next/`
-  - [ ] Configure Python environment and lockfile
-  - [ ] Configure Node.js / TypeScript environment
-  - [ ] Implement Pydantic models & generate TypeScript interfaces / JSON schemas (`packages/contracts/`)
-  - [ ] Implement Ajv contract-drift validator
-  - [ ] Write region configurations (`configs/regions/jamuna.yaml`, `configs/regions/sundarbans.yaml`)
-  - [ ] Build `fluvisar doctor` CLI command
+- [x] **B00 — Contracts and Inventory**
+  - [x] Initialize workspace `fluvisar-next/`
+  - [x] Configure Python environment and lockfile
+  - [x] Implement Pydantic models (`models.py`)
+  - [x] Generate TypeScript interfaces / JSON schemas (`packages/contracts/`)
+  - [x] Write region configurations (`configs/regions/jamuna.yaml`, `configs/regions/sundarbans.yaml` & pilot geojsons)
+  - [x] Build `fluvisar doctor` CLI command
+  - [x] Contract unit tests & validation tests (`tests/test_contracts.py`)
 
 - [ ] **B01 — Visual Shell with Real Geography**
   - [ ] Setup React + Vite + Tailwind/Tokens + MapLibre GL JS

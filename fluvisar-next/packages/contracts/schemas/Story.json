@@ -1,0 +1,125 @@
+{
+  "$defs": {
+    "BilingualText": {
+      "properties": {
+        "en": {
+          "description": "English text",
+          "title": "En",
+          "type": "string"
+        },
+        "bn": {
+          "description": "Reviewed Bangla text in Noto Sans Bengali",
+          "title": "Bn",
+          "type": "string"
+        }
+      },
+      "required": [
+        "en",
+        "bn"
+      ],
+      "title": "BilingualText",
+      "type": "object"
+    },
+    "StoryStep": {
+      "properties": {
+        "step_index": {
+          "description": "Step order in chapter",
+          "title": "Step Index",
+          "type": "integer"
+        },
+        "camera": {
+          "additionalProperties": true,
+          "description": "Map camera: center [lon, lat], zoom, pitch, bearing",
+          "title": "Camera",
+          "type": "object"
+        },
+        "active_layer_ids": {
+          "description": "Layers enabled in this step",
+          "items": {
+            "type": "string"
+          },
+          "title": "Active Layer Ids",
+          "type": "array"
+        },
+        "focused_finding_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Finding to highlight",
+          "title": "Focused Finding Id"
+        },
+        "narrative": {
+          "$ref": "#/$defs/BilingualText",
+          "description": "Story narrative"
+        }
+      },
+      "required": [
+        "step_index",
+        "camera",
+        "narrative"
+      ],
+      "title": "StoryStep",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "id": {
+      "description": "Story chapter ID e.g. chapter-1-river-memory",
+      "title": "Id",
+      "type": "string"
+    },
+    "chapter_number": {
+      "description": "One of the Five localized dances (1-5)",
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Chapter Number",
+      "type": "integer"
+    },
+    "region_id": {
+      "description": "jamuna or sundarbans",
+      "title": "Region Id",
+      "type": "string"
+    },
+    "case_id": {
+      "description": "Associated case ID",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "run_id": {
+      "description": "Associated run ID",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "title": {
+      "$ref": "#/$defs/BilingualText"
+    },
+    "steps": {
+      "items": {
+        "$ref": "#/$defs/StoryStep"
+      },
+      "title": "Steps",
+      "type": "array"
+    },
+    "published": {
+      "default": false,
+      "title": "Published",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "id",
+    "chapter_number",
+    "region_id",
+    "case_id",
+    "run_id",
+    "title"
+  ],
+  "title": "Story",
+  "type": "object"
+}

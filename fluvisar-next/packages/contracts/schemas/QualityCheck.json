@@ -1,0 +1,65 @@
+{
+  "$defs": {
+    "CheckStatus": {
+      "enum": [
+        "pass",
+        "warn",
+        "fail",
+        "not-evaluated",
+        "not-applicable"
+      ],
+      "title": "CheckStatus",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "id": {
+      "description": "Check identifier e.g. CHK-GEOM-01",
+      "title": "Id",
+      "type": "string"
+    },
+    "group": {
+      "description": "One of the 7 documented check groups",
+      "enum": [
+        "product-geometry",
+        "alignment",
+        "classification-sensitivity",
+        "hydrological-context",
+        "subsequent-observations",
+        "independent-comparison",
+        "controls-plausibility"
+      ],
+      "title": "Group",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/CheckStatus",
+      "description": "pass, warn, fail, not-evaluated, not-applicable"
+    },
+    "name": {
+      "description": "Human-readable check name",
+      "title": "Name",
+      "type": "string"
+    },
+    "reason": {
+      "description": "Detailed diagnostic reason",
+      "title": "Reason",
+      "type": "string"
+    },
+    "impact_on_claim": {
+      "description": "Consequence if this check warns or fails",
+      "title": "Impact On Claim",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "group",
+    "status",
+    "name",
+    "reason",
+    "impact_on_claim"
+  ],
+  "title": "QualityCheck",
+  "type": "object"
+}

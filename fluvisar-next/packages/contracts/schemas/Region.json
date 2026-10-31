@@ -1,0 +1,143 @@
+{
+  "$defs": {
+    "BilingualText": {
+      "properties": {
+        "en": {
+          "description": "English text",
+          "title": "En",
+          "type": "string"
+        },
+        "bn": {
+          "description": "Reviewed Bangla text in Noto Sans Bengali",
+          "title": "Bn",
+          "type": "string"
+        }
+      },
+      "required": [
+        "en",
+        "bn"
+      ],
+      "title": "BilingualText",
+      "type": "object"
+    },
+    "ReadinessState": {
+      "enum": [
+        "not-searched",
+        "metadata-found",
+        "access-required",
+        "downloaded",
+        "inspected",
+        "processed",
+        "evaluated",
+        "unsuitable",
+        "unavailable"
+      ],
+      "title": "ReadinessState",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "id": {
+      "description": "Unique region identifier: jamuna or sundarbans",
+      "title": "Id",
+      "type": "string"
+    },
+    "name": {
+      "$ref": "#/$defs/BilingualText",
+      "description": "Bilingual region name"
+    },
+    "search_bbox": {
+      "description": "[west, south, east, north] discovery window in EPSG:4326",
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "title": "Search Bbox",
+      "type": "array"
+    },
+    "centre": {
+      "description": "Initial map centre [longitude, latitude]",
+      "maxItems": 2,
+      "minItems": 2,
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "title": "Centre",
+      "type": "array"
+    },
+    "study_geometry": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Approved pilot polygon GeoJSON",
+      "title": "Study Geometry"
+    },
+    "preferred_analysis_crs": {
+      "default": "EPSG:32645",
+      "description": "Target projected CRS (UTM 45N)",
+      "title": "Preferred Analysis Crs",
+      "type": "string"
+    },
+    "case_ids": {
+      "description": "Associated case identifiers",
+      "items": {
+        "type": "string"
+      },
+      "title": "Case Ids",
+      "type": "array"
+    },
+    "views": {
+      "description": "Available view modes (e.g. J1, J2, S1)",
+      "items": {
+        "type": "string"
+      },
+      "title": "Views",
+      "type": "array"
+    },
+    "capabilities": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Capabilities and readiness mapping",
+      "title": "Capabilities",
+      "type": "object"
+    },
+    "readiness": {
+      "$ref": "#/$defs/ReadinessState",
+      "default": "metadata-found",
+      "description": "Overall region input readiness"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "search_bbox",
+    "centre"
+  ],
+  "title": "Region",
+  "type": "object"
+}

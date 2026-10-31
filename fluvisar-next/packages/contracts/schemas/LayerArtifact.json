@@ -1,0 +1,114 @@
+{
+  "properties": {
+    "id": {
+      "description": "Layer artifact identifier",
+      "title": "Id",
+      "type": "string"
+    },
+    "run_id": {
+      "description": "Parent analysis run ID",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "kind": {
+      "description": "Layer kind",
+      "enum": [
+        "raster",
+        "vector",
+        "pmtiles",
+        "mask",
+        "thumbnail"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "render_url": {
+      "description": "Relative URL to renderable tile / GeoJSON",
+      "title": "Render Url",
+      "type": "string"
+    },
+    "numeric_artifact_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Reference to backend numeric COG for sampling",
+      "title": "Numeric Artifact Id"
+    },
+    "bounds": {
+      "description": "[west, south, east, north] bounds",
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "title": "Bounds",
+      "type": "array"
+    },
+    "source_ids": {
+      "description": "Source observation IDs",
+      "items": {
+        "type": "string"
+      },
+      "title": "Source Ids",
+      "type": "array"
+    },
+    "dates": {
+      "description": "Acquisition dates represented",
+      "items": {
+        "type": "string"
+      },
+      "title": "Dates",
+      "type": "array"
+    },
+    "unit": {
+      "description": "Measurement unit (e.g. dB, ratio, class)",
+      "title": "Unit",
+      "type": "string"
+    },
+    "legend": {
+      "additionalProperties": true,
+      "description": "Color ramp and class labels",
+      "title": "Legend",
+      "type": "object"
+    },
+    "nodata_policy": {
+      "default": "masked",
+      "description": "Policy for invalid/unobserved support",
+      "title": "Nodata Policy",
+      "type": "string"
+    },
+    "content_hash": {
+      "description": "SHA-256 integrity hash",
+      "title": "Content Hash",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "run_id",
+    "kind",
+    "render_url",
+    "bounds",
+    "unit",
+    "content_hash"
+  ],
+  "title": "LayerArtifact",
+  "type": "object"
+}

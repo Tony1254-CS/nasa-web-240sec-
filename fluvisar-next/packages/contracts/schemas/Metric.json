@@ -1,0 +1,148 @@
+{
+  "$defs": {
+    "Origin": {
+      "enum": [
+        "source-observation",
+        "derived-observation",
+        "modeled-scenario",
+        "educational-simulation",
+        "external-reference"
+      ],
+      "title": "Origin",
+      "type": "string"
+    },
+    "SensitivitySummary": {
+      "properties": {
+        "min": {
+          "description": "Minimum value across evaluated variants",
+          "title": "Min",
+          "type": "number"
+        },
+        "max": {
+          "description": "Maximum value across evaluated variants",
+          "title": "Max",
+          "type": "number"
+        },
+        "unit": {
+          "description": "Measurement unit",
+          "title": "Unit",
+          "type": "string"
+        },
+        "variant_family_id": {
+          "description": "Tested parameter family (e.g. water-sensitivity)",
+          "title": "Variant Family Id",
+          "type": "string"
+        },
+        "evaluated_variant_count": {
+          "description": "Number of parameter variants evaluated",
+          "title": "Evaluated Variant Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "min",
+        "max",
+        "unit",
+        "variant_family_id",
+        "evaluated_variant_count"
+      ],
+      "title": "SensitivitySummary",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "id": {
+      "description": "Unique metric identifier",
+      "title": "Id",
+      "type": "string"
+    },
+    "value": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Numeric value, null if reason is provided",
+      "title": "Value"
+    },
+    "unit": {
+      "description": "Measurement unit",
+      "title": "Unit",
+      "type": "string"
+    },
+    "definition_id": {
+      "description": "Method / calculation definition ID",
+      "title": "Definition Id",
+      "type": "string"
+    },
+    "run_id": {
+      "description": "Analysis run ID",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "input_ids": {
+      "description": "Input artifact IDs",
+      "items": {
+        "type": "string"
+      },
+      "title": "Input Ids",
+      "type": "array"
+    },
+    "observation_ids": {
+      "description": "Source observation IDs",
+      "items": {
+        "type": "string"
+      },
+      "title": "Observation Ids",
+      "type": "array"
+    },
+    "support_id": {
+      "description": "Polygon or spatial support ID",
+      "title": "Support Id",
+      "type": "string"
+    },
+    "origin": {
+      "$ref": "#/$defs/Origin",
+      "description": "Origin taxonomy of this quantity"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Reason if value is null",
+      "title": "Reason"
+    },
+    "sensitivity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SensitivitySummary"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Evaluated parameter sensitivity"
+    }
+  },
+  "required": [
+    "id",
+    "unit",
+    "definition_id",
+    "run_id",
+    "support_id",
+    "origin"
+  ],
+  "title": "Metric",
+  "type": "object"
+}

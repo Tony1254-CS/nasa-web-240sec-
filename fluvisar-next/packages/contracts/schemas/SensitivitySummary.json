@@ -1,0 +1,38 @@
+{
+  "properties": {
+    "min": {
+      "description": "Minimum value across evaluated variants",
+      "title": "Min",
+      "type": "number"
+    },
+    "max": {
+      "description": "Maximum value across evaluated variants",
+      "title": "Max",
+      "type": "number"
+    },
+    "unit": {
+      "description": "Measurement unit",
+      "title": "Unit",
+      "type": "string"
+    },
+    "variant_family_id": {
+      "description": "Tested parameter family (e.g. water-sensitivity)",
+      "title": "Variant Family Id",
+      "type": "string"
+    },
+    "evaluated_variant_count": {
+      "description": "Number of parameter variants evaluated",
+      "title": "Evaluated Variant Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "min",
+    "max",
+    "unit",
+    "variant_family_id",
+    "evaluated_variant_count"
+  ],
+  "title": "SensitivitySummary",
+  "type": "object"
+}

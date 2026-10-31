@@ -1,0 +1,60 @@
+{
+  "properties": {
+    "id": {
+      "description": "Unique scenario ID",
+      "title": "Id",
+      "type": "string"
+    },
+    "base_run_id": {
+      "description": "Immutable baseline run ID",
+      "title": "Base Run Id",
+      "type": "string"
+    },
+    "objective": {
+      "description": "Planning objective e.g. inspection-shortlist",
+      "title": "Objective",
+      "type": "string"
+    },
+    "declared_alternatives": {
+      "additionalProperties": true,
+      "description": "Tested alternative assumptions",
+      "title": "Declared Alternatives",
+      "type": "object"
+    },
+    "actual_inputs": {
+      "description": "Observed real input IDs",
+      "items": {
+        "type": "string"
+      },
+      "title": "Actual Inputs",
+      "type": "array"
+    },
+    "scenario_inputs": {
+      "description": "Hypothetical input descriptions",
+      "items": {
+        "type": "string"
+      },
+      "title": "Scenario Inputs",
+      "type": "array"
+    },
+    "outputs": {
+      "additionalProperties": true,
+      "description": "Recomputed decision consequences",
+      "title": "Outputs",
+      "type": "object"
+    },
+    "assumption_receipt": {
+      "additionalProperties": true,
+      "description": "Exact record of changed inputs and decision flip",
+      "title": "Assumption Receipt",
+      "type": "object"
+    }
+  },
+  "required": [
+    "id",
+    "base_run_id",
+    "objective"
+  ],
+  "title": "DecisionScenario",
+  "type": "object"
+}

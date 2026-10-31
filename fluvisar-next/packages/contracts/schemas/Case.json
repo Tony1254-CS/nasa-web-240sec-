@@ -1,0 +1,74 @@
+{
+  "$defs": {
+    "BilingualText": {
+      "properties": {
+        "en": {
+          "description": "English text",
+          "title": "En",
+          "type": "string"
+        },
+        "bn": {
+          "description": "Reviewed Bangla text in Noto Sans Bengali",
+          "title": "Bn",
+          "type": "string"
+        }
+      },
+      "required": [
+        "en",
+        "bn"
+      ],
+      "title": "BilingualText",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "id": {
+      "description": "Case identifier e.g. river-memory or wetland-pulse",
+      "title": "Id",
+      "type": "string"
+    },
+    "region_id": {
+      "description": "Parent region ID",
+      "title": "Region Id",
+      "type": "string"
+    },
+    "question": {
+      "$ref": "#/$defs/BilingualText",
+      "description": "Plain human question for the case"
+    },
+    "goal": {
+      "$ref": "#/$defs/BilingualText",
+      "description": "Investigation objective"
+    },
+    "pilot_unit_ids": {
+      "description": "Approved pilot/char unit IDs",
+      "items": {
+        "type": "string"
+      },
+      "title": "Pilot Unit Ids",
+      "type": "array"
+    },
+    "approved_run_ids": {
+      "description": "Immutable run IDs attached to this case",
+      "items": {
+        "type": "string"
+      },
+      "title": "Approved Run Ids",
+      "type": "array"
+    },
+    "default_view": {
+      "description": "Default map view mode: J1, J2, J3, S1, S2, X1, C1",
+      "title": "Default View",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "region_id",
+    "question",
+    "goal",
+    "default_view"
+  ],
+  "title": "Case",
+  "type": "object"
+}

@@ -1,0 +1,65 @@
+{
+  "properties": {
+    "id": {
+      "description": "Immutable finding identifier e.g. J-2026-F01",
+      "title": "Id",
+      "type": "string"
+    },
+    "run_id": {
+      "description": "Analysis run ID",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "geometry": {
+      "additionalProperties": true,
+      "description": "GeoJSON Polygon/MultiPolygon of the candidate finding",
+      "title": "Geometry",
+      "type": "object"
+    },
+    "category": {
+      "description": "Candidate category e.g. land-to-water-candidate",
+      "title": "Category",
+      "type": "string"
+    },
+    "pair_observation_ids": {
+      "description": "[date_a_obs_id, date_b_obs_id]",
+      "maxItems": 2,
+      "minItems": 2,
+      "prefixItems": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "title": "Pair Observation Ids",
+      "type": "array"
+    },
+    "metric_ids": {
+      "description": "Associated metric IDs",
+      "items": {
+        "type": "string"
+      },
+      "title": "Metric Ids",
+      "type": "array"
+    },
+    "claim_ids": {
+      "description": "Associated claim IDs",
+      "items": {
+        "type": "string"
+      },
+      "title": "Claim Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "id",
+    "run_id",
+    "geometry",
+    "category",
+    "pair_observation_ids"
+  ],
+  "title": "Finding",
+  "type": "object"
+}

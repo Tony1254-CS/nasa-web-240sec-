@@ -1,0 +1,118 @@
+{
+  "$defs": {
+    "ReviewState": {
+      "enum": [
+        "unreviewed",
+        "awaiting-review",
+        "reviewed"
+      ],
+      "title": "ReviewState",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "id": {
+      "description": "Unique evidence ID",
+      "title": "Id",
+      "type": "string"
+    },
+    "source_type": {
+      "enum": [
+        "field-photo",
+        "gauge-csv",
+        "interviewer-note",
+        "satellite-crosscheck",
+        "reference-map"
+      ],
+      "title": "Source Type",
+      "type": "string"
+    },
+    "target_claim_id": {
+      "description": "Claim this evidence addresses",
+      "title": "Target Claim Id",
+      "type": "string"
+    },
+    "observation_time_utc": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Actual time of field observation",
+      "title": "Observation Time Utc"
+    },
+    "geometry": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Location GeoJSON Point",
+      "title": "Geometry"
+    },
+    "media_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Relative URL to media file if applicable",
+      "title": "Media Url"
+    },
+    "answer": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Structured answer or measurement",
+      "title": "Answer"
+    },
+    "attribution": {
+      "description": "Author or observer attribution",
+      "title": "Attribution",
+      "type": "string"
+    },
+    "quality": {
+      "additionalProperties": true,
+      "description": "GPS accuracy, sensor info, etc.",
+      "title": "Quality",
+      "type": "object"
+    },
+    "permissions": {
+      "default": "public-use",
+      "description": "License or consent record",
+      "title": "Permissions",
+      "type": "string"
+    },
+    "review_state": {
+      "$ref": "#/$defs/ReviewState",
+      "default": "awaiting-review"
+    }
+  },
+  "required": [
+    "id",
+    "source_type",
+    "target_claim_id",
+    "attribution"
+  ],
+  "title": "EvidenceRecord",
+  "type": "object"
+}

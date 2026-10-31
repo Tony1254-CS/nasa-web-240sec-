@@ -1,0 +1,94 @@
+{
+  "properties": {
+    "id": {
+      "description": "Immutable run ID e.g. run-2026-10-31-01",
+      "title": "Id",
+      "type": "string"
+    },
+    "region_id": {
+      "description": "Target region ID",
+      "title": "Region Id",
+      "type": "string"
+    },
+    "case_id": {
+      "description": "Target case ID",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "input_ids": {
+      "description": "Granule IDs and configuration inputs",
+      "items": {
+        "type": "string"
+      },
+      "title": "Input Ids",
+      "type": "array"
+    },
+    "input_hashes": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Input content hashes",
+      "title": "Input Hashes",
+      "type": "object"
+    },
+    "config_hash": {
+      "description": "SHA-256 of configuration parameters",
+      "title": "Config Hash",
+      "type": "string"
+    },
+    "code_version": {
+      "description": "Git commit SHA or release tag",
+      "title": "Code Version",
+      "type": "string"
+    },
+    "method_version": {
+      "default": "1.0.0",
+      "description": "Methodology version",
+      "title": "Method Version",
+      "type": "string"
+    },
+    "created_at_utc": {
+      "description": "Creation timestamp in UTC",
+      "title": "Created At Utc",
+      "type": "string"
+    },
+    "artifact_ids": {
+      "description": "Output layer artifact IDs",
+      "items": {
+        "type": "string"
+      },
+      "title": "Artifact Ids",
+      "type": "array"
+    },
+    "metric_ids": {
+      "description": "Calculated metric IDs",
+      "items": {
+        "type": "string"
+      },
+      "title": "Metric Ids",
+      "type": "array"
+    },
+    "evaluation_state": {
+      "default": "not-evaluated",
+      "description": "Scientific validation state",
+      "enum": [
+        "not-evaluated",
+        "limited",
+        "evaluated",
+        "unsuitable"
+      ],
+      "title": "Evaluation State",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "region_id",
+    "case_id",
+    "config_hash",
+    "code_version",
+    "created_at_utc"
+  ],
+  "title": "AnalysisRun",
+  "type": "object"
+}

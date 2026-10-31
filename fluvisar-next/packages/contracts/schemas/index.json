@@ -1,0 +1,1582 @@
+{
+  "Region": {
+    "$defs": {
+      "BilingualText": {
+        "properties": {
+          "en": {
+            "description": "English text",
+            "title": "En",
+            "type": "string"
+          },
+          "bn": {
+            "description": "Reviewed Bangla text in Noto Sans Bengali",
+            "title": "Bn",
+            "type": "string"
+          }
+        },
+        "required": [
+          "en",
+          "bn"
+        ],
+        "title": "BilingualText",
+        "type": "object"
+      },
+      "ReadinessState": {
+        "enum": [
+          "not-searched",
+          "metadata-found",
+          "access-required",
+          "downloaded",
+          "inspected",
+          "processed",
+          "evaluated",
+          "unsuitable",
+          "unavailable"
+        ],
+        "title": "ReadinessState",
+        "type": "string"
+      }
+    },
+    "properties": {
+      "id": {
+        "description": "Unique region identifier: jamuna or sundarbans",
+        "title": "Id",
+        "type": "string"
+      },
+      "name": {
+        "$ref": "#/$defs/BilingualText",
+        "description": "Bilingual region name"
+      },
+      "search_bbox": {
+        "description": "[west, south, east, north] discovery window in EPSG:4326",
+        "maxItems": 4,
+        "minItems": 4,
+        "prefixItems": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          }
+        ],
+        "title": "Search Bbox",
+        "type": "array"
+      },
+      "centre": {
+        "description": "Initial map centre [longitude, latitude]",
+        "maxItems": 2,
+        "minItems": 2,
+        "prefixItems": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          }
+        ],
+        "title": "Centre",
+        "type": "array"
+      },
+      "study_geometry": {
+        "anyOf": [
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Approved pilot polygon GeoJSON",
+        "title": "Study Geometry"
+      },
+      "preferred_analysis_crs": {
+        "default": "EPSG:32645",
+        "description": "Target projected CRS (UTM 45N)",
+        "title": "Preferred Analysis Crs",
+        "type": "string"
+      },
+      "case_ids": {
+        "description": "Associated case identifiers",
+        "items": {
+          "type": "string"
+        },
+        "title": "Case Ids",
+        "type": "array"
+      },
+      "views": {
+        "description": "Available view modes (e.g. J1, J2, S1)",
+        "items": {
+          "type": "string"
+        },
+        "title": "Views",
+        "type": "array"
+      },
+      "capabilities": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "description": "Capabilities and readiness mapping",
+        "title": "Capabilities",
+        "type": "object"
+      },
+      "readiness": {
+        "$ref": "#/$defs/ReadinessState",
+        "default": "metadata-found",
+        "description": "Overall region input readiness"
+      }
+    },
+    "required": [
+      "id",
+      "name",
+      "search_bbox",
+      "centre"
+    ],
+    "title": "Region",
+    "type": "object"
+  },
+  "Case": {
+    "$defs": {
+      "BilingualText": {
+        "properties": {
+          "en": {
+            "description": "English text",
+            "title": "En",
+            "type": "string"
+          },
+          "bn": {
+            "description": "Reviewed Bangla text in Noto Sans Bengali",
+            "title": "Bn",
+            "type": "string"
+          }
+        },
+        "required": [
+          "en",
+          "bn"
+        ],
+        "title": "BilingualText",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "id": {
+        "description": "Case identifier e.g. river-memory or wetland-pulse",
+        "title": "Id",
+        "type": "string"
+      },
+      "region_id": {
+        "description": "Parent region ID",
+        "title": "Region Id",
+        "type": "string"
+      },
+      "question": {
+        "$ref": "#/$defs/BilingualText",
+        "description": "Plain human question for the case"
+      },
+      "goal": {
+        "$ref": "#/$defs/BilingualText",
+        "description": "Investigation objective"
+      },
+      "pilot_unit_ids": {
+        "description": "Approved pilot/char unit IDs",
+        "items": {
+          "type": "string"
+        },
+        "title": "Pilot Unit Ids",
+        "type": "array"
+      },
+      "approved_run_ids": {
+        "description": "Immutable run IDs attached to this case",
+        "items": {
+          "type": "string"
+        },
+        "title": "Approved Run Ids",
+        "type": "array"
+      },
+      "default_view": {
+        "description": "Default map view mode: J1, J2, J3, S1, S2, X1, C1",
+        "title": "Default View",
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "region_id",
+      "question",
+      "goal",
+      "default_view"
+    ],
+    "title": "Case",
+    "type": "object"
+  },
+  "Observation": {
+    "$defs": {
+      "ReadinessState": {
+        "enum": [
+          "not-searched",
+          "metadata-found",
+          "access-required",
+          "downloaded",
+          "inspected",
+          "processed",
+          "evaluated",
+          "unsuitable",
+          "unavailable"
+        ],
+        "title": "ReadinessState",
+        "type": "string"
+      }
+    },
+    "properties": {
+      "id": {
+        "description": "Unique observation ID",
+        "title": "Id",
+        "type": "string"
+      },
+      "source_collection": {
+        "description": "Collection short name e.g. NISAR_L2_GCOV_PROVISIONAL_V1",
+        "title": "Source Collection",
+        "type": "string"
+      },
+      "item_id": {
+        "description": "Source granule / asset identifier",
+        "title": "Item Id",
+        "type": "string"
+      },
+      "acquisition_start_utc": {
+        "description": "ISO 8601 acquisition start time in UTC",
+        "title": "Acquisition Start Utc",
+        "type": "string"
+      },
+      "acquisition_end_utc": {
+        "description": "ISO 8601 acquisition end time in UTC",
+        "title": "Acquisition End Utc",
+        "type": "string"
+      },
+      "sensor": {
+        "description": "Sensor/instrument name e.g. NISAR-L, Sentinel-2A",
+        "title": "Sensor",
+        "type": "string"
+      },
+      "product_maturity": {
+        "default": "PROVISIONAL_V1",
+        "description": "Product maturity/version",
+        "title": "Product Maturity",
+        "type": "string"
+      },
+      "track": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Orbit track identifier",
+        "title": "Track"
+      },
+      "direction": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Ascending (A) or Descending (D)",
+        "title": "Direction"
+      },
+      "frame": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Frame number",
+        "title": "Frame"
+      },
+      "mode": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Acquisition mode (e.g. DHDH, QPDH)",
+        "title": "Mode"
+      },
+      "available_terms": {
+        "description": "Available polarization / covariance terms",
+        "items": {
+          "type": "string"
+        },
+        "title": "Available Terms",
+        "type": "array"
+      },
+      "crs": {
+        "default": "EPSG:32645",
+        "description": "Spatial reference system",
+        "title": "Crs",
+        "type": "string"
+      },
+      "safe_source_link": {
+        "description": "Safe, credential-free resolvable source URL",
+        "title": "Safe Source Link",
+        "type": "string"
+      },
+      "readiness": {
+        "$ref": "#/$defs/ReadinessState",
+        "default": "metadata-found"
+      }
+    },
+    "required": [
+      "id",
+      "source_collection",
+      "item_id",
+      "acquisition_start_utc",
+      "acquisition_end_utc",
+      "sensor",
+      "safe_source_link"
+    ],
+    "title": "Observation",
+    "type": "object"
+  },
+  "LayerArtifact": {
+    "properties": {
+      "id": {
+        "description": "Layer artifact identifier",
+        "title": "Id",
+        "type": "string"
+      },
+      "run_id": {
+        "description": "Parent analysis run ID",
+        "title": "Run Id",
+        "type": "string"
+      },
+      "kind": {
+        "description": "Layer kind",
+        "enum": [
+          "raster",
+          "vector",
+          "pmtiles",
+          "mask",
+          "thumbnail"
+        ],
+        "title": "Kind",
+        "type": "string"
+      },
+      "render_url": {
+        "description": "Relative URL to renderable tile / GeoJSON",
+        "title": "Render Url",
+        "type": "string"
+      },
+      "numeric_artifact_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Reference to backend numeric COG for sampling",
+        "title": "Numeric Artifact Id"
+      },
+      "bounds": {
+        "description": "[west, south, east, north] bounds",
+        "maxItems": 4,
+        "minItems": 4,
+        "prefixItems": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "number"
+          }
+        ],
+        "title": "Bounds",
+        "type": "array"
+      },
+      "source_ids": {
+        "description": "Source observation IDs",
+        "items": {
+          "type": "string"
+        },
+        "title": "Source Ids",
+        "type": "array"
+      },
+      "dates": {
+        "description": "Acquisition dates represented",
+        "items": {
+          "type": "string"
+        },
+        "title": "Dates",
+        "type": "array"
+      },
+      "unit": {
+        "description": "Measurement unit (e.g. dB, ratio, class)",
+        "title": "Unit",
+        "type": "string"
+      },
+      "legend": {
+        "additionalProperties": true,
+        "description": "Color ramp and class labels",
+        "title": "Legend",
+        "type": "object"
+      },
+      "nodata_policy": {
+        "default": "masked",
+        "description": "Policy for invalid/unobserved support",
+        "title": "Nodata Policy",
+        "type": "string"
+      },
+      "content_hash": {
+        "description": "SHA-256 integrity hash",
+        "title": "Content Hash",
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "run_id",
+      "kind",
+      "render_url",
+      "bounds",
+      "unit",
+      "content_hash"
+    ],
+    "title": "LayerArtifact",
+    "type": "object"
+  },
+  "SensitivitySummary": {
+    "properties": {
+      "min": {
+        "description": "Minimum value across evaluated variants",
+        "title": "Min",
+        "type": "number"
+      },
+      "max": {
+        "description": "Maximum value across evaluated variants",
+        "title": "Max",
+        "type": "number"
+      },
+      "unit": {
+        "description": "Measurement unit",
+        "title": "Unit",
+        "type": "string"
+      },
+      "variant_family_id": {
+        "description": "Tested parameter family (e.g. water-sensitivity)",
+        "title": "Variant Family Id",
+        "type": "string"
+      },
+      "evaluated_variant_count": {
+        "description": "Number of parameter variants evaluated",
+        "title": "Evaluated Variant Count",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "min",
+      "max",
+      "unit",
+      "variant_family_id",
+      "evaluated_variant_count"
+    ],
+    "title": "SensitivitySummary",
+    "type": "object"
+  },
+  "Metric": {
+    "$defs": {
+      "Origin": {
+        "enum": [
+          "source-observation",
+          "derived-observation",
+          "modeled-scenario",
+          "educational-simulation",
+          "external-reference"
+        ],
+        "title": "Origin",
+        "type": "string"
+      },
+      "SensitivitySummary": {
+        "properties": {
+          "min": {
+            "description": "Minimum value across evaluated variants",
+            "title": "Min",
+            "type": "number"
+          },
+          "max": {
+            "description": "Maximum value across evaluated variants",
+            "title": "Max",
+            "type": "number"
+          },
+          "unit": {
+            "description": "Measurement unit",
+            "title": "Unit",
+            "type": "string"
+          },
+          "variant_family_id": {
+            "description": "Tested parameter family (e.g. water-sensitivity)",
+            "title": "Variant Family Id",
+            "type": "string"
+          },
+          "evaluated_variant_count": {
+            "description": "Number of parameter variants evaluated",
+            "title": "Evaluated Variant Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "min",
+          "max",
+          "unit",
+          "variant_family_id",
+          "evaluated_variant_count"
+        ],
+        "title": "SensitivitySummary",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "id": {
+        "description": "Unique metric identifier",
+        "title": "Id",
+        "type": "string"
+      },
+      "value": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Numeric value, null if reason is provided",
+        "title": "Value"
+      },
+      "unit": {
+        "description": "Measurement unit",
+        "title": "Unit",
+        "type": "string"
+      },
+      "definition_id": {
+        "description": "Method / calculation definition ID",
+        "title": "Definition Id",
+        "type": "string"
+      },
+      "run_id": {
+        "description": "Analysis run ID",
+        "title": "Run Id",
+        "type": "string"
+      },
+      "input_ids": {
+        "description": "Input artifact IDs",
+        "items": {
+          "type": "string"
+        },
+        "title": "Input Ids",
+        "type": "array"
+      },
+      "observation_ids": {
+        "description": "Source observation IDs",
+        "items": {
+          "type": "string"
+        },
+        "title": "Observation Ids",
+        "type": "array"
+      },
+      "support_id": {
+        "description": "Polygon or spatial support ID",
+        "title": "Support Id",
+        "type": "string"
+      },
+      "origin": {
+        "$ref": "#/$defs/Origin",
+        "description": "Origin taxonomy of this quantity"
+      },
+      "reason": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Reason if value is null",
+        "title": "Reason"
+      },
+      "sensitivity": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/SensitivitySummary"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Evaluated parameter sensitivity"
+      }
+    },
+    "required": [
+      "id",
+      "unit",
+      "definition_id",
+      "run_id",
+      "support_id",
+      "origin"
+    ],
+    "title": "Metric",
+    "type": "object"
+  },
+  "Finding": {
+    "properties": {
+      "id": {
+        "description": "Immutable finding identifier e.g. J-2026-F01",
+        "title": "Id",
+        "type": "string"
+      },
+      "run_id": {
+        "description": "Analysis run ID",
+        "title": "Run Id",
+        "type": "string"
+      },
+      "geometry": {
+        "additionalProperties": true,
+        "description": "GeoJSON Polygon/MultiPolygon of the candidate finding",
+        "title": "Geometry",
+        "type": "object"
+      },
+      "category": {
+        "description": "Candidate category e.g. land-to-water-candidate",
+        "title": "Category",
+        "type": "string"
+      },
+      "pair_observation_ids": {
+        "description": "[date_a_obs_id, date_b_obs_id]",
+        "maxItems": 2,
+        "minItems": 2,
+        "prefixItems": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "string"
+          }
+        ],
+        "title": "Pair Observation Ids",
+        "type": "array"
+      },
+      "metric_ids": {
+        "description": "Associated metric IDs",
+        "items": {
+          "type": "string"
+        },
+        "title": "Metric Ids",
+        "type": "array"
+      },
+      "claim_ids": {
+        "description": "Associated claim IDs",
+        "items": {
+          "type": "string"
+        },
+        "title": "Claim Ids",
+        "type": "array"
+      }
+    },
+    "required": [
+      "id",
+      "run_id",
+      "geometry",
+      "category",
+      "pair_observation_ids"
+    ],
+    "title": "Finding",
+    "type": "object"
+  },
+  "Claim": {
+    "$defs": {
+      "Assessment": {
+        "enum": [
+          "supported",
+          "limited",
+          "inconclusive",
+          "refuted"
+        ],
+        "title": "Assessment",
+        "type": "string"
+      },
+      "BilingualText": {
+        "properties": {
+          "en": {
+            "description": "English text",
+            "title": "En",
+            "type": "string"
+          },
+          "bn": {
+            "description": "Reviewed Bangla text in Noto Sans Bengali",
+            "title": "Bn",
+            "type": "string"
+          }
+        },
+        "required": [
+          "en",
+          "bn"
+        ],
+        "title": "BilingualText",
+        "type": "object"
+      },
+      "Origin": {
+        "enum": [
+          "source-observation",
+          "derived-observation",
+          "modeled-scenario",
+          "educational-simulation",
+          "external-reference"
+        ],
+        "title": "Origin",
+        "type": "string"
+      },
+      "ReviewState": {
+        "enum": [
+          "unreviewed",
+          "awaiting-review",
+          "reviewed"
+        ],
+        "title": "ReviewState",
+        "type": "string"
+      }
+    },
+    "properties": {
+      "id": {
+        "description": "Claim identifier",
+        "title": "Id",
+        "type": "string"
+      },
+      "statement": {
+        "$ref": "#/$defs/BilingualText",
+        "description": "Precise factual statement"
+      },
+      "metric_ids": {
+        "description": "Supporting metric IDs",
+        "items": {
+          "type": "string"
+        },
+        "title": "Metric Ids",
+        "type": "array"
+      },
+      "finding_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Associated finding ID",
+        "title": "Finding Id"
+      },
+      "run_id": {
+        "description": "Parent run ID",
+        "title": "Run Id",
+        "type": "string"
+      },
+      "origin": {
+        "$ref": "#/$defs/Origin",
+        "description": "Observation, scenario, or reference origin"
+      },
+      "assessment": {
+        "$ref": "#/$defs/Assessment",
+        "default": "inconclusive",
+        "description": "Current scientific assessment"
+      },
+      "supporting_evidence_ids": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Supporting Evidence Ids",
+        "type": "array"
+      },
+      "conflicting_evidence_ids": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Conflicting Evidence Ids",
+        "type": "array"
+      },
+      "missing_evidence_ids": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Missing Evidence Ids",
+        "type": "array"
+      },
+      "review_state": {
+        "$ref": "#/$defs/ReviewState",
+        "default": "unreviewed"
+      },
+      "revision_id": {
+        "default": "rev-1",
+        "description": "Current revision identifier",
+        "title": "Revision Id",
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "statement",
+      "run_id",
+      "origin"
+    ],
+    "title": "Claim",
+    "type": "object"
+  },
+  "AnalysisRun": {
+    "properties": {
+      "id": {
+        "description": "Immutable run ID e.g. run-2026-10-31-01",
+        "title": "Id",
+        "type": "string"
+      },
+      "region_id": {
+        "description": "Target region ID",
+        "title": "Region Id",
+        "type": "string"
+      },
+      "case_id": {
+        "description": "Target case ID",
+        "title": "Case Id",
+        "type": "string"
+      },
+      "input_ids": {
+        "description": "Granule IDs and configuration inputs",
+        "items": {
+          "type": "string"
+        },
+        "title": "Input Ids",
+        "type": "array"
+      },
+      "input_hashes": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "description": "Input content hashes",
+        "title": "Input Hashes",
+        "type": "object"
+      },
+      "config_hash": {
+        "description": "SHA-256 of configuration parameters",
+        "title": "Config Hash",
+        "type": "string"
+      },
+      "code_version": {
+        "description": "Git commit SHA or release tag",
+        "title": "Code Version",
+        "type": "string"
+      },
+      "method_version": {
+        "default": "1.0.0",
+        "description": "Methodology version",
+        "title": "Method Version",
+        "type": "string"
+      },
+      "created_at_utc": {
+        "description": "Creation timestamp in UTC",
+        "title": "Created At Utc",
+        "type": "string"
+      },
+      "artifact_ids": {
+        "description": "Output layer artifact IDs",
+        "items": {
+          "type": "string"
+        },
+        "title": "Artifact Ids",
+        "type": "array"
+      },
+      "metric_ids": {
+        "description": "Calculated metric IDs",
+        "items": {
+          "type": "string"
+        },
+        "title": "Metric Ids",
+        "type": "array"
+      },
+      "evaluation_state": {
+        "default": "not-evaluated",
+        "description": "Scientific validation state",
+        "enum": [
+          "not-evaluated",
+          "limited",
+          "evaluated",
+          "unsuitable"
+        ],
+        "title": "Evaluation State",
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "region_id",
+      "case_id",
+      "config_hash",
+      "code_version",
+      "created_at_utc"
+    ],
+    "title": "AnalysisRun",
+    "type": "object"
+  },
+  "QualityCheck": {
+    "$defs": {
+      "CheckStatus": {
+        "enum": [
+          "pass",
+          "warn",
+          "fail",
+          "not-evaluated",
+          "not-applicable"
+        ],
+        "title": "CheckStatus",
+        "type": "string"
+      }
+    },
+    "properties": {
+      "id": {
+        "description": "Check identifier e.g. CHK-GEOM-01",
+        "title": "Id",
+        "type": "string"
+      },
+      "group": {
+        "description": "One of the 7 documented check groups",
+        "enum": [
+          "product-geometry",
+          "alignment",
+          "classification-sensitivity",
+          "hydrological-context",
+          "subsequent-observations",
+          "independent-comparison",
+          "controls-plausibility"
+        ],
+        "title": "Group",
+        "type": "string"
+      },
+      "status": {
+        "$ref": "#/$defs/CheckStatus",
+        "description": "pass, warn, fail, not-evaluated, not-applicable"
+      },
+      "name": {
+        "description": "Human-readable check name",
+        "title": "Name",
+        "type": "string"
+      },
+      "reason": {
+        "description": "Detailed diagnostic reason",
+        "title": "Reason",
+        "type": "string"
+      },
+      "impact_on_claim": {
+        "description": "Consequence if this check warns or fails",
+        "title": "Impact On Claim",
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "group",
+      "status",
+      "name",
+      "reason",
+      "impact_on_claim"
+    ],
+    "title": "QualityCheck",
+    "type": "object"
+  },
+  "DecisionScenario": {
+    "properties": {
+      "id": {
+        "description": "Unique scenario ID",
+        "title": "Id",
+        "type": "string"
+      },
+      "base_run_id": {
+        "description": "Immutable baseline run ID",
+        "title": "Base Run Id",
+        "type": "string"
+      },
+      "objective": {
+        "description": "Planning objective e.g. inspection-shortlist",
+        "title": "Objective",
+        "type": "string"
+      },
+      "declared_alternatives": {
+        "additionalProperties": true,
+        "description": "Tested alternative assumptions",
+        "title": "Declared Alternatives",
+        "type": "object"
+      },
+      "actual_inputs": {
+        "description": "Observed real input IDs",
+        "items": {
+          "type": "string"
+        },
+        "title": "Actual Inputs",
+        "type": "array"
+      },
+      "scenario_inputs": {
+        "description": "Hypothetical input descriptions",
+        "items": {
+          "type": "string"
+        },
+        "title": "Scenario Inputs",
+        "type": "array"
+      },
+      "outputs": {
+        "additionalProperties": true,
+        "description": "Recomputed decision consequences",
+        "title": "Outputs",
+        "type": "object"
+      },
+      "assumption_receipt": {
+        "additionalProperties": true,
+        "description": "Exact record of changed inputs and decision flip",
+        "title": "Assumption Receipt",
+        "type": "object"
+      }
+    },
+    "required": [
+      "id",
+      "base_run_id",
+      "objective"
+    ],
+    "title": "DecisionScenario",
+    "type": "object"
+  },
+  "EvidenceRecord": {
+    "$defs": {
+      "ReviewState": {
+        "enum": [
+          "unreviewed",
+          "awaiting-review",
+          "reviewed"
+        ],
+        "title": "ReviewState",
+        "type": "string"
+      }
+    },
+    "properties": {
+      "id": {
+        "description": "Unique evidence ID",
+        "title": "Id",
+        "type": "string"
+      },
+      "source_type": {
+        "enum": [
+          "field-photo",
+          "gauge-csv",
+          "interviewer-note",
+          "satellite-crosscheck",
+          "reference-map"
+        ],
+        "title": "Source Type",
+        "type": "string"
+      },
+      "target_claim_id": {
+        "description": "Claim this evidence addresses",
+        "title": "Target Claim Id",
+        "type": "string"
+      },
+      "observation_time_utc": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Actual time of field observation",
+        "title": "Observation Time Utc"
+      },
+      "geometry": {
+        "anyOf": [
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Location GeoJSON Point",
+        "title": "Geometry"
+      },
+      "media_url": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Relative URL to media file if applicable",
+        "title": "Media Url"
+      },
+      "answer": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Structured answer or measurement",
+        "title": "Answer"
+      },
+      "attribution": {
+        "description": "Author or observer attribution",
+        "title": "Attribution",
+        "type": "string"
+      },
+      "quality": {
+        "additionalProperties": true,
+        "description": "GPS accuracy, sensor info, etc.",
+        "title": "Quality",
+        "type": "object"
+      },
+      "permissions": {
+        "default": "public-use",
+        "description": "License or consent record",
+        "title": "Permissions",
+        "type": "string"
+      },
+      "review_state": {
+        "$ref": "#/$defs/ReviewState",
+        "default": "awaiting-review"
+      }
+    },
+    "required": [
+      "id",
+      "source_type",
+      "target_claim_id",
+      "attribution"
+    ],
+    "title": "EvidenceRecord",
+    "type": "object"
+  },
+  "RevisionEvent": {
+    "$defs": {
+      "Assessment": {
+        "enum": [
+          "supported",
+          "limited",
+          "inconclusive",
+          "refuted"
+        ],
+        "title": "Assessment",
+        "type": "string"
+      }
+    },
+    "properties": {
+      "id": {
+        "description": "Revision event ID",
+        "title": "Id",
+        "type": "string"
+      },
+      "claim_id": {
+        "description": "Target claim ID",
+        "title": "Claim Id",
+        "type": "string"
+      },
+      "reviewer_identity": {
+        "description": "Reviewer name or role",
+        "title": "Reviewer Identity",
+        "type": "string"
+      },
+      "evidence_ids": {
+        "description": "Evidence triggering the revision",
+        "items": {
+          "type": "string"
+        },
+        "title": "Evidence Ids",
+        "type": "array"
+      },
+      "old_assessment": {
+        "$ref": "#/$defs/Assessment"
+      },
+      "new_assessment": {
+        "$ref": "#/$defs/Assessment"
+      },
+      "rationale": {
+        "description": "Detailed justification for revision",
+        "title": "Rationale",
+        "type": "string"
+      },
+      "timestamp_utc": {
+        "title": "Timestamp Utc",
+        "type": "string"
+      },
+      "superseded_revision_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Superseded Revision Id"
+      }
+    },
+    "required": [
+      "id",
+      "claim_id",
+      "reviewer_identity",
+      "old_assessment",
+      "new_assessment",
+      "rationale",
+      "timestamp_utc"
+    ],
+    "title": "RevisionEvent",
+    "type": "object"
+  },
+  "StoryStep": {
+    "$defs": {
+      "BilingualText": {
+        "properties": {
+          "en": {
+            "description": "English text",
+            "title": "En",
+            "type": "string"
+          },
+          "bn": {
+            "description": "Reviewed Bangla text in Noto Sans Bengali",
+            "title": "Bn",
+            "type": "string"
+          }
+        },
+        "required": [
+          "en",
+          "bn"
+        ],
+        "title": "BilingualText",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "step_index": {
+        "description": "Step order in chapter",
+        "title": "Step Index",
+        "type": "integer"
+      },
+      "camera": {
+        "additionalProperties": true,
+        "description": "Map camera: center [lon, lat], zoom, pitch, bearing",
+        "title": "Camera",
+        "type": "object"
+      },
+      "active_layer_ids": {
+        "description": "Layers enabled in this step",
+        "items": {
+          "type": "string"
+        },
+        "title": "Active Layer Ids",
+        "type": "array"
+      },
+      "focused_finding_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Finding to highlight",
+        "title": "Focused Finding Id"
+      },
+      "narrative": {
+        "$ref": "#/$defs/BilingualText",
+        "description": "Story narrative"
+      }
+    },
+    "required": [
+      "step_index",
+      "camera",
+      "narrative"
+    ],
+    "title": "StoryStep",
+    "type": "object"
+  },
+  "Story": {
+    "$defs": {
+      "BilingualText": {
+        "properties": {
+          "en": {
+            "description": "English text",
+            "title": "En",
+            "type": "string"
+          },
+          "bn": {
+            "description": "Reviewed Bangla text in Noto Sans Bengali",
+            "title": "Bn",
+            "type": "string"
+          }
+        },
+        "required": [
+          "en",
+          "bn"
+        ],
+        "title": "BilingualText",
+        "type": "object"
+      },
+      "StoryStep": {
+        "properties": {
+          "step_index": {
+            "description": "Step order in chapter",
+            "title": "Step Index",
+            "type": "integer"
+          },
+          "camera": {
+            "additionalProperties": true,
+            "description": "Map camera: center [lon, lat], zoom, pitch, bearing",
+            "title": "Camera",
+            "type": "object"
+          },
+          "active_layer_ids": {
+            "description": "Layers enabled in this step",
+            "items": {
+              "type": "string"
+            },
+            "title": "Active Layer Ids",
+            "type": "array"
+          },
+          "focused_finding_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Finding to highlight",
+            "title": "Focused Finding Id"
+          },
+          "narrative": {
+            "$ref": "#/$defs/BilingualText",
+            "description": "Story narrative"
+          }
+        },
+        "required": [
+          "step_index",
+          "camera",
+          "narrative"
+        ],
+        "title": "StoryStep",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "id": {
+        "description": "Story chapter ID e.g. chapter-1-river-memory",
+        "title": "Id",
+        "type": "string"
+      },
+      "chapter_number": {
+        "description": "One of the Five localized dances (1-5)",
+        "maximum": 5,
+        "minimum": 1,
+        "title": "Chapter Number",
+        "type": "integer"
+      },
+      "region_id": {
+        "description": "jamuna or sundarbans",
+        "title": "Region Id",
+        "type": "string"
+      },
+      "case_id": {
+        "description": "Associated case ID",
+        "title": "Case Id",
+        "type": "string"
+      },
+      "run_id": {
+        "description": "Associated run ID",
+        "title": "Run Id",
+        "type": "string"
+      },
+      "title": {
+        "$ref": "#/$defs/BilingualText"
+      },
+      "steps": {
+        "items": {
+          "$ref": "#/$defs/StoryStep"
+        },
+        "title": "Steps",
+        "type": "array"
+      },
+      "published": {
+        "default": false,
+        "title": "Published",
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "id",
+      "chapter_number",
+      "region_id",
+      "case_id",
+      "run_id",
+      "title"
+    ],
+    "title": "Story",
+    "type": "object"
+  },
+  "FieldTask": {
+    "$defs": {
+      "BilingualText": {
+        "properties": {
+          "en": {
+            "description": "English text",
+            "title": "En",
+            "type": "string"
+          },
+          "bn": {
+            "description": "Reviewed Bangla text in Noto Sans Bengali",
+            "title": "Bn",
+            "type": "string"
+          }
+        },
+        "required": [
+          "en",
+          "bn"
+        ],
+        "title": "BilingualText",
+        "type": "object"
+      }
+    },
+    "properties": {
+      "id": {
+        "description": "Task ID e.g. TASK-J01",
+        "title": "Id",
+        "type": "string"
+      },
+      "region_id": {
+        "title": "Region Id",
+        "type": "string"
+      },
+      "case_id": {
+        "title": "Case Id",
+        "type": "string"
+      },
+      "run_id": {
+        "title": "Run Id",
+        "type": "string"
+      },
+      "finding_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Finding Id"
+      },
+      "question": {
+        "$ref": "#/$defs/BilingualText"
+      },
+      "target_dates": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Target Dates",
+        "type": "array"
+      },
+      "target_geometry": {
+        "additionalProperties": true,
+        "title": "Target Geometry",
+        "type": "object"
+      },
+      "structured_answers": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Structured Answers",
+        "type": "array"
+      },
+      "guide": {
+        "$ref": "#/$defs/BilingualText"
+      },
+      "pack_version": {
+        "default": "1.0.0",
+        "title": "Pack Version",
+        "type": "string"
+      },
+      "lifecycle": {
+        "default": "open",
+        "enum": [
+          "open",
+          "in-progress",
+          "submitted",
+          "reviewed",
+          "closed"
+        ],
+        "title": "Lifecycle",
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "region_id",
+      "case_id",
+      "run_id",
+      "question",
+      "target_geometry",
+      "guide"
+    ],
+    "title": "FieldTask",
+    "type": "object"
+  }
+}

@@ -1,0 +1,42 @@
+id: jamuna
+name:
+  en: Jamuna River
+  bn: যমুনা নদী
+search_bbox: [89.60, 25.40, 89.90, 25.75]
+centre: [89.75, 25.575]
+study_geometry: configs/regions/jamuna/pilot.geojson
+preferred_analysis_crs: EPSG:32645
+views:
+  - J1
+  - J2
+  - J3
+  - X1
+  - C1
+source_window:
+  start: "2026-06-17T00:00:00Z"
+  end: "2026-10-30T00:00:00Z"
+cases:
+  - id: river-memory
+    name:
+      en: River Memory & Permanent Erosion
+      bn: নদীর গতিপথ ও স্থায়ী ভাঙন
+    default_view: J1
+  - id: floodplain-recovery
+    name:
+      en: Floodplain Recovery & Chilmari Agriculture
+      bn: প্লাবনভূমির পানি নিষ্কাশন ও চিলমারী কৃষি
+    default_view: J2
+  - id: service-continuity
+    name:
+      en: Char Community Service Continuity
+      bn: চরের বসতি ও স্কুল-ক্লিনিক সংযোগ
+    default_view: J3
+capabilities:
+  gcov: required
+  optical: required
+  polarimetry: input-dependent
+  gunw: input-dependent
+  stage_context: access-and-support-dependent
+  network_graph: required
+  soil_moisture: retrieval-dependent
+readiness: metadata-found

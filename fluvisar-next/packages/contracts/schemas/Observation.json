@@ -1,0 +1,143 @@
+{
+  "$defs": {
+    "ReadinessState": {
+      "enum": [
+        "not-searched",
+        "metadata-found",
+        "access-required",
+        "downloaded",
+        "inspected",
+        "processed",
+        "evaluated",
+        "unsuitable",
+        "unavailable"
+      ],
+      "title": "ReadinessState",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "id": {
+      "description": "Unique observation ID",
+      "title": "Id",
+      "type": "string"
+    },
+    "source_collection": {
+      "description": "Collection short name e.g. NISAR_L2_GCOV_PROVISIONAL_V1",
+      "title": "Source Collection",
+      "type": "string"
+    },
+    "item_id": {
+      "description": "Source granule / asset identifier",
+      "title": "Item Id",
+      "type": "string"
+    },
+    "acquisition_start_utc": {
+      "description": "ISO 8601 acquisition start time in UTC",
+      "title": "Acquisition Start Utc",
+      "type": "string"
+    },
+    "acquisition_end_utc": {
+      "description": "ISO 8601 acquisition end time in UTC",
+      "title": "Acquisition End Utc",
+      "type": "string"
+    },
+    "sensor": {
+      "description": "Sensor/instrument name e.g. NISAR-L, Sentinel-2A",
+      "title": "Sensor",
+      "type": "string"
+    },
+    "product_maturity": {
+      "default": "PROVISIONAL_V1",
+      "description": "Product maturity/version",
+      "title": "Product Maturity",
+      "type": "string"
+    },
+    "track": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Orbit track identifier",
+      "title": "Track"
+    },
+    "direction": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Ascending (A) or Descending (D)",
+      "title": "Direction"
+    },
+    "frame": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Frame number",
+      "title": "Frame"
+    },
+    "mode": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Acquisition mode (e.g. DHDH, QPDH)",
+      "title": "Mode"
+    },
+    "available_terms": {
+      "description": "Available polarization / covariance terms",
+      "items": {
+        "type": "string"
+      },
+      "title": "Available Terms",
+      "type": "array"
+    },
+    "crs": {
+      "default": "EPSG:32645",
+      "description": "Spatial reference system",
+      "title": "Crs",
+      "type": "string"
+    },
+    "safe_source_link": {
+      "description": "Safe, credential-free resolvable source URL",
+      "title": "Safe Source Link",
+      "type": "string"
+    },
+    "readiness": {
+      "$ref": "#/$defs/ReadinessState",
+      "default": "metadata-found"
+    }
+  },
+  "required": [
+    "id",
+    "source_collection",
+    "item_id",
+    "acquisition_start_utc",
+    "acquisition_end_utc",
+    "sensor",
+    "safe_source_link"
+  ],
+  "title": "Observation",
+  "type": "object"
+}

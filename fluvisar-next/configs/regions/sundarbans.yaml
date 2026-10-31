@@ -1,0 +1,36 @@
+id: sundarbans
+name:
+  en: Sundarbans Mangrove
+  bn: সুন্দরবন ম্যানগ্রোভ
+search_bbox: [89.55, 21.75, 89.85, 22.00]
+centre: [89.70, 21.875]
+study_geometry: configs/regions/sundarbans/pilot.geojson
+preferred_analysis_crs: EPSG:32645
+views:
+  - S1
+  - S2
+  - X1
+  - C1
+source_window:
+  start: "2026-06-17T00:00:00Z"
+  end: "2026-10-30T00:00:00Z"
+cases:
+  - id: wetland-pulse
+    name:
+      en: Wetland Pulse & Canopy Penetration
+      bn: জোয়ারের পানি ও বনের ভেতর রাডার সিগন্যাল
+    default_view: S1
+  - id: forest-restoration
+    name:
+      en: Mangrove Extent & Restoration Audit
+      bn: ম্যানগ্রোভ সীমানা ও পুনরুদ্ধার মূল্যায়ন
+    default_view: S2
+capabilities:
+  gcov: required
+  optical: required
+  polarimetry: input-dependent
+  gunw: input-dependent
+  tide_context: access-and-support-dependent
+  restoration: intervention-and-reference-dependent
+  soil_moisture: retrieval-dependent
+readiness: metadata-found

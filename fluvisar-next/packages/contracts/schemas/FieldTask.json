@@ -1,0 +1,108 @@
+{
+  "$defs": {
+    "BilingualText": {
+      "properties": {
+        "en": {
+          "description": "English text",
+          "title": "En",
+          "type": "string"
+        },
+        "bn": {
+          "description": "Reviewed Bangla text in Noto Sans Bengali",
+          "title": "Bn",
+          "type": "string"
+        }
+      },
+      "required": [
+        "en",
+        "bn"
+      ],
+      "title": "BilingualText",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "id": {
+      "description": "Task ID e.g. TASK-J01",
+      "title": "Id",
+      "type": "string"
+    },
+    "region_id": {
+      "title": "Region Id",
+      "type": "string"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "finding_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Finding Id"
+    },
+    "question": {
+      "$ref": "#/$defs/BilingualText"
+    },
+    "target_dates": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Target Dates",
+      "type": "array"
+    },
+    "target_geometry": {
+      "additionalProperties": true,
+      "title": "Target Geometry",
+      "type": "object"
+    },
+    "structured_answers": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Structured Answers",
+      "type": "array"
+    },
+    "guide": {
+      "$ref": "#/$defs/BilingualText"
+    },
+    "pack_version": {
+      "default": "1.0.0",
+      "title": "Pack Version",
+      "type": "string"
+    },
+    "lifecycle": {
+      "default": "open",
+      "enum": [
+        "open",
+        "in-progress",
+        "submitted",
+        "reviewed",
+        "closed"
+      ],
+      "title": "Lifecycle",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "region_id",
+    "case_id",
+    "run_id",
+    "question",
+    "target_geometry",
+    "guide"
+  ],
+  "title": "FieldTask",
+  "type": "object"
+}

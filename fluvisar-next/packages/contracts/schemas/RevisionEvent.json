@@ -1,0 +1,77 @@
+{
+  "$defs": {
+    "Assessment": {
+      "enum": [
+        "supported",
+        "limited",
+        "inconclusive",
+        "refuted"
+      ],
+      "title": "Assessment",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "id": {
+      "description": "Revision event ID",
+      "title": "Id",
+      "type": "string"
+    },
+    "claim_id": {
+      "description": "Target claim ID",
+      "title": "Claim Id",
+      "type": "string"
+    },
+    "reviewer_identity": {
+      "description": "Reviewer name or role",
+      "title": "Reviewer Identity",
+      "type": "string"
+    },
+    "evidence_ids": {
+      "description": "Evidence triggering the revision",
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "old_assessment": {
+      "$ref": "#/$defs/Assessment"
+    },
+    "new_assessment": {
+      "$ref": "#/$defs/Assessment"
+    },
+    "rationale": {
+      "description": "Detailed justification for revision",
+      "title": "Rationale",
+      "type": "string"
+    },
+    "timestamp_utc": {
+      "title": "Timestamp Utc",
+      "type": "string"
+    },
+    "superseded_revision_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Superseded Revision Id"
+    }
+  },
+  "required": [
+    "id",
+    "claim_id",
+    "reviewer_identity",
+    "old_assessment",
+    "new_assessment",
+    "rationale",
+    "timestamp_utc"
+  ],
+  "title": "RevisionEvent",
+  "type": "object"
+}

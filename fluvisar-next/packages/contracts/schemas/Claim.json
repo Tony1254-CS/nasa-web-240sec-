@@ -1,0 +1,139 @@
+{
+  "$defs": {
+    "Assessment": {
+      "enum": [
+        "supported",
+        "limited",
+        "inconclusive",
+        "refuted"
+      ],
+      "title": "Assessment",
+      "type": "string"
+    },
+    "BilingualText": {
+      "properties": {
+        "en": {
+          "description": "English text",
+          "title": "En",
+          "type": "string"
+        },
+        "bn": {
+          "description": "Reviewed Bangla text in Noto Sans Bengali",
+          "title": "Bn",
+          "type": "string"
+        }
+      },
+      "required": [
+        "en",
+        "bn"
+      ],
+      "title": "BilingualText",
+      "type": "object"
+    },
+    "Origin": {
+      "enum": [
+        "source-observation",
+        "derived-observation",
+        "modeled-scenario",
+        "educational-simulation",
+        "external-reference"
+      ],
+      "title": "Origin",
+      "type": "string"
+    },
+    "ReviewState": {
+      "enum": [
+        "unreviewed",
+        "awaiting-review",
+        "reviewed"
+      ],
+      "title": "ReviewState",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "id": {
+      "description": "Claim identifier",
+      "title": "Id",
+      "type": "string"
+    },
+    "statement": {
+      "$ref": "#/$defs/BilingualText",
+      "description": "Precise factual statement"
+    },
+    "metric_ids": {
+      "description": "Supporting metric IDs",
+      "items": {
+        "type": "string"
+      },
+      "title": "Metric Ids",
+      "type": "array"
+    },
+    "finding_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Associated finding ID",
+      "title": "Finding Id"
+    },
+    "run_id": {
+      "description": "Parent run ID",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "origin": {
+      "$ref": "#/$defs/Origin",
+      "description": "Observation, scenario, or reference origin"
+    },
+    "assessment": {
+      "$ref": "#/$defs/Assessment",
+      "default": "inconclusive",
+      "description": "Current scientific assessment"
+    },
+    "supporting_evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Supporting Evidence Ids",
+      "type": "array"
+    },
+    "conflicting_evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Conflicting Evidence Ids",
+      "type": "array"
+    },
+    "missing_evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Missing Evidence Ids",
+      "type": "array"
+    },
+    "review_state": {
+      "$ref": "#/$defs/ReviewState",
+      "default": "unreviewed"
+    },
+    "revision_id": {
+      "default": "rev-1",
+      "description": "Current revision identifier",
+      "title": "Revision Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "statement",
+    "run_id",
+    "origin"
+  ],
+  "title": "Claim",
+  "type": "object"
+}

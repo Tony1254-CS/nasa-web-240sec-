@@ -1,0 +1,27 @@
+{
+  "type": "FeatureCollection",
+  "name": "Sundarbans Dublar-Passur Pilot AOI",
+  "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "region_id": "sundarbans",
+        "name": "Sundarbans Dublar-Passur Pilot Footprint",
+        "description": "Bounding polygon for mangrove wetland and canopy penetration study"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [89.55, 21.75],
+            [89.85, 21.75],
+            [89.85, 22.00],
+            [89.55, 22.00],
+            [89.55, 21.75]
+          ]
+        ]
+      }
+    }
+  ]
+}
