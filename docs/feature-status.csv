@@ -60,3 +60,4 @@ N04,Guided Comparison Prompts,B10,"RightInspector.tsx, scenarios_and_improvement
 N05,Evidence Multi-Clock Display,B10,"RightInspector.tsx, scenarios_and_improvements.py",test_b10_scenarios_and_comprehension.py,Implemented,"Separates Satellite (UTC), Gauge, Processing, and Field timestamps"
 A01-A12,Mobile Field Task Contracts,B00/B08,"models.py, evidence_passport.py, DecisionBriefModal.tsx",test_contracts.py,Implemented (Web Contract),"Task schemas, QR payload handoff, and review endpoints implemented"
 AX01-AX12,Mobile Extended Contracts,B00/B08,"models.py, evidence_passport.py",test_contracts.py,Implemented (Web Contract),"Field task data models preserved; native phone APK deferred"
+

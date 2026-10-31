@@ -100,3 +100,4 @@ if __name__ == "__main__":
     test_gcov_adapter_point_sampling()
     test_fastapi_endpoints()
     print("All Milestone B02 verification tests PASSED successfully!")
+

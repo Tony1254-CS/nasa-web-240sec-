@@ -320,3 +320,4 @@ def evaluate_nisar_contribution_benchmark() -> Dict[str, Any]:
             "Final operational dual-pass NISAR L-SAR L1/L2 products pending satellite routine calibration phase."
         ]
     }
+

@@ -139,3 +139,4 @@ export const PairSelectorModal: React.FC<PairSelectorProps> = ({ isOpen, onClose
     </div>
   );
 };
+

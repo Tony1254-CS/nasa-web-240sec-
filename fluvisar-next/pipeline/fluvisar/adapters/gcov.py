@@ -93,3 +93,4 @@ class GCOVAdapter:
             "pixel_coords": [col, row],
             "reason": None
         }
+

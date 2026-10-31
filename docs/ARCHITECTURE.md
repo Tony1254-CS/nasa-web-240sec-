@@ -53,3 +53,16 @@ FluviSAR is a dual-region web observatory designed for the **NASA Space Apps Cha
 - **S2 (Forest Response):** Mangrove canopy optical–radar scatter plots and boundary tracking.
 - **X1 (Motion & Fringe):** InSAR line-of-sight displacement and interferometric coherence.
 - **C1 (Scenario Lab):** Side-by-side comparison of baseline vs. NISAR-added decisions.
+
+
+---
+
+## 🛰️ External Data Sources & Basemaps
+For a full scientific and technical inventory of all external datasets (NASA NISAR, GPM IMERG, SWOT, Copernicus Sentinel-1/2, JAXA GMW, BWDB FFWC, BIWTA, BBS 2022 Census), see [`docs/EXTERNAL_DATA_SOURCES.md`](EXTERNAL_DATA_SOURCES.md).
+
+### High-Resolution Basemap Engine & Swipe Comparison
+- **Real Satellite Basemap:** Integrated global true-color optical satellite imagery (Esri World Imagery / Maxar / NASA) toggleable with the `🛰️ Real Satellite` vs `🗺️ Carto Map` switcher.
+- **Dual Synchronized Viewports:** `MapWorkspace.tsx` manages two synchronized MapLibre canvases:
+  - **Map B (Primary / Interactive):** Renders Date B post-monsoon channels, active red erosion zones (145.8 ha), green accretion sandbars (88.4 ha), and asset risk pins.
+  - **Map A (Comparison / Clipped):** Renders Date A pre-flood peak inundation or pure optical satellite imagery, clipped via CSS polygon mask according to the user's `swipePosition`.
+  - **Synchronization:** 60 FPS WebGL camera mirroring ensures zero lag during pan and zoom.

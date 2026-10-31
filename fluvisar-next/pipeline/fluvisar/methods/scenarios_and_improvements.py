@@ -197,3 +197,4 @@ def build_multi_clock_display(
         },
         "temporal_alignment_note": "Satellite radar and river gauge are offset by less than 18 minutes; ground truth is not assumed contemporaneous."
     }
+

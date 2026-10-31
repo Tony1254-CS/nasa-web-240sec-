@@ -205,3 +205,4 @@ def sample_numeric_artifact(
         "pixel_resolution_m": 20.0,
         "reason": None
     }
+

@@ -192,3 +192,4 @@ def generate_decision_brief_manifest(
         "human_impact_summary": impact_ledger,
         "mobile_field_contract": qr_field_task_payload
     }
+

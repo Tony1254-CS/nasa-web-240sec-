@@ -6,6 +6,7 @@ export type WorkspaceMode = 'explore' | 'investigate' | 'act';
 export type Language = 'en' | 'bn';
 export type Audience = 'public' | 'decision' | 'analyst';
 export type ActiveTab = 'atlas' | 'investigate' | 'stories' | 'learn' | 'reports';
+export type BasemapType = 'satellite' | 'carto';
 
 export interface MapCamera {
   center: [number, number];
@@ -32,6 +33,11 @@ export interface WorkspaceState {
   viewId: ViewId;
   mode: WorkspaceMode;
   
+  // Basemap & Visualization
+  basemapType: BasemapType;
+  swipePosition: number; // 0 - 100 percentage
+  comparisonMode: 'dates' | 'sensors';
+
   // Localization & Audience
   language: Language;
   audience: Audience;
@@ -59,6 +65,9 @@ export interface WorkspaceState {
   
   // Actions
   setActiveTab: (tab: ActiveTab) => void;
+  setBasemapType: (basemap: BasemapType) => void;
+  setSwipePosition: (pos: number) => void;
+  setComparisonMode: (mode: 'dates' | 'sensors') => void;
   setRegion: (regionId: RegionId) => void;
   setCase: (caseId: string) => void;
   setView: (viewId: ViewId) => void;
@@ -96,6 +105,9 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   runId: 'run-2026-prod-01',
   viewId: 'M0', // Atlas by default
   mode: 'explore',
+  basemapType: 'satellite', // Default to REAL satellite imagery!
+  swipePosition: 50,
+  comparisonMode: 'dates',
   language: 'bn', // Default Bangla with toggle to EN
   audience: 'public',
   selectedDate: '2026-08-26',
@@ -127,6 +139,9 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   },
 
   setActiveTab: (activeTab) => set({ activeTab }),
+  setBasemapType: (basemapType) => set({ basemapType }),
+  setSwipePosition: (swipePosition: number) => set({ swipePosition }),
+  setComparisonMode: (comparisonMode: 'dates' | 'sensors') => set({ comparisonMode }),
   setRegion: (regionId) =>
     set((state) => {
       if (state.regionId === regionId) return state;

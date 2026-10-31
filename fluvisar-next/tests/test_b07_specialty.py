@@ -152,3 +152,4 @@ if __name__ == "__main__":
     test_swot_water_elevation()
     test_compound_observation_and_benchmark()
     print("All Milestone B07 Specialty & Research unit tests PASSED successfully!")
+

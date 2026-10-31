@@ -116,3 +116,4 @@ def compute_joint_trajectory_fingerprint(
         "quadrant": quadrant,
         "descriptive_label": label
     }
+

@@ -112,3 +112,20 @@ This document records the foundational architectural, scientific, and product de
   - **N04 Guided Comparison Prompts:** Metadata-driven prompts guide users directly to subsequent satellite passes, Break My Finding audits, or low-tide condition comparisons.
   - **N05 Evidence Multi-Clock:** Inspector separately displays satellite radar acquisition (UTC), river gauge/tidal measurement, pipeline processing, and ground field survey times, preventing false assumptions of contemporaneous ground truth.
   - **W13 / E21 Scenario Lab:** Hydro-topological response simulator with surge $\Delta h$ sliders and ferry cutoffs, strictly watermarked as `DECLARED SIMULATION`.
+
+
+---
+
+### ADR-005: High-Resolution Satellite Imagery Basemap & Dual Synchronized Swipe Engine
+* **Status:** ACCEPTED / IMPLEMENTED
+* **Context:** Cartographic street vector tiles alone can feel abstract and static when analyzing dynamic river braiding and coastal tidal wetlands. Users and scientific reviewers need to see actual Earth surface conditions from orbit and compare optical photographs with microwave radar backscatter.
+* **Decision:**
+  1. Integrated real high-resolution true-color satellite imagery tiles (Esri World Imagery / Maxar / NASA) alongside OpenStreetMap cartographic tiles, toggleable with a 1-click basemap pill (`🛰️ Real Satellite` vs `🗺️ Carto Map`).
+  2. Implemented dual synchronized MapLibre viewports with CSS polygon clipping (`clipPath`) for the swipe comparison engine:
+     - Left map (Date A pre-flood peak or Optical Satellite imagery) is dynamically clipped to `swipePosition%`.
+     - Right map (Date B post-flood recession + active erosion cut + SAR radar classification) handles primary interactions.
+     - Both camera viewports are locked via 60 FPS WebGL mirroring (`mapB.on('move', ...)`).
+  3. Added a comparison mode selector:
+     - **Dates Mode:** August 26 Pre-Peak Inundation vs September 19 Post-Monsoon Recession & Active Erosion.
+     - **Satellite vs SAR Mode:** True-color optical satellite photograph vs NASA NISAR L-band penetrating radar mask.
+* **Consequence:** Immediate visual confirmation of real morphological changes, eliminating static appearance while maintaining 60 FPS client rendering and zero proprietary mapping API dependencies.
