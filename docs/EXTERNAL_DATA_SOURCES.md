@@ -110,3 +110,4 @@ This document provides a comprehensive scientific and operational overview of al
    - **Dates Mode:** Compares August 26 Pre-Peak Inundation (large flood water mask) on the left against September 19 Post-Monsoon Receded Channels + Red Erosion Zone (145.8 ha) + Green Sandbar Accretion (88.4 ha) on the right.
    - **Satellite vs SAR Mode:** Compares true-color optical satellite imagery from space on the left against NASA-ISRO NISAR L-band penetrating radar microwave backscatter on the right.
 3. **Point Sampling Tool:** Clicking anywhere inside the study regions returns calibrated backscatter ($\gamma^0$ in dB) and classification metadata.
+

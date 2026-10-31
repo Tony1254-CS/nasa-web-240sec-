@@ -9,7 +9,7 @@ import { InSARSpecialtyPanel } from './InSARSpecialtyPanel';
 import { ScenarioLabPanel } from './ScenarioLabPanel';
 
 export const LeftPanel: React.FC = () => {
-  const { regionId, viewId, setView, language, layerVisibility, toggleLayer } = useWorkspaceStore();
+  const { regionId, viewId, setView, language, mode, layerVisibility, toggleLayer } = useWorkspaceStore();
   const t = i18n[language];
 
   // Specific views available per region (plan.md Section 6)
@@ -31,6 +31,24 @@ export const LeftPanel: React.FC = () => {
 
   return (
     <div className="w-[340px] bg-white border-r border-[#CBD5E1] flex flex-col h-full overflow-y-auto shrink-0 select-none">
+      {/* Workspace Mode Indicator Pill */}
+      <div className={`px-3 py-2 border-b text-[11px] font-medium flex items-center justify-between ${
+        mode === 'explore'
+          ? 'bg-[#F0FDF4] border-[#BBF7D0] text-[#166534]'
+          : mode === 'investigate'
+          ? 'bg-[#EFF6FF] border-[#BFDBFE] text-[#1E40AF]'
+          : 'bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]'
+      }`}>
+        <span className="font-bold flex items-center space-x-1">
+          <span>
+            {mode === 'explore' ? '🔭 Explore' : mode === 'investigate' ? '🔬 Investigate' : '⚡ Act & Explain'}
+          </span>
+        </span>
+        <span className="text-[10px] opacity-80 uppercase tracking-wider font-semibold">
+          {mode === 'explore' ? 'Discovery' : mode === 'investigate' ? 'Deep Physics' : 'Field Actions'}
+        </span>
+      </div>
+
       {/* View Switcher Section */}
       <div className="p-3 border-b border-[#F1F5F9]">
         <div className="flex items-center justify-between text-[#64748B] font-bold uppercase tracking-wider text-[11px] mb-2">

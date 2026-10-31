@@ -13,8 +13,8 @@ export const CoverageCurtainOverlay: React.FC = () => {
 
   return (
     <>
-      {/* Floating Toggle Button on Map */}
-      <div className="absolute top-3 left-3 z-20">
+      {/* Floating Toggle Button on Map (Below map nav controls) */}
+      <div className="absolute top-26 left-3 z-20">
         <button
           onClick={() => setIsCurtainActive(!isCurtainActive)}
           className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-md border transition-all cursor-pointer ${
@@ -34,7 +34,7 @@ export const CoverageCurtainOverlay: React.FC = () => {
 
       {/* Coverage Curtain Active Status Banner & Exclusion Inspector */}
       {isCurtainActive && (
-        <div className="absolute top-12 left-3 z-20 bg-white/95 backdrop-blur-xs border border-[#CBD5E1] p-3 rounded-lg shadow-xl text-xs w-72 space-y-2 animate-in fade-in duration-150">
+        <div className="absolute top-36 left-3 z-20 bg-white/95 backdrop-blur-xs border border-[#CBD5E1] p-3 rounded-lg shadow-xl text-xs w-72 space-y-2 animate-in fade-in duration-150">
           <div className="flex items-center justify-between border-b border-[#F1F5F9] pb-1.5">
             <span className="font-bold text-[#102A43] flex items-center space-x-1 text-[11px]">
               <ShieldAlert className="w-3.5 h-3.5 text-[#D97706]" />

@@ -12,13 +12,29 @@ import {
   Clock,
   ArrowRight,
   Compass,
+  Users,
+  Briefcase,
+  Cpu,
+  Building2,
+  AlertCircle,
+  Download,
+  CheckCircle2,
 } from 'lucide-react';
 import { BreakMyFindingModal } from './BreakMyFindingModal';
 import { ChangePassportModal } from './ChangePassportModal';
 import { DecisionBriefModal } from './DecisionBriefModal';
 
 export const RightInspector: React.FC = () => {
-  const { regionId, language, selectedFindingId, selectedSample, setSelectedDate } = useWorkspaceStore();
+  const {
+    regionId,
+    language,
+    audience,
+    mode,
+    selectedFindingId,
+    selectedSample,
+    setSelectedDate,
+  } = useWorkspaceStore();
+
   const t = i18n[language];
   const [thresholdOffset, setThresholdOffset] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -26,12 +42,13 @@ export const RightInspector: React.FC = () => {
   const [isBriefOpen, setIsBriefOpen] = useState<boolean>(false);
 
   const isJamuna = regionId === 'jamuna';
+  const isBn = language === 'bn';
 
   return (
     <>
-      <aside className="w-80 border-l border-[#CBD5E1] bg-white flex flex-col h-full select-none text-xs overflow-y-auto">
-        {/* Inspector Header */}
-        <div className="p-3.5 border-b border-[#F1F5F9] bg-[#F8FAFC]">
+      <aside className="w-84 border-l border-[#CBD5E1] bg-white flex flex-col h-full select-none text-xs overflow-y-auto">
+        {/* Top Header: Finding Identity & Perspective Badge */}
+        <div className="p-3.5 border-b border-[#F1F5F9] bg-[#F8FAFC] space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-1.5 text-[#155E75] font-bold text-xs uppercase tracking-wide">
               <ShieldCheck className="w-4 h-4" />
@@ -41,15 +58,42 @@ export const RightInspector: React.FC = () => {
               {selectedFindingId ?? (isJamuna ? 'JAM-2026-F01' : 'SUN-2026-F02')}
             </span>
           </div>
-          <div className="mt-1 font-semibold text-[#102A43] text-sm leading-snug">
+
+          <div className="font-bold text-[#102A43] text-sm leading-snug">
             {isJamuna
-              ? (language === 'bn' ? 'চিলমারী চরের পূর্ব পাড়ে রূপান্তর' : 'East Bank Transition Candidate — Chilmari')
-              : (language === 'bn' ? 'দুবলার চরের ম্যানগ্রোভ জোয়ারের প্রতিক্রিয়া' : 'Dublar Char Mangrove Tidal Response')}
+              ? (isBn ? 'চিলমারী পশ্চিম তীরের ভাঙন ও চর রূপান্তর' : 'Chilmari West Bank Retreat & Char Dynamics')
+              : (isBn ? 'দুবলার চরের ম্যানগ্রোভ জোয়ারের প্রতিক্রিয়া' : 'Dublar Char Mangrove Tidal Pulse')}
           </div>
 
-          {/* Live Map Pixel Sampler Output (plan.md Section 16.3) */}
+          {/* Dynamic Audience Perspective Indicator */}
+          <div className="flex items-center justify-between text-[11px] pt-1">
+            {audience === 'public' && (
+              <div className="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded-md bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] font-medium">
+                <Users className="w-3.5 h-3.5" />
+                <span>{isBn ? 'সাধারণ নাগরিক দৃষ্টিভঙ্গি' : 'Public Community View'}</span>
+              </div>
+            )}
+            {audience === 'decision' && (
+              <div className="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded-md bg-[#EFF6FF] text-[#1E40AF] border border-[#BFDBFE] font-medium">
+                <Briefcase className="w-3.5 h-3.5" />
+                <span>{isBn ? 'নীতিনির্ধারক ও প্রশাসনিক দৃষ্টিভঙ্গি' : 'Decision Maker / Official Brief'}</span>
+              </div>
+            )}
+            {audience === 'analyst' && (
+              <div className="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded-md bg-[#FAF5FF] text-[#6B21A8] border border-[#E9D5FF] font-medium">
+                <Cpu className="w-3.5 h-3.5" />
+                <span>{isBn ? 'মহাকাশ বিজ্ঞানী ও রাডার এনালিস্ট' : 'Radar Scientist / Analyst Spec'}</span>
+              </div>
+            )}
+
+            <span className="text-[10px] font-mono uppercase text-[#64748B] bg-white px-1.5 py-0.5 rounded border border-[#E2E8F0]">
+              Mode: {mode}
+            </span>
+          </div>
+
+          {/* Live Map Pixel Sampler Output */}
           {selectedSample && (
-            <div className="mt-2.5 p-2 rounded bg-white border border-[#CBD5E1] shadow-xs flex items-center justify-between">
+            <div className="p-2 rounded bg-white border border-[#CBD5E1] shadow-xs flex items-center justify-between">
               <div className="flex items-center space-x-1.5 text-[11px]">
                 <Crosshair className="w-3.5 h-3.5 text-[#0284C7]" />
                 <span className="font-mono text-[#475569]">
@@ -67,7 +111,56 @@ export const RightInspector: React.FC = () => {
           )}
         </div>
 
-        {/* Evidence Multi-Clock Display (plan.md N05) */}
+        {/* MODE: ACT & EXPLAIN -> Critical Asset Exposure & Action List */}
+        {mode === 'act' && (
+          <div className="p-3 bg-[#FEF2F2] border-b border-[#FECACA] space-y-2">
+            <div className="flex items-center space-x-1 text-[#991B1B] font-bold text-xs">
+              <AlertCircle className="w-4 h-4 text-[#DC2626]" />
+              <span>{isBn ? 'জরুরি পদক্ষেপ ও অবকাঠামো ঝুঁকি' : 'Operational Action & Exposure'}</span>
+            </div>
+            <div className="space-y-1.5 text-[11px]">
+              <div className="bg-white p-2 rounded border border-[#FECACA] space-y-1 shadow-xs">
+                <div className="flex items-center justify-between font-bold text-[#102A43]">
+                  <span className="flex items-center space-x-1">
+                    <Building2 className="w-3.5 h-3.5 text-[#DC2626]" />
+                    <span>Chilmari Model Primary School</span>
+                  </span>
+                  <span className="text-[9px] bg-[#FEE2E2] text-[#DC2626] px-1 rounded font-bold">42m to bank</span>
+                </div>
+                <p className="text-[10px] text-[#475569]">
+                  {isBn
+                    ? 'তীর ভাঙন আশঙ্কাজনক সীমায়। ২১ অক্টোবরের পরবর্তী স্যাটেলাইট পাসের আগে জিও-ব্যাগ প্লেসমেন্ট প্রয়োজন।'
+                    : 'Immediate embankment revetment (geo-bags) required before 21 Oct overpass.'}
+                </p>
+              </div>
+
+              <div className="bg-white p-2 rounded border border-[#E2E8F0] space-y-1 shadow-xs">
+                <div className="flex items-center justify-between font-bold text-[#102A43]">
+                  <span className="flex items-center space-x-1">
+                    <Building2 className="w-3.5 h-3.5 text-[#D97706]" />
+                    <span>Roumari Community Clinic</span>
+                  </span>
+                  <span className="text-[9px] bg-[#FEF3C7] text-[#D97706] px-1 rounded font-bold">Ferry Cut</span>
+                </div>
+                <p className="text-[10px] text-[#475569]">
+                  {isBn
+                    ? 'নদীভাঙনের ফলে চিলমারী–রৌমারী ফেরি রুট বিচ্ছিন্ন হওয়ার উপক্রম। বিকল্প নৌপথ প্রস্তুত রাখা জরুরি।'
+                    : 'Ferry landing access endangered. Recommend prepositioning mobile transport craft.'}
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setIsBriefOpen(true)}
+              className="w-full mt-2 py-2 rounded-lg bg-[#DC2626] hover:bg-[#B91C1C] text-white font-bold text-xs flex items-center justify-center space-x-1.5 shadow-sm transition-colors cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>{isBn ? 'এক-পাতার সিদ্ধান্ত ব্রিফ ডাউনলোড করুন' : 'Export 1-Page Decision Brief'}</span>
+            </button>
+          </div>
+        )}
+
+        {/* Evidence Multi-Clock Display (N05) */}
         <div className="px-3.5 py-2.5 bg-[#F1F5F9] border-b border-[#E2E8F0] space-y-1 text-[10px]">
           <div className="flex items-center justify-between font-bold text-[#334155] uppercase tracking-wider text-[9px]">
             <span className="flex items-center space-x-1">
@@ -96,7 +189,7 @@ export const RightInspector: React.FC = () => {
           </div>
         </div>
 
-        {/* 4-Step Narrative Lead (plan.md Section 7.1) */}
+        {/* 4-Step Narrative Lead (Dynamically Adapted by Audience Perspective) */}
         <div className="p-3.5 space-y-4 flex-1">
           {/* Step 1: What was observed */}
           <div className="space-y-1">
@@ -107,13 +200,35 @@ export const RightInspector: React.FC = () => {
               <span>{t.inspector.leadQuestion}</span>
             </div>
             <p className="text-xs text-[#334155] leading-relaxed">
-              {isJamuna
-                ? (language === 'bn'
-                    ? '২৬ আগস্ট এবং ১৯ সেপ্টেম্বরের মধ্যে যমুনার পূর্ব তীরে ব্যাকস্ক্যাটার -৭.২ dB থেকে কমে -১৫.৪ dB এ নেমেছে।'
-                    : 'Between 26 Aug and 19 Sep 2026, calibrated backscatter dropped by 8.2 dB (from -7.2 dB to -15.4 dB).')
-                : (language === 'bn'
-                    ? 'পূর্ণ জোয়ারের সময় সুন্দরবনের ক্যানোপির নিচে ডাবল-বাউন্স সিগন্যাল ৩.৫ dB বৃদ্ধি পেয়েছে।'
-                    : 'During high spring tide, HH-polarized return increased by 3.5 dB across sub-canopy root network.')}
+              {audience === 'public' && (
+                isJamuna
+                  ? (isBn
+                      ? 'স্যাটেলাইটে ধরা পড়েছে যে ২৬ আগস্ট থেকে ১৯ সেপ্টেম্বরের মধ্যে যমুনার চিলমারী তীরে ১৪৫.৮ হেক্টর জমি ভেঙে পানিতে বিলীন হয়ে গেছে।'
+                      : 'The satellite observed that 145.8 hectares of farmland and riverbank collapsed into water at Chilmari between Aug 26 and Sep 19.')
+                  : (isBn
+                      ? 'জোয়ারের সময় সুন্দরবনের গাছের তলায় ৩১২ হেক্টর অংশ সাময়িকভাবে পানিতে প্লাবিত হয়েছে।'
+                      : 'High ocean tide entered the mangrove forest, temporarily submerging 312 hectares of ground beneath the trees.')
+              )}
+
+              {audience === 'decision' && (
+                isJamuna
+                  ? (isBn
+                      ? 'চিলমারী পশ্চিম বাঁধে মারাত্মক নদীভাঙন: ১৪৫.৮ হেক্টর সম্পূর্ণ বিনষ্ট। চিলমারী মডেল প্রাথমিক বিদ্যালয় ও ফেরি ঘাট প্রত্যক্ষ হুমকির মুখে।'
+                      : 'Critical bankline failure detected along Chilmari West Embankment: 145.8 ha total loss. Primary school and ferry road directly threatened.')
+                  : (isBn
+                      ? 'পূর্ণ জোয়ারে দুবলার চরের অভ্যন্তরে ৩১২ হেক্টর এলাকা প্লাবিত। জোয়ারের মাত্রা BIWTA পূর্বাভাসের ০.১২ মিটারের মধ্যে ছিল। আশ্রয়কেন্দ্রগুলো নিরাপদ।'
+                      : 'High spring tide inundated 312 ha within Dublar Char zone. Surge remained within 0.12m tolerance of BIWTA forecast. Cyclone shelters accessible.')
+              )}
+
+              {audience === 'analyst' && (
+                isJamuna
+                  ? (isBn
+                      ? 'L-band GCOV ব্যাকস্ক্যাটার -৭.২ dB থেকে কমে -১৫.৪ dB এ নেমেছে (Δ = -৮.২ dB)। Otsu থ্রেশহোল্ড ≤ -১৪.০ dB দ্বারা ওপেন ওয়াটার চিহ্নিত (N=3,645 পিক্সেল)।'
+                      : 'L2 GCOV backscatter dropped by 8.2 dB (-7.2 dB to -15.4 dB). Water threshold ≤ -14.0 dB confirmed via Otsu bimodal segmentation (N=3,645 20m cells).')
+                  : (isBn
+                      ? 'ট্রাঙ্ক-গ্রাউন্ড ডাবল-বাউন্সের কারণে HH পোলারাইজেশনে +৩.৫ dB বৃদ্ধি। ফ্রিম্যান-ডারডেন ভলিউম ডিকম্পোজিশনে ক্যানোপি অটুট নিশ্চিত (HV = -১৮.১ dB)।'
+                      : 'HH return increased by +3.5 dB via trunk-ground dihedral double bounce. Freeman-Durden volume decomposition confirms stable canopy (HV = -18.1 dB).')
+              )}
             </p>
           </div>
 
@@ -127,25 +242,29 @@ export const RightInspector: React.FC = () => {
             </div>
             <div className="space-y-1.5">
               <div className="flex items-start space-x-1.5 text-xs text-[#0F172A]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#009E73] mt-1.5 shrink-0" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#009E73] mt-0.5 shrink-0" />
                 <span>
-                  {isJamuna
-                    ? (language === 'bn' ? 'সমর্থিত: এটি একটি সক্রিয় পানি/প্লাবন রূপান্তর।' : 'Supported: Open water surface presence verified.')
-                    : (language === 'bn' ? 'সমর্থিত: জোয়ারের পানিতে ক্যানোপির তলদেশ নিমজ্জন।' : 'Supported: Sub-canopy water presence verified.')}
+                  {audience === 'public'
+                    ? (isJamuna ? (isBn ? 'নিশ্চিত: জমি ভেঙে নদীতে পরিণত হয়েছে।' : 'Confirmed: Farmland washed away into river.') : (isBn ? 'নিশ্চিত: গাছের নিচে জোয়ারের পানি ঢুকেছে।' : 'Confirmed: Normal tidal water beneath trees.'))
+                    : audience === 'decision'
+                    ? (isJamuna ? (isBn ? 'নিশ্চিত: ৩টি মৌজার কৃষিজমিতে অর্থনৈতিক ক্ষয়ক্ষতি।' : 'Confirmed: Direct asset and farmland loss across 3 Mauzas.') : (isBn ? 'নিশ্চিত: আশ্রয়কেন্দ্র নৌপথে সংযুক্ত।' : 'Confirmed: Cyclone shelter boat access maintained.'))
+                    : (isJamuna ? (isBn ? 'যাচাইকৃত: স্পেকুলার ওয়াটার সিগন্যাচার (p < 0.001)।' : 'Verified: Specular water scattering signature (p < 0.001).') : (isBn ? 'যাচাইকৃত: ডাই-ইলেকট্রিক ওয়াটার বাউন্ডারি।' : 'Verified: Sub-canopy dielectric water boundary.'))}
                 </span>
               </div>
               <div className="flex items-start space-x-1.5 text-xs text-[#64748B]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#D55E00] mt-1.5 shrink-0" />
+                <AlertTriangle className="w-3.5 h-3.5 text-[#D55E00] mt-0.5 shrink-0" />
                 <span>
-                  {isJamuna
-                    ? (language === 'bn' ? 'অমীমাংসিত: স্থায়ী নদীভাঙন নাকি সাময়িক প্লাবন।' : 'Unresolved: Permanent erosion vs. transient sandbar submergence.')
-                    : (language === 'bn' ? 'অমীমাংসিত: ঘূর্ণিঝড়ের ক্ষত নাকি নিয়মিত উচ্চ জোয়ার।' : 'Unresolved: Cyclonic canopy loss vs. regular spring tide.')}
+                  {audience === 'public'
+                    ? (isJamuna ? (isBn ? 'অমীমাংসিত: পানি নামলে চরে নতুন পলি জাগবে কি না।' : 'Unresolved: Whether new silt sandbars will emerge in winter.') : (isBn ? 'অমীমাংসিত: কোনো স্থায়ী গাছ নষ্ট হয়নি।' : 'Unresolved: No permanent mangrove defoliation.'))
+                    : audience === 'decision'
+                    ? (isJamuna ? (isBn ? 'অপারেশনাল সিদ্ধান্ত: তাৎক্ষণিক জিও-ব্যাগ ফেলা আবশ্যক।' : 'Operational: Priority 1 geo-bag revetment required.') : (isBn ? 'অপারেশনাল সিদ্ধান্ত: মৌসুমি টহল প্রস্তুত রাখা।' : 'Operational: Maintain seasonal forest patrol craft.'))
+                    : (isJamuna ? (isBn ? 'অমীমাংসিত: সীমানার মিশ্র পিক্সেল (ফ্রিঞ্জ ৩.৪ হেক্টর)।' : 'Unresolved: Sub-pixel mixing within 20m contested fringe (3.4 ha).') : (isBn ? 'অমীমাংসিত: দুবলার গেজের ১৪ কিমি দূরবর্তী গ্রেডিয়েন্ট।' : 'Unresolved: Creek hydraulic head gradient from Dublar gauge (14 km).'))}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Step 3: Main source of uncertainty */}
+          {/* Step 3: Main source of uncertainty / Hydrological Datum */}
           <div className="space-y-1">
             <div className="text-[11px] font-bold uppercase tracking-wider text-[#D55E00] flex items-center space-x-1">
               <span className="w-4 h-4 rounded-full bg-[#FFEDD5] text-[#C2410C] flex items-center justify-center text-[10px]">
@@ -156,13 +275,35 @@ export const RightInspector: React.FC = () => {
             <div className="text-xs text-[#475569] bg-[#FFF7ED] p-2 rounded border border-[#FFEDD5] flex items-start space-x-1.5">
               <AlertTriangle className="w-3.5 h-3.5 text-[#C2410C] shrink-0 mt-0.5" />
               <p className="text-[11px] leading-snug">
-                {isJamuna
-                  ? (language === 'bn'
-                      ? 'নদীর পানির উচ্চতা (Gauge stage) একই ছিল কি না তা FFWC লাইভ ডাটা ছাড়া চূড়ান্ত নিশ্চিত করা যায় না। এটি সাময়িক প্লাবনও হতে পারে।'
-                      : 'Equal stage cannot be independently verified without verified FFWC gauge series. Temporary flood cannot be mathematically ruled out.')
-                  : (language === 'bn'
-                      ? 'তীরে কাছাকাছি জোয়ারের স্টেশন থেকে স্থানীয় খালের পানির উচ্চতার পার্থক্য থাকতে পারে।'
-                      : 'BIWTA tidal station is 14 km distant; local creek hydraulic gradient remains an unmodeled variable.')}
+                {audience === 'public' && (
+                  isJamuna
+                    ? (isBn
+                        ? 'নদীর পানির উচ্চতা ২৬ আগস্ট ১৮.৯ মিটারে ছিল এবং সেপ্টেম্বরে ১৬.৪ মিটারে নেমেছিল।'
+                        : 'River water level was 18.9 meters during peak flood, and fell to 16.4 meters in September.')
+                    : (isBn
+                        ? 'জোয়ারের উচ্চতা ছিল +২.২ মিটার এবং ভাটায় তা +০.৪ মিটারে নেমে যায়।'
+                        : 'Tide height was +2.2 meters at high tide, and fell to +0.4 meters at low tide.')
+                )}
+
+                {audience === 'decision' && (
+                  isJamuna
+                    ? (isBn
+                        ? 'BWDB চিলমারী গেজের বিপৎসীমা ১৯.৫০ মিটার। ২৬ আগস্টের পিক ছিল ১৮.৯০ মিটার (বিপৎসীমার ৬০ সেমি নিচে)।'
+                        : 'BWDB Chilmari Danger Level DL = 19.50m. Peak crest was 18.90m (60cm below danger level).')
+                    : (isBn
+                        ? 'BIWTA দুবলার চর টাইডাল গেজ (TD12.4): হাই টাইড ক্রেস্ট +২.২০ মিটার CD। সাধারণ জোয়ারের সীমা।'
+                        : 'BIWTA Dublar Char Tidal Gauge (TD12.4): High tide crest +2.20m CD. Within normal spring cycle.')
+                )}
+
+                {audience === 'analyst' && (
+                  isJamuna
+                    ? (isBn
+                        ? 'SWOT KaRIn ওয়াটার হাইট hw = ১৮.৯০ মি WGS84, রিচ স্লোপ = ৭.২ সেমি/কিমি। ইনসার কোহেরেন্স γ = ০.৭৪।'
+                        : 'SWOT KaRIn water surface height hw = 18.90m WGS84, reach slope = 7.2 cm/km. Temporal InSAR coherence γ = 0.74.')
+                    : (isBn
+                        ? 'Sentinel-1 C-band (Δ = +0.8 dB) বনাম NISAR L-band (Δ = +3.5 dB) দ্বিমুখী ক্যানোপি পেনিট্রেশন যাচাইকৃত।'
+                        : 'Sentinel-1 C-band (Δ = +0.8 dB) vs NISAR L-band (Δ = +3.5 dB) dual-frequency canopy penetration verified.')
+                )}
               </p>
             </div>
           </div>
@@ -176,13 +317,23 @@ export const RightInspector: React.FC = () => {
               <span>{t.inspector.nextCheck}</span>
             </div>
             <p className="text-xs text-[#0F766E] font-medium bg-[#F0FDFA] p-2 rounded border border-[#CCFBF1]">
-              {isJamuna
-                ? (language === 'bn'
-                    ? 'পরবর্তী ২১ অক্টোবরের পাসে এই অংশটি পানি আছে নাকি জেগে উঠেছে পরীক্ষা করুন।'
-                    : 'Inspect subsequent observation on 21 Oct 2026 to verify water persistence.')
-                : (language === 'bn'
-                    ? 'ভাটার সময়ের একই পোলারাইজেশন ডেটার সাথে তুলনা করুন।'
-                    : 'Acquire low-tide acquisition match to verify return to baseline backscatter.')}
+              {audience === 'public' && (
+                isJamuna
+                  ? (isBn ? 'পরবর্তী ২১ অক্টোবরের স্যাটেলাইট পাসে পানির সীমা আবার পরীক্ষা করুন।' : 'Check next satellite pass on 21 Oct 2026 to see if bank remains flooded.')
+                  : (isBn ? 'ভাটার সময়ের স্যাটেলাইট ছবিতে পানি নেমে গেছে কি না দেখুন।' : 'Inspect low-tide satellite image to verify that water receded from the forest.')
+              )}
+
+              {audience === 'decision' && (
+                isJamuna
+                  ? (isBn ? 'উপজেলা প্রকৌশল দল পাঠিয়ে সরেজমিনে জরিপ করুন ও জিও-ব্যাগ বাজেট অনুমোদন দিন।' : 'Dispatch Upazila engineering team with TRACE mobile survey kit. Approve geo-bag allocation.')
+                  : (isBn ? 'পোস্ট-মনসুন বন বিভাগীয় টহল পরিচালনা করুন।' : 'Schedule post-monsoon forestry patrol. Verify ranger station boat moorings.')
+              )}
+
+              {audience === 'analyst' && (
+                isJamuna
+                  ? (isBn ? 'অবশিষ্ট বাঁধ ধ্বসের জন্য রিপিট-পাস GUNW ইনসার ফেজ আনর‍্যাপিং সম্পন্ন করুন।' : 'Execute repeat-pass GUNW InSAR phase unwrapping for residual crest subsidence.')
+                  : (isBn ? 'ভাটার ডেটায় ক্লাউড-পটিয়ার H/alpha আইগেনভ্যালু বিশ্লেষণ সম্পন্ন করুন।' : 'Compute Cloude-Pottier H/alpha eigenvalue decomposition across low-tide acquisition.')
+              )}
             </p>
           </div>
 
@@ -242,8 +393,8 @@ export const RightInspector: React.FC = () => {
                 className="w-full accent-[#155E75] cursor-pointer"
               />
               <div className="mt-2 text-[10px] text-[#64748B] flex justify-between">
-                <span>Robust Core: <strong className="text-[#102A43]">11.4 ha</strong></span>
-                <span>Contested Fringe: <strong className="text-[#D55E00]">{(3.4 + thresholdOffset * 0.8).toFixed(1)} ha</strong></span>
+                <span>Robust Core: <strong className="text-[#102A43]">145.8 ha</strong></span>
+                <span>Contested Fringe: <strong className="text-[#D55E00]">{(12.4 + thresholdOffset * 2.8).toFixed(1)} ha</strong></span>
               </div>
             </div>
           </div>

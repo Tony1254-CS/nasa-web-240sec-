@@ -108,7 +108,7 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   basemapType: 'satellite', // Default to REAL satellite imagery!
   swipePosition: 50,
   comparisonMode: 'dates',
-  language: 'bn', // Default Bangla with toggle to EN
+  language: 'en', // Default English with toggle to BN
   audience: 'public',
   selectedDate: '2026-08-26',
   availableDates: ['2026-06-23', '2026-07-17', '2026-08-10', '2026-08-26', '2026-09-19', '2026-10-21'],
