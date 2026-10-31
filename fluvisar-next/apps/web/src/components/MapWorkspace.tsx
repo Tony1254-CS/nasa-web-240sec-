@@ -29,6 +29,14 @@ export const MapWorkspace: React.FC = () => {
 
   const [snapshotTaken, setSnapshotTaken] = useState<boolean>(false);
 
+  // TEMPORARY basemap debug harness (?debug=1): live map state + real-browser tile probe.
+  // Lets the user report one string instead of guessing. Remove after verification.
+  const isDebug =
+    typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('debug');
+  const [dbgText, setDbgText] = useState('booting…');
+  const mapErrorsRef = useRef<string[]>([]);
+  const tileProbeRef = useRef('probe: not run');
+
   const {
     regionId,
     viewId,
@@ -49,33 +57,51 @@ export const MapWorkspace: React.FC = () => {
 
   const isBn = language === 'bn';
 
-  // Helper to apply basemaps across either map instance
-  const applyBasemap = (map: maplibregl.Map | null, type: BasemapType) => {
-    if (!map || !map.isStyleLoaded()) return;
-    if (map.getLayer('satellite-layer')) {
-      map.setLayoutProperty('satellite-layer', 'visibility', type === 'satellite' ? 'visible' : 'none');
-    }
-    if (map.getLayer('sar-layer')) {
-      map.setLayoutProperty('sar-layer', 'visibility', type === 'sar' ? 'visible' : 'none');
-    }
-    if (map.getLayer('osm-layer')) {
-      map.setLayoutProperty('osm-layer', 'visibility', type === 'carto' ? 'visible' : 'none');
+  // LATEST-WINS state ref: async map callbacks ('load'/'styledata') must apply the user's
+  // CURRENT basemap choice — not the mount-time snapshot captured in the first render closure.
+  // NOTE: this assignment runs on every render, so the ref is always in sync with the store.
+  const basemapStateRef = useRef({ basemapType, comparisonMode });
+  basemapStateRef.current = { basemapType, comparisonMode };
+
+  // Helper to apply basemaps across either map instance.
+  // FIX: previously returned early when the style was not loaded, silently DROPPING the
+  // user's click forever (no retry). Now we schedule a one-shot retry on 'styledata'
+  // so an early click always lands as soon as the style is ready.
+  const applyBasemapWithRetry = (map: maplibregl.Map | null, type: BasemapType) => {
+    if (!map) return;
+    const doApply = () => {
+      if (map.getLayer('satellite-layer')) {
+        map.setLayoutProperty('satellite-layer', 'visibility', type === 'satellite' ? 'visible' : 'none');
+      }
+      if (map.getLayer('sar-layer')) {
+        map.setLayoutProperty('sar-layer', 'visibility', type === 'sar' ? 'visible' : 'none');
+      }
+      if (map.getLayer('osm-layer')) {
+        map.setLayoutProperty('osm-layer', 'visibility', type === 'carto' ? 'visible' : 'none');
+      }
+    };
+    if (map.isStyleLoaded()) {
+      doApply();
+    } else {
+      map.once('styledata', doApply);
     }
   };
 
-  // Sync basemaps depending on active comparisonMode
+  // Sync basemaps depending on active comparisonMode (reads LATEST state via ref)
   const syncBasemaps = () => {
+    const { basemapType: type, comparisonMode: mode } = basemapStateRef.current;
     const mapB = mapRefB.current;
     const mapA = mapRefA.current;
 
-    if (comparisonMode === 'sensors') {
-      // Optical Satellite on Left, NISAR SAR Radar on Right
-      if (mapA) applyBasemap(mapA, 'satellite');
-      if (mapB) applyBasemap(mapB, 'sar');
+    if (mode === 'sensors') {
+      // Optical Satellite on Left; the right "sensor panel" honors the user's selection
+      // (defaulting to the NISAR SAR panel when Optical is picked, so both sides differ).
+      if (mapA) applyBasemapWithRetry(mapA, 'satellite');
+      if (mapB) applyBasemapWithRetry(mapB, type === 'satellite' ? 'sar' : type);
     } else {
       // Dates mode: both maps use user's selected basemap
-      if (mapA) applyBasemap(mapA, basemapType);
-      if (mapB) applyBasemap(mapB, basemapType);
+      if (mapA) applyBasemapWithRetry(mapA, type);
+      if (mapB) applyBasemapWithRetry(mapB, type);
     }
   };
 
@@ -122,14 +148,17 @@ export const MapWorkspace: React.FC = () => {
         tileSize: 256,
         attribution: 'Esri, Maxar, Earthstar Geographics, NASA/USGS',
       },
-      // 2. Grayscale NISAR L-band SAR Radar Backscatter surface (Microwave Reflectivity)
+      // 2. SIMULATED NISAR L-band SAR amplitude panel: same optical mosaic rendered
+      //    through a grayscale high-contrast "microwave X-ray" paint transform.
+      //    (Public XYZ tile servers do not host real NISAR/SAR rasters without auth,
+      //    so the radar look is synthesized in-paint; attribution kept honest.)
       'sar-tiles': {
         type: 'raster',
         tiles: [
           'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
         ],
         tileSize: 256,
-        attribution: 'NASA-ISRO SAR (NISAR) L2 GCOV (20m posting)',
+        attribution: 'Optical base © Esri · Simulated NISAR L-band amplitude (grayscale γ⁰)',
       },
       // 3. Cartographic Vector Map (OpenStreetMap)
       'osm-tiles': {
@@ -160,10 +189,11 @@ export const MapWorkspace: React.FC = () => {
         layout: { visibility: 'none' },
         paint: {
           'raster-opacity': 1.0,
-          'raster-saturation': -1.0, // High-contrast microwave radar backscatter
-          'raster-contrast': 0.85,
+          'raster-saturation': -1.0, // Fully grayscale — microwave backscatter X-ray look
+          'raster-contrast': 1.0, // Crushed blacks / bright speckle highlights
           'raster-brightness-min': 0.0,
-          'raster-brightness-max': 0.85,
+          'raster-brightness-max': 0.62, // Dark amplitude readout — unmistakable vs optical baseline
+          'raster-hue-rotate': 0,
         },
       },
       {
@@ -212,6 +242,19 @@ export const MapWorkspace: React.FC = () => {
     mapRefA.current = mapA;
     (window as any).__mapA = mapA;
     (window as any).__mapB = mapB;
+
+    if (isDebug) {
+      [mapB, mapA].forEach((m) =>
+        m.on('error', (e: any) => {
+          const msg =
+            typeof e?.error === 'string'
+              ? e.error
+              : e?.error?.message || e?.statusText || 'unknown-error';
+          mapErrorsRef.current.push(String(msg).slice(0, 120));
+          if (mapErrorsRef.current.length > 6) mapErrorsRef.current.shift();
+        })
+      );
+    }
 
     // Synchronize Camera from Map B to Map A continuously
     const syncCamera = () => {
@@ -551,6 +594,39 @@ export const MapWorkspace: React.FC = () => {
     applyOverlayFills(mapRefB.current);
     applyOverlayFills(mapRefA.current);
   }, [overlayStyle]);
+
+  // DIAGNOSIS ONLY: live state reporter + real-browser tile probe (?debug=1).
+  useEffect(() => {
+    if (!isDebug) return;
+    // Probe the ACTIVE provider exactly the way MapLibre does (crossOrigin image fetch)
+    const provider =
+      basemapType === 'carto'
+        ? 'https://tile.openstreetmap.org/10/767/437.png'
+        : 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/10/437/767';
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    const t0 = Date.now();
+    img.onload = () => {
+      tileProbeRef.current = `/probe OK ${Date.now() - t0}ms ${img.naturalWidth}px`;
+    };
+    img.onerror = () => {
+      tileProbeRef.current = '/probe FAILED (blocked/CORS/offline)';
+    };
+    img.src = provider;
+
+    const id = window.setInterval(() => {
+      const snap = (m: maplibregl.Map | null) => {
+        if (!m) return 'no-map';
+        const v = (id: string) => (m.getLayer(id) ? m.getLayoutProperty(id, 'visibility') : 'NOLAYER');
+        return `style=${m.isStyleLoaded() ? 'loaded' : 'LOADING'} sat=${v('satellite-layer')} sar=${v('sar-layer')} osm=${v('osm-layer')}`;
+      };
+      const errs = mapErrorsRef.current.slice(-3).join(' § ') || 'none';
+      setDbgText(
+        `type=${basemapType} mode=${comparisonMode} | B[${snap(mapRefB.current)}] | A[${snap(mapRefA.current)}] | ${tileProbeRef.current} | err: ${errs}`
+      );
+    }, 600);
+    return () => window.clearInterval(id);
+  }, [isDebug, basemapType, comparisonMode]);
 
   // Dynamic temporal update: sync map water extent to selectedDate or selectedPair!
   useEffect(() => {
@@ -969,6 +1045,12 @@ export const MapWorkspace: React.FC = () => {
               </div>
             </>
           )}
+        </div>
+      )}
+      {/* TEMPORARY basemap debug badge (?debug=1) — read this string to diagnose switching */}
+      {isDebug && (
+        <div className="absolute bottom-2 left-2 z-50 max-w-[72%] p-2 rounded-lg bg-black/85 text-[10px] leading-relaxed font-mono text-[#7DF9AA] border border-[#7DF9AA]/40 pointer-events-auto select-text break-words">
+          <span className="font-bold text-white">BASEMAP DEBUG:</span> {dbgText}
         </div>
       )}
     </div>

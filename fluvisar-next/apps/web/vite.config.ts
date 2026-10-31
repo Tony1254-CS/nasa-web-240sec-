@@ -8,4 +8,14 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  // OneDrive-synced project folder: chokidar's fs events are unreliable here, so HMR was
+  // silently skipping edits (browser kept serving stale modules → "fix keno dekhtesena").
+  // Polling guarantees edits are detected reliably. node_modules is ignored to keep CPU sane.
+  server: {
+    watch: {
+      usePolling: true,
+      interval: 300,
+      ignored: ['**/node_modules/**'],
+    },
+  },
 })
