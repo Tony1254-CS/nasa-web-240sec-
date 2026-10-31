@@ -1,242 +1,349 @@
-# FluviSAR Observatory — Complete Feature Catalog & User Guide
-> **Document Purpose:** Comprehensive reference of all features specified in `features.pdf` alongside additional platform features implemented in FluviSAR, with scientific explanations and step-by-step instructions for use on the web observatory.
+# FluviSAR ওয়েব অবজারভেটরি — পূর্ণাঙ্গ ফিচার ক্যাটালগ ও ইউজার গাইড (User Guide)
+
+> **ডকুমেন্টের উদ্দেশ্য:** এই ডকুমেন্টে `features.pdf` ফাইলের প্রতিটি কোর ও স্পেশালাইজড ফিচার এবং ওয়েবসাইটে যুক্ত অতিরিক্ত উদ্ভাবনী ফিচারসমূহ বিস্তারিত বাংলায় নথিভুক্ত করা হলো। প্রতিটি ফিচারের স্ক্রিনে সুনির্দিষ্ট অবস্থান (Screen Location), কোন কোন বাটনে ক্লিক করতে হবে এবং কীভাবে ব্যবহার করতে হবে তা ধাপে ধাপে বুঝিয়ে দেওয়া হয়েছে—যাতে যে-কেউ এটি পড়ে ওয়েবসাইটটি সম্পূর্ণভাবে পরিচালনা করতে পারেন।
 
 ---
 
-## 📑 Table of Contents
-1. [Overview & Architecture Alignment](#overview--architecture-alignment)
-2. [Part 1: Features from features.pdf (Core & Differentiating Features)](#part-1-features-from-featurespdf)
-   - [Tier 1: Core Observatory Features (W1–W5)](#tier-1-core-observatory-features)
-   - [Tier 2: Differentiating Features (W6–W10)](#tier-2-differentiating-features)
-   - [Tier 3: High-Impact Experience (W11–W14)](#tier-3-high-impact-experience)
-   - [Specialized Scientific Modules (Modules 1–9)](#specialized-scientific-modules)
-3. [Part 2: Additional Platform Features Beyond features.pdf](#part-2-additional-platform-features-beyond-featurespdf)
-4. [Quick Reference Feature Navigation Matrix](#quick-reference-feature-navigation-matrix)
+## 🖥️ স্ক্রিনের মূল লেআউট ও বাটন ডিরেক্টরি (Screen Layout Overview)
+
+ওয়েবসাইটে ঢোকার পর স্ক্রিনটিকে প্রধান ৫টি অংশে দেখতে পাবেন:
+
+```text
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│ [1] টপ হেডার বার: Logo | [Atlas] [Investigate] [Stories] [Learn] [Reports] | [🔊] [Public|Decision|Analyst] [EN/BN] │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│ [2] রিজিয়ন ও মোড বার: [Jamuna River] [Sundarbans Mangrove]             [Explore] [Investigate] [Act] │
+├─────────────────────────┬──────────────────────────────────────────────┬───────────────┤
+│ [3] বাম পাশের প্যানেল   │ [4] মাঝখানের মূল স্যাটেলাইট ম্যাপ ওয়ার্কস্পেস │ [5] ডান পাশের │
+│ • Quick Focal Points    │ • উপরে বামে: [Dates] [Sat vs Radar] [Split]  │ অডিট প্যানেল  │
+│ • Investigation Lenses  │ • উপরে ডানে: [Satellite][Radar][Carto]       │ • Finding info│
+│   (J1, J2, S1, S2, X1)  │              [Outlines Only] [📸 Snapshot]   │ • 7-Check     │
+│ • Radar Switchboard     │              [-] ──●── [+] 11.5x             │   Audit Cards │
+│ • Scenario Lab Controls │ • মাঝখানে: ড্র্যাগেবল সোয়াইপ স্লাইডার (↔)   │ • Impact Data │
+│                         │ • নিচে ডানে: সায়েন্টিফিক লিজেন্ড             │ • Action Btn: │
+│                         │ • ম্যাপে: লাল ভাঙন ও সবুজ চরের মার্কার      │   [BreakMyFind]
+│                         │                                              │   [Passport]  │
+│                         │                                              │   [Brief PDF] │
+├─────────────────────────┴──────────────────────────────────────────────┴───────────────┤
+│ [6] নিচের মাল্টি-সেন্সর গ্রাফ স্ট্রিপ (Radar dB / Gauge Stage / NDVI / GPM Rain)       │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│ [7] একদম নিচের টাইমলাইন রিদম প্লেয়ার: [▶ Play] [২৩ জুন] ── [২৬ আগস্ট] ── [২১ অক্টোবর] [Pair]│
+└────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## Overview & Architecture Alignment
-
-FluviSAR is a dual-region web observatory developed for the **NASA Space Apps Challenge 2026** under the challenge theme *"Dancing with the SARs"*. It operates across two primary active study regions in Bangladesh:
-* **The Jamuna River:** Braided river dynamic migration, monsoonal flash inundation, severe cutbank erosion, and char accretion.
-* **The Sundarbans Mangrove Forest:** Tidal inundation pulses, sub-canopy double-bounce microwave radar penetration, and coastal ecosystem monitoring.
-
-All features are designed to fulfill the challenge's core directive: *translate complex microwave radar data into transparent, actionable, and human-legible insights*.
+# পর্ব ১: `features.pdf` এ উল্লিখিত ফিচারসমূহ
 
 ---
 
-# Part 1: Features from `features.pdf`
+## 🟢 Tier 1: Core Observatory Features (মৌলিক ফিচারসমূহ)
 
-## Tier 1: Core Observatory Features
-
-### W1. Earth Change Atlas
-* **Explanation:** An interactive geospatial switchboard that situates localized investigations within a macro geographic context, enabling users to jump between Jamuna, Sundarbans, and global benchmark sites.
-* **How to Use on the Website:**
-  1. Click the **`Atlas`** tab on the top navigation header (or select **`M0`** from the view selector).
-  2. Click on the **Jamuna River** or **Sundarbans Mangrove** card to immediately transition the camera and load date-indexed observations for that ecosystem.
-
-### W2. SAR Time Machine
-* **Explanation:** A multi-temporal synchronized comparison engine with a draggable swipe divider, temporal timeline playback, and observation pairs showing physical landscape evolution over time.
-* **How to Use on the Website:**
-  1. In the central map workspace, locate the vertical white divider line with the circular handle (**`↔`**).
-  2. Drag the handle horizontally across the river or mangrove forest to inspect the Before state on the left and After state on the right.
-  3. Use the bottom timeline bar to scrub through acquisition dates or click the **`Play (▶)`** button to trigger automatic time-series progression.
-
-### W3. Radar Lens & Polarization Switchboard
-* **Explanation:** Allows users to inspect calibrated SAR backscatter power ($\gamma^0$ in dB) across polarization channels ($\text{HH}$, $\text{HV}$, $\text{Pauli RGB}$) to distinguish between surface roughness, volume scattering, and double-bounce returns.
-* **How to Use on the Website:**
-  1. Select **Sundarbans Mangrove** from the region switcher.
-  2. In the left panel under **`Sundarbans Radar Switchboard`**, click **`HH`**, **`HV`**, or **`Pauli`** to switch polarization channels.
-  3. Notice how $\text{HH}$ highlights flooded vegetation underneath the canopy, while $\text{HV}$ exposes the forest crown structure.
-
-### W4. Change Detection Engine
-* **Explanation:** A rigorous algorithmic classifier that segments landscape transitions into 4 distinct categories: persistent water, emergent sandbars (accretion), collapsing cutbanks (erosion), and stable land.
-* **How to Use on the Website:**
-  1. In the Jamuna view, locate the prominent red-dashed zone along the western bank (Chilmari) or tan-dashed zone in the middle channel (Mandaler Char).
-  2. Click directly on any colored polygon to open its specific area measurement (e.g., $145.8\text{ ha}$ retreat), affected dates, and classification boundary.
-
-### W5. Evidence & Confidence Inspector
-* **Explanation:** A dedicated right-hand audit panel explaining the observation dates, sensor platform, processing parameters, and 7-point scientific verification check for each selected change candidate.
-* **How to Use on the Website:**
-  1. Click on any finding callout or polygon on the map.
-  2. Review the right sidebar (**`Observed Finding Inspector`**), which reveals the **`7 Check Groups`** (radiometric drops, rainfall anomaly exclusion, stage match, etc.) and explicit confidence flags.
+### ১. W1. Earth Change Atlas (গ্লোবাল ল্যান্ডস্কেপ অ্যাটলাস)
+* **সহজ ব্যাখ্যা:** এটি একটি সমন্বিত গ্লোবাল ড্যাশবোর্ড, যা যমুনা নদী এবং সুন্দরবনসহ বিভিন্ন জলবায়ু-সংবেদনশীল এলাকার সামগ্রিক ভৌগোলিক রূপ একসাথে উপস্থাপন করে।
+* **স্ক্রিনের অবস্থান:** একদম উপরের নীল হেডার বারের মাঝখানে।
+* **কীভাবে ব্যবহার করবেন:**
+  1. হেডারের **`🌐 Atlas`** ট্যাবে ক্লিক করুন।
+  2. স্ক্রিনে একটি পূর্ণাঙ্গ গ্লোবাল ম্যাপ খুলবে এবং নিচে যমুনা নদী ও সুন্দরবনের বড় কার্ড দেখতে পাবেন।
+  3. **`Jamuna River`** বা **`Sundarbans Mangrove`** কার্ডের ওপর ক্লিক করলেই ক্যামেরা স্বয়ংক্রিয়ভাবে জুম হয়ে সেই অঞ্চলের বিশদ তদন্ত প্যানেলে প্রবেশ করবে।
 
 ---
 
-## Tier 2: Differentiating Features
-
-### W6. Break My Finding (Change Robustness Laboratory)
-* **Explanation:** A counterfactual stress-testing tool where users can dynamically alter Otsu classification thresholds ($\pm 2.0\text{ dB}$) to see which erosion hotspots remain stable (**Robust Core**) versus ambiguous (**Contested Fringe**).
-* **How to Use on the Website:**
-  1. On the right inspector panel, click the blue **`🧪 Break My Finding`** button.
-  2. A modal dialog will appear displaying the bimodal backscatter histogram.
-  3. Drag the threshold slider left and right to observe how water polygons expand or contract, proving that the finding survives parameter variations.
-
-### W7. River Memory
-* **Explanation:** Displays simultaneous historical river boundaries, animates braided thalweg migration, and charts cumulative bank retreat through successive satellite passes against the official danger level ($19.50\text{ m}$).
-* **How to Use on the Website:**
-  1. In the left panel, click on the **`River Memory (J1)`** lens.
-  2. Observe the historical ghost boundaries etched onto the map.
-  3. Look at the hydrograph chart below the map to see the flood peak cresting above $18.9\text{ m}$ followed by rapid recession.
-
-### W8. Environmental Context Fusion
-* **Explanation:** Fuses SAR radar observations with multi-sensor environmental telemetry: NASA GPM precipitation, FFWC river stage, and Sentinel-2 NDVI vegetation health.
-* **How to Use on the Website:**
-  1. Scroll down to the **`Multisensor Environmental Tracks`** strip directly below the map.
-  2. View synchronized plots showing radar power ($\gamma^0\text{ dB}$), river gauge stage ($\text{m}$), Sentinel-2 NDVI, and 7-day GPM rainfall anomaly on a shared time axis.
-
-### W9. Exposure & Impact Lens
-* **Explanation:** Overlays OpenStreetMap (OSM) community infrastructure (primary schools, clinics, severed roads, ferry terminals) onto the erosion polygon to quantify human exposure estimates.
-* **How to Use on the Website:**
-  1. In the right panel, inspect the **`What Changed for Whom`** / **`Sendai-Aligned Impact Ledger`** section.
-  2. Review the verified asset tallies (e.g., *1 school at critical risk, 120m severed embankment road, 8,200 people exposed*).
-
-### W10. The Change Passport
-* **Explanation:** An immutable digital evidence dossier capturing granule identifiers, processing settings, cryptographic SHA-256 hashes, and a machine-readable JSON manifest for full reproducibility.
-* **How to Use on the Website:**
-  1. In the right inspector panel, click **`🛂 Change Passport`**.
-  2. A cryptographic passport modal will open displaying granule lineage, audit history, and a **`Download Manifest (JSON)`** button for peer-review.
+### ২. W2. SAR Time Machine (টাইম মেশিন ও সোয়াইপ কম্প্যারিজন)
+* **সহজ ব্যাখ্যা:** নির্দিষ্ট তারিখ অনুযায়ী আগে ও পরের স্যাটেলাইট এবং রাডার ছবি পাশাপাশি রেখে মাঝখানের সোয়াইপ হ্যান্ডেল টেনে নদী ও চরের বাস্তব রূপান্তর দেখার ইন্টারেক্টিভ মাধ্যম।
+* **স্ক্রিনের অবস্থান:** মাঝখানের মূল ম্যাপের ঠিক কেন্দ্রস্থলে।
+* **কীভাবে ব্যবহার করবেন:**
+  1. ম্যাপের মাঝখানে একটি সাদা উলম্ব দাগ এবং মাঝে একটি বৃত্তাকার বাটন দেখতে পাবেন যাতে দুইমুখী তীরচিহ্ন (**`↔`**) আঁকা আছে।
+  2. মাউসের লেফট বাটন চেপে ধরে হ্যান্ডেলটিকে ডানে অথবা বামে টেনে নিয়ে যান।
+  3. হ্যান্ডেলের বাম পাশে দেখতে পাবেন আগের তারিখের দৃশ্য (২৬ আগস্টের বন্যায় ডোবা চর) এবং ডান পাশে দেখতে পাবেন পরের তারিখের দৃশ্য (১৯ সেপ্টেম্বরের পানি নেমে গিয়ে চর জেগে ওঠা ও ভাঙন)।
 
 ---
 
-## Tier 3: High-Impact Experience
-
-### W11. Radar-to-Reality
-* **Explanation:** A linked, synchronized multi-sensor view showing original optical satellite photography side-by-side with microwave SAR penetration, highlighting identical geographic pixels.
-* **How to Use on the Website:**
-  1. In the floating top control pill, click **`Sat vs Radar`**.
-  2. Drag the center swipe handle across the river or mangrove; the left side displays true-color optical satellite photography while the right side displays penetrating L-band radar.
-
-### W12. Scientific Story Mode
-* **Explanation:** A cinematic, chapter-based narrative investigation guiding users through 5 localized stories of climate resilience, river dynamics, and mangrove pulse.
-* **How to Use on the Website:**
-  1. Click **`Stories`** in the top navigation bar.
-  2. Select any chapter (e.g., *Chilmari Riverbank Retreat* or *Dublar Char Mangrove Pulse*).
-  3. Click **`Next Chapter`** to follow the sequential guided tour complete with human narratives and satellite findings.
-
-### W13. Scenario Laboratory
-* **Explanation:** An interactive exploration simulator that models hypothetical environmental changes (such as $+1.0\text{ m}$ flood surge or embankment breach) without confusing scenarios with forecasts.
-* **How to Use on the Website:**
-  1. In the left panel, select **`Compare & Scenario`** (or open the Scenario Lab).
-  2. Toggle scenario parameters (e.g., *High Water Stage $+1\text{m}$*).
-  3. The map displays a labeled simulation layer tagged explicitly as **`DECLARED SIMULATION`** to maintain scientific honesty.
-
-### W14. Decision Brief Generator & Field QR Bridge
-* **Explanation:** Compiles the entire investigation into an official one-page printable decision brief with Sendai Framework impact metrics and an embedded QR code linking to TRACE Field mobile tasks.
-* **How to Use on the Website:**
-  1. In the right inspector panel, click **`📄 Generate Decision Brief`**.
-  2. A print-ready briefing modal will open containing recommended actions, authority contacts, and a scannable QR code.
-  3. Click **`Print / Save PDF`** to export the brief.
+### ৩. W3. Radar Lens & Polarization Switchboard (রাডার লেন্স ও পোলারাইজেশন)
+* **সহজ ব্যাখ্যা:** অপটিক্যাল ক্যামেরার সীমাবদ্ধতা কাটিয়ে রাডার তরঙ্গের বিভিন্ন পোলারাইজেশন চ্যানেল (HH, HV, Pauli RGB) ব্যবহার করে মাটি, পানি এবং বনের ভেতরের গভীরতা দেখার ব্যবস্থা।
+* **স্ক্রিনের অবস্থান:** স্ক্রিনের বাম পাশের প্যানেলে (সুন্দরবন সিলেক্ট থাকা অবস্থায়)।
+* **কীভাবে ব্যবহার করবেন:**
+  1. উপরের সাব-হেডার থেকে **`Sundarbans Mangrove`** এ ক্লিক করুন।
+  2. বাম প্যানেলের **`Sundarbans Radar Switchboard`** সেকশনে যান।
+  3. সেখানে থাকা **`HH`**, **`HV`**, বা **`Pauli`** বাটনে ক্লিক করুন।
+  4. **`HH`** চাপলে দেখতে পাবেন গাছের তলার জোয়ারের পানি কীভাবে উজ্জ্বল হয়ে ফুটে উঠেছে; আর **`HV`** চাপলে বনের ঘন ক্যানোপি স্পষ্ট দেখা যাবে।
 
 ---
 
-## Specialized Scientific Modules (from `features.pdf` pages 16–23)
-
-### Module 1: Stage-Matched Pair Selector (Equal-Stage Twin)
-* **Explanation:** Queries river gauge archives (BWDB/FFWC) to find SAR observation pairs with identical water heights ($\Delta h \le 0.1\text{ m}$), preventing seasonal floods from being misclassified as erosion.
-* **How to Use on the Website:** Click the **`Comparison Pair`** button on the bottom timeline bar; the modal displays recommended pairs with their $\Delta\text{stage}$ and $\Delta\text{days}$ compatibility.
-
-### Module 2: Live Otsu Threshold with Histogram
-* **Explanation:** Calculates the bimodal histogram of radar backscatter live and identifies the optimal valley threshold dividing water from dry ground.
-* **How to Use on the Website:** Open **`Break My Finding`** to view the live histogram with the vertical threshold cutoff indicator.
-
-### Module 3: Change Mask with Uncertainty Band
-* **Explanation:** Reports area changes with honest scientific confidence intervals (e.g., $145.8\text{ ha} \pm 18.2\text{ ha}$) derived from threshold sensitivity rather than single naked numbers.
-* **How to Use on the Website:** Displayed on the right panel under **`Robustness Profile`** and within the **`Change Passport`**.
-
-### Module 4: The Rejection Engine / Null Result Room
-* **Explanation:** Transparently explains why the system rejected certain areas as false positives (e.g., wind roughening, radar shadow, stage mismatch).
-* **How to Use on the Website:** Scroll down in the right inspector to the **`Null Result Room`** section to inspect the flipped rejection cards.
-
-### Module 5: Cross-Sensor Evidence Wall
-* **Explanation:** Shows independent corroborating evidence from NASA FIRMS, GPM precipitation, and Sentinel-1 C-band.
-* **How to Use on the Website:** Located in the right inspector panel under the **`Cross-Sensor Verification`** cards.
-
-### Module 6: What Changed for Whom
-* **Explanation:** Converts abstract remote sensing pixels into human-legible sentences that district administrators can act upon.
-* **How to Use on the Website:** Read the summary banner in the right panel (e.g., *"Chilmari West Bank lost 145.8 ha, cutting the primary access road to the ferry ghat"*).
-
-### Module 7–12: TRACE Field Protocol & Mobile Task Handoff
-* **Explanation:** Field verification protocol connecting satellite findings to ground observations (GPS photo, one-tap YES/NO verdict, and offline cache).
-* **How to Use on the Website:** Scan the QR code generated in the **`Decision Brief`** or **`Change Passport`** with any smartphone camera to open the field task contract.
+### ৪. W4. Change Detection Engine (পরিবর্তন শনাক্তকরণ ইঞ্জিন)
+* **সহজ ব্যাখ্যা:** শুধুমাত্র ছবির পার্থক্য নয়, বরং গাণিতিক অ্যালগরিদমের সাহায্যে নদীভাঙন (Erosion), নতুন জেগে ওঠা চর (Accretion) ও পানির সীমানা নিখুঁত হেক্টরে পরিমাপ করে।
+* **স্ক্রিনের অবস্থান:** ম্যাপের ওপর রঙিন ড্যাশড রেখা ও মার্কার হিসেবে প্রদর্শিত।
+* **কীভাবে ব্যবহার করবেন:**
+  1. যমুনা নদীর ম্যাপে পশ্চিম পাড়ে থাকা লাল ড্যাশড বক্সের ওপর ভাসমান **`🔴 Chilmari Retreat: 145.8 ha`** লাল বাটনে ক্লিক করুন।
+  2. ক্লিক করার সাথে সাথে ডান পাশের প্যানেলে সেই ভাঙন বলয়ের মোট আয়তন ($145.8\text{ ha}$), ভাঙনের তারিখ ও নদীর চ্যানেল থেকে কতটা ভেতরে ভেঙেছে তা দেখা যাবে।
+  3. একইভাবে নদীর মাঝখানে থাকা সবুজ মার্কার **`🌱 Mandaler Char Silt: 88.4 ha`** এ ক্লিক করে নতুন পলিচর জমার হিসাব দেখতে পাবেন।
 
 ---
 
-# Part 2: Additional Platform Features Beyond `features.pdf`
-
-Our engineering team built the following high-value enhancements to elevate FluviSAR above typical hackathon prototypes:
-
-### 15. Real Date-Indexed Sentinel-2 & SAR Raster Engine
-* **Explanation:** Streams genuine ESA Copernicus Sentinel-2 multispectral imagery (Tile `45RYJ` and `45QYE`, $0.00\%$ cloud) and calibrated Sentinel-1 SAR imagery for all 6 observation dates, ensuring the Earth surface physically updates beneath vectors.
-* **How to Use on the Website:** Click any date node on the bottom timeline or toggle between **`Satellite`** and **`Radar`**; the base imagery dynamically transitions to that exact acquisition.
-
-### 16. Instant High-Res Map Snapshot Tool
-* **Explanation:** Captures the current dual-canvas WebGL map composite at native viewport resolution with scalebar and attribution watermarks, exporting a crisp PNG.
-* **How to Use on the Website:** Click the **`📸 Snapshot`** button in the top-right toolbar. The file downloads immediately and the button flashes green with **`Saved!`**.
-
-### 17. Clean Outlines Only vs. Tinted Fill Toggle
-* **Explanation:** Allows users to switch between translucent thematic fills and crisp border outlines, ensuring zero obstruction of underlying satellite photography.
-* **How to Use on the Website:** Click the **`✏️ Outlines Only / 🎨 Tinted`** pill in the top-right toolbar. In outlines mode, river channels and sandbars remain $100\%$ visible without blue or red color wash.
-
-### 18. Audience Switcher (Three Perspective Modes)
-* **Explanation:** Dynamically restructures the entire UI vocabulary between three user personas: **`Public`** (plain language, local bigha units), **`Decision Maker`** (Sendai risk metrics, budget), and **`Analyst`** (raw dB backscatter, coherence, and polarimetry).
-* **How to Use on the Website:** Toggle between **`Public`**, **`Decision Maker`**, and **`Analyst`** in the top-right corner of the header.
-
-### 19. Full Bilingual Localization Engine (English & Bengali)
-* **Explanation:** Provides instantaneous one-click switching between English and natural, culturally reviewed Bengali (*Noto Sans Bengali*), ensuring accessibility for local char dwellers and disaster managers.
-* **How to Use on the Website:** Click the **`EN / BN`** button in the header navigation to switch the entire application interface into Bengali.
-
-### 20. Web Audio Sonification Engine ("Feel the River")
-* **Explanation:** Synthesizes calibrated radar backscatter power ($\text{dB}$) into real-time audio frequencies using the Web Audio API, allowing visually impaired researchers to "hear" river depth and vegetation density.
-* **How to Use on the Website:**
-  1. Click the speaker icon (**`🔊`**) in the top header to unmute audio sonification.
-  2. Click anywhere on the map (water, sandbar, or collapsing bank); a tone will play with frequency and modulation mapped to that pixel's radar backscatter.
-
-### 21. Coverage Curtain Support Mask (N02)
-* **Explanation:** Visualizes the true $78\%$ observable satellite swath geometry, orbit inclination angle, and radar shadow blindspots over the target reach.
-* **How to Use on the Website:** Click the floating **`Coverage Curtain (N02)`** badge on the upper-left corner of the map to toggle the orbital support mask.
-
-### 22. InSAR Fringe Stage & Centimeter Displacement Profiler
-* **Explanation:** Renders interactive interferometric phase fringes ($\Delta\phi$) measuring line-of-sight ground displacement at $11.9\text{ cm}$ per full $2\pi$ color fringe cycle.
-* **How to Use on the Website:** Select **`Fringe Stage (InSAR)`** in the left panel to inspect the interferogram and read live deformation values.
-
-### 23. Continuous Precision Zoom Slider
-* **Explanation:** A fine-grained zoom slider allowing smooth magnification adjustments from regional overview ($6.0\times$) to bank-level detail ($16.0\times$).
-* **How to Use on the Website:** Adjust the slider situated between the **`-`** and **`+`** zoom buttons in the top-right corner of the map.
-
-### 24. Split-Screen vs. Draggable Swipe Mode Switcher
-* **Explanation:** Provides the option to switch from a single-screen draggable center divider to a side-by-side synchronized dual split screen.
-* **How to Use on the Website:** In the top-left comparison pill, click the **`Split / Swipe`** toggle button to choose your preferred layout.
-
-### 25. Interactive SAR Lab Educational Suite
-* **Explanation:** An educational sandbox featuring four hands-on interactive experiments: *Cloud Blindness Test*, *Polarization Matcher*, *Speckle Filter*, and *Fringe Counter*.
-* **How to Use on the Website:** Click the **`Learn`** tab in the main navigation header to launch the interactive simulators.
+### ৫. W5. Evidence & Confidence Inspector (প্রমাণ ও আস্থা অডিট প্যানেল)
+* **সহজ ব্যাখ্যা:** একটি সুনির্দিষ্ট পরিবর্তনকে কেন সিস্টেম "সত্যিকারের ভাঙন" হিসেবে গ্রহণ করেছে তার ৭ স্তরের বৈজ্ঞানিক প্রমাণপত্র ও কোয়ালিটি অডিট।
+* **স্ক্রিনের অবস্থান:** স্ক্রিনের সম্পূর্ণ ডান পাশের লম্বা সাইডবার।
+* **কীভাবে ব্যবহার করবেন:**
+  1. ম্যাপে যেকোনো ফিচার বা মার্কারে ক্লিক করুন।
+  2. ডান পাশের সাইডবারে স্ক্রোল করুন। সেখানে **`EVIDENCE MULTI-CLOCK`** (স্যাটেলাইট ট্রানজিট সময়) এবং **`7 Check Groups`** কার্ডগুলো দেখতে পাবেন।
+  3. প্রতিটি কার্ডের পাশে সবুজ "PASSED" বা হলুদ "WARNING" ব্যাজ দেখে নিশ্চিত হতে পারবেন যে এটি কোনো মেঘের ছায়া বা সাময়িক রোদ নয়, বরং নিশ্চিত নদীভাঙন।
 
 ---
 
-## Quick Reference Feature Navigation Matrix
+## 🔵 Tier 2: Differentiating Features (উন্নত বিশ্লেষণাত্মক ফিচারসমূহ)
 
-| Requirement / Feature | Category | Primary UI Entry Point | Key Implementation Files |
+### ৬. W6. Break My Finding (কাউন্টারফ্যাকচুয়াল স্ট্রেস টেস্ট ল্যাব)
+* **সহজ ব্যাখ্যা:** অ্যালগরিদমের সিদ্ধান্তের বিরুদ্ধে গিয়ে নিজেই থ্রেশহোল্ড (dB) ও প্যারামিটার বদলে যাচাই করার সায়েন্টিফিক ল্যাব—যা প্রমাণ করে ফলাফলটি কাল্পনিক নয়।
+* **স্ক্রিনের অবস্থান:** ডান পাশের ইন্সপেক্টর প্যানেলের নিচের দিকে থাকা নীল বাটন।
+* **কীভাবে ব্যবহার করবেন:**
+  1. ডান প্যানেলের **`🧪 Break My Finding`** বাটনে ক্লিক করুন।
+  2. একটি বড় মডাল উইন্ডো পপ-আপ হবে যেখানে রাডার পিক্সেল পাওয়ারের **Live Otsu Histogram** দেখা যাবে।
+  3. উইন্ডোর স্লাইডারটি ধরে বামে বা ডানে টানুন (যেমন $-2\text{ dB}$ থেকে $+2\text{ dB}$)।
+  4. লক্ষ্য করুন কীভাবে ব্যাকগ্রাউন্ডে পানির সীমানা পরিবর্তিত হয় এবং কোনটি **"Robust Core"** (সব প্যারামিটারে অটুট থাকে) আর কোনটি **"Contested Fringe"** তা পরিষ্কার হয়ে ওঠে।
+
+---
+
+### ৭. W7. River Memory (নদীর ঐতিহাসিক স্মৃতি ও গতিপথ)
+* **সহজ ব্যাখ্যা:** যমুনা নদীর বিগত কয়েক বছরের গতিপথ, ভূতপূর্ব চ্যানেল এবং বিপৎসীমার ($19.50\text{ m}$) সাথে বর্তমান ভাঙনের তুলনামূলক অ্যানিমেশন।
+* **স্ক্রিনের অবস্থান:** বাম পাশের প্যানেলের প্রথম লেন্স বাটন।
+* **কীভাবে ব্যবহার করবেন:**
+  1. বাম প্যানেলে গিয়ে **`River Memory (J1)`** বাটনে ক্লিক করুন।
+  2. ম্যাপে হালকা নীল ও ধূসর রঙের ঐতিহাসিক চ্যানেল আউটলাইন ফুটে উঠবে।
+  3. নিচের টাইমলাইন প্লেয়ারের প্লে বাটনে চাপলে দেখতে পাবেন কীভাবে নদী বছরের পর বছর ধরে বামে ও ডানে স্থানান্তরিত হয়েছে।
+
+---
+
+### ৮. W8. Environmental Context Fusion (পরিবেশগত মাল্টি-সেন্সর ফিউশন)
+* **সহজ ব্যাখ্যা:** রাডার সংকেতের সাথে নাসার GPM বৃষ্টিপাত, সরকারি FFWC নদীর পানির উচ্চতা ও Sentinel-2 গাছপালার ইনডেক্স (NDVI) একসাথে টাইমলাইনে মিলিয়ে দেখা।
+* **স্ক্রিনের অবস্থান:** মাঝখানের ম্যাপের ঠিক নিচে অবস্থিত হরিজন্টাল স্ট্রিপ।
+* **কীভাবে ব্যবহার করবেন:**
+  1. ম্যাপের নিচের **`Multisensor Environmental Tracks (Shared Time Axis)`** প্যানেলটি দেখুন।
+  2. এখানে ৪টি আলাদা গ্রাফ পাশাপাশি রয়েছে:
+     * `NISAR L-GCOV (dB)` — রাডার পাওয়ার
+     * `Chilmari Gauge (m)` — নদীর পানির উচ্চতা (লাল ডটেড লাইন হলো বিপৎসীমা)
+     * `Sentinel-2 NDVI` — গাছপালার সবুজত্ব
+     * `GPM 7d Rain (mm)` — উজানের বৃষ্টিপাতের পরিমাণ
+  3. টাইমলাইনের কোনো তারিখে ক্লিক করলে গ্রাফের ভার্টিক্যাল লাইন সেই নির্দিষ্ট দিনের ডেটা পয়েন্টে চলে যাবে।
+
+---
+
+### ৯. W9. Exposure & Impact Lens (জনজীবন ও অবকাঠামো ক্ষতির হিসাব)
+* **সহজ ব্যাখ্যা:** ভাঙন বা বন্যার ফলে কতগুলো স্কুল, কমিউনিটি ক্লিনিক, মসজিদ এবং রাস্তা নদীগর্ভে বিলীন হওয়ার ঝুঁকিতে পড়েছে তার সঠিক তালিকা।
+* **স্ক্রিনের অবস্থান:** ডান পাশের প্যানেলের **`What Changed for Whom`** সেকশন।
+* **কীভাবে ব্যবহার করবেন:**
+  1. ডান পাশের প্যানেলে স্ক্রল করে **`Sendai-Aligned Impact Ledger`** টাইটেলটি খুঁজুন।
+  2. সেখানে সরাসরি দেখতে পাবেন:
+     * **স্কুল:** ১টি প্রাথমিক বিদ্যালয় ঝুঁকিতে
+     * **ক্লিনিক:** ০টি স্বাস্থ্যকেন্দ্র
+     * **সড়ক:** ১২০ মিটার বাঁধ সড়ক বিচ্ছিন্ন
+     * **ক্ষতিগ্রস্ত জনসংখ্যা:** ৮,২০০ জন মানুষ
+  3. প্রতিটি সংখ্যার পাশে `MEASURED` / `ESTIMATED` ব্যাজ দেখে ডেটার গ্রহণযোগ্যতা যাচাই করতে পারবেন।
+
+---
+
+### ১০. W10. The Change Passport (চেঞ্জ পাসপোর্ট ও ক্রিপ্টোগ্রাফিক লিনিয়েজ)
+* **সহজ ব্যাখ্যা:** প্রতিটি অ্যানালাইসিসের জন্য একটি ডিজিটাল পাসপোর্ট—যাতে স্যাটেলাইটের গ্র্যানিউল আইডি, অ্যালগরিদম রান আইডি এবং ক্রিপ্টোগ্রাফিক SHA-256 হ্যাশ সংরক্ষিত থাকে।
+* **স্ক্রিনের অবস্থান:** ডান পাশের ইন্সপেক্টর প্যানেলের অ্যাকশন বাটন সেকশন।
+* **কীভাবে ব্যবহার করবেন:**
+  1. ডান প্যানেলের **`🛂 Change Passport`** বাটনে ক্লিক করুন।
+  2. একটি ডিজিটাল পাসপোর্ট উইন্ডো খুলবে যেখানে নাসার স্যাটেলাইট গ্র্যানিউল কোড, প্রসেসিং তারিখ ও ডেটা ইন্টিগ্রিটি হ্যাশ দেখতে পাবেন।
+  3. উইন্ডোর নিচে থাকা **`Download Manifest (JSON)`** বাটনে ক্লিক করে গবেষক বা বিচারকদের জন্য সম্পূর্ণ সায়েন্টিফিক ফাইল ডাউনলোড করে নিতে পারেন।
+
+---
+
+## 🟣 Tier 3: High-Impact Experience (উন্নত অভিজ্ঞতা ও অ্যাকশন টুলস)
+
+### ১১. W11. Radar-to-Reality (রাডার বনাম বাস্তব অপটিক্যাল তুলনা)
+* **সহজ ব্যাখ্যা:** আসল পৃথিবীর কালার স্যাটেলাইট আলোকচিত্রের সাথে রাডার এক্স-রে ছবির হুবহু পিক্সেল-বাই-পিক্সেল সোয়াইপ তুলনা।
+* **স্ক্রিনের অবস্থান:** ম্যাপের ওপরের বাম কোণে থাকা ভাসমান মোড পিল।
+* **কীভাবে ব্যবহার করবেন:**
+  1. ম্যাপের উপরে বামপাশে থাকা **`Sat vs Radar`** বাটনে ক্লিক করুন।
+  2. এবার মাঝখানের সোয়াইপ ডিভাইডারটি টানুন।
+  3. বাম পাশে দেখতে পাবেন মহাকাশ থেকে তোলা আসল ট্রু-কালার স্যাটেলাইট ছবি এবং ডান পাশে দেখতে পাবেন মাটির আর্দ্রতা ও গাছের নিচে ভেদ করে যাওয়া রাডার এক্স-রে।
+
+---
+
+### ১২. W12. Scientific Story Mode (সিনেমাটিক স্টোরি মোড)
+* **সহজ ব্যাখ্যা:** জলবায়ু পরিবর্তন ও ভাঙনকবলিত চরের মানুষের বাস্তব জীবনের ৫টি অধ্যায় নিয়ে সাজানো একটি ইন্টারঅ্যাক্টিভ ভিজ্যুয়াল স্টোরিম্যাপ।
+* **স্ক্রিনের অবস্থান:** একদম উপরের প্রধান হেডার বারের ৩য় ট্যাব।
+* **কীভাবে ব্যবহার করবেন:**
+  1. উপরের হেডারে **`📖 Stories`** ট্যাবে ক্লিক করুন।
+  2. স্টোরি পেইজটি ওপেন হলে বাম পাশে অধ্যায়গুলোর তালিকা দেখতে পাবেন (যেমন: *Chilmari Riverbank Retreat*, *Dublar Char Pulse*)।
+  3. যেকোনো অধ্যায় সিলেক্ট করে নিচের **`Next Chapter ➔`** বাটনে চাপ দিয়ে গল্প ও ম্যাপ একসাথে উপভোগ করুন।
+
+---
+
+### ১৩. W13. Scenario Laboratory (দৃশ্যপট ও ভবিষ্যত অনুকরণ ল্যাব)
+* **সহজ ব্যাখ্যা:** কাল্পনিক পরিস্থিতি (যেমন: নদীর পানি স্বাভাবিকের চেয়ে আরও ১ মিটার বেড়ে গেলে কতটুকু চর ডুববে) সিমুলেট করে দেখার ভবিষ্যৎ ল্যাব।
+* **স্ক্রিনের অবস্থান:** বাম পাশের প্যানেলের **`Compare & Scenario (C1)`** ট্যাব।
+* **কীভাবে ব্যবহার করবেন:**
+  1. বাম প্যানেলের তালিকা থেকে **`Compare & Scenario`** এ ক্লিক করুন।
+  2. স্ক্রিনে **Scenario Lab** কন্ট্রোল প্যানেল আসবে।
+  3. সেখানে থাকা **`+1.0m High Flood Stage`** টগলটি অন করুন।
+  4. ম্যাপে একটি বিশেষ সিমুলেশন লেয়ার জ্বলে উঠবে যা পরিষ্কারভাবে **`DECLARED SIMULATION`** হিসেবে চিহ্নিত থাকবে।
+
+---
+
+### ১৪. W14. Decision Brief Generator & Field QR Bridge (এক পাতার নথিপত্র ও কিউআর কোড)
+* **সহজ ব্যাখ্যা:** যেকোনো জেলা প্রশাসক, এনজিও বা ফিল্ড অফিসারের জন্য এক ক্লিকে ১ পাতার অফিশিয়াল প্রিন্টযোগ্য PDF ব্রিফ এবং ফিল্ড অ্যাপের জন্য লাইভ QR কোড তৈরি করা।
+* **স্ক্রিনের অবস্থান:** ডান পাশের ইন্সপেক্টর প্যানেলের নিচে বড় বাটন।
+* **কীভাবে ব্যবহার করবেন:**
+  1. ডান প্যানেলের **`📄 Generate Decision Brief`** বাটনে ক্লিক করুন।
+  2. স্ক্রিনে একটি পূর্ণাঙ্গ অফিশিয়াল ব্রিফিং কার্ড প্রদর্শিত হবে যাতে ক্ষতির পরিসংখ্যান, সুপারিশকৃত পদক্ষেপ এবং একটি বড় **QR Code** থাকবে।
+  3. আপনার স্মার্টফোনের ক্যামেরা দিয়ে QR কোডটি স্ক্যান করলে সরাসরি ফিল্ড ভেরিফিকেশন টাস্কটি মোবাইলে খুলে যাবে।
+  4. নিচে থাকা **`Print / Save PDF`** বাটনে চাপ দিয়ে সরাসরি প্রিন্ট বা PDF সেভ করতে পারবেন।
+
+---
+
+## 🔬 Specialized Scientific Modules (বিশেষায়িত বৈজ্ঞানিক মডিউলসমূহ)
+
+### ১৫. Module 1: Stage-Matched Pair Selector (Equal-Stage Twin)
+* **স্ক্রিনের অবস্থান:** নিচের টাইমলাইনের ডান পাশে থাকা **`Comparison Pair`** বক্স।
+* **কীভাবে ব্যবহার করবেন:** বক্সে ক্লিক করুন (`2026-08-26 ➔ 2026-09-19`)। একটি পপআপ মডাল আসবে যেখানে দেখানো হবে কোন দুটি তারিখের পানির উচ্চতা সমান ($\Delta h \le 0.1\text{m}$) এবং কোন জোড়াটি বিজ্ঞানসম্মতভাবে উপযুক্ত।
+
+### ১৬. Module 4: The Rejection Engine / Null Result Room
+* **স্ক্রিনের অবস্থান:** ডান পাশের প্যানেলের নিচের দিকে স্ক্রোল করলে পাবেন।
+* **কীভাবে ব্যবহার করবেন:** **`Null Result Room`** সেকশনে যান। সেখানে সিস্টেম কেন কিছু এলাকাকে নদীভাঙন হিসেবে রিজেক্ট করেছে (যেমন: বাতাসের কারণে পানির ওপর ঢেউ তৈরি হওয়া বা রাডার শ্যাডো) তার ৩টি স্পষ্ট রিজেকশন কার্ড দেখতে পাবেন।
+
+---
+
+# পর্ব ২: `features.pdf` এর বাইরে অতিরিক্ত উদ্ভাবনী ফিচারসমূহ (Extra Platform Features)
+
+---
+
+### ১৭. Real Date-Indexed Sentinel-2 & SAR Satellite Raster Engine (রিয়েল স্যাটেলাইট ইঞ্জিন)
+* **সহজ ব্যাখ্যা:** কোনো স্ট্যাটিক বা কাল্পনিক ছবি নয়; ইউরোপিয়ান স্পেস এজেন্সি (ESA) ও AWS Earth Search থেকে যমুনা ও সুন্দরবনের প্রতিটি তারিখের বাস্তব ০% ক্লাউড স্যাটেলাইট ও রাডার ছবি লাইভ রেন্ডার করা।
+* **স্ক্রিনের অবস্থান:** ম্যাপের ওপরের ডান কোণে থাকা বেসম্যাপ সুইচ এবং নিচের টাইমলাইন।
+* **কীভাবে ব্যবহার করবেন:**
+  1. ম্যাপের উপরে ডান কোণে থাকা **`🛰️ Satellite`** বাটনে চাপ দিন।
+  2. নিচের টাইমলাইন থেকে **২৬ আগস্ট** এ ক্লিক করুন—পেছনের আসল ছবিতে দেখবেন বিস্তীর্ণ চর পানির নিচে ডুবে গেছে।
+  3. এবার টাইমলাইন থেকে **১৯ সেপ্টেম্বর** বা **২১ অক্টোবর** এ ক্লিক করুন—সাথে সাথে পেছনের আসল স্যাটেলাইট ছবিতে দেখবেন পানি নেমে গিয়ে সাদা বালুচর জেগে উঠেছে!
+  4. রাডার দেখতে চাইলে উপরে **`📡 Radar`** বাটনে ক্লিক করুন।
+
+---
+
+### ১৮. Instant High-Res Map Snapshot Tool (ইনস্ট্যান্ট ম্যাপ স্ন্যাপশট ও ডাউনলোড)
+* **সহজ ব্যাখ্যা:** ব্রাউজারের স্ক্রিনশট না কেটে, সরাসরি ম্যাপের আসল রেজোলিউশন, স্কেলবার ও নর্থ অ্যারো সহ এক ক্লিকে হাই-কোয়ালিটি PNG ডাউনলোড করার টুল।
+* **স্ক্রিনের অবস্থান:** ম্যাপের উপরের ডান কোণে ভাসমান টুলবার।
+* **কীভাবে ব্যবহার করবেন:**
+  1. আপনার পছন্দমতো ম্যাপে জুম করুন বা সোয়াইপ স্লাইডারটি সেট করুন।
+  2. উপরের ডানদিকের **`📸 Snapshot`** বাটনে ক্লিক করুন।
+  3. বাটনটি তৎক্ষণাৎ সবুজ হয়ে **`Saved!`** দেখাবে এবং কয়েক মিলিগ্রাম সেকেন্ডের মধ্যে আপনার কম্পিউটারে একটি ক্রিস্টাল-ক্লিয়ার PNG ইমেজ ডাউনলোড হয়ে যাবে।
+
+---
+
+### ১৯. Dynamic Outlines Only vs. Tinted Fill Toggle (স্বচ্ছ আউটলাইন মোড)
+* **সহজ ব্যাখ্যা:** রঙিন মার্কিং যেন পেছনের আসল নদীর জলধারা ও বালুর টেক্সচার ঢেকে না ফেলে, সেজন্য সম্পূর্ণ স্বচ্ছ বর্ডারলাইন বা হালকা রঙের টগল।
+* **স্ক্রিনের অবস্থান:** ম্যাপের উপরে ডান কোণে, স্ন্যাপশট বাটনের ঠিক পাশে।
+* **কীভাবে ব্যবহার করবেন:**
+  1. **`✏️ Outlines Only / 🎨 Tinted`** বাটনে ক্লিক করুন।
+  2. **Outlines Only** মোডে থাকলে নদীভাঙন ও চরের ওপর কোনো ভরাট রঙ থাকবে না—শুধুমাত্র নিয়ন লাল ও নীল আউটলাইন থাকবে, ফলে ভেতরের আসল স্যাটেলাইট নদী ও মাটি ১০০% স্বচ্ছ দেখা যাবে।
+  3. হালকা আভা দেখতে চাইলে পুনরায় ক্লিক করে **Tinted** মোডে নিয়ে যান।
+
+---
+
+### ২০. Audience Switcher (তিন স্তরের দর্শক রূপান্তরকারী)
+* **সহজ ব্যাখ্যা:** একই ডেটাকে দর্শকের ধরন অনুযায়ী ৩টি ভিন্ন ভাষায় ও স্কেলে প্রকাশ করে—সাধারণ মানুষ, নীতিনির্ধারক ও বিজ্ঞানী।
+* **স্ক্রিনের অবস্থান:** একদম উপরের নীল হেডারের একদম ডান প্রান্তে।
+* **কীভাবে ব্যবহার করবেন:**
+  1. হেডারের উপরে থাকা **`Public`**, **`Decision Maker`**, অথবা **`Analyst`** বাটনে ক্লিক করুন।
+  2. **`Public`** চাপলে স্ক্রিনের পরিমাপ সাধারণ মানুষের বোধগম্য ভাষায় ও স্থানীয় এককে (যেমন: "বিঘা") পরিবর্তিত হবে।
+  3. **`Decision Maker`** চাপলে খরচ, ঝুঁকি ও সেন্ডাই ফ্রেমওয়ার্কের পরিসংখ্যান আসবে।
+  4. **`Analyst`** চাপলে সরাসরি রাডার ডেসিবেল ($\gamma^0\text{ dB}$) ও কোহেরেন্স ভ্যালু দেখা যাবে।
+
+---
+
+### ২১. Bilingual Language Switcher (বাংলা ও ইংরেজি তাৎক্ষণিক রূপান্তর)
+* **সহজ ব্যাখ্যা:** স্থানীয় চরের মানুষ বা বাংলাদেশি কর্মকর্তাদের জন্য এক ক্লিকে সম্পূর্ণ প্ল্যাটফর্মের প্রতিটি মেনু, চার্ট ও সাইন্টিফিক টার্ম বাংলায় পরিবর্তন করার ইঞ্জিন।
+* **স্ক্রিনের অবস্থান:** একদম উপরের নীল হেডারের সর্ব-ডানে।
+* **কীভাবে ব্যবহার করবেন:**
+  1. হেডারের **`EN / BN`** বাটনে ক্লিক করুন।
+  2. সম্পূর্ণ ওয়েবসাইট তৎক্ষণাৎ বিশুদ্ধ ও প্রাঞ্জল বাংলায় অনূদিত হয়ে যাবে।
+
+---
+
+### ২২. Web Audio Sonification - "Feel the River" (শব্দে রাডার অনুভব করা)
+* **সহজ ব্যাখ্যা:** অন্ধ বা দৃষ্টিপ্রতিবন্ধী গবেষকদের জন্য অথবা রোদে দাঁড়িয়ে থাকা মাঠকর্মীদের জন্য রাডার সিগন্যালকে Web Audio API এর মাধ্যমে শব্দ তরঙ্গে (Pitch & Pulse) রূপান্তর করা।
+* **স্ক্রিনের অবস্থান:** একদম উপরের নীল হেডারের ডান কোণে স্পিকার আইকন।
+* **কীভাবে ব্যবহার করবেন:**
+  1. হেডারের স্পিকার আইকনে (**`🔊`**) ক্লিক করে সাউন্ড আনমিউট করুন।
+  2. এবার মাউস দিয়ে ম্যাপের পানির ওপর ক্লিক করুন—একটি নিচু ও গভীর টোন শুনতে পাবেন।
+  3. চরের শুষ্ক বালু বা ভাঙন পাড়ের ওপর ক্লিক করুন—উচ্চ কম্পাঙ্কের ভিন্ন শব্দ শুনতে পাবেন।
+
+---
+
+### ২৩. Coverage Curtain Support Overlay (N02 কাভারেজ কার্টেন)
+* **সহজ ব্যাখ্যা:** স্যাটেলাইটের অরবিট পাথ এবং রাডার স্ক্যানের ৭৮% পর্যবেক্ষণযোগ্য এলাকা ও লুকানো অন্ধ এলাকা (Radar Shadow) মানচিত্রে ফুটিয়ে তোলা।
+* **স্ক্রিনের অবস্থান:** ম্যাপের বাম পাশের উপরে ভাসমান সাদা-নীল ব্যাজ।
+* **কীভাবে ব্যবহার করবেন:**
+  1. ম্যাপের উপরে বাম কোণে থাকা **`Coverage Curtain (N02)`** ব্যাজে ক্লিক করুন।
+  2. ম্যাপের ওপর একটি ডায়াগনাল নীল স্ট্রাইপ ওভারলে খুলে যাবে, যা দেখাবে স্যাটেলাইটের এই পাসে কোন অংশটুকু ক্যামেরার পরিষ্কার দৃষ্টিসীমায় ছিল।
+
+---
+
+### ২৪. InSAR Fringe Stage & Centimeter Movement (ভূমি দেবে যাওয়ার পরিমাপ)
+* **সহজ ব্যাখ্যা:** ইনসার (InSAR) ইন্টারফেরোগ্রামের প্রতিটি রঙের বৃত্ত বা ফ্রিঞ্জে ১১.৯ সেন্টিমিটার করে ভূমি সরে যাওয়ার পরিমাণ স্বয়ংক্রিয়ভাবে পরিমাপ করা।
+* **স্ক্রিনের অবস্থান:** বাম পাশের প্যানেলের **`Fringe Stage (InSAR)`** লেন্স।
+* **কীভাবে ব্যবহার করবেন:**
+  1. বাম প্যানেলের তালিকা থেকে **`Fringe Stage (X1)`** এ ক্লিক করুন।
+  2. ম্যাপে ইন্টারফেরোগ্রামের রঙধনু ফ্রিঞ্জ ফুটে উঠবে এবং স্ক্রিনে লাইভ সেন্টিমিটার ডিসপ্লেসমেন্ট রিডআউট দেখতে পাবেন।
+
+---
+
+### ২৫. Continuous Precision Zoom Slider (স্মুথ জুম কন্ট্রোল)
+* **সহজ ব্যাখ্যা:** মাউসের হুইল ছাড়াও সূক্ষ্মভাবে ৬ গুণ থেকে ১৬ গুণ পর্যন্ত যেকোনো জুম লেভেলে ম্যাপকে স্থির রাখার স্লাইডার।
+* **স্ক্রিনের অবস্থান:** ম্যাপের উপরে ডান কোণে।
+* **কীভাবে ব্যবহার করবেন:**
+  1. **`-`** ও **`+`** বাটন দুটির মাঝখানে থাকা নীল হ্যান্ডেলযুক্ত সরু স্লাইডারটি মাউস দিয়ে ডানে-বামে ড্র্যাগ করুন।
+  2. পাশে থাকা জুম লেভেল ইন্ডিকেটরে (যেমন `11.5x`, `13.2x`) রিয়েল-টাইমে জুমের মাত্রা দেখতে পাবেন।
+
+---
+
+### ২৬. Split-Screen vs. Draggable Swipe Mode Switcher (স্প্লিট ভিউ টগল)
+* **সহজ ব্যাখ্যা:** সোয়াইপ স্লাইডার ছাড়া দুটি ম্যাপকে স্ক্রিনে পাশাপাশি (Side-by-Side) বিভক্ত করে দেখার সুযোগ।
+* **স্ক্রিনের অবস্থান:** ম্যাপের উপরে বাম পাশের কন্ট্রোল পিল।
+* **কীভাবে ব্যবহার করবেন:**
+  1. উপরে বামে থাকা **`Split`** বাটনে ক্লিক করুন।
+  2. ম্যাপটি দুটি সমান অর্ধে ভাগ হয়ে যাবে; বামে আগের দৃশ্য এবং ডানে পরের দৃশ্য পাশাপাশি দেখা যাবে। পুনরায় **`Swipe`** চাপলে একক ম্যাপে সোয়াইপ হ্যান্ডেল ফিরে আসবে।
+
+---
+
+### ২৭. Interactive SAR Lab Experiments (শিক্ষামূলক ল্যাব ও সিমুলেটর)
+* **সহজ ব্যাখ্যা:** শিক্ষার্থী ও গবেষকদের জন্য ৪টি হাতে-কলমে রাডার পরীক্ষা: Cloud Blindness Test, Polarization Match, Speckle Filter, এবং Fringe Counter।
+* **স্ক্রিনের অবস্থান:** একদম উপরের প্রধান হেডার বারের ৪র্থ ট্যাব।
+* **কীভাবে ব্যবহার করবেন:**
+  1. উপরের হেডারে **`🎓 Learn`** ট্যাবে ক্লিক করুন।
+  2. স্ক্রিনে ৪টি ইন্টারঅ্যাক্টিভ ল্যাব বক্স আসবে।
+  3. স্লাইডার টেনে দেখতে পারেন মেঘের কারণে অপটিক্যাল ক্যামেরা অন্ধ হয়ে গেলেও রাডার কীভাবে মেঘ ভেদ করে পরিষ্কার নদী দেখায়।
+
+---
+
+## 📌 সারসংক্ষেপ টেবিল (Quick Navigation Table)
+
+| ফিচার নম্বর ও নাম | ক্যাটাগরি | স্ক্রিনের সঠিক অবস্থান | কোন বাটনে ক্লিক করতে হবে? |
 | :--- | :--- | :--- | :--- |
-| **W1. Earth Change Atlas** | Core (Tier 1) | Header Tab: `Atlas` | `AtlasView.tsx`, `MapWorkspace.tsx` |
-| **W2. SAR Time Machine** | Core (Tier 1) | Center Map: Swipe Divider (`↔`) | `MapWorkspace.tsx`, `SwipeCompareMap.tsx` |
-| **W3. Radar Lens & Pol** | Core (Tier 1) | Left Panel: `Radar Switchboard` | `SundarbansPolarizationPanel.tsx` |
-| **W4. Change Detection** | Core (Tier 1) | Interactive Map Polygons | `MapWorkspace.tsx`, `geoData.ts` |
-| **W5. Evidence Inspector** | Core (Tier 1) | Right Panel: `Observed Finding` | `RightInspector.tsx` |
-| **W6. Break My Finding** | Diff (Tier 2) | Right Panel: `🧪 Break My Finding` | `BreakMyFindingModal.tsx` |
-| **W7. River Memory** | Diff (Tier 2) | Left Panel: `River Memory (J1)` | `MapWorkspace.tsx`, `ContextTracks.tsx` |
-| **W8. Context Fusion** | Diff (Tier 2) | Bottom Strip: `Environmental Tracks` | `ContextTracks.tsx` |
-| **W9. Impact Lens** | Diff (Tier 2) | Right Panel: `What Changed for Whom` | `RightInspector.tsx`, `JamunaDecisionPanel.tsx` |
-| **W10. Change Passport** | Diff (Tier 2) | Right Panel: `🛂 Change Passport` | `ChangePassportModal.tsx` |
-| **W11. Radar-to-Reality** | High-Impact | Top Pill: `Sat vs Radar` | `MapWorkspace.tsx`, `SwipeCompareMap.tsx` |
-| **W12. Story Mode** | High-Impact | Header Tab: `Stories` | `StoryModeView.tsx` |
-| **W13. Scenario Lab** | High-Impact | Left Panel: `Compare & Scenario` | `ScenarioLabPanel.tsx` |
-| **W14. Decision Brief** | High-Impact | Right Panel: `📄 Generate Decision Brief` | `DecisionBriefModal.tsx` |
-| **Real Sentinel-2 Rasters** | Extra Platform | Timeline & Basemap Switcher | `download_full_enclosing_scenes.py` |
-| **Instant Snapshot** | Extra Platform | Top Toolbar: `📸 Snapshot` | `MapWorkspace.tsx` |
-| **Audience Switcher** | Extra Platform | Top Header: `Public/Decision/Analyst` | `Header.tsx`, `workspaceStore.ts` |
-| **Bilingual Toggle** | Extra Platform | Top Header: `EN / BN` | `Header.tsx`, `translations.ts` |
-| **Web Audio Sonifier** | Extra Platform | Top Header: Speaker Icon (`🔊`) | `sonification.ts`, `App.tsx` |
-| **Coverage Curtain** | Extra Platform | Map Badge: `Coverage Curtain (N02)` | `CoverageCurtainOverlay.tsx` |
-| **InSAR Fringe Stage** | Extra Platform | Left Panel: `Fringe Stage (X1)` | `InSARSpecialtyPanel.tsx` |
-| **SAR Lab Experiments** | Extra Platform | Header Tab: `Learn` | `SarLabView.tsx` |
+| **১. W1. Earth Change Atlas** | Tier 1 (Core) | টপ হেডার বার | **`🌐 Atlas`** ট্যাব |
+| **২. W2. SAR Time Machine** | Tier 1 (Core) | ম্যাপের কেন্দ্রস্থল | কেন্দ্রস্থলের বৃত্তাকার **`↔`** হ্যান্ডেল ড্র্যাগ করুন |
+| **৩. W3. Radar Lens & Pol** | Tier 1 (Core) | বাম পাশের প্যানেল | **`HH`**, **`HV`**, বা **`Pauli`** বাটন |
+| **৪. W4. Change Detection** | Tier 1 (Core) | ম্যাপের ওপরের পলিগন | **`🔴 Chilmari Retreat`** বা **`🌱 Mandaler Char`** মার্কার |
+| **৫. W5. Evidence Inspector** | Tier 1 (Core) | ডান পাশের সাইডবার | ডান প্যানেলের **`7 Check Groups`** কার্ডসমূহ |
+| **৬. W6. Break My Finding** | Tier 2 (Diff) | ডান প্যানেলের নিচে | **`🧪 Break My Finding`** নীল বাটন |
+| **৭. W7. River Memory** | Tier 2 (Diff) | বাম প্যানেল ও বটম বার | বাম প্যানেলে **`River Memory (J1)`** লেন্স |
+| **৮. W8. Context Fusion** | Tier 2 (Diff) | ম্যাপের ঠিক নিচে | **`Multisensor Environmental Tracks`** গ্রাফ |
+| **৯. W9. Impact Lens** | Tier 2 (Diff) | ডান পাশের সাইডবার | **`Sendai-Aligned Impact Ledger`** সেকশন |
+| **১০. W10. Change Passport** | Tier 2 (Diff) | ডান প্যানেলের নিচে | **`🛂 Change Passport`** বাটন |
+| **১১. W11. Radar-to-Reality** | Tier 3 (Impact) | ম্যাপের উপরে বামে | **`Sat vs Radar`** বাটন |
+| **১২. W12. Story Mode** | Tier 3 (Impact) | টপ হেডার বার | **`📖 Stories`** ট্যাব |
+| **১৩. W13. Scenario Lab** | Tier 3 (Impact) | বাম পাশের প্যানেল | **`Compare & Scenario (C1)`** ট্যাব |
+| **১৪. W14. Decision Brief** | Tier 3 (Impact) | ডান প্যানেলের নিচে | **`📄 Generate Decision Brief`** বাটন |
+| **১৫. Real Sentinel-2 Rasters**| Extra Platform | ম্যাপের উপরে ডানে ও নিচে| **`🛰️ Satellite`** বাটন ও টাইমলাইন তারিখ |
+| **১৬. Instant Snapshot** | Extra Platform | ম্যাপের উপরে ডানে | **`📸 Snapshot`** বাটন |
+| **১৭. Outlines Only Mode** | Extra Platform | ম্যাপের উপরে ডানে | **`✏️ Outlines Only / 🎨 Tinted`** বাটন |
+| **১৮. Audience Switcher** | Extra Platform | টপ হেডারের সর্ব-ডানে | **`Public`**, **`Decision`**, **`Analyst`** টগল |
+| **১৯. Bilingual Language** | Extra Platform | টপ হেডারের সর্ব-ডানে | **`EN / BN`** ভাষা টগল |
+| **২০. Web Audio Sonifier** | Extra Platform | টপ হেডারের সর্ব-ডানে | স্পিকার আইকন (**`🔊`**) |
+| **২১. Coverage Curtain** | Extra Platform | ম্যাপের উপরে বামে | **`Coverage Curtain (N02)`** ব্যাজ |
+| **২২. InSAR Fringe Stage** | Extra Platform | বাম পাশের প্যানেল | **`Fringe Stage (X1)`** লেন্স |
+| **২৩. Precision Zoom Slider**| Extra Platform | ম্যাপের উপরে ডানে | **`[-] ──●── [+]`** জুম স্লাইডার |
+| **২৪. Split / Swipe View** | Extra Platform | ম্যাপের উপরে বামে | **`Split / Swipe`** বাটন |
+| **২৫. SAR Lab Simulators** | Extra Platform | টপ হেডার বার | **`🎓 Learn`** ট্যাব |
