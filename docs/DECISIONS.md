@@ -147,6 +147,24 @@ This document records the foundational architectural, scientific, and product de
   3. **Dual Comparison Modes:**
      - `Dates` Mode: Compares Monsoon Flood Crest (Aug 26, Stage 18.9m) on the left against Post-Monsoon Recession (Sep 19, Stage 16.4m) on the right.
      - `Sat vs Radar` Mode: Compares True-Color Optical Satellite imagery on the left against Grayscale NISAR Microwave Radar backscatter on the right, providing an authentic "X-Ray" canopy and cloud penetration experience.
-  4. **Tri-Perspective Audience & Three Workspace Modes:**
-     - Fully wire `Public`, `Decision Maker`, and `Analyst` perspectives to adapt text tone, risk tables, and radar equations.
-     - Fully wire `Explore`, `Investigate`, and `Act & Explain` modes to adapt tools, quick focal navigators, and emergency decision brief exports.
+---
+
+### ADR-011: Transparent Vector Outlines Mode vs Thematic Tinting and Official Graphify Architecture Integration
+* **Status:** LOCKED / ACCEPTED
+* **Context:** High-opacity polygon fills (e.g. 0.30 - 0.50 opacity) act like a tinted or solid veil that obscures high-resolution optical satellite textures, river sandbars, thalweg braids, and coastal creek morphology. Professional earth observation portals (NASA Worldview, USGS EarthExplorer, Copernicus Browser) default to high-contrast boundary contours (Outlines Only) to ensure 100% unobstructed visibility of underlying ground features while clearly identifying classified change boundaries. Furthermore, maintaining codebase awareness across 80+ files requires local, token-free knowledge graph navigation.
+* **Decision:**
+  1. **Outlines-Only Mode as Default (`overlayStyle: 'outlines'`):**
+     - Set `fill-opacity` on all candidate polygons (`layer-jamuna-water-sep`, `layer-jamuna-water-aug`, `layer-jamuna-erosion`, `layer-jamuna-accretion`, `layer-sundarbans-water`, `layer-sundarbans-canopy`, `layer-sundarbans-pulse`) to `0.0`.
+     - Render razor-sharp, high-contrast vector boundary contours:
+       - Active Bankline Erosion: Glowing crimson dashed contour (`#EF4444`, `[4, 2]`, 2.8px) marking the 145.8 ha retreat cut.
+       - Emergent Sandbars / Char Accretion: Emerald dashed contour (`#10B981`, `[3, 2]`, 2.2px) outlining newly emerged Rabi crop shoals.
+       - Receded Thalweg Water: Sky blue contour (`#38BDF8`, 1.8px) tracing the active channels.
+       - Sundarbans Tidal Pulse: Orange dashed line (`#F97316`, `[4, 2]`, 2.5px) tracing sub-canopy water presence.
+     - Provide an interactive map toggle: `[ ✏️ Outlines Only ]` / `[ 🎨 Tinted ]` so users can switch to subtle thematic tinting (0.12 - 0.18 opacity) on demand.
+     - Wire individual layer visibility toggles (`layerVisibility`) to dynamically hide/show specific features.
+  2. **Official Graphify Integration:**
+     - Installed official `graphify` (v0.9.99) via `uv tool install --upgrade graphifyy --python 3.11`.
+     - Initialized project knowledge graph (`graphify update .`), extracting 1,827 nodes, 3,418 edges, and 128 communities (`graphify-out/graph.json` and `GRAPH_REPORT.md`).
+     - Installed Git post-commit, post-checkout, post-merge hooks (`graphify hook install`) for automatic background graph synchronization.
+     - Enabled local semantic graph queries (`graphify query "<query>"`) with zero external API token consumption.
+
