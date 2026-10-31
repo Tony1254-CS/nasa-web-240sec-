@@ -9,9 +9,9 @@
 
 | Metric | Status |
 |---|---|
-| **Overall Progress** | `[███░░░░░░░] 25%` (3 / 12 Milestones Complete) |
+| **Overall Progress** | `[████░░░░░░] 33%` (4 / 12 Milestones Complete) |
 | **Current Phase** | **Phase 2: Core Observation & Change Engine** |
-| **Active Milestone** | **B03 — Time and Linked Comparison** |
+| **Active Milestone** | **B04 — Change Detection & "Break My Finding"** |
 | **Active Directory** | `fluvisar-next/` |
 | **Blockers / Open Issues** | None |
 
@@ -64,11 +64,11 @@
   - [x] Interactive map click point sampling wired to RightInspector with real-time dB feedback
   - [x] Automated tests for GCOV transformation and API endpoints (`tests/test_b02_source_and_api.py`)
 
-- [ ] **B03 — Time and Linked Comparison**
-  - [ ] Rhythm Player with true time spacing and explicit gap markers
-  - [ ] Dual-pane synchronized map comparison (swipe / split-screen)
-  - [ ] Context tracks: rainfall (IMERG), water fraction, NDVI, water-level context
-  - [ ] Patch biography and temporal observation ledger
+- [x] **B03 — Time and Linked Comparison**
+  - [x] Rhythm Player with true time spacing and explicit gap markers (`TimelinePlayer.tsx`)
+  - [x] Dual-pane synchronized map comparison with swipe & split-screen toggle (`SwipeCompareMap.tsx`)
+  - [x] Linked context tracks: radar power, stage ladder with danger line, NDVI, rainfall (`ContextTracks.tsx`)
+  - [x] Compatible pair selector with orbit geometry matching and stage $\Delta h$ limits (`PairSelectorModal.tsx`)
 
 - [ ] **B04 — Change Detection & "Break My Finding"**
   - [ ] Otsu exploratory thresholding with real pixel histogram

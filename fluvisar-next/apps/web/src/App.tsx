@@ -6,10 +6,12 @@ import { LeftPanel } from './components/LeftPanel';
 import { MapWorkspace } from './components/MapWorkspace';
 import { RightInspector } from './components/RightInspector';
 import { TimelinePlayer } from './components/TimelinePlayer';
+import { ContextTracks } from './components/ContextTracks';
+import { SwipeCompareMap } from './components/SwipeCompareMap';
 import './styles/tokens.css';
 
 export const App: React.FC = () => {
-  const { viewId } = useWorkspaceStore();
+  const { viewId, selectedPair } = useWorkspaceStore();
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#F4F7FA]">
@@ -29,9 +31,14 @@ export const App: React.FC = () => {
             {/* Left Tools & Views Panel */}
             <LeftPanel />
 
-            {/* Central Geographic Map */}
+            {/* Central Geographic Map Workspace */}
             <main className="flex-1 relative flex flex-col overflow-hidden">
               <MapWorkspace />
+
+              {/* Swipe Compare Overlay (When a pair is selected) */}
+              {selectedPair && (
+                <SwipeCompareMap dateA={selectedPair[0]} dateB={selectedPair[1]} />
+              )}
             </main>
 
             {/* Right Evidence & Challenge Inspector */}
@@ -40,7 +47,10 @@ export const App: React.FC = () => {
         )}
       </div>
 
-      {/* 3. Rhythm Player Timeline (Shown across all views) */}
+      {/* 3. Linked Context Tracks (Shown when investigating) */}
+      {viewId !== 'M0' && <ContextTracks />}
+
+      {/* 4. Rhythm Player Timeline */}
       <TimelinePlayer />
     </div>
   );
