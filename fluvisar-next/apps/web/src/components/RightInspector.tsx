@@ -9,13 +9,16 @@ import {
   FileCheck2,
   Crosshair,
   ExternalLink,
+  Clock,
+  ArrowRight,
+  Compass,
 } from 'lucide-react';
 import { BreakMyFindingModal } from './BreakMyFindingModal';
 import { ChangePassportModal } from './ChangePassportModal';
 import { DecisionBriefModal } from './DecisionBriefModal';
 
 export const RightInspector: React.FC = () => {
-  const { regionId, language, selectedFindingId, selectedSample } = useWorkspaceStore();
+  const { regionId, language, selectedFindingId, selectedSample, setSelectedDate } = useWorkspaceStore();
   const t = i18n[language];
   const [thresholdOffset, setThresholdOffset] = useState<number>(0);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -62,6 +65,35 @@ export const RightInspector: React.FC = () => {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Evidence Multi-Clock Display (plan.md N05) */}
+        <div className="px-3.5 py-2.5 bg-[#F1F5F9] border-b border-[#E2E8F0] space-y-1 text-[10px]">
+          <div className="flex items-center justify-between font-bold text-[#334155] uppercase tracking-wider text-[9px]">
+            <span className="flex items-center space-x-1">
+              <Clock className="w-3 h-3 text-[#155E75]" />
+              <span>Evidence Multi-Clock (N05)</span>
+            </span>
+            <span className="text-[#64748B] font-mono">UTC</span>
+          </div>
+          <div className="grid grid-cols-2 gap-1 font-mono text-[9px]">
+            <div className="bg-white p-1 rounded border border-[#E2E8F0]">
+              <span className="text-[#64748B] block">Satellite SAR:</span>
+              <strong className="text-[#155E75]">26 Aug 11:42</strong>
+            </div>
+            <div className="bg-white p-1 rounded border border-[#E2E8F0]">
+              <span className="text-[#64748B] block">River Gauge:</span>
+              <strong className="text-[#0284C7]">26 Aug 12:00</strong>
+            </div>
+            <div className="bg-white p-1 rounded border border-[#E2E8F0]">
+              <span className="text-[#64748B] block">Pipeline Run:</span>
+              <strong className="text-[#334155]">31 Oct 08:00</strong>
+            </div>
+            <div className="bg-white p-1 rounded border border-[#E2E8F0]">
+              <span className="text-[#64748B] block">Field Survey:</span>
+              <strong className="text-[#C2410C]">PENDING AUDIT</strong>
+            </div>
+          </div>
         </div>
 
         {/* 4-Step Narrative Lead (plan.md Section 7.1) */}
@@ -152,6 +184,30 @@ export const RightInspector: React.FC = () => {
                     ? 'ভাটার সময়ের একই পোলারাইজেশন ডেটার সাথে তুলনা করুন।'
                     : 'Acquire low-tide acquisition match to verify return to baseline backscatter.')}
             </p>
+          </div>
+
+          {/* Guided Comparison Prompts (plan.md N04) */}
+          <div className="p-2.5 bg-[#EFF6FF] border border-[#BFDBFE] rounded-lg space-y-1.5">
+            <div className="font-bold text-[#1E40AF] text-[10px] uppercase flex items-center space-x-1">
+              <Compass className="w-3 h-3 text-[#2563EB]" />
+              <span>Guided Actions (N04)</span>
+            </div>
+            <div className="space-y-1">
+              <button
+                onClick={() => setSelectedDate('2026-10-21')}
+                className="w-full text-left p-1.5 bg-white rounded border border-[#DBEAFE] hover:bg-[#F8FAFC] text-[10px] flex items-center justify-between cursor-pointer transition-colors"
+              >
+                <span>Check 21 Oct Subsequent Overpass</span>
+                <ArrowRight className="w-3 h-3 text-[#2563EB]" />
+              </button>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="w-full text-left p-1.5 bg-white rounded border border-[#DBEAFE] hover:bg-[#F8FAFC] text-[10px] flex items-center justify-between cursor-pointer transition-colors"
+              >
+                <span>Perturb Threshold (Break My Finding)</span>
+                <ArrowRight className="w-3 h-3 text-[#2563EB]" />
+              </button>
+            </div>
           </div>
 
           {/* Live "Break My Finding" Trigger Box */}

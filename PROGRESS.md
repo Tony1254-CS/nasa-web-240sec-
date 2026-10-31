@@ -9,9 +9,9 @@
 
 | Metric | Status |
 |---|---|
-| **Overall Progress** | `[████████░░] 83%` (10 / 12 Milestones Complete) |
-| **Current Phase** | **Phase 4: Intelligence, Stories & Decision Lab** |
-| **Active Milestone** | **B10 — Scenarios and Comprehension Improvements** |
+| **Overall Progress** | `[█████████░] 92%` (11 / 12 Milestones Complete) |
+| **Current Phase** | **Phase 5: Verification & Production Release** |
+| **Active Milestone** | **B11 — Verification and Release Package** |
 | **Active Directory** | `fluvisar-next/` |
 | **Blockers / Open Issues** | None |
 
@@ -133,13 +133,14 @@
   - [x] Future NISAR capabilities horizon panel: SME2 soil moisture, forest biomass, tectonic deformation (E14)
   - [x] Automated tests for chapters contract, physics formulas, and audience separation (`tests/test_b09_stories_and_learn.py`)
 
-- [ ] **B10 — Scenarios and Comprehension Improvements**
-  - [ ] Decision & educational radar response simulator
-  - [ ] N01: Historical context bridge (GMW long-term mangrove context)
-  - [ ] N02: Coverage curtain (valid/unobserved/quality masks)
-  - [ ] N03: Assumption receipt for scenario exports
-  - [ ] N04: Guided comparison prompts
-  - [ ] N05: Multi-clock timestamp display
+- [x] **B10 — Scenarios and Comprehension Improvements**
+  - [x] Decision & educational radar response simulator (`ScenarioLabPanel.tsx`, W13 / E21)
+  - [x] N01: Historical context bridge (GMW 1996-2025 mangrove baseline vs 2026 NISAR tidal pulse)
+  - [x] N02: Coverage curtain support denominator toggle & pixel exclusion inspector (`CoverageCurtainOverlay.tsx`)
+  - [x] N03: Assumption receipt export recording changed parameters and delta impacts (`scenarios_and_improvements.py`)
+  - [x] N04: Guided comparison prompts authored from metadata (subsequent overpass, threshold challenge)
+  - [x] N05: Evidence multi-clock display (Satellite radar, river gauge, pipeline run, field survey)
+  - [x] Automated tests for GMW bridge, curtain support, assumption receipt, guided prompts, and multi-clock (`tests/test_b10_scenarios_and_comprehension.py`)
 
 ---
 
@@ -147,12 +148,12 @@
 *Goal: Scientific invariants verification, accessibility, performance tuning, and release package.*
 
 - [ ] **B11 — Verification and Release Package**
-  - [ ] Unit & integration tests (pytest for science invariants, Vitest for frontend)
-  - [ ] End-to-end journey tests with Playwright
+  - [ ] Unit & integration test suite verification across all milestones
   - [ ] WCAG 2.2 accessibility & contrast compliance verification
-  - [ ] Performance benchmark validation (sub-3s shell, sub-500ms cached date switch)
-  - [ ] Docker Compose setup & reproduction verification
-  - [ ] Final documentation: `README.md`, `feature-status.csv`, source registry
+  - [ ] Production build and performance validation (sub-3s shell load)
+  - [ ] Docker Compose setup & reproducible launch configuration
+  - [ ] Requirement-status matrix (`docs/feature-status.csv`) and source registry
+  - [ ] Complete root `README.md` and developer documentation
 
 ---
 

@@ -10,6 +10,7 @@ import { ContextTracks } from './components/ContextTracks';
 import { SwipeCompareMap } from './components/SwipeCompareMap';
 import { StoryModeView } from './components/StoryModeView';
 import { SarLabView } from './components/SarLabView';
+import { CoverageCurtainOverlay } from './components/CoverageCurtainOverlay';
 import { radarSonifier } from './utils/sonification';
 import './styles/tokens.css';
 
@@ -47,6 +48,9 @@ export const App: React.FC = () => {
             {/* Central Geographic Map Workspace */}
             <main className="flex-1 relative flex flex-col overflow-hidden">
               <MapWorkspace />
+
+              {/* Coverage Curtain Support Overlay (N02) */}
+              <CoverageCurtainOverlay />
 
               {/* Swipe Compare Overlay (When a pair is selected) */}
               {selectedPair && (

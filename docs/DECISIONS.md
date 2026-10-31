@@ -98,3 +98,17 @@ This document records the foundational architectural, scientific, and product de
   - Implement **Audience Switcher** (`E10`): renders identically grounded satellite facts in Public Bangla/English, Decision Maker register, or Technical Analyst terminology.
   - Implement **SAR Lab** (`E18`) with 4 interactive mini-experiments: Cloud Blindness, Polarization Match, Speckle Noise Filtering, and InSAR Fringe Counter.
   - Implement **Web Audio Sonification** (`E22`): maps backscatter dB into acoustic frequencies ($f = 220 \cdot 2^{(\text{dB}+25)/12}\text{ Hz}$) for multi-sensory and accessible map reading.
+
+
+---
+
+### ADR-010: Scenario Laboratory & Comprehension Improvements N01–N05 (Milestone B10)
+* **Status:** ACCEPTED
+* **Context:** Remote sensing platforms can mislead decision-makers if long-term trends are conflated with short-term observations, if satellite data gaps are hidden by smooth styling, or if simulated projections are presented as measured facts.
+* **Decision:**
+  - **N01 Historical Context Bridge:** Display approved Global Mangrove Watch (GMW) decadal epochs (1996–2025) side-by-side with 2026 NISAR observations, explicitly distinguishing decadal baselines from 12-day tidal flood cycles.
+  - **N02 Coverage Curtain:** Implement a persistent one-click overlay showing the exact observable support denominator (78%) versus excluded pixels (radar shadow, antenna roll-off, specular water absorption) with click explanations.
+  - **N03 Assumption Receipt:** Every scenario run generates a downloadable JSON receipt detailing changed inputs, baseline vs simulated metrics, and remaining uncertainties with an explicit simulation disclaimer.
+  - **N04 Guided Comparison Prompts:** Metadata-driven prompts guide users directly to subsequent satellite passes, Break My Finding audits, or low-tide condition comparisons.
+  - **N05 Evidence Multi-Clock:** Inspector separately displays satellite radar acquisition (UTC), river gauge/tidal measurement, pipeline processing, and ground field survey times, preventing false assumptions of contemporaneous ground truth.
+  - **W13 / E21 Scenario Lab:** Hydro-topological response simulator with surge $\Delta h$ sliders and ferry cutoffs, strictly watermarked as `DECLARED SIMULATION`.

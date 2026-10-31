@@ -6,6 +6,7 @@ import { Layers, Activity } from 'lucide-react';
 import { SundarbansPolarizationPanel } from './SundarbansPolarizationPanel';
 import { JamunaDecisionPanel } from './JamunaDecisionPanel';
 import { InSARSpecialtyPanel } from './InSARSpecialtyPanel';
+import { ScenarioLabPanel } from './ScenarioLabPanel';
 
 export const LeftPanel: React.FC = () => {
   const { regionId, viewId, setView, language, layerVisibility, toggleLayer } = useWorkspaceStore();
@@ -47,7 +48,7 @@ export const LeftPanel: React.FC = () => {
             <button
               key={v.id}
               onClick={() => setView(v.id)}
-              className={`flex flex-col text-left px-2.5 py-1.5 rounded transition-all ${
+              className={`flex flex-col text-left px-2.5 py-1.5 rounded transition-all cursor-pointer ${
                 viewId === v.id
                   ? 'bg-[#155E75] text-white shadow-xs font-semibold'
                   : 'text-[#334155] hover:bg-[#F8FAFC]'
@@ -72,7 +73,9 @@ export const LeftPanel: React.FC = () => {
       </div>
 
       {/* Specialized Panels */}
-      {viewId === 'X1' || viewId === 'C1' ? (
+      {viewId === 'C1' ? (
+        <ScenarioLabPanel />
+      ) : viewId === 'X1' ? (
         <InSARSpecialtyPanel />
       ) : (
         <>
