@@ -472,7 +472,7 @@ export const MapWorkspace: React.FC = () => {
 
       mapB.addSource('sundarbans-raster-scene', {
         type: 'image',
-        url: '/rasters/sundarbans_sar_spring.png',
+        url: `/rasters/sundarbans_${typeBInit}_${dateBInit}.png`,
         coordinates: SUNDARBANS_RASTER_COORDS,
       });
       mapB.addLayer({
@@ -692,7 +692,7 @@ export const MapWorkspace: React.FC = () => {
 
       mapA.addSource('sundarbans-raster-scene-a', {
         type: 'image',
-        url: '/rasters/sundarbans_sar_spring.png',
+        url: `/rasters/sundarbans_${typeAInit === 'sar' ? 'sar' : 'optical'}_${dateAInit}.png`,
         coordinates: SUNDARBANS_RASTER_COORDS,
       });
       mapA.addLayer({
@@ -863,7 +863,6 @@ export const MapWorkspace: React.FC = () => {
   // Synchronize georeferenced high-resolution satellite & SAR raster scenes
   const syncRasterScenes = (dateB: string, dateA: string) => {
     const isJamuna = regionId === 'jamuna';
-    const isSpringTide = (d: string) => d === '2026-08-26' || d === '2026-09-19';
 
     // Map B:
     const mapB = mapRefB.current;
@@ -888,8 +887,9 @@ export const MapWorkspace: React.FC = () => {
       } else {
         const sourceB = mapB.getSource('sundarbans-raster-scene') as maplibregl.ImageSource;
         if (sourceB) {
+          const modeB = (comparisonMode === 'sensors' ? 'sar' : basemapType) === 'sar' ? 'sar' : 'optical';
           sourceB.updateImage({
-            url: isSpringTide(dateB) ? '/rasters/sundarbans_sar_spring.png' : '/rasters/sundarbans_sar_neap.png',
+            url: `/rasters/sundarbans_${modeB}_${dateB}.png`,
             coordinates: SUNDARBANS_RASTER_COORDS,
           });
         }
@@ -921,8 +921,9 @@ export const MapWorkspace: React.FC = () => {
       } else {
         const sourceA = mapA.getSource('sundarbans-raster-scene-a') as maplibregl.ImageSource;
         if (sourceA) {
+          const modeA = typeA === 'sar' ? 'sar' : 'optical';
           sourceA.updateImage({
-            url: isSpringTide(dateA) ? '/rasters/sundarbans_sar_spring.png' : '/rasters/sundarbans_sar_neap.png',
+            url: `/rasters/sundarbans_${modeA}_${dateA}.png`,
             coordinates: SUNDARBANS_RASTER_COORDS,
           });
         }
