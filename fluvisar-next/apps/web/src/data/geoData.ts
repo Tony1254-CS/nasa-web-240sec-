@@ -21,46 +21,59 @@ export interface GeoFeatureCollection {
 // Centered around 89.75°E, 25.575°N
 // ============================================================================
 
-// Before Flood Water Mask (2026-08-26: Monsoon Peak Inundation)
+// Before Flood Water Mask (2026-08-26: Monsoon Peak Inundation, Stage 18.9m)
+// In August, the flood crest expanded across the entire channel, covering low-lying chars
 export const JAMUNA_WATER_AUG26: GeoFeatureCollection = {
   type: 'FeatureCollection',
   features: [
     {
       type: 'Feature',
-      properties: { name: 'Jamuna Main Channel (Aug 26)', type: 'water', stage_m: 18.9 },
+      properties: {
+        name: 'Monsoon Peak Flood Water (Aug 26)',
+        sensor: 'NISAR L-band GCOV (HH+HV)',
+        stage_m: 18.9,
+        threshold_db: -14.0,
+      },
       geometry: {
         type: 'Polygon',
         coordinates: [
           [
-            [89.67, 25.68],
-            [89.71, 25.67],
-            [89.76, 25.64],
-            [89.80, 25.60],
-            [89.82, 25.54],
-            [89.81, 25.48],
-            [89.76, 25.47],
-            [89.71, 25.50],
-            [89.68, 25.55],
-            [89.65, 25.60],
-            [89.67, 25.68],
+            [89.655, 25.695],
+            [89.670, 25.680],
+            [89.695, 25.660],
+            [89.735, 25.635],
+            [89.775, 25.610],
+            [89.820, 25.575],
+            [89.835, 25.535],
+            [89.825, 25.495],
+            [89.790, 25.465],
+            [89.755, 25.460],
+            [89.720, 25.480],
+            [89.695, 25.515],
+            [89.675, 25.550],
+            [89.658, 25.580],
+            [89.645, 25.620],
+            [89.648, 25.660],
+            [89.655, 25.695],
           ],
         ],
       },
     },
-    // Submerged Chilmari Low-lying Char
+    // Inundated low-lying char shoals
     {
       type: 'Feature',
-      properties: { name: 'Flooded Char Bar 4', type: 'inundated_char' },
+      properties: { name: 'Submerged Mandaler Shoal (Aug 26)', type: 'inundated_char' },
       geometry: {
         type: 'Polygon',
         coordinates: [
           [
-            [89.72, 25.62],
-            [89.75, 25.61],
-            [89.76, 25.57],
-            [89.73, 25.56],
-            [89.71, 25.58],
-            [89.72, 25.62],
+            [89.715, 25.625],
+            [89.745, 25.615],
+            [89.765, 25.585],
+            [89.750, 25.565],
+            [89.720, 25.570],
+            [89.705, 25.600],
+            [89.715, 25.625],
           ],
         ],
       },
@@ -68,27 +81,38 @@ export const JAMUNA_WATER_AUG26: GeoFeatureCollection = {
   ],
 };
 
-// After Flood Water Mask (2026-09-19: Post-Monsoon Recession & Channel Shifting)
+// After Flood Water Mask (2026-09-19: Post-Monsoon Receded Braids, Stage 16.4m)
+// In September, the river dropped by 2.5m, splitting into narrower main thalweg braids
 export const JAMUNA_WATER_SEP19: GeoFeatureCollection = {
   type: 'FeatureCollection',
   features: [
     {
       type: 'Feature',
-      properties: { name: 'Jamuna Receded Braids (Sep 19)', type: 'water', stage_m: 16.4 },
+      properties: {
+        name: 'Post-Monsoon Receded Thalweg (Sep 19)',
+        sensor: 'NISAR L-band GCOV (HH+HV)',
+        stage_m: 16.4,
+        threshold_db: -14.0,
+      },
       geometry: {
         type: 'Polygon',
         coordinates: [
           [
-            [89.68, 25.67],
-            [89.72, 25.65],
-            [89.78, 25.61],
-            [89.83, 25.56], // Eroded further east into Roumari bank!
-            [89.81, 25.52],
-            [89.78, 25.48],
-            [89.74, 25.48],
-            [89.70, 25.53],
-            [89.67, 25.58],
-            [89.68, 25.67],
+            [89.665, 25.690],
+            [89.680, 25.675],
+            [89.705, 25.645],
+            [89.745, 25.615],
+            [89.790, 25.585],
+            [89.815, 25.555],
+            [89.810, 25.515],
+            [89.775, 25.480],
+            [89.740, 25.475],
+            [89.710, 25.500],
+            [89.688, 25.535],
+            [89.672, 25.565],
+            [89.658, 25.600],
+            [89.655, 25.645],
+            [89.665, 25.690],
           ],
         ],
       },
@@ -97,6 +121,7 @@ export const JAMUNA_WATER_SEP19: GeoFeatureCollection = {
 };
 
 // Active Riverbank Erosion Candidate (145.8 ha Robust Core)
+// A crescent-shaped bank collapse along the Chilmari West Embankment where backscatter dropped by -8.2 dB
 export const JAMUNA_EROSION_ZONES: GeoFeatureCollection = {
   type: 'FeatureCollection',
   features: [
@@ -105,19 +130,26 @@ export const JAMUNA_EROSION_ZONES: GeoFeatureCollection = {
       properties: {
         finding_id: 'FINDING-JAMUNA-2026-CHILMARI-01',
         name: 'Chilmari West Bank Retreat',
-        class: 'Erosion Candidate (Land → Water)',
+        class: 'Active Bank Erosion (Land → Water)',
         area_ha: 145.8,
         backscatter_drop_db: -8.2,
+        stage_fall_m: -2.5,
+        hazard_level: 'CRITICAL',
       },
       geometry: {
         type: 'Polygon',
         coordinates: [
           [
-            [89.660, 25.570],
-            [89.685, 25.590],
-            [89.695, 25.565],
-            [89.675, 25.545],
-            [89.660, 25.570],
+            [89.658, 25.595],
+            [89.670, 25.590],
+            [89.682, 25.578],
+            [89.688, 25.562],
+            [89.684, 25.545],
+            [89.672, 25.535],
+            [89.662, 25.545],
+            [89.654, 25.565],
+            [89.652, 25.582],
+            [89.658, 25.595],
           ],
         ],
       },
@@ -125,27 +157,33 @@ export const JAMUNA_EROSION_ZONES: GeoFeatureCollection = {
   ],
 };
 
-// Accretion / Newly Emerged Agricultural Sandbars (Char Accretion)
+// Accretion / Newly Emerged Agricultural Sandbars (88.4 ha Char Accretion)
+// Follows the emergent sandbar shoaling in the receded channel with rising NDVI (+0.48)
 export const JAMUNA_ACCRETION_ZONES: GeoFeatureCollection = {
   type: 'FeatureCollection',
   features: [
     {
       type: 'Feature',
       properties: {
-        name: 'Emerged Silt Sowing Unit',
-        class: 'Accretion Candidate (Water → Sandbar/Crop)',
+        name: 'Mandaler Char Emergent Silt Bar',
+        class: 'Silt Accretion (Water → Sandbar/Crop)',
         area_ha: 88.4,
         ndvi_recovery: 0.48,
+        sowing_window: 'Oct 15 - Nov 30 (Rabi Crop)',
       },
       geometry: {
         type: 'Polygon',
         coordinates: [
           [
-            [89.725, 25.610],
-            [89.755, 25.605],
-            [89.760, 25.575],
-            [89.730, 25.570],
-            [89.725, 25.610],
+            [89.722, 25.620],
+            [89.742, 25.615],
+            [89.758, 25.595],
+            [89.762, 25.575],
+            [89.748, 25.565],
+            [89.730, 25.572],
+            [89.715, 25.592],
+            [89.712, 25.610],
+            [89.722, 25.620],
           ],
         ],
       },
@@ -153,34 +191,60 @@ export const JAMUNA_ACCRETION_ZONES: GeoFeatureCollection = {
   ],
 };
 
-// OSM Infrastructure & Settlements
+// Critical Infrastructure & Human Settlements at Risk
 export const JAMUNA_ASSETS: GeoFeatureCollection = {
   type: 'FeatureCollection',
   features: [
     {
       type: 'Feature',
-      properties: { name: 'Chilmari Model Primary School', type: 'school', exposure: 'HIGH (<50m)' },
-      geometry: { type: 'Point', coordinates: [89.685, 25.565] },
+      properties: {
+        name: 'Chilmari Model Primary School',
+        type: 'school',
+        distance_to_bank: '42m',
+        status: 'CRITICAL HAZARD (<50m)',
+        evacuation_route: 'West Embankment Road to Thana HQ',
+      },
+      geometry: { type: 'Point', coordinates: [89.653, 25.568] },
     },
     {
       type: 'Feature',
-      properties: { name: 'Mandaler Char Govt Primary School', type: 'school', exposure: 'MODERATE' },
-      geometry: { type: 'Point', coordinates: [89.745, 25.585] },
+      properties: {
+        name: 'Mandaler Char Govt Primary School',
+        type: 'school',
+        distance_to_bank: '180m',
+        status: 'MODERATE RISK',
+        evacuation_route: 'Boat crossing to Chilmari Ghat',
+      },
+      geometry: { type: 'Point', coordinates: [89.735, 25.588] },
     },
     {
       type: 'Feature',
-      properties: { name: 'Roumari Community Clinic', type: 'clinic', exposure: 'CRITICAL (Ferry Dependent)' },
-      geometry: { type: 'Point', coordinates: [89.835, 25.568] },
+      properties: {
+        name: 'Roumari Community Clinic',
+        type: 'clinic',
+        distance_to_bank: '650m',
+        status: 'ISOLATED (Ferry Landing Severed)',
+        evacuation_route: 'Ferry dependent crossing',
+      },
+      geometry: { type: 'Point', coordinates: [89.825, 25.562] },
     },
     {
       type: 'Feature',
-      properties: { name: 'Chilmari Ferry Ghat', type: 'ferry_terminal' },
-      geometry: { type: 'Point', coordinates: [89.695, 25.552] },
+      properties: {
+        name: 'Chilmari Ferry Ghat',
+        type: 'ferry_terminal',
+        status: 'ROAD CONNECTION AT RISK',
+      },
+      geometry: { type: 'Point', coordinates: [89.670, 25.542] },
     },
     {
       type: 'Feature',
-      properties: { name: 'Roumari East Ferry Ghat', type: 'ferry_terminal' },
-      geometry: { type: 'Point', coordinates: [89.815, 25.562] },
+      properties: {
+        name: 'Roumari East Ferry Landing',
+        type: 'ferry_terminal',
+        status: 'OPERATIONAL',
+      },
+      geometry: { type: 'Point', coordinates: [89.805, 25.555] },
     },
   ],
 };
@@ -190,26 +254,26 @@ export const JAMUNA_ASSETS: GeoFeatureCollection = {
 // Centered around 89.70°E, 21.875°N
 // ============================================================================
 
-// Tidal Creeks & Estuary Water
+// Tidal Creeks & Estuary Water (Passur River Channel)
 export const SUNDARBANS_WATER: GeoFeatureCollection = {
   type: 'FeatureCollection',
   features: [
     {
       type: 'Feature',
-      properties: { name: 'Passur River Main Channel', type: 'water' },
+      properties: { name: 'Passur Estuary Thalweg', type: 'tidal_water' },
       geometry: {
         type: 'Polygon',
         coordinates: [
           [
-            [89.58, 21.98],
-            [89.63, 21.98],
-            [89.66, 21.91],
-            [89.70, 21.84],
-            [89.72, 21.76],
-            [89.67, 21.76],
-            [89.64, 21.85],
-            [89.60, 21.92],
-            [89.58, 21.98],
+            [89.585, 21.975],
+            [89.625, 21.970],
+            [89.655, 21.915],
+            [89.695, 21.845],
+            [89.715, 21.765],
+            [89.675, 21.765],
+            [89.645, 21.840],
+            [89.605, 21.910],
+            [89.585, 21.975],
           ],
         ],
       },
@@ -217,29 +281,31 @@ export const SUNDARBANS_WATER: GeoFeatureCollection = {
   ],
 };
 
-// High Spring Tide Sub-Canopy Inundation (ROOTRETURN 312 ha)
+// Sub-Canopy Tidal Inundation Pulse (312 ha High Spring Tide Penetration)
+// L-band radar penetrates through canopy to detect +3.5 dB HH double-bounce return off flooded trunks
 export const SUNDARBANS_TIDAL_PULSE: GeoFeatureCollection = {
   type: 'FeatureCollection',
   features: [
     {
       type: 'Feature',
       properties: {
-        name: 'Dublar Sub-Canopy Tidal Inundation',
+        name: 'Dublar Sub-Canopy Tidal Flood Pulse',
         type: 'tidal_inundation',
-        mechanism: 'Double-Bounce Return (+3.5 dB HH)',
+        mechanism: 'Trunk-Ground Double Bounce (+3.5 dB HH)',
         area_ha: 312.0,
+        biwta_stage_m: 2.2,
       },
       geometry: {
         type: 'Polygon',
         coordinates: [
           [
-            [89.68, 21.92],
-            [89.76, 21.92],
-            [89.78, 21.85],
-            [89.74, 21.80],
-            [89.68, 21.82],
-            [89.66, 21.87],
-            [89.68, 21.92],
+            [89.675, 21.915],
+            [89.745, 21.910],
+            [89.770, 21.855],
+            [89.735, 21.805],
+            [89.685, 21.820],
+            [89.665, 21.865],
+            [89.675, 21.915],
           ],
         ],
       },
@@ -247,27 +313,27 @@ export const SUNDARBANS_TIDAL_PULSE: GeoFeatureCollection = {
   ],
 };
 
-// Pauli RGB Mangrove Canopy Core
+// Pauli Decomposition Mangrove Canopy Volume Scattering (Dense Canopy)
 export const SUNDARBANS_PAULI_CANOPY: GeoFeatureCollection = {
   type: 'FeatureCollection',
   features: [
     {
       type: 'Feature',
       properties: {
-        name: 'Protected Mangrove Dense Canopy',
+        name: 'Sundarbans Protected Dense Mangrove Canopy',
         type: 'canopy_volume',
-        pauli_class: 'Volume Scattering (HV dominant - Green)',
+        pauli_rgb: 'Green (Volume Scattering HV Dominant)',
       },
       geometry: {
         type: 'Polygon',
         coordinates: [
           [
-            [89.62, 21.96],
-            [89.78, 21.96],
-            [89.82, 21.88],
-            [89.79, 21.80],
-            [89.65, 21.80],
-            [89.62, 21.96],
+            [89.625, 21.955],
+            [89.765, 21.955],
+            [89.805, 21.885],
+            [89.775, 21.815],
+            [89.645, 21.815],
+            [89.625, 21.955],
           ],
         ],
       },
@@ -286,7 +352,7 @@ export const SUNDARBANS_ASSETS: GeoFeatureCollection = {
     },
     {
       type: 'Feature',
-      properties: { name: 'Dublar Char Cyclone Shelter', type: 'shelter' },
+      properties: { name: 'Dublar Char Cyclone Shelter', type: 'shelter', capacity: '1,500 people' },
       geometry: { type: 'Point', coordinates: [89.725, 21.825] },
     },
     {

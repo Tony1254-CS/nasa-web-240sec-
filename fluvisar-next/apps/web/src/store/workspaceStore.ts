@@ -6,7 +6,7 @@ export type WorkspaceMode = 'explore' | 'investigate' | 'act';
 export type Language = 'en' | 'bn';
 export type Audience = 'public' | 'decision' | 'analyst';
 export type ActiveTab = 'atlas' | 'investigate' | 'stories' | 'learn' | 'reports';
-export type BasemapType = 'satellite' | 'carto';
+export type BasemapType = 'satellite' | 'sar' | 'carto';
 
 export interface MapCamera {
   center: [number, number];
@@ -99,11 +99,11 @@ const REGION_DEFAULTS: Record<RegionId, { center: [number, number]; zoom: number
 };
 
 export const useWorkspaceStore = create<WorkspaceState>((set) => ({
-  activeTab: 'atlas',
+  activeTab: 'investigate',
   regionId: 'jamuna',
   caseId: 'river-memory',
   runId: 'run-2026-prod-01',
-  viewId: 'M0', // Atlas by default
+  viewId: 'J1', // Direct to Jamuna investigation by default
   mode: 'explore',
   basemapType: 'satellite', // Default to REAL satellite imagery!
   swipePosition: 50,
@@ -149,6 +149,7 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
       // Reset incompatible state per Section 18.1
       return {
         regionId,
+        activeTab: 'investigate',
         caseId: def.defaultCase,
         viewId: def.defaultView,
         selectedFindingId: null,

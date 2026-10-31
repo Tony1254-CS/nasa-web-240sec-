@@ -129,3 +129,24 @@ This document records the foundational architectural, scientific, and product de
      - **Dates Mode:** August 26 Pre-Peak Inundation vs September 19 Post-Monsoon Recession & Active Erosion.
      - **Satellite vs SAR Mode:** True-color optical satellite photograph vs NASA NISAR L-band penetrating radar mask.
 * **Consequence:** Immediate visual confirmation of real morphological changes, eliminating static appearance while maintaining 60 FPS client rendering and zero proprietary mapping API dependencies.
+
+---
+
+### ADR-006: Authentic SAR Remote Sensing Visualization & Dual-Map Swipe Synchronization
+* **Status:** LOCKED / ACCEPTED
+* **Context:** Presenting arbitrary solid geometric color blocks (such as flat opaque diamonds or polygons) misrepresents synthetic aperture radar (SAR) data, confuses users, and undermines the scientific rigor required for NASA Space Apps Challenge 2026. Furthermore, comparing temporal acquisitions requires a robust swipe slider that hardware-clips WebGL canvases with zero compositing artifacts.
+* **Decision:**
+  1. **Authentic Remote Sensing Overlays:** Replace cartoonish geometric shapes with authentic, multi-vertex geomorphological features:
+     - Water masks styled with semi-transparent marine blue (`#0284C7` at 0.28 opacity), preserving natural riverbed and sandbar textures.
+     - Active bankline erosion styled as a Damage Proxy Map (DPM) with dashed crimson cutlines (`#EF4444`, `[4, 2]`) and interactive callout markers displaying backscatter drops ($\Delta \gamma^0 = -8.2\text{ dB}$).
+     - Sundarbans sub-canopy tidal pulse rendered in glowing amber (`#EA580C`, 0.35 opacity) highlighting L-band trunk-ground double bounce return (+3.5 dB HH).
+  2. **WebGL Hardware Compositor Synchronization:**
+     - Enforce `position: absolute` via inline styles on both map containers (`mapContainerA` z-index 10, `mapContainerB` z-index 0) to override `.maplibregl-map` relative layout conflicts.
+     - Employ `ResizeObserver` to guarantee dynamic WebGL canvas buffer resizing to full container dimensions (e.g. 752x466) rather than fallback unrendered dimensions.
+     - Set `canvasContextAttributes: { preserveDrawingBuffer: true }` to enable 1-click high-resolution PNG snapshot exports.
+  3. **Dual Comparison Modes:**
+     - `Dates` Mode: Compares Monsoon Flood Crest (Aug 26, Stage 18.9m) on the left against Post-Monsoon Recession (Sep 19, Stage 16.4m) on the right.
+     - `Sat vs Radar` Mode: Compares True-Color Optical Satellite imagery on the left against Grayscale NISAR Microwave Radar backscatter on the right, providing an authentic "X-Ray" canopy and cloud penetration experience.
+  4. **Tri-Perspective Audience & Three Workspace Modes:**
+     - Fully wire `Public`, `Decision Maker`, and `Analyst` perspectives to adapt text tone, risk tables, and radar equations.
+     - Fully wire `Explore`, `Investigate`, and `Act & Explain` modes to adapt tools, quick focal navigators, and emergency decision brief exports.

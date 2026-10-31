@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Columns, Split, Calendar, Layers } from 'lucide-react';
 import { useWorkspaceStore } from '../store/workspaceStore';
 
@@ -8,38 +8,89 @@ interface SwipeCompareProps {
 }
 
 export const SwipeCompareMap: React.FC<SwipeCompareProps> = ({ dateA, dateB }) => {
-  const { swipePosition, setSwipePosition, comparisonMode, setComparisonMode } = useWorkspaceStore();
+  const { swipePosition, setSwipePosition, comparisonMode, setComparisonMode, language } = useWorkspaceStore();
   const [isDualSplit, setIsDualSplit] = React.useState<boolean>(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isBn = language === 'bn';
+
+  // Responsive 1:1 mouse drag handler
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const parent = containerRef.current;
+    if (!parent) return;
+
+    const rect = parent.getBoundingClientRect();
+
+    const onMouseMove = (moveEv: MouseEvent) => {
+      const currentX = moveEv.clientX - rect.left;
+      const newPos = Math.max(5, Math.min(95, (currentX / rect.width) * 100));
+      setSwipePosition(Math.round(newPos));
+    };
+
+    const onMouseUp = () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  };
+
+  // Touch drag handler
+  const handleTouchStart = () => {
+    const parent = containerRef.current;
+    if (!parent) return;
+
+    const rect = parent.getBoundingClientRect();
+
+    const onTouchMove = (moveEv: TouchEvent) => {
+      const touch = moveEv.touches[0];
+      const currentX = touch.clientX - rect.left;
+      const newPos = Math.max(5, Math.min(95, (currentX / rect.width) * 100));
+      setSwipePosition(Math.round(newPos));
+    };
+
+    const onTouchEnd = () => {
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
+    };
+
+    window.addEventListener('touchmove', onTouchMove);
+    window.addEventListener('touchend', onTouchEnd);
+  };
 
   return (
-    <div className="absolute inset-0 z-15 pointer-events-none flex flex-col justify-end">
-      {/* Top Center Controls Overlay (Compact, non-overlapping) */}
-      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 pointer-events-auto flex items-center space-x-1.5 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-lg border border-[#CBD5E1] shadow-md text-xs">
+    <div
+      ref={containerRef}
+      className="absolute inset-0 z-15 pointer-events-none flex flex-col justify-end overflow-hidden"
+    >
+      {/* Top Controls Overlay (Compact, non-overlapping) */}
+      <div className="absolute top-3 left-14 z-20 pointer-events-auto flex items-center space-x-1.5 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-xl border border-[#CBD5E1] shadow-lg text-xs">
         {/* Mode Selector */}
-        <div className="flex items-center bg-[#F1F5F9] p-0.5 rounded border border-[#E2E8F0]">
+        <div className="flex items-center bg-[#F1F5F9] p-0.5 rounded-lg border border-[#E2E8F0]">
           <button
             onClick={() => setComparisonMode('dates')}
-            className={`flex items-center space-x-1 px-2 py-0.5 rounded font-semibold transition-colors cursor-pointer ${
+            className={`flex items-center space-x-1 px-2 py-0.5 rounded-md font-bold transition-all cursor-pointer ${
               comparisonMode === 'dates'
                 ? 'bg-[#155E75] text-white shadow-xs'
                 : 'text-[#475569] hover:text-[#102A43]'
             }`}
-            title="Compare Flood Peak (Aug 26) vs Post-Flood Erosion (Sep 19)"
+            title="Compare Flood Peak (Aug 26) vs Post-Flood Recession (Sep 19)"
           >
-            <Calendar className="w-3 h-3" />
-            <span>Dates</span>
+            <Calendar className="w-3.5 h-3.5" />
+            <span>{isBn ? 'তারিখ' : 'Dates'}</span>
           </button>
           <button
             onClick={() => setComparisonMode('sensors')}
-            className={`flex items-center space-x-1 px-2 py-0.5 rounded font-semibold transition-colors cursor-pointer ${
+            className={`flex items-center space-x-1 px-2 py-0.5 rounded-md font-bold transition-all cursor-pointer ${
               comparisonMode === 'sensors'
                 ? 'bg-[#155E75] text-white shadow-xs'
                 : 'text-[#475569] hover:text-[#102A43]'
             }`}
-            title="Compare Real Satellite Photo vs NISAR Radar SAR Backscatter"
+            title="Compare Optical Satellite Photo vs NISAR Radar X-Ray"
           >
-            <Layers className="w-3 h-3" />
-            <span>Satellite vs SAR</span>
+            <Layers className="w-3.5 h-3.5" />
+            <span>{isBn ? 'রাডার বনাম অপটিক্যাল' : 'Sat vs Radar'}</span>
           </button>
         </div>
 
@@ -48,10 +99,10 @@ export const SwipeCompareMap: React.FC<SwipeCompareProps> = ({ dateA, dateB }) =
         {/* Swipe vs Split Toggle */}
         <button
           onClick={() => setIsDualSplit(!isDualSplit)}
-          className={`flex items-center space-x-1 px-2 py-0.5 rounded font-medium transition-colors cursor-pointer ${
+          className={`flex items-center space-x-1 px-2 py-0.5 rounded-md font-semibold transition-colors cursor-pointer ${
             isDualSplit ? 'bg-[#155E75] text-white' : 'bg-[#F1F5F9] text-[#475569] hover:bg-[#E2E8F0]'
           }`}
-          title="Toggle Split-Screen vs Swipe Slider"
+          title="Toggle Split-Screen vs Interactive Swipe Slider"
         >
           {isDualSplit ? <Columns className="w-3 h-3" /> : <Split className="w-3 h-3" />}
           <span>{isDualSplit ? 'Split' : 'Swipe'}</span>
@@ -63,70 +114,56 @@ export const SwipeCompareMap: React.FC<SwipeCompareProps> = ({ dateA, dateB }) =
         <div
           className="absolute top-0 bottom-0 z-20 pointer-events-auto flex items-center justify-center cursor-ew-resize select-none"
           style={{ left: `${swipePosition}%` }}
-          onMouseDown={(e) => {
-            const startX = e.clientX;
-            const startPos = swipePosition;
-            const onMouseMove = (moveEv: MouseEvent) => {
-              const delta = moveEv.clientX - startX;
-              const containerWidth = window.innerWidth;
-              const newPos = Math.max(5, Math.min(95, startPos + (delta / containerWidth) * 100));
-              setSwipePosition(Math.round(newPos));
-            };
-            const onMouseUp = () => {
-              window.removeEventListener('mousemove', onMouseMove);
-              window.removeEventListener('mouseup', onMouseUp);
-            };
-            window.addEventListener('mousemove', onMouseMove);
-            window.addEventListener('mouseup', onMouseUp);
-          }}
-          onTouchStart={(e) => {
-            const touch = e.touches[0];
-            const startX = touch.clientX;
-            const startPos = swipePosition;
-            const onTouchMove = (moveEv: TouchEvent) => {
-              const t = moveEv.touches[0];
-              const delta = t.clientX - startX;
-              const containerWidth = window.innerWidth;
-              const newPos = Math.max(5, Math.min(95, startPos + (delta / containerWidth) * 100));
-              setSwipePosition(Math.round(newPos));
-            };
-            const onTouchEnd = () => {
-              window.removeEventListener('touchmove', onTouchMove);
-              window.removeEventListener('touchend', onTouchEnd);
-            };
-            window.addEventListener('touchmove', onTouchMove);
-            window.addEventListener('touchend', onTouchEnd);
-          }}
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
         >
-          {/* Vertical Divider Line with Glow */}
-          <div className="w-1 h-full bg-white shadow-[0_0_12px_rgba(0,0,0,0.7)] border-l border-r border-[#155E75]" />
+          {/* Vertical Divider Line with Glow & Cyan Accents */}
+          <div className="w-1 h-full bg-white shadow-[0_0_16px_rgba(0,0,0,0.85)] border-l border-r border-[#0284C7]" />
 
-          {/* Draggable Circle Knob */}
-          <div
-            className="absolute w-9 h-9 rounded-full bg-white border-2 border-[#155E75] shadow-2xl flex items-center justify-center text-[#155E75] text-xs font-black hover:scale-110 active:scale-95 transition-transform"
-            title="Drag left or right to swipe compare"
-          >
-            ↔
+          {/* Draggable Circle Knob with Floating Mode Pill Above */}
+          <div className="relative flex flex-col items-center">
+            {/* Dynamic Label Badge directly above the knob */}
+            <div className="absolute -top-12 whitespace-nowrap bg-[#0F172A]/95 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-2xl border border-[#38BDF8] pointer-events-none flex items-center space-x-2">
+              <span className="text-[#38BDF8]">
+                {comparisonMode === 'sensors'
+                  ? '🛰️ Optical Satellite'
+                  : `📅 ${dateA} (Flood)`}
+              </span>
+              <span className="text-white/60">↔</span>
+              <span className="text-[#F87171]">
+                {comparisonMode === 'sensors'
+                  ? '📡 NISAR Radar X-Ray'
+                  : `📅 ${dateB} (Recession)`}
+              </span>
+            </div>
+
+            {/* Draggable Knob */}
+            <div
+              className="w-10 h-10 rounded-full bg-white border-2 border-[#0284C7] shadow-2xl flex items-center justify-center text-[#0284C7] text-sm font-black hover:scale-115 active:scale-95 transition-all cursor-ew-resize"
+              title="Drag left or right across the river"
+            >
+              ↔
+            </div>
           </div>
         </div>
       )}
 
-      {/* Date & Sensor Badges at Bottom Corners */}
-      <div className="absolute bottom-6 left-6 z-10 pointer-events-none bg-white/95 backdrop-blur-xs px-3 py-1.5 rounded-lg border border-[#CBD5E1] text-[11px] font-bold text-[#102A43] shadow-md flex items-center space-x-1.5">
-        <span className="w-2.5 h-2.5 rounded-full bg-[#155E75]" />
+      {/* Bottom Corner Floating Info Badges */}
+      <div className="absolute bottom-6 left-6 z-10 pointer-events-none bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#CBD5E1] text-[11px] font-bold text-[#102A43] shadow-lg flex items-center space-x-2">
+        <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] ring-4 ring-[#E0F2FE]" />
         <span>
           {comparisonMode === 'dates'
-            ? `Before: ${dateA} (Flood Peak — Stage 18.9m)`
-            : 'Left: 🛰️ High-Res Satellite Photo (Esri / NASA)'}
+            ? `◀ ${isBn ? 'পূর্বে' : 'Before'}: ${dateA} (${isBn ? 'মনসুন বন্যা শিখর — ১৮.৯মি' : 'Flood Peak — Stage 18.9m'})`
+            : `◀ ${isBn ? 'বাম' : 'Left'}: 🛰️ ${isBn ? 'হাই-রেজ অপটিক্যাল স্যাটেলাইট' : 'High-Res Optical Satellite (Esri/NASA)'}`}
         </span>
       </div>
 
-      <div className="absolute bottom-6 right-6 z-10 pointer-events-none bg-white/95 backdrop-blur-xs px-3 py-1.5 rounded-lg border border-[#CBD5E1] text-[11px] font-bold text-[#102A43] shadow-md flex items-center space-x-1.5">
-        <span className="w-2.5 h-2.5 rounded-full bg-[#EF4444]" />
+      <div className="absolute bottom-6 right-6 z-10 pointer-events-none bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#CBD5E1] text-[11px] font-bold text-[#102A43] shadow-lg flex items-center space-x-2">
+        <span className="w-2.5 h-2.5 rounded-full bg-[#EF4444] ring-4 ring-[#FEE2E2]" />
         <span>
           {comparisonMode === 'dates'
-            ? `After: ${dateB} (Recession & 145.8 ha Active Erosion)`
-            : 'Right: 📡 NISAR SAR Microwave Radar Mask'}
+            ? `▶ ${isBn ? 'পরে' : 'After'}: ${dateB} (${isBn ? 'পানি হ্রাস ও ১৪৫.৮ হেক্টর ভাঙন' : 'Recession & 145.8 ha Bank Retreat'})`
+            : `▶ ${isBn ? 'ডান' : 'Right'}: 📡 ${isBn ? 'মাইক্রোওয়েভ রাডার ও নদীভাঙন' : 'NISAR SAR Radar Microwave & Erosion'}`}
         </span>
       </div>
     </div>

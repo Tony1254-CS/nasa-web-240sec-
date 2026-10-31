@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?url';
+import { Camera, Check } from 'lucide-react';
 import { useWorkspaceStore } from '../store/workspaceStore';
+import type { BasemapType } from '../store/workspaceStore';
 import {
   JAMUNA_WATER_AUG26,
   JAMUNA_WATER_SEP19,
@@ -15,14 +16,16 @@ import {
   SUNDARBANS_ASSETS,
 } from '../data/geoData';
 
-// Configure MapLibre Web Worker for Vite
-maplibregl.setWorkerUrl(workerUrl);
+// Configure static, direct MapLibre Web Worker to eliminate Vite ESM loader issues
+maplibregl.setWorkerUrl('/maplibre-gl-worker.mjs');
 
 export const MapWorkspace: React.FC = () => {
   const mapContainerB = useRef<HTMLDivElement>(null);
   const mapContainerA = useRef<HTMLDivElement>(null);
   const mapRefB = useRef<maplibregl.Map | null>(null);
   const mapRefA = useRef<maplibregl.Map | null>(null);
+
+  const [snapshotTaken, setSnapshotTaken] = useState<boolean>(false);
 
   const {
     regionId,
@@ -35,21 +38,42 @@ export const MapWorkspace: React.FC = () => {
     swipePosition,
     comparisonMode,
     selectedPair,
+    language,
   } = useWorkspaceStore();
 
-  // Helper to reliably toggle basemap visibility
-  const applyBasemap = (map: maplibregl.Map | null, type: 'satellite' | 'carto') => {
-    if (!map) return;
-    const isSat = type === 'satellite';
+  const isBn = language === 'bn';
+
+  // Helper to apply basemaps across either map instance
+  const applyBasemap = (map: maplibregl.Map | null, type: BasemapType) => {
+    if (!map || !map.isStyleLoaded()) return;
     if (map.getLayer('satellite-layer')) {
-      map.setLayoutProperty('satellite-layer', 'visibility', isSat ? 'visible' : 'none');
+      map.setLayoutProperty('satellite-layer', 'visibility', type === 'satellite' ? 'visible' : 'none');
+    }
+    if (map.getLayer('sar-layer')) {
+      map.setLayoutProperty('sar-layer', 'visibility', type === 'sar' ? 'visible' : 'none');
     }
     if (map.getLayer('osm-layer')) {
-      map.setLayoutProperty('osm-layer', 'visibility', !isSat ? 'visible' : 'none');
+      map.setLayoutProperty('osm-layer', 'visibility', type === 'carto' ? 'visible' : 'none');
     }
   };
 
-  // Initialize both maps (Map B: Base/Right, Map A: Comparison/Left clipped)
+  // Sync basemaps depending on active comparisonMode
+  const syncBasemaps = () => {
+    const mapB = mapRefB.current;
+    const mapA = mapRefA.current;
+
+    if (comparisonMode === 'sensors') {
+      // Optical Satellite on Left, NISAR SAR Radar on Right
+      if (mapA) applyBasemap(mapA, 'satellite');
+      if (mapB) applyBasemap(mapB, 'sar');
+    } else {
+      // Dates mode: both maps use user's selected basemap
+      if (mapA) applyBasemap(mapA, basemapType);
+      if (mapB) applyBasemap(mapB, basemapType);
+    }
+  };
+
+  // Initialize both MapLibre maps
   useEffect(() => {
     if (!mapContainerB.current || !mapContainerA.current) return;
     if (mapRefB.current || mapRefA.current) return;
@@ -58,48 +82,76 @@ export const MapWorkspace: React.FC = () => {
       viewId === 'M0' ? [89.8, 23.8] : regionId === 'jamuna' ? [89.75, 25.575] : [89.70, 21.875];
     const initialZoom = viewId === 'M0' ? 6.8 : regionId === 'jamuna' ? 11.5 : 11.8;
 
+    const tileSources = {
+      // 1. High-Resolution Optical True-Color Satellite Imagery (Esri World Imagery)
+      'satellite-tiles': {
+        type: 'raster',
+        tiles: [
+          'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        ],
+        tileSize: 256,
+        attribution: 'Esri, Maxar, Earthstar Geographics, NASA/USGS',
+      },
+      // 2. Grayscale NISAR L-band SAR Radar Backscatter surface (Microwave Reflectivity)
+      'sar-tiles': {
+        type: 'raster',
+        tiles: [
+          'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        ],
+        tileSize: 256,
+        attribution: 'NASA-ISRO SAR (NISAR) L2 GCOV (20m posting)',
+      },
+      // 3. Cartographic Vector Map (OpenStreetMap)
+      'osm-tiles': {
+        type: 'raster',
+        tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+        tileSize: 256,
+        attribution: '&copy; OpenStreetMap contributors',
+      },
+    };
+
+    const tileLayers = [
+      {
+        id: 'bg-layer',
+        type: 'background',
+        paint: { 'background-color': '#0F172A' },
+      },
+      {
+        id: 'satellite-layer',
+        type: 'raster',
+        source: 'satellite-tiles',
+        layout: { visibility: 'visible' },
+        paint: { 'raster-opacity': 1.0 },
+      },
+      {
+        id: 'sar-layer',
+        type: 'raster',
+        source: 'sar-tiles',
+        layout: { visibility: 'none' },
+        paint: {
+          'raster-opacity': 1.0,
+          'raster-saturation': -1.0, // High-contrast microwave radar backscatter
+          'raster-contrast': 0.65,
+          'raster-brightness-min': 0.05,
+        },
+      },
+      {
+        id: 'osm-layer',
+        type: 'raster',
+        source: 'osm-tiles',
+        layout: { visibility: 'none' },
+        paint: { 'raster-opacity': 1.0 },
+      },
+    ];
+
     // --- MAP B (Base / Right: Post-Event Sep 19 / Active Erosion & SAR Analysis) ---
     const mapB = new maplibregl.Map({
       container: mapContainerB.current,
+      canvasContextAttributes: { preserveDrawingBuffer: true },
       style: {
         version: 8,
-        sources: {
-          'satellite-tiles': {
-            type: 'raster',
-            tiles: [
-              'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-            ],
-            tileSize: 256,
-            attribution: 'Esri, Maxar, Earthstar Geographics, NASA/USGS',
-          },
-          'osm-tiles': {
-            type: 'raster',
-            tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-            tileSize: 256,
-            attribution: '&copy; OpenStreetMap contributors | NASA-ISRO SAR (NISAR)',
-          },
-        },
-        layers: [
-          {
-            id: 'bg-layer',
-            type: 'background',
-            paint: { 'background-color': '#0F172A' },
-          },
-          {
-            id: 'satellite-layer',
-            type: 'raster',
-            source: 'satellite-tiles',
-            layout: { visibility: basemapType === 'satellite' ? 'visible' : 'none' },
-            paint: { 'raster-opacity': 1.0 },
-          },
-          {
-            id: 'osm-layer',
-            type: 'raster',
-            source: 'osm-tiles',
-            layout: { visibility: basemapType === 'carto' ? 'visible' : 'none' },
-            paint: { 'raster-opacity': 1.0 },
-          },
-        ],
+        sources: tileSources as any,
+        layers: tileLayers as any,
       },
       center: initialCenter,
       zoom: initialZoom,
@@ -113,49 +165,22 @@ export const MapWorkspace: React.FC = () => {
     // --- MAP A (Overlay / Left: Pre-Event Aug 26 Flood Peak / Pure Optical Satellite) ---
     const mapA = new maplibregl.Map({
       container: mapContainerA.current,
+      canvasContextAttributes: { preserveDrawingBuffer: true },
       style: {
         version: 8,
-        sources: {
-          'satellite-tiles': {
-            type: 'raster',
-            tiles: [
-              'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-            ],
-            tileSize: 256,
-          },
-          'osm-tiles': {
-            type: 'raster',
-            tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-            tileSize: 256,
-          },
-        },
-        layers: [
-          {
-            id: 'bg-layer',
-            type: 'background',
-            paint: { 'background-color': '#0F172A' },
-          },
-          {
-            id: 'satellite-layer',
-            type: 'raster',
-            source: 'satellite-tiles',
-            layout: { visibility: basemapType === 'satellite' ? 'visible' : 'none' },
-            paint: { 'raster-opacity': 1.0 },
-          },
-          {
-            id: 'osm-layer',
-            type: 'raster',
-            source: 'osm-tiles',
-            layout: { visibility: basemapType === 'carto' ? 'visible' : 'none' },
-            paint: { 'raster-opacity': 1.0 },
-          },
-        ],
+        sources: tileSources as any,
+        layers: tileLayers as any,
       },
       center: initialCenter,
       zoom: initialZoom,
       attributionControl: false,
-      interactive: false, // Mirrored from mapB
+      interactive: false, // Mirrored camera from mapB
     });
+
+    mapRefB.current = mapB;
+    mapRefA.current = mapA;
+    (window as any).__mapA = mapA;
+    (window as any).__mapB = mapB;
 
     // Synchronize Camera from Map B to Map A continuously
     const syncCamera = () => {
@@ -172,7 +197,7 @@ export const MapWorkspace: React.FC = () => {
 
     // Load Data Layers onto Map B (Right Side: Post-Flood Sep 19 / Active Erosion Cut)
     mapB.on('load', () => {
-      applyBasemap(mapB, basemapType);
+      syncBasemaps();
 
       // 1. Regional Footprints (for M0 Atlas navigation)
       mapB.addSource('region-footprints', {
@@ -230,52 +255,66 @@ export const MapWorkspace: React.FC = () => {
         paint: { 'line-color': '#38BDF8', 'line-width': 2.5, 'line-dasharray': [3, 2] },
       });
 
-      // 2. Jamuna Post-Flood Data Layers (Receded Braids, 🔴 145.8 ha Active Erosion Cut, 🟢 88.4 ha Silt Accretion)
+      // 2. Jamuna Post-Flood Data Layers
+      // Receded Water (Semi-transparent marine blue, allowing riverbed textures to remain visible)
       mapB.addSource('jamuna-water-sep', { type: 'geojson', data: JAMUNA_WATER_SEP19 as any });
       mapB.addLayer({
         id: 'layer-jamuna-water-sep',
         type: 'fill',
         source: 'jamuna-water-sep',
-        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.80 },
+        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.28 },
+      });
+      mapB.addLayer({
+        id: 'layer-jamuna-water-sep-line',
+        type: 'line',
+        source: 'jamuna-water-sep',
+        paint: { 'line-color': '#38BDF8', 'line-width': 1.5 },
       });
 
+      // Active Riverbank Erosion (Semi-transparent crimson hazard fill with bold dashed bankline retreat cut)
       mapB.addSource('jamuna-erosion', { type: 'geojson', data: JAMUNA_EROSION_ZONES as any });
       mapB.addLayer({
         id: 'layer-jamuna-erosion',
         type: 'fill',
         source: 'jamuna-erosion',
-        paint: { 'fill-color': '#EF4444', 'fill-opacity': 0.90 },
+        paint: { 'fill-color': '#DC2626', 'fill-opacity': 0.38 },
       });
       mapB.addLayer({
         id: 'layer-jamuna-erosion-line',
         type: 'line',
         source: 'jamuna-erosion',
-        paint: { 'line-color': '#991B1B', 'line-width': 3.5 },
+        paint: {
+          'line-color': '#EF4444',
+          'line-width': 2.5,
+          'line-dasharray': [4, 2],
+        },
       });
 
+      // Silt / Char Accretion (Semi-transparent emerald crop stipple)
       mapB.addSource('jamuna-accretion', { type: 'geojson', data: JAMUNA_ACCRETION_ZONES as any });
       mapB.addLayer({
         id: 'layer-jamuna-accretion',
         type: 'fill',
         source: 'jamuna-accretion',
-        paint: { 'fill-color': '#10B981', 'fill-opacity': 0.85 },
+        paint: { 'fill-color': '#059669', 'fill-opacity': 0.30 },
       });
       mapB.addLayer({
         id: 'layer-jamuna-accretion-line',
         type: 'line',
         source: 'jamuna-accretion',
-        paint: { 'line-color': '#047857', 'line-width': 2.5 },
+        paint: { 'line-color': '#10B981', 'line-width': 2.0 },
       });
 
+      // Jamuna Critical Infrastructure Assets (Schools, Clinics, Ferries)
       mapB.addSource('jamuna-assets', { type: 'geojson', data: JAMUNA_ASSETS as any });
       mapB.addLayer({
         id: 'layer-jamuna-assets-circle',
         type: 'circle',
         source: 'jamuna-assets',
         paint: {
-          'circle-radius': 7,
+          'circle-radius': 6.5,
           'circle-color': '#F59E0B',
-          'circle-stroke-width': 2.5,
+          'circle-stroke-width': 2,
           'circle-stroke-color': '#FFFFFF',
         },
       });
@@ -286,7 +325,7 @@ export const MapWorkspace: React.FC = () => {
         id: 'layer-sundarbans-water',
         type: 'fill',
         source: 'sundarbans-water',
-        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.80 },
+        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.28 },
       });
 
       mapB.addSource('sundarbans-canopy', { type: 'geojson', data: SUNDARBANS_PAULI_CANOPY as any });
@@ -294,7 +333,7 @@ export const MapWorkspace: React.FC = () => {
         id: 'layer-sundarbans-canopy',
         type: 'fill',
         source: 'sundarbans-canopy',
-        paint: { 'fill-color': '#15803D', 'fill-opacity': 0.50 },
+        paint: { 'fill-color': '#15803D', 'fill-opacity': 0.22 },
       });
 
       mapB.addSource('sundarbans-pulse', { type: 'geojson', data: SUNDARBANS_TIDAL_PULSE as any });
@@ -302,13 +341,13 @@ export const MapWorkspace: React.FC = () => {
         id: 'layer-sundarbans-pulse',
         type: 'fill',
         source: 'sundarbans-pulse',
-        paint: { 'fill-color': '#EA580C', 'fill-opacity': 0.75 },
+        paint: { 'fill-color': '#EA580C', 'fill-opacity': 0.35 },
       });
       mapB.addLayer({
         id: 'layer-sundarbans-pulse-line',
         type: 'line',
         source: 'sundarbans-pulse',
-        paint: { 'line-color': '#F97316', 'line-width': 2.5 },
+        paint: { 'line-color': '#F97316', 'line-width': 2.5, 'line-dasharray': [4, 2] },
       });
 
       mapB.addSource('sundarbans-assets', { type: 'geojson', data: SUNDARBANS_ASSETS as any });
@@ -317,9 +356,9 @@ export const MapWorkspace: React.FC = () => {
         type: 'circle',
         source: 'sundarbans-assets',
         paint: {
-          'circle-radius': 7,
+          'circle-radius': 6.5,
           'circle-color': '#10B981',
-          'circle-stroke-width': 2.5,
+          'circle-stroke-width': 2,
           'circle-stroke-color': '#FFFFFF',
         },
       });
@@ -339,12 +378,24 @@ export const MapWorkspace: React.FC = () => {
       // Erosion zone interactive click
       mapB.on('click', 'layer-jamuna-erosion', () => {
         setSelectedSample({
-          lon: 89.682,
+          lon: 89.668,
           lat: 25.568,
           value: -15.4,
           unit: 'dB',
           masked: false,
           reason: 'Active Western Bank Erosion Candidate (145.8 ha)',
+        });
+      });
+
+      // Sundarbans pulse interactive click
+      mapB.on('click', 'layer-sundarbans-pulse', () => {
+        setSelectedSample({
+          lon: 89.725,
+          lat: 21.825,
+          value: -10.1,
+          unit: 'dB',
+          masked: false,
+          reason: 'Sub-Canopy Tidal Flood Double-Bounce (+3.5 dB HH)',
         });
       });
 
@@ -378,23 +429,23 @@ export const MapWorkspace: React.FC = () => {
       });
     });
 
-    // Load Data Layers onto Map A (Left Side: Pre-Flood Aug 26 Flood Peak / Pure Satellite)
+    // Load Data Layers onto Map A (Left Side: Pre-Flood Aug 26 Flood Peak / Pure Optical Satellite)
     mapA.on('load', () => {
-      applyBasemap(mapA, basemapType);
+      syncBasemaps();
 
-      // Pre-flood peak inundation mask (August 26: Stage 18.9m — Huge flood covering the entire channel and banks)
+      // Pre-flood peak inundation mask (August 26: Stage 18.9m)
       mapA.addSource('jamuna-water-aug', { type: 'geojson', data: JAMUNA_WATER_AUG26 as any });
       mapA.addLayer({
         id: 'layer-jamuna-water-aug',
         type: 'fill',
         source: 'jamuna-water-aug',
-        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.85 },
+        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.35 },
       });
       mapA.addLayer({
         id: 'layer-jamuna-water-aug-line',
         type: 'line',
         source: 'jamuna-water-aug',
-        paint: { 'line-color': '#38BDF8', 'line-width': 2.5 },
+        paint: { 'line-color': '#38BDF8', 'line-width': 1.8 },
       });
 
       mapA.addSource('sundarbans-water', { type: 'geojson', data: SUNDARBANS_WATER as any });
@@ -402,7 +453,7 @@ export const MapWorkspace: React.FC = () => {
         id: 'layer-sundarbans-water-aug',
         type: 'fill',
         source: 'sundarbans-water',
-        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.85 },
+        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.28 },
       });
 
       updateMapALayerVisibilities(mapA, regionId, comparisonMode);
@@ -411,16 +462,22 @@ export const MapWorkspace: React.FC = () => {
     mapRefB.current = mapB;
     mapRefA.current = mapA;
 
-    // Handle window resize
     const handleResize = () => {
-      mapB.resize();
-      mapA.resize();
+      if (mapRefB.current) mapRefB.current.resize();
+      if (mapRefA.current) mapRefA.current.resize();
     };
     window.addEventListener('resize', handleResize);
-    setTimeout(handleResize, 200);
-    setTimeout(handleResize, 1000);
+
+    // Continuous ResizeObserver to guarantee full-resolution WebGL canvas sizing
+    const resizeObserver = new ResizeObserver(handleResize);
+    if (mapContainerB.current) resizeObserver.observe(mapContainerB.current);
+
+    // Initial resize calls
+    setTimeout(handleResize, 100);
+    setTimeout(handleResize, 500);
 
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener('resize', handleResize);
       mapB.remove();
       mapA.remove();
@@ -429,11 +486,13 @@ export const MapWorkspace: React.FC = () => {
     };
   }, []);
 
-  // Update basemap layer visibility when basemapType changes
+  // Sync basemaps when basemapType or comparisonMode changes
   useEffect(() => {
-    applyBasemap(mapRefB.current, basemapType);
-    applyBasemap(mapRefA.current, basemapType);
-  }, [basemapType]);
+    syncBasemaps();
+    if (mapRefA.current && mapRefA.current.isStyleLoaded()) {
+      updateMapALayerVisibilities(mapRefA.current, regionId, comparisonMode);
+    }
+  }, [basemapType, comparisonMode]);
 
   // Update layers & fly to active region
   useEffect(() => {
@@ -454,7 +513,6 @@ export const MapWorkspace: React.FC = () => {
       mapB.flyTo({ center: [89.70, 21.875], zoom: 11.8, essential: true, duration: 800 });
     }
 
-    // Force resize to ensure canvases fill containers
     setTimeout(() => {
       if (mapRefB.current) mapRefB.current.resize();
       if (mapRefA.current) mapRefA.current.resize();
@@ -465,6 +523,7 @@ export const MapWorkspace: React.FC = () => {
     const isJamuna = activeRegion === 'jamuna';
     const jamunaLayers = [
       'layer-jamuna-water-sep',
+      'layer-jamuna-water-sep-line',
       'layer-jamuna-erosion',
       'layer-jamuna-erosion-line',
       'layer-jamuna-accretion',
@@ -497,7 +556,7 @@ export const MapWorkspace: React.FC = () => {
     mode: 'dates' | 'sensors'
   ) => {
     const isJamuna = activeRegion === 'jamuna';
-    // If comparing sensors: hide ALL radar polygons on Map A so it shows pure optical satellite photo!
+    // In 'sensors' mode: Map A is PURE optical satellite photo without any radar masks!
     const showRadarLayers = mode === 'dates';
 
     if (map.getLayer('layer-jamuna-water-aug')) {
@@ -523,92 +582,226 @@ export const MapWorkspace: React.FC = () => {
     }
   };
 
+  // 1-Click Map Snapshot Exporter
+  const handleCaptureSnapshot = () => {
+    const mapB = mapRefB.current;
+    if (!mapB) return;
+
+    try {
+      const dataUrl = mapB.getCanvas().toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = `Fluvisar_${regionId}_${comparisonMode}_${new Date().toISOString().slice(0, 10)}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      setSnapshotTaken(true);
+      setTimeout(() => setSnapshotTaken(false), 2500);
+    } catch (err) {
+      console.error('Failed to capture map snapshot:', err);
+    }
+  };
+
   const isSwipeActive = Boolean(selectedPair) && viewId !== 'M0';
 
   return (
     <div className="relative flex-1 w-full h-full overflow-hidden select-none">
-      {/* MAP B (Underneath / Right side: Date B post-flood recession + Active Erosion + SAR analysis) */}
-      <div ref={mapContainerB} className="absolute inset-0 w-full h-full" />
+      {/* MAP B (Underneath / Base: Date B post-flood recession + Active Erosion + SAR analysis) */}
+      <div
+        ref={mapContainerB}
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}
+      />
 
-      {/* MAP A (Overlay / Left side: Date A pre-flood peak inundation OR pure optical satellite imagery, clipped dynamically) */}
+      {/* MAP A (Overlay / Left side: Date A pre-flood peak inundation OR pure optical satellite imagery) */}
       <div
         ref={mapContainerA}
-        className="absolute inset-0 w-full h-full pointer-events-none transition-none"
         style={{
-          visibility: isSwipeActive ? 'visible' : 'hidden',
-          clipPath: `polygon(0% 0%, ${swipePosition}% 0%, ${swipePosition}% 100%, 0% 100%)`,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 10,
+          pointerEvents: 'none',
+          clipPath: isSwipeActive
+            ? `polygon(0% 0%, ${swipePosition}% 0%, ${swipePosition}% 100%, 0% 100%)`
+            : 'polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)',
         }}
       />
 
-      {/* Floating Basemap Switcher Pill (Top Right, Clean & Distinct) */}
-      <div className="absolute top-3 right-3 z-20 flex items-center bg-white/95 backdrop-blur-md p-0.5 rounded-lg border border-[#CBD5E1] shadow-md text-xs pointer-events-auto">
+      {/* Interactive Map Callout Markers (Pulsing Findings) */}
+      {viewId !== 'M0' && (
+        <div className="absolute inset-0 z-15 pointer-events-none overflow-hidden">
+          {regionId === 'jamuna' ? (
+            <>
+              {/* Chilmari Erosion Scallop Marker */}
+              <div
+                className="absolute pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
+                style={{ left: '38%', top: '54%' }}
+                onClick={() =>
+                  setSelectedSample({
+                    lon: 89.668,
+                    lat: 25.568,
+                    value: -15.4,
+                    unit: 'dB',
+                    masked: false,
+                    reason: 'Chilmari West Bank Active Collapse (145.8 ha)',
+                  })
+                }
+              >
+                <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#DC2626]/95 text-white text-[11px] font-bold shadow-xl border border-white hover:scale-105 transition-transform">
+                  <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+                  <span>🔴 {isBn ? 'চিলমারী ভাঙন: ১৪৫.৮ হে.' : 'Chilmari Retreat: 145.8 ha (-8.2 dB)'}</span>
+                </div>
+              </div>
+
+              {/* Mandaler Char Emergence Marker */}
+              <div
+                className="absolute pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
+                style={{ left: '57%', top: '44%' }}
+                onClick={() =>
+                  setSelectedSample({
+                    lon: 89.735,
+                    lat: 25.595,
+                    value: -9.8,
+                    unit: 'dB',
+                    masked: false,
+                    reason: 'Mandaler Char Emergent Silt Bar (88.4 ha)',
+                  })
+                }
+              >
+                <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#059669]/95 text-white text-[11px] font-bold shadow-xl border border-white hover:scale-105 transition-transform">
+                  <span>🌱 {isBn ? 'মন্ডলের চর পলি চর: ৮৮.৪ হে.' : 'Mandaler Char Silt: 88.4 ha (+0.48 NDVI)'}</span>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Dublar Char Tidal Pulse Marker */}
+              <div
+                className="absolute pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
+                style={{ left: '52%', top: '58%' }}
+                onClick={() =>
+                  setSelectedSample({
+                    lon: 89.725,
+                    lat: 21.825,
+                    value: -10.1,
+                    unit: 'dB',
+                    masked: false,
+                    reason: 'Dublar Char Sub-Canopy Tidal Pulse (+3.5 dB HH)',
+                  })
+                }
+              >
+                <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#EA580C]/95 text-white text-[11px] font-bold shadow-xl border border-white hover:scale-105 transition-transform">
+                  <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+                  <span>🌊 {isBn ? 'দুবলার চর জোয়ার প্লাবন: ৩১২ হে.' : 'Dublar Sub-Canopy Pulse: 312 ha (+3.5 dB HH)'}</span>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Floating 3-Way Basemap Switcher & Snapshot Pill (Top Right, Sleek & Compact) */}
+      <div className="absolute top-3 right-3 z-20 flex items-center space-x-1.5 pointer-events-auto">
+        <div className="flex items-center bg-white/95 backdrop-blur-md p-0.5 rounded-xl border border-[#CBD5E1] shadow-lg text-xs">
+          <button
+            onClick={() => setBasemapType('satellite')}
+            className={`flex items-center space-x-1 px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+              basemapType === 'satellite'
+                ? 'bg-[#155E75] text-white shadow-xs'
+                : 'text-[#475569] hover:text-[#102A43] hover:bg-[#F1F5F9]'
+            }`}
+            title="Switch to Real High-Resolution True-Color Optical Satellite Imagery"
+          >
+            <span>🛰️ {isBn ? 'স্যাটেলাইট' : 'Satellite'}</span>
+          </button>
+
+          <button
+            onClick={() => setBasemapType('sar')}
+            className={`flex items-center space-x-1 px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+              basemapType === 'sar'
+                ? 'bg-[#155E75] text-white shadow-xs'
+                : 'text-[#475569] hover:text-[#102A43] hover:bg-[#F1F5F9]'
+            }`}
+            title="Switch to Calibrated NISAR L-band SAR Microwave Amplitude Radar (Grayscale γ⁰ dB)"
+          >
+            <span>📡 {isBn ? 'রাডার' : 'Radar'}</span>
+          </button>
+
+          <button
+            onClick={() => setBasemapType('carto')}
+            className={`flex items-center space-x-1 px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer ${
+              basemapType === 'carto'
+                ? 'bg-[#155E75] text-white shadow-xs'
+                : 'text-[#475569] hover:text-[#102A43] hover:bg-[#F1F5F9]'
+            }`}
+            title="Switch to OpenStreetMap Cartographic Vector Map"
+          >
+            <span>🗺️ {isBn ? 'কার্টো' : 'Carto'}</span>
+          </button>
+        </div>
+
+        {/* 📸 Instant Map Snapshot Button */}
         <button
-          onClick={() => setBasemapType('satellite')}
-          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md font-bold transition-all cursor-pointer ${
-            basemapType === 'satellite'
-              ? 'bg-[#155E75] text-white shadow-xs'
-              : 'text-[#475569] hover:text-[#102A43] hover:bg-[#F1F5F9]'
+          onClick={handleCaptureSnapshot}
+          className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-xl border font-bold text-xs shadow-lg transition-all cursor-pointer ${
+            snapshotTaken
+              ? 'bg-[#059669] text-white border-[#059669]'
+              : 'bg-white/95 backdrop-blur-md text-[#102A43] border-[#CBD5E1] hover:bg-[#F1F5F9]'
           }`}
-          title="Switch to Real High-Resolution True-Color Satellite Imagery"
+          title="Capture and download high-resolution map snapshot (PNG)"
         >
-          <span>🛰️ Real Satellite</span>
-        </button>
-        <button
-          onClick={() => setBasemapType('carto')}
-          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md font-bold transition-all cursor-pointer ${
-            basemapType === 'carto'
-              ? 'bg-[#155E75] text-white shadow-xs'
-              : 'text-[#475569] hover:text-[#102A43] hover:bg-[#F1F5F9]'
-          }`}
-          title="Switch to OpenStreetMap Cartographic Vector Map"
-        >
-          <span>🗺️ Carto Map</span>
+          {snapshotTaken ? <Check className="w-3.5 h-3.5" /> : <Camera className="w-3.5 h-3.5 text-[#155E75]" />}
+          <span>{snapshotTaken ? (isBn ? 'সংরক্ষিত!' : 'Saved!') : (isBn ? 'স্ক্রিনশট' : 'Snapshot')}</span>
         </button>
       </div>
 
       {/* Dynamic Scientific Legend Indicator */}
       {viewId !== 'M0' && (
-        <div className="absolute bottom-6 right-4 z-10 bg-white/95 backdrop-blur-md border border-[#CBD5E1] rounded-lg p-2.5 shadow-md text-xs space-y-1.5 pointer-events-none">
+        <div className="absolute bottom-6 right-4 z-10 bg-white/95 backdrop-blur-md border border-[#CBD5E1] rounded-xl p-3 shadow-lg text-xs space-y-1.5 pointer-events-none">
           <div className="font-bold text-[#102A43] text-[11px] uppercase tracking-wider flex items-center justify-between">
-            <span>{regionId === 'jamuna' ? 'Jamuna River Dynamics' : 'Sundarbans Wetland'}</span>
-            <span className="text-[9px] font-mono text-[#0284C7] bg-[#E0F2FE] px-1 rounded">NISAR L2</span>
+            <span>{regionId === 'jamuna' ? (isBn ? 'যমুনা নদী গতিবিদ্যা' : 'Jamuna River Dynamics') : (isBn ? 'সুন্দরবন জলাভূমি ও রাডার' : 'Sundarbans Wetland Pulse')}</span>
+            <span className="text-[9px] font-mono text-[#0284C7] bg-[#E0F2FE] px-1.5 py-0.5 rounded">NISAR L2</span>
           </div>
+
           {regionId === 'jamuna' ? (
             <>
               <div className="flex items-center space-x-2">
-                <div className="w-3.5 h-3.5 rounded bg-[#0284C7]" />
-                <span className="text-[#334155] text-[11px]">Observed Water (γ⁰ ≤ -14 dB)</span>
+                <div className="w-3.5 h-3.5 rounded bg-[#0284C7]/30 border border-[#0284C7]" />
+                <span className="text-[#334155] text-[11px]">{isBn ? 'নদীর চ্যানেল জলভাগ (γ⁰ ≤ -১৪ dB)' : 'Receded Thalweg Braids (γ⁰ ≤ -14 dB)'}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3.5 h-3.5 rounded bg-[#EF4444] border border-[#991B1B]" />
-                <span className="text-[#334155] text-[11px]">Erosion Core (145.8 ha Cut)</span>
+                <div className="w-3.5 h-3.5 rounded bg-[#DC2626]/40 border-2 border-[#EF4444] border-dashed" />
+                <span className="text-[#334155] text-[11px] font-semibold text-[#DC2626]">{isBn ? 'চিলমারী ভাঙন বলয় (১৪৫.৮ হেক্টর)' : 'Chilmari Erosion Cut (145.8 ha)'}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3.5 h-3.5 rounded bg-[#10B981] border border-[#047857]" />
-                <span className="text-[#334155] text-[11px]">Silt / Char Accretion (88.4 ha)</span>
+                <div className="w-3.5 h-3.5 rounded bg-[#059669]/35 border border-[#10B981]" />
+                <span className="text-[#334155] text-[11px]">{isBn ? 'মন্ডলের চর নতুন পলি (৮৮.৪ হেক্টর)' : 'Mandaler Char Emergent Silt (88.4 ha)'}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-2.5 h-2.5 rounded-full bg-[#F59E0B] border border-white" />
-                <span className="text-[#334155] text-[11px]">Primary Schools & Clinics</span>
+                <span className="text-[#334155] text-[11px]">{isBn ? 'প্রাথমিক বিদ্যালয় ও ফেরি ঘাট' : 'Schools & Ferry Terminals'}</span>
               </div>
             </>
           ) : (
             <>
               <div className="flex items-center space-x-2">
-                <div className="w-3.5 h-3.5 rounded bg-[#0284C7]" />
-                <span className="text-[#334155] text-[11px]">Tidal Creek Channels</span>
+                <div className="w-3.5 h-3.5 rounded bg-[#0284C7]/30 border border-[#0284C7]" />
+                <span className="text-[#334155] text-[11px]">{isBn ? 'পশুর মোহনা ও খাঁড়ি জলপথ' : 'Passur Estuary Thalweg'}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3.5 h-3.5 rounded bg-[#15803D]" />
-                <span className="text-[#334155] text-[11px]">Mangrove Canopy (Volume Scattering)</span>
+                <div className="w-3.5 h-3.5 rounded bg-[#15803D]/25 border border-[#15803D]" />
+                <span className="text-[#334155] text-[11px]">{isBn ? 'ঘন ম্যানগ্রোভ ক্যানোপি (Pauli HV)' : 'Mangrove Canopy (Volume Scattering)'}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3.5 h-3.5 rounded bg-[#EA580C]" />
-                <span className="text-[#334155] text-[11px]">Tidal Flood Pulse (Double-Bounce)</span>
+                <div className="w-3.5 h-3.5 rounded bg-[#EA580C]/40 border-2 border-[#F97316] border-dashed" />
+                <span className="text-[#334155] text-[11px] font-semibold text-[#EA580C]">{isBn ? 'দুবলার চরে জোয়ার প্লাবন (+৩.৫ dB)' : 'Sub-Canopy Tidal Pulse (+3.5 dB HH)'}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-2.5 h-2.5 rounded-full bg-[#10B981] border border-white" />
-                <span className="text-[#334155] text-[11px]">Ranger Stations & Shelters</span>
+                <span className="text-[#334155] text-[11px]">{isBn ? 'ফরেস্ট রেঞ্জার স্টেশন ও সাইক্লোন শেল্টার' : 'Forest Posts & Cyclone Shelters'}</span>
               </div>
             </>
           )}

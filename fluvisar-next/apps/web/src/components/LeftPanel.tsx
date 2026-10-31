@@ -2,7 +2,7 @@ import React from 'react';
 import { useWorkspaceStore } from '../store/workspaceStore';
 import type { ViewId } from '../store/workspaceStore';
 import { i18n } from '../i18n/translations';
-import { Layers, Activity } from 'lucide-react';
+import { Layers, Activity, Navigation } from 'lucide-react';
 import { SundarbansPolarizationPanel } from './SundarbansPolarizationPanel';
 import { JamunaDecisionPanel } from './JamunaDecisionPanel';
 import { InSARSpecialtyPanel } from './InSARSpecialtyPanel';
@@ -11,6 +11,7 @@ import { ScenarioLabPanel } from './ScenarioLabPanel';
 export const LeftPanel: React.FC = () => {
   const { regionId, viewId, setView, language, mode, layerVisibility, toggleLayer } = useWorkspaceStore();
   const t = i18n[language];
+  const isBn = language === 'bn';
 
   // Specific views available per region (plan.md Section 6)
   const views: { id: ViewId; label: string; tag: string }[] =
@@ -30,7 +31,7 @@ export const LeftPanel: React.FC = () => {
         ];
 
   return (
-    <div className="w-[340px] bg-white border-r border-[#CBD5E1] flex flex-col h-full overflow-y-auto shrink-0 select-none">
+    <div className="w-84 bg-white border-r border-[#CBD5E1] flex flex-col h-full overflow-y-auto shrink-0 select-none">
       {/* Workspace Mode Indicator Pill */}
       <div className={`px-3 py-2 border-b text-[11px] font-medium flex items-center justify-between ${
         mode === 'explore'
@@ -48,6 +49,80 @@ export const LeftPanel: React.FC = () => {
           {mode === 'explore' ? 'Discovery' : mode === 'investigate' ? 'Deep Physics' : 'Field Actions'}
         </span>
       </div>
+
+      {/* MODE: EXPLORE -> Quick Focal Points Navigator */}
+      {mode === 'explore' && (
+        <div className="p-3 border-b border-[#F1F5F9] bg-[#F8FAFC]">
+          <div className="text-[#102A43] font-bold text-xs mb-2 flex items-center justify-between">
+            <span className="flex items-center space-x-1.5">
+              <Navigation className="w-3.5 h-3.5 text-[#155E75]" />
+              <span>{isBn ? 'দ্রুত পর্যবেক্ষণ কেন্দ্র' : 'Quick Focal Points'}</span>
+            </span>
+            <span className="text-[10px] text-[#0284C7] font-semibold bg-[#E0F2FE] px-1.5 py-0.5 rounded">
+              {regionId === 'jamuna' ? 'Jamuna Reach' : 'Sundarbans'}
+            </span>
+          </div>
+
+          <div className="space-y-1.5">
+            {regionId === 'jamuna' ? (
+              <>
+                <button
+                  onClick={() => {
+                    setView('J1');
+                    const mapB = (window as any).__mapB;
+                    if (mapB) mapB.flyTo({ center: [89.668, 25.568], zoom: 13.5, duration: 900 });
+                  }}
+                  className="w-full text-left p-2 rounded-lg bg-white border border-[#CBD5E1] hover:border-[#DC2626] hover:bg-[#FEF2F2] transition-colors cursor-pointer group"
+                >
+                  <div className="flex items-center justify-between font-bold text-xs text-[#DC2626]">
+                    <span>🔴 {isBn ? 'চিলমারী পশ্চিম তীর ভাঙন' : 'Chilmari West Bank Retreat'}</span>
+                    <span className="text-[10px] font-mono text-[#64748B]">145.8 ha</span>
+                  </div>
+                  <div className="text-[10px] text-[#475569] mt-0.5">
+                    {isBn ? 'বাঁধের দিকে ভাঙন অগ্রসর হচ্ছে (-৮.২ dB)' : 'Active cutbank retreating at 2.4m/day (-8.2 dB drop)'}
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setView('J2');
+                    const mapB = (window as any).__mapB;
+                    if (mapB) mapB.flyTo({ center: [89.735, 25.595], zoom: 13.2, duration: 900 });
+                  }}
+                  className="w-full text-left p-2 rounded-lg bg-white border border-[#CBD5E1] hover:border-[#059669] hover:bg-[#F0FDF4] transition-colors cursor-pointer group"
+                >
+                  <div className="flex items-center justify-between font-bold text-xs text-[#059669]">
+                    <span>🌱 {isBn ? 'মন্ডলের চর নতুন পলি চর' : 'Mandaler Char Emergent Silt'}</span>
+                    <span className="text-[10px] font-mono text-[#64748B]">88.4 ha</span>
+                  </div>
+                  <div className="text-[10px] text-[#475569] mt-0.5">
+                    {isBn ? 'পানি হ্রাস পেয়ে রবি ফসলের উপযোগী চর সৃষ্টি' : 'Emergent shoal post-flood with rising NDVI (+0.48)'}
+                  </div>
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => {
+                    setView('S1');
+                    const mapB = (window as any).__mapB;
+                    if (mapB) mapB.flyTo({ center: [89.725, 21.825], zoom: 13.0, duration: 900 });
+                  }}
+                  className="w-full text-left p-2 rounded-lg bg-white border border-[#CBD5E1] hover:border-[#EA580C] hover:bg-[#FFF7ED] transition-colors cursor-pointer group"
+                >
+                  <div className="flex items-center justify-between font-bold text-xs text-[#EA580C]">
+                    <span>🌊 {isBn ? 'দুবলার চর জোয়ার প্লাবন' : 'Dublar Sub-Canopy Tidal Pulse'}</span>
+                    <span className="text-[10px] font-mono text-[#64748B]">312 ha</span>
+                  </div>
+                  <div className="text-[10px] text-[#475569] mt-0.5">
+                    {isBn ? 'পূর্ণ জোয়ারের সময় ডাবল বাউন্স (+৩.৫ dB)' : 'Trunk-ground double bounce return under canopy (+3.5 dB HH)'}
+                  </div>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* View Switcher Section */}
       <div className="p-3 border-b border-[#F1F5F9]">
