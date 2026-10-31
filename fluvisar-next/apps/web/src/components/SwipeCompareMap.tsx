@@ -138,14 +138,14 @@ export const SwipeCompareMap: React.FC<SwipeCompareProps> = ({ dateA, dateB }) =
             <div className="absolute -top-12 whitespace-nowrap bg-[#0F172A]/95 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-2xl border border-[#38BDF8] pointer-events-none flex items-center space-x-2">
               <span className="text-[#38BDF8]">
                 {comparisonMode === 'sensors'
-                  ? '🛰️ Optical Satellite'
-                  : `📅 ${dateA} (Flood)`}
+                  ? (isBn ? '🛰️ অপটিক্যাল স্যাটেলাইট' : '🛰️ Optical Satellite')
+                  : `📅 ${dateA} (${metaA.stage})`}
               </span>
               <span className="text-white/60">↔</span>
               <span className="text-[#F87171]">
                 {comparisonMode === 'sensors'
-                  ? '📡 NISAR Radar X-Ray'
-                  : `📅 ${dateB} (Recession)`}
+                  ? (isBn ? '📡 নিসার রাডার' : '📡 NISAR Radar X-Ray')
+                  : `📅 ${dateB} (${metaB.stage})`}
               </span>
             </div>
 

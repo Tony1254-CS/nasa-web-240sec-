@@ -33,7 +33,7 @@ export interface WorkspaceState {
   runId: string;
   viewId: ViewId;
   mode: WorkspaceMode;
-  
+
   // Basemap & Visualization
   basemapType: BasemapType;
   overlayStyle: OverlayStyle;
@@ -43,28 +43,28 @@ export interface WorkspaceState {
   // Localization & Audience
   language: Language;
   audience: Audience;
-  
+
   // Temporal & Observation State
   selectedDate: string;
   availableDates: string[];
   selectedPair: [string, string] | null;
   isPlaying: boolean;
-  
+
   // Layers & Lenses
   activeLens: string;
   layerVisibility: Record<string, boolean>;
-  
+
   // Finding & Selection
   selectedFindingId: string | null;
   selectedPatch: any | null;
   selectedSample: PixelSample | null;
-  
+
   // Sonification & Audio
   isSonificationEnabled: boolean;
 
   // Map State
   camera: MapCamera;
-  
+
   // Actions
   setActiveTab: (tab: ActiveTab) => void;
   setBasemapType: (basemap: BasemapType) => void;
@@ -175,19 +175,25 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   setAudience: (audience) => set({ audience }),
   setSelectedDate: (selectedDate) =>
     set((state) => {
-      const currentPair = state.selectedPair;
-      let newPair: [string, string] | null = currentPair;
-      if (currentPair) {
-        if (selectedDate !== currentPair[0]) {
-          newPair = [currentPair[0], selectedDate];
-        } else {
-          const nextIdx = (state.availableDates.indexOf(selectedDate) + 1) % state.availableDates.length;
-          newPair = [selectedDate, state.availableDates[nextIdx]];
+      let newPair: [string, string] | null = state.selectedPair;
+      if (newPair) {
+        const currIdx = state.availableDates.indexOf(selectedDate);
+        if (currIdx > 0) {
+          // Compare with preceding date in timeline (e.g. Aug 26 -> Sep 19)
+          newPair = [state.availableDates[currIdx - 1], selectedDate];
+        } else if (state.availableDates.length > 1) {
+          // If earliest date picked, compare against peak flood crest or next date
+          const peakIdx = state.availableDates.indexOf('2026-08-26');
+          newPair = [selectedDate, peakIdx !== -1 ? '2026-08-26' : state.availableDates[1]];
         }
       }
       return { selectedDate, selectedPair: newPair };
     }),
-  setSelectedPair: (selectedPair) => set({ selectedPair }),
+  setSelectedPair: (selectedPair) =>
+    set({
+      selectedPair,
+      ...(selectedPair ? { selectedDate: selectedPair[1] } : {}),
+    }),
   toggleLayer: (layerId) =>
     set((state) => ({
       layerVisibility: {

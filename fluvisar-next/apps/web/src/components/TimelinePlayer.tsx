@@ -87,22 +87,20 @@ export const TimelinePlayer: React.FC = () => {
                 className="relative z-10 flex flex-col items-center cursor-pointer group"
               >
                 <div
-                  className={`w-4 h-4 rounded-full border-2 transition-all flex items-center justify-center ${
-                    isSelected
-                      ? 'bg-[#155E75] border-white ring-2 ring-[#155E75] scale-125'
-                      : isInPair
+                  className={`w-4 h-4 rounded-full border-2 transition-all flex items-center justify-center ${isSelected
+                    ? 'bg-[#155E75] border-white ring-2 ring-[#155E75] scale-125'
+                    : isInPair
                       ? 'bg-[#0284C7] border-white ring-1 ring-[#0284C7]'
                       : 'bg-white border-[#94A3B8] hover:border-[#155E75] hover:scale-110'
-                  }`}
+                    }`}
                 >
                   {isSelected && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                 </div>
 
                 <div className="mt-1 flex flex-col items-center">
                   <span
-                    className={`text-[11px] font-mono leading-none ${
-                      isSelected ? 'font-bold text-[#155E75]' : 'text-[#64748B]'
-                    }`}
+                    className={`text-[11px] font-mono leading-none ${isSelected ? 'font-bold text-[#155E75]' : 'text-[#64748B]'
+                      }`}
                   >
                     {formatDate(d)}
                   </span>

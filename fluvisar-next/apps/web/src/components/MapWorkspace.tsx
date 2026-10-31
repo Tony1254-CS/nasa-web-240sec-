@@ -3,7 +3,7 @@ import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { Camera, Check } from 'lucide-react';
 import { useWorkspaceStore } from '../store/workspaceStore';
-import type { BasemapType } from '../store/workspaceStore';
+import type { BasemapType, OverlayStyle } from '../store/workspaceStore';
 import {
   JAMUNA_WATER_AUG26,
   JAMUNA_WATER_SEP19,
@@ -15,11 +15,28 @@ import {
   SUNDARBANS_PAULI_CANOPY,
   SUNDARBANS_ASSETS,
   getJamunaWaterForDate,
+  getJamunaErosionForDate,
+  getJamunaAccretionForDate,
   getSundarbansWaterForDate,
+  getSundarbansPulseForDate,
 } from '../data/geoData';
 
 // Configure static, direct MapLibre Web Worker to eliminate Vite ESM loader issues
 maplibregl.setWorkerUrl('/maplibre-gl-worker.mjs');
+
+const JAMUNA_RASTER_COORDS: [[number, number], [number, number], [number, number], [number, number]] = [
+  [89.60, 25.75], // Top-Left
+  [89.90, 25.75], // Top-Right
+  [89.90, 25.40], // Bottom-Right
+  [89.60, 25.40], // Bottom-Left
+];
+
+const SUNDARBANS_RASTER_COORDS: [[number, number], [number, number], [number, number], [number, number]] = [
+  [89.55, 22.00], // Top-Left
+  [89.85, 22.00], // Top-Right
+  [89.85, 21.75], // Bottom-Right
+  [89.55, 21.75], // Bottom-Left
+];
 
 export const MapWorkspace: React.FC = () => {
   const mapContainerB = useRef<HTMLDivElement>(null);
@@ -27,6 +44,7 @@ export const MapWorkspace: React.FC = () => {
   const mapRefB = useRef<maplibregl.Map | null>(null);
   const mapRefA = useRef<maplibregl.Map | null>(null);
 
+  const [currentZoom, setCurrentZoom] = useState<number>(11.5);
   const [snapshotTaken, setSnapshotTaken] = useState<boolean>(false);
 
   // TEMPORARY basemap debug harness (?debug=1): live map state + real-browser tile probe.
@@ -105,28 +123,135 @@ export const MapWorkspace: React.FC = () => {
     }
   };
 
-  // Dynamic fill opacity management:
+  // Dynamic fill opacity & thematic styling management:
   // Water layers maintain realistic hydrologic fill so flood vs recession is clearly visible during swipe!
-  const applyOverlayFills = (map: maplibregl.Map | null) => {
+  const applyDynamicThematicStyles = (
+    map: maplibregl.Map | null,
+    type: BasemapType,
+    style: OverlayStyle
+  ) => {
     if (!map || !map.isStyleLoaded()) return;
-    const isOutlines = overlayStyle === 'outlines';
+    const isOutlines = style === 'outlines';
 
-    const fillLayers = [
-      { id: 'layer-jamuna-water-aug', opacity: isOutlines ? 0.38 : 0.48 }, // Peak flood covers char
-      { id: 'layer-jamuna-water-sep', opacity: isOutlines ? 0.28 : 0.38 }, // Receded channel
-      { id: 'layer-jamuna-erosion', opacity: isOutlines ? 0.12 : 0.28 },   // Collapsing cutbank
-      { id: 'layer-jamuna-accretion', opacity: isOutlines ? 0.10 : 0.24 }, // Emergent char
-      { id: 'layer-sundarbans-water', opacity: isOutlines ? 0.28 : 0.38 },
-      { id: 'layer-sundarbans-water-aug', opacity: isOutlines ? 0.28 : 0.38 },
-      { id: 'layer-sundarbans-canopy', opacity: isOutlines ? 0.08 : 0.20 },
-      { id: 'layer-sundarbans-pulse', opacity: isOutlines ? 0.30 : 0.42 }, // High spring tide sub-canopy surge
-    ];
+    // 1. Water color & opacity by basemap
+    // In Satellite/SAR mode, real high-resolution satellite/SAR rasters are rendered underneath!
+    // Outlines mode keeps water fill at 0.0 (only crisp border line) so 100% of real satellite water and river channel is visible without blue wash.
+    const waterColor = type === 'sar' ? '#020617' : '#0284C7';
+    const waterOpacity = type === 'carto' ? (isOutlines ? 0.12 : 0.28) : (isOutlines ? 0.0 : 0.08);
+    const waterLineColor = type === 'sar' ? '#06B6D4' : '#38BDF8';
 
-    fillLayers.forEach(({ id, opacity }) => {
+    ['layer-jamuna-water-sep', 'layer-jamuna-water-aug', 'layer-sundarbans-water', 'layer-sundarbans-water-aug'].forEach((id) => {
       if (map.getLayer(id)) {
-        map.setPaintProperty(id, 'fill-opacity', opacity);
+        map.setPaintProperty(id, 'fill-color', waterColor);
+        map.setPaintProperty(id, 'fill-opacity', waterOpacity);
+      }
+      const lineId = `${id}-line`;
+      if (map.getLayer(lineId)) {
+        map.setPaintProperty(lineId, 'line-color', waterLineColor);
+        map.setPaintProperty(lineId, 'line-width', 2.0);
       }
     });
+
+    // 2. Erosion color & opacity
+    const erosionColor = '#DC2626';
+    const erosionOpacity = isOutlines ? 0.12 : 0.28;
+    ['layer-jamuna-erosion', 'layer-jamuna-erosion-aug'].forEach((id) => {
+      if (map.getLayer(id)) {
+        map.setPaintProperty(id, 'fill-color', erosionColor);
+        map.setPaintProperty(id, 'fill-opacity', erosionOpacity);
+      }
+      const lineId = `${id}-line`;
+      if (map.getLayer(lineId)) {
+        map.setPaintProperty(lineId, 'line-color', '#EF4444');
+        map.setPaintProperty(lineId, 'line-width', 2.2);
+      }
+    });
+
+    // 3. Accretion / emergent sandbar color & opacity
+    const accretionColor = type === 'sar' ? '#64748B' : '#D4B996';
+    const accretionOpacity = isOutlines ? 0.10 : 0.25;
+    const accretionLineColor = type === 'sar' ? '#94A3B8' : '#B45309';
+    ['layer-jamuna-accretion', 'layer-jamuna-accretion-aug'].forEach((id) => {
+      if (map.getLayer(id)) {
+        map.setPaintProperty(id, 'fill-color', accretionColor);
+        map.setPaintProperty(id, 'fill-opacity', accretionOpacity);
+      }
+      const lineId = `${id}-line`;
+      if (map.getLayer(lineId)) {
+        map.setPaintProperty(lineId, 'line-color', accretionLineColor);
+        map.setPaintProperty(lineId, 'line-width', 2.0);
+      }
+    });
+
+    // 4. Sundarbans tidal pulse (sub-canopy double bounce)
+    const pulseColor = type === 'sar' ? '#FB923C' : '#EA580C';
+    const pulseOpacity = type === 'sar' ? 0.75 : isOutlines ? 0.38 : 0.58;
+    ['layer-sundarbans-pulse', 'layer-sundarbans-pulse-aug'].forEach((id) => {
+      if (map.getLayer(id)) {
+        map.setPaintProperty(id, 'fill-color', pulseColor);
+        map.setPaintProperty(id, 'fill-opacity', pulseOpacity);
+      }
+      const lineId = `${id}-line`;
+      if (map.getLayer(lineId)) {
+        map.setPaintProperty(lineId, 'line-color', '#F97316');
+        map.setPaintProperty(lineId, 'line-width', 2.2);
+      }
+    });
+
+    // 5. Sundarbans canopy volume
+    const canopyColor = type === 'sar' ? '#22C55E' : '#15803D';
+    const canopyOpacity = isOutlines ? 0.18 : 0.32;
+    if (map.getLayer('layer-sundarbans-canopy')) {
+      map.setPaintProperty('layer-sundarbans-canopy', 'fill-color', canopyColor);
+      map.setPaintProperty('layer-sundarbans-canopy', 'fill-opacity', canopyOpacity);
+    }
+    if (map.getLayer('layer-sundarbans-canopy-line')) {
+      map.setPaintProperty('layer-sundarbans-canopy-line', 'line-color', '#16A34A');
+      map.setPaintProperty('layer-sundarbans-canopy-line', 'line-width', 1.8);
+    }
+  };
+
+  // Atmosphere and radiometric tone adjustments per satellite date
+  const applyTemporalSatelliteTones = (
+    map: maplibregl.Map | null,
+    date: string,
+    type: BasemapType
+  ) => {
+    if (!map || !map.isStyleLoaded()) return;
+
+    if (type === 'satellite' && map.getLayer('satellite-layer')) {
+      if (date === '2026-08-26' || date === '2026-08-10') {
+        // Monsoon flood peak: high humidity, saturated water sediment, cloudy monsoon glow
+        map.setPaintProperty('satellite-layer', 'raster-saturation', 0.20);
+        map.setPaintProperty('satellite-layer', 'raster-contrast', 0.12);
+        map.setPaintProperty('satellite-layer', 'raster-brightness-max', 0.95);
+      } else if (date === '2026-10-21') {
+        // Winter dry season: crisp low-humidity atmosphere, sharp sandbars
+        map.setPaintProperty('satellite-layer', 'raster-saturation', -0.05);
+        map.setPaintProperty('satellite-layer', 'raster-contrast', 0.28);
+        map.setPaintProperty('satellite-layer', 'raster-brightness-max', 1.05);
+      } else if (date === '2026-09-19') {
+        // Flood recession: post-monsoon clearing
+        map.setPaintProperty('satellite-layer', 'raster-saturation', 0.08);
+        map.setPaintProperty('satellite-layer', 'raster-contrast', 0.22);
+        map.setPaintProperty('satellite-layer', 'raster-brightness-max', 1.0);
+      } else {
+        // Early monsoon (Jun 23, Jul 17)
+        map.setPaintProperty('satellite-layer', 'raster-saturation', 0.0);
+        map.setPaintProperty('satellite-layer', 'raster-contrast', 0.18);
+        map.setPaintProperty('satellite-layer', 'raster-brightness-max', 1.0);
+      }
+    }
+
+    if (type === 'sar' && map.getLayer('sar-layer')) {
+      if (date === '2026-08-26' || date === '2026-08-10') {
+        map.setPaintProperty('sar-layer', 'raster-contrast', 1.15);
+        map.setPaintProperty('sar-layer', 'raster-brightness-max', 0.58);
+      } else {
+        map.setPaintProperty('sar-layer', 'raster-contrast', 1.0);
+        map.setPaintProperty('sar-layer', 'raster-brightness-max', 0.62);
+      }
+    }
   };
 
   // Initialize both MapLibre maps
@@ -264,6 +389,7 @@ export const MapWorkspace: React.FC = () => {
         bearing: mapB.getBearing(),
         pitch: mapB.getPitch(),
       });
+      setCurrentZoom(Number(mapB.getZoom().toFixed(1)));
     };
     mapB.on('move', syncCamera);
     mapB.on('zoom', syncCamera);
@@ -329,29 +455,56 @@ export const MapWorkspace: React.FC = () => {
         paint: { 'line-color': '#38BDF8', 'line-width': 2.5, 'line-dasharray': [3, 2] },
       });
 
+      // 0. Primary Georeferenced High-Resolution Satellite & SAR Rasters
+      const dateBInit = comparisonMode === 'dates' && selectedPair ? selectedPair[1] : selectedDate;
+      const typeBInit = basemapType === 'sar' ? 'sar' : 'optical';
+      mapB.addSource('jamuna-raster-scene', {
+        type: 'image',
+        url: `/rasters/jamuna_${typeBInit}_${dateBInit}.png`,
+        coordinates: JAMUNA_RASTER_COORDS,
+      });
+      mapB.addLayer({
+        id: 'layer-jamuna-raster-scene',
+        type: 'raster',
+        source: 'jamuna-raster-scene',
+        paint: { 'raster-opacity': 1.0 },
+      });
+
+      mapB.addSource('sundarbans-raster-scene', {
+        type: 'image',
+        url: '/rasters/sundarbans_sar_spring.png',
+        coordinates: SUNDARBANS_RASTER_COORDS,
+      });
+      mapB.addLayer({
+        id: 'layer-sundarbans-raster-scene',
+        type: 'raster',
+        source: 'sundarbans-raster-scene',
+        paint: { 'raster-opacity': 1.0 },
+      });
+
       // 2. Jamuna Post-Flood Data Layers
-      // Receded Water (Clean line-only by default, 0.0 fill opacity preserves 100% satellite visibility)
+      // Receded Water with realistic dynamic hydrologic surface
       mapB.addSource('jamuna-water-sep', { type: 'geojson', data: JAMUNA_WATER_SEP19 as any });
       mapB.addLayer({
         id: 'layer-jamuna-water-sep',
         type: 'fill',
         source: 'jamuna-water-sep',
-        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.0 },
+        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.52 },
       });
       mapB.addLayer({
         id: 'layer-jamuna-water-sep-line',
         type: 'line',
         source: 'jamuna-water-sep',
-        paint: { 'line-color': '#38BDF8', 'line-width': 1.8 },
+        paint: { 'line-color': '#38BDF8', 'line-width': 2.2 },
       });
 
-      // Active Riverbank Erosion (Glowing dashed retreat line along collapsing cutbank)
+      // Active Riverbank Erosion (Prominent warning zone along collapsing cutbank)
       mapB.addSource('jamuna-erosion', { type: 'geojson', data: JAMUNA_EROSION_ZONES as any });
       mapB.addLayer({
         id: 'layer-jamuna-erosion',
         type: 'fill',
         source: 'jamuna-erosion',
-        paint: { 'fill-color': '#DC2626', 'fill-opacity': 0.0 },
+        paint: { 'fill-color': '#DC2626', 'fill-opacity': 0.40 },
       });
       mapB.addLayer({
         id: 'layer-jamuna-erosion-line',
@@ -359,24 +512,23 @@ export const MapWorkspace: React.FC = () => {
         source: 'jamuna-erosion',
         paint: {
           'line-color': '#EF4444',
-          'line-width': 2.8,
-          'line-dasharray': [4, 2],
+          'line-width': 2.4,
         },
       });
 
-      // Silt / Char Accretion (Crisp emerald boundary contour line)
+      // Silt / Char Accretion (Emergent agricultural sandbars)
       mapB.addSource('jamuna-accretion', { type: 'geojson', data: JAMUNA_ACCRETION_ZONES as any });
       mapB.addLayer({
         id: 'layer-jamuna-accretion',
         type: 'fill',
         source: 'jamuna-accretion',
-        paint: { 'fill-color': '#059669', 'fill-opacity': 0.0 },
+        paint: { 'fill-color': '#D4B996', 'fill-opacity': 0.45 },
       });
       mapB.addLayer({
         id: 'layer-jamuna-accretion-line',
         type: 'line',
         source: 'jamuna-accretion',
-        paint: { 'line-color': '#10B981', 'line-width': 2.2, 'line-dasharray': [3, 2] },
+        paint: { 'line-color': '#B45309', 'line-width': 2.0 },
       });
 
       // Jamuna Critical Infrastructure Assets (Schools, Clinics, Ferries)
@@ -399,13 +551,13 @@ export const MapWorkspace: React.FC = () => {
         id: 'layer-sundarbans-water',
         type: 'fill',
         source: 'sundarbans-water',
-        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.0 },
+        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.52 },
       });
       mapB.addLayer({
         id: 'layer-sundarbans-water-line',
         type: 'line',
         source: 'sundarbans-water',
-        paint: { 'line-color': '#38BDF8', 'line-width': 1.8 },
+        paint: { 'line-color': '#38BDF8', 'line-width': 2.2 },
       });
 
       mapB.addSource('sundarbans-canopy', { type: 'geojson', data: SUNDARBANS_PAULI_CANOPY as any });
@@ -413,13 +565,13 @@ export const MapWorkspace: React.FC = () => {
         id: 'layer-sundarbans-canopy',
         type: 'fill',
         source: 'sundarbans-canopy',
-        paint: { 'fill-color': '#15803D', 'fill-opacity': 0.0 },
+        paint: { 'fill-color': '#15803D', 'fill-opacity': 0.18 },
       });
       mapB.addLayer({
         id: 'layer-sundarbans-canopy-line',
         type: 'line',
         source: 'sundarbans-canopy',
-        paint: { 'line-color': '#15803D', 'line-width': 2.0, 'line-dasharray': [3, 2] },
+        paint: { 'line-color': '#16A34A', 'line-width': 1.8 },
       });
 
       mapB.addSource('sundarbans-pulse', { type: 'geojson', data: SUNDARBANS_TIDAL_PULSE as any });
@@ -427,13 +579,13 @@ export const MapWorkspace: React.FC = () => {
         id: 'layer-sundarbans-pulse',
         type: 'fill',
         source: 'sundarbans-pulse',
-        paint: { 'fill-color': '#EA580C', 'fill-opacity': 0.0 },
+        paint: { 'fill-color': '#EA580C', 'fill-opacity': 0.38 },
       });
       mapB.addLayer({
         id: 'layer-sundarbans-pulse-line',
         type: 'line',
         source: 'sundarbans-pulse',
-        paint: { 'line-color': '#F97316', 'line-width': 2.5, 'line-dasharray': [4, 2] },
+        paint: { 'line-color': '#F97316', 'line-width': 2.2 },
       });
 
       mapB.addSource('sundarbans-assets', { type: 'geojson', data: SUNDARBANS_ASSETS as any });
@@ -514,12 +666,41 @@ export const MapWorkspace: React.FC = () => {
         }
       });
 
-      applyOverlayFills(mapB);
+      applyDynamicThematicStyles(mapB, basemapType, overlayStyle);
     });
 
     // Load Data Layers onto Map A (Left Side: Pre-Flood Aug 26 Flood Peak / Pure Optical Satellite)
     mapA.on('load', () => {
       syncBasemaps();
+
+      const dateAInit = comparisonMode === 'dates' && selectedPair ? selectedPair[0] : selectedDate;
+      const typeAInit = comparisonMode === 'sensors' ? 'satellite' : (basemapType === 'sar' ? 'sar' : 'optical');
+      const urlAInit = `/rasters/jamuna_${typeAInit === 'sar' ? 'sar' : 'optical'}_${dateAInit}.png`;
+
+      // 0. Primary Georeferenced High-Resolution Satellite & SAR Rasters for Map A
+      mapA.addSource('jamuna-raster-scene-a', {
+        type: 'image',
+        url: urlAInit,
+        coordinates: JAMUNA_RASTER_COORDS,
+      });
+      mapA.addLayer({
+        id: 'layer-jamuna-raster-scene-a',
+        type: 'raster',
+        source: 'jamuna-raster-scene-a',
+        paint: { 'raster-opacity': 1.0 },
+      });
+
+      mapA.addSource('sundarbans-raster-scene-a', {
+        type: 'image',
+        url: '/rasters/sundarbans_sar_spring.png',
+        coordinates: SUNDARBANS_RASTER_COORDS,
+      });
+      mapA.addLayer({
+        id: 'layer-sundarbans-raster-scene-a',
+        type: 'raster',
+        source: 'sundarbans-raster-scene-a',
+        paint: { 'raster-opacity': 1.0 },
+      });
 
       // Pre-flood peak inundation mask (August 26: Stage 18.9m)
       mapA.addSource('jamuna-water-aug', { type: 'geojson', data: JAMUNA_WATER_AUG26 as any });
@@ -527,31 +708,74 @@ export const MapWorkspace: React.FC = () => {
         id: 'layer-jamuna-water-aug',
         type: 'fill',
         source: 'jamuna-water-aug',
-        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.0 },
+        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.52 },
       });
       mapA.addLayer({
         id: 'layer-jamuna-water-aug-line',
         type: 'line',
         source: 'jamuna-water-aug',
-        paint: { 'line-color': '#38BDF8', 'line-width': 1.8, 'line-dasharray': [4, 2] },
+        paint: { 'line-color': '#38BDF8', 'line-width': 2.2 },
       });
 
-      mapA.addSource('sundarbans-water', { type: 'geojson', data: SUNDARBANS_WATER as any });
+      // Jamuna Erosion & Accretion on Map A for stage-matched comparison
+      mapA.addSource('jamuna-erosion-aug', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } as any });
+      mapA.addLayer({
+        id: 'layer-jamuna-erosion-aug',
+        type: 'fill',
+        source: 'jamuna-erosion-aug',
+        paint: { 'fill-color': '#DC2626', 'fill-opacity': 0.40 },
+      });
+      mapA.addLayer({
+        id: 'layer-jamuna-erosion-aug-line',
+        type: 'line',
+        source: 'jamuna-erosion-aug',
+        paint: { 'line-color': '#EF4444', 'line-width': 2.4 },
+      });
+
+      mapA.addSource('jamuna-accretion-aug', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } as any });
+      mapA.addLayer({
+        id: 'layer-jamuna-accretion-aug',
+        type: 'fill',
+        source: 'jamuna-accretion-aug',
+        paint: { 'fill-color': '#D4B996', 'fill-opacity': 0.45 },
+      });
+      mapA.addLayer({
+        id: 'layer-jamuna-accretion-aug-line',
+        type: 'line',
+        source: 'jamuna-accretion-aug',
+        paint: { 'line-color': '#B45309', 'line-width': 2.0 },
+      });
+
+      mapA.addSource('sundarbans-water-aug', { type: 'geojson', data: SUNDARBANS_WATER as any });
       mapA.addLayer({
         id: 'layer-sundarbans-water-aug',
         type: 'fill',
-        source: 'sundarbans-water',
-        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.0 },
+        source: 'sundarbans-water-aug',
+        paint: { 'fill-color': '#0284C7', 'fill-opacity': 0.52 },
       });
       mapA.addLayer({
         id: 'layer-sundarbans-water-aug-line',
         type: 'line',
-        source: 'sundarbans-water',
-        paint: { 'line-color': '#38BDF8', 'line-width': 1.8 },
+        source: 'sundarbans-water-aug',
+        paint: { 'line-color': '#38BDF8', 'line-width': 2.2 },
+      });
+
+      mapA.addSource('sundarbans-pulse-aug', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } as any });
+      mapA.addLayer({
+        id: 'layer-sundarbans-pulse-aug',
+        type: 'fill',
+        source: 'sundarbans-pulse-aug',
+        paint: { 'fill-color': '#EA580C', 'fill-opacity': 0.38 },
+      });
+      mapA.addLayer({
+        id: 'layer-sundarbans-pulse-aug-line',
+        type: 'line',
+        source: 'sundarbans-pulse-aug',
+        paint: { 'line-color': '#F97316', 'line-width': 2.2 },
       });
 
       updateMapALayerVisibilities(mapA, regionId, comparisonMode);
-      applyOverlayFills(mapA);
+      applyDynamicThematicStyles(mapA, comparisonMode === 'sensors' ? 'satellite' : basemapType, overlayStyle);
     });
 
     mapRefB.current = mapB;
@@ -584,6 +808,10 @@ export const MapWorkspace: React.FC = () => {
   // Sync basemaps when basemapType or comparisonMode changes
   useEffect(() => {
     syncBasemaps();
+    const isComparing = comparisonMode === 'dates' && Boolean(selectedPair);
+    const dateA = isComparing && selectedPair ? selectedPair[0] : selectedDate;
+    const dateB = isComparing && selectedPair ? selectedPair[1] : selectedDate;
+    syncRasterScenes(dateB, dateA);
     if (mapRefA.current && mapRefA.current.isStyleLoaded()) {
       updateMapALayerVisibilities(mapRefA.current, regionId, comparisonMode);
     }
@@ -591,9 +819,13 @@ export const MapWorkspace: React.FC = () => {
 
   // Dynamic overlay style (Outlines vs Tinted)
   useEffect(() => {
-    applyOverlayFills(mapRefB.current);
-    applyOverlayFills(mapRefA.current);
-  }, [overlayStyle]);
+    applyDynamicThematicStyles(mapRefB.current, basemapType, overlayStyle);
+    applyDynamicThematicStyles(
+      mapRefA.current,
+      comparisonMode === 'sensors' ? 'satellite' : basemapType,
+      overlayStyle
+    );
+  }, [overlayStyle, basemapType, comparisonMode]);
 
   // DIAGNOSIS ONLY: live state reporter + real-browser tile probe (?debug=1).
   useEffect(() => {
@@ -628,11 +860,83 @@ export const MapWorkspace: React.FC = () => {
     return () => window.clearInterval(id);
   }, [isDebug, basemapType, comparisonMode]);
 
-  // Dynamic temporal update: sync map water extent to selectedDate or selectedPair!
+  // Synchronize georeferenced high-resolution satellite & SAR raster scenes
+  const syncRasterScenes = (dateB: string, dateA: string) => {
+    const isJamuna = regionId === 'jamuna';
+    const isSpringTide = (d: string) => d === '2026-08-26' || d === '2026-09-19';
+
+    // Map B:
+    const mapB = mapRefB.current;
+    if (mapB && mapB.isStyleLoaded()) {
+      const showRasterB = basemapType !== 'carto' && viewId !== 'M0';
+      if (mapB.getLayer('layer-jamuna-raster-scene')) {
+        mapB.setLayoutProperty('layer-jamuna-raster-scene', 'visibility', isJamuna && showRasterB ? 'visible' : 'none');
+      }
+      if (mapB.getLayer('layer-sundarbans-raster-scene')) {
+        mapB.setLayoutProperty('layer-sundarbans-raster-scene', 'visibility', !isJamuna && showRasterB ? 'visible' : 'none');
+      }
+
+      if (isJamuna) {
+        const sourceB = mapB.getSource('jamuna-raster-scene') as maplibregl.ImageSource;
+        if (sourceB) {
+          const modeB = (comparisonMode === 'sensors' ? 'sar' : basemapType) === 'sar' ? 'sar' : 'optical';
+          sourceB.updateImage({
+            url: `/rasters/jamuna_${modeB}_${dateB}.png`,
+            coordinates: JAMUNA_RASTER_COORDS,
+          });
+        }
+      } else {
+        const sourceB = mapB.getSource('sundarbans-raster-scene') as maplibregl.ImageSource;
+        if (sourceB) {
+          sourceB.updateImage({
+            url: isSpringTide(dateB) ? '/rasters/sundarbans_sar_spring.png' : '/rasters/sundarbans_sar_neap.png',
+            coordinates: SUNDARBANS_RASTER_COORDS,
+          });
+        }
+      }
+      mapB.triggerRepaint();
+    }
+
+    // Map A:
+    const mapA = mapRefA.current;
+    if (mapA && mapA.isStyleLoaded()) {
+      const typeA = comparisonMode === 'sensors' ? 'satellite' : basemapType;
+      const showRasterA = typeA !== 'carto' && viewId !== 'M0';
+      if (mapA.getLayer('layer-jamuna-raster-scene-a')) {
+        mapA.setLayoutProperty('layer-jamuna-raster-scene-a', 'visibility', isJamuna && showRasterA ? 'visible' : 'none');
+      }
+      if (mapA.getLayer('layer-sundarbans-raster-scene-a')) {
+        mapA.setLayoutProperty('layer-sundarbans-raster-scene-a', 'visibility', !isJamuna && showRasterA ? 'visible' : 'none');
+      }
+
+      if (isJamuna) {
+        const sourceA = mapA.getSource('jamuna-raster-scene-a') as maplibregl.ImageSource;
+        if (sourceA) {
+          const modeA = typeA === 'sar' ? 'sar' : 'optical';
+          sourceA.updateImage({
+            url: `/rasters/jamuna_${modeA}_${dateA}.png`,
+            coordinates: JAMUNA_RASTER_COORDS,
+          });
+        }
+      } else {
+        const sourceA = mapA.getSource('sundarbans-raster-scene-a') as maplibregl.ImageSource;
+        if (sourceA) {
+          sourceA.updateImage({
+            url: isSpringTide(dateA) ? '/rasters/sundarbans_sar_spring.png' : '/rasters/sundarbans_sar_neap.png',
+            coordinates: SUNDARBANS_RASTER_COORDS,
+          });
+        }
+      }
+      mapA.triggerRepaint();
+    }
+  };
+
+  // Dynamic temporal update: sync map water extent & features to selectedDate or selectedPair!
   useEffect(() => {
     const isJamuna = regionId === 'jamuna';
-    const dateB = selectedPair ? selectedPair[1] : selectedDate;
-    const dateA = selectedPair ? selectedPair[0] : selectedDate;
+    const isComparing = comparisonMode === 'dates' && Boolean(selectedPair);
+    const dateA = isComparing && selectedPair ? selectedPair[0] : selectedDate;
+    const dateB = isComparing && selectedPair ? selectedPair[1] : selectedDate;
 
     const mapB = mapRefB.current;
     if (mapB && mapB.isStyleLoaded()) {
@@ -641,29 +945,60 @@ export const MapWorkspace: React.FC = () => {
         if (sourceB) {
           sourceB.setData(getJamunaWaterForDate(dateB) as any);
         }
+        const erosionB = mapB.getSource('jamuna-erosion') as maplibregl.GeoJSONSource;
+        if (erosionB) {
+          erosionB.setData(getJamunaErosionForDate(dateB) as any);
+        }
+        const accretionB = mapB.getSource('jamuna-accretion') as maplibregl.GeoJSONSource;
+        if (accretionB) {
+          accretionB.setData(getJamunaAccretionForDate(dateB) as any);
+        }
       } else {
         const sourceB = mapB.getSource('sundarbans-water') as maplibregl.GeoJSONSource;
         if (sourceB) {
           sourceB.setData(getSundarbansWaterForDate(dateB) as any);
         }
+        const pulseB = mapB.getSource('sundarbans-pulse') as maplibregl.GeoJSONSource;
+        if (pulseB) {
+          pulseB.setData(getSundarbansPulseForDate(dateB) as any);
+        }
       }
+      applyDynamicThematicStyles(mapB, basemapType, overlayStyle);
+      applyTemporalSatelliteTones(mapB, dateB, basemapType);
     }
 
     const mapA = mapRefA.current;
     if (mapA && mapA.isStyleLoaded()) {
+      const typeA = comparisonMode === 'sensors' ? 'satellite' : basemapType;
       if (isJamuna) {
         const sourceA = mapA.getSource('jamuna-water-aug') as maplibregl.GeoJSONSource;
         if (sourceA) {
           sourceA.setData(getJamunaWaterForDate(dateA) as any);
         }
+        const erosionA = mapA.getSource('jamuna-erosion-aug') as maplibregl.GeoJSONSource;
+        if (erosionA) {
+          erosionA.setData(getJamunaErosionForDate(dateA) as any);
+        }
+        const accretionA = mapA.getSource('jamuna-accretion-aug') as maplibregl.GeoJSONSource;
+        if (accretionA) {
+          accretionA.setData(getJamunaAccretionForDate(dateA) as any);
+        }
       } else {
-        const sourceA = mapA.getSource('sundarbans-water') as maplibregl.GeoJSONSource;
+        const sourceA = mapA.getSource('sundarbans-water-aug') as maplibregl.GeoJSONSource;
         if (sourceA) {
           sourceA.setData(getSundarbansWaterForDate(dateA) as any);
         }
+        const pulseA = mapA.getSource('sundarbans-pulse-aug') as maplibregl.GeoJSONSource;
+        if (pulseA) {
+          pulseA.setData(getSundarbansPulseForDate(dateA) as any);
+        }
       }
+      applyDynamicThematicStyles(mapA, typeA, overlayStyle);
+      applyTemporalSatelliteTones(mapA, dateA, typeA);
     }
-  }, [selectedDate, selectedPair, regionId]);
+
+    syncRasterScenes(dateB, dateA);
+  }, [selectedDate, selectedPair, regionId, basemapType, overlayStyle, comparisonMode]);
 
   // Update layers & fly to active region & sync layer stack checkboxes
   useEffect(() => {
@@ -671,12 +1006,22 @@ export const MapWorkspace: React.FC = () => {
     const mapA = mapRefA.current;
     if (!mapB || !mapB.isStyleLoaded()) return;
 
+    const isComparing = comparisonMode === 'dates' && Boolean(selectedPair);
+    const dateA = isComparing && selectedPair ? selectedPair[0] : selectedDate;
+    const dateB = isComparing && selectedPair ? selectedPair[1] : selectedDate;
+
     updateMapBLayerVisibilities(mapB, regionId);
-    applyOverlayFills(mapB);
+    applyDynamicThematicStyles(mapB, basemapType, overlayStyle);
     if (mapA && mapA.isStyleLoaded()) {
       updateMapALayerVisibilities(mapA, regionId, comparisonMode);
-      applyOverlayFills(mapA);
+      applyDynamicThematicStyles(
+        mapA,
+        comparisonMode === 'sensors' ? 'satellite' : basemapType,
+        overlayStyle
+      );
     }
+
+    syncRasterScenes(dateB, dateA);
 
     if (viewId === 'M0') {
       mapB.flyTo({ center: [89.8, 23.8], zoom: 6.8, essential: true, duration: 800 });
@@ -754,6 +1099,7 @@ export const MapWorkspace: React.FC = () => {
   ) => {
     const isJamuna = activeRegion === 'jamuna';
     const showWater = (layerVisibility['water'] ?? true) && mode === 'dates';
+    const showTransitions = (layerVisibility['transitions'] ?? true) && mode === 'dates';
 
     if (map.getLayer('layer-jamuna-water-aug')) {
       map.setLayoutProperty(
@@ -769,6 +1115,34 @@ export const MapWorkspace: React.FC = () => {
         showWater && isJamuna ? 'visible' : 'none'
       );
     }
+    if (map.getLayer('layer-jamuna-erosion-aug')) {
+      map.setLayoutProperty(
+        'layer-jamuna-erosion-aug',
+        'visibility',
+        showTransitions && isJamuna ? 'visible' : 'none'
+      );
+    }
+    if (map.getLayer('layer-jamuna-erosion-aug-line')) {
+      map.setLayoutProperty(
+        'layer-jamuna-erosion-aug-line',
+        'visibility',
+        showTransitions && isJamuna ? 'visible' : 'none'
+      );
+    }
+    if (map.getLayer('layer-jamuna-accretion-aug')) {
+      map.setLayoutProperty(
+        'layer-jamuna-accretion-aug',
+        'visibility',
+        showTransitions && isJamuna ? 'visible' : 'none'
+      );
+    }
+    if (map.getLayer('layer-jamuna-accretion-aug-line')) {
+      map.setLayoutProperty(
+        'layer-jamuna-accretion-aug-line',
+        'visibility',
+        showTransitions && isJamuna ? 'visible' : 'none'
+      );
+    }
     if (map.getLayer('layer-sundarbans-water-aug')) {
       map.setLayoutProperty(
         'layer-sundarbans-water-aug',
@@ -781,6 +1155,20 @@ export const MapWorkspace: React.FC = () => {
         'layer-sundarbans-water-aug-line',
         'visibility',
         showWater && !isJamuna ? 'visible' : 'none'
+      );
+    }
+    if (map.getLayer('layer-sundarbans-pulse-aug')) {
+      map.setLayoutProperty(
+        'layer-sundarbans-pulse-aug',
+        'visibility',
+        showTransitions && !isJamuna ? 'visible' : 'none'
+      );
+    }
+    if (map.getLayer('layer-sundarbans-pulse-aug-line')) {
+      map.setLayoutProperty(
+        'layer-sundarbans-pulse-aug-line',
+        'visibility',
+        showTransitions && !isJamuna ? 'visible' : 'none'
       );
     }
   };
@@ -972,6 +1360,45 @@ export const MapWorkspace: React.FC = () => {
           {snapshotTaken ? <Check className="w-3.5 h-3.5" /> : <Camera className="w-3.5 h-3.5 text-[#155E75]" />}
           <span>{snapshotTaken ? (isBn ? 'সংরক্ষিত!' : 'Saved!') : (isBn ? 'স্ক্রিনশট' : 'Snapshot')}</span>
         </button>
+
+        {/* 🔍 Zoom In / Out Slider Control */}
+        <div className="flex items-center space-x-2 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#CBD5E1] shadow-lg text-xs font-bold text-[#102A43]">
+          <button
+            onClick={() => {
+              if (mapRefB.current) mapRefB.current.zoomOut({ duration: 300 });
+            }}
+            className="w-5 h-5 flex items-center justify-center rounded hover:bg-[#F1F5F9] text-[#475569] hover:text-[#0284C7] transition-colors cursor-pointer text-sm font-black"
+            title="Zoom Out (-)"
+          >
+            -
+          </button>
+          <input
+            type="range"
+            min="6"
+            max="16"
+            step="0.1"
+            value={currentZoom}
+            onChange={(e) => {
+              const z = parseFloat(e.target.value);
+              setCurrentZoom(z);
+              if (mapRefB.current) {
+                mapRefB.current.setZoom(z);
+              }
+            }}
+            className="w-20 h-1.5 bg-[#E2E8F0] rounded-lg appearance-none cursor-pointer accent-[#0284C7]"
+            title={`Current Zoom: ${currentZoom}x`}
+          />
+          <button
+            onClick={() => {
+              if (mapRefB.current) mapRefB.current.zoomIn({ duration: 300 });
+            }}
+            className="w-5 h-5 flex items-center justify-center rounded hover:bg-[#F1F5F9] text-[#475569] hover:text-[#0284C7] transition-colors cursor-pointer text-sm font-black"
+            title="Zoom In (+)"
+          >
+            +
+          </button>
+          <span className="text-[10px] font-mono text-[#0284C7] min-w-[28px]">{currentZoom}x</span>
+        </div>
       </div>
 
       {/* Dynamic Scientific Legend Indicator */}

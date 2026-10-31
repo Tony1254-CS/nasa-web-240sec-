@@ -201,8 +201,64 @@ export const getJamunaWaterForDate = (date: string): GeoFeatureCollection => {
   return JAMUNA_WATER_BY_DATE[date] ?? JAMUNA_WATER_AUG26;
 };
 
-export const getSundarbansWaterForDate = (_date: string): GeoFeatureCollection => {
+// Date-Indexed Jamuna Bank Erosion Candidates
+// Before the recession (Aug 26 and earlier), embankment was intact. Post-recession (Sep 19 & Oct 21), cutbank failed.
+export const getJamunaErosionForDate = (date: string): GeoFeatureCollection => {
+  if (date === '2026-06-23' || date === '2026-07-17' || date === '2026-08-10' || date === '2026-08-26') {
+    return { type: 'FeatureCollection', features: [] };
+  }
+  return JAMUNA_EROSION_ZONES;
+};
+
+// Date-Indexed Jamuna Silt & Char Accretion
+// During peak flood (Aug 26 and earlier), chars are submerged. As water drops (Sep 19 & Oct 21), sandbars emerge.
+export const getJamunaAccretionForDate = (date: string): GeoFeatureCollection => {
+  if (date === '2026-06-23' || date === '2026-07-17' || date === '2026-08-10' || date === '2026-08-26') {
+    return { type: 'FeatureCollection', features: [] };
+  }
+  return JAMUNA_ACCRETION_ZONES;
+};
+
+// Sundarbans Spring Tide High Inundation vs Neap Flow
+export const SUNDARBANS_WATER_SPRING: GeoFeatureCollection = {
+  type: 'FeatureCollection',
+  features: [
+    {
+      type: 'Feature',
+      properties: { name: 'Passur Estuary Swollen Spring Tide', type: 'tidal_water', tidal_stage_m: 3.4 },
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [89.575, 21.985],
+            [89.635, 21.980],
+            [89.668, 21.925],
+            [89.710, 21.855],
+            [89.728, 21.755],
+            [89.662, 21.755],
+            [89.632, 21.830],
+            [89.592, 21.900],
+            [89.575, 21.985],
+          ],
+        ],
+      },
+    },
+  ],
+};
+
+export const getSundarbansWaterForDate = (date: string): GeoFeatureCollection => {
+  if (date === '2026-08-26' || date === '2026-09-19') {
+    return SUNDARBANS_WATER_SPRING;
+  }
   return SUNDARBANS_WATER;
+};
+
+export const getSundarbansPulseForDate = (date: string): GeoFeatureCollection => {
+  // Peak spring tide pulse active on flood crest passes
+  if (date === '2026-08-26' || date === '2026-09-19') {
+    return SUNDARBANS_TIDAL_PULSE;
+  }
+  return { type: 'FeatureCollection', features: [] };
 };
 
 // Active Riverbank Erosion Candidate (145.8 ha Robust Core)
