@@ -4,6 +4,7 @@ import type { ViewId } from '../store/workspaceStore';
 import { i18n } from '../i18n/translations';
 import { Layers, Activity } from 'lucide-react';
 import { SundarbansPolarizationPanel } from './SundarbansPolarizationPanel';
+import { JamunaDecisionPanel } from './JamunaDecisionPanel';
 
 export const LeftPanel: React.FC = () => {
   const { regionId, viewId, setView, language, layerVisibility, toggleLayer } = useWorkspaceStore();
@@ -67,7 +68,8 @@ export const LeftPanel: React.FC = () => {
         </div>
       </div>
 
-      {/* Special Sundarbans Polarization Panel (if region is sundarbans) */}
+      {/* Regional Specialized Panels */}
+      {regionId === 'jamuna' && <JamunaDecisionPanel />}
       {regionId === 'sundarbans' && <SundarbansPolarizationPanel />}
 
       {/* Layers & Lenses Section */}

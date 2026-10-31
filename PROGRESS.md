@@ -9,9 +9,9 @@
 
 | Metric | Status |
 |---|---|
-| **Overall Progress** | `[██████░░░░] 50%` (6 / 12 Milestones Complete) |
+| **Overall Progress** | `[███████░░░] 58%` (7 / 12 Milestones Complete) |
 | **Current Phase** | **Phase 3: Regional Missions & Deep Science** |
-| **Active Milestone** | **B06 — Jamuna Recovery and Service Decisions** |
+| **Active Milestone** | **B07 — Specialty and Research Cases** |
 | **Active Directory** | `fluvisar-next/` |
 | **Blockers / Open Issues** | None |
 
@@ -93,12 +93,14 @@
   - [x] Interactive Sundarbans Radar Switchboard in frontend LeftPanel (`SundarbansPolarizationPanel.tsx`)
   - [x] Automated tests for dual-pol, Pauli, NDVI, and tide filtering (`tests/test_b05_sundarbans.py`)
 
-- [ ] **B06 — Jamuna Recovery and Service Decisions**
-  - [ ] Floodplain water recurrence ($N_{wet} / N_{valid}$)
-  - [ ] Comparative recession analysis (RE:FLOW)
-  - [ ] OSM road, clinic, and school exposure extraction
-  - [ ] Service continuity network graph (CHARKEEP)
-  - [ ] **Decision Flip Engine:** Budget-constrained inspection shortlist & assumption flip
+- [x] **B06 — Jamuna Recovery and Service Decisions**
+  - [x] Floodplain water recurrence ($N_{wet} / N_{valid}$)
+  - [x] Comparative recession analysis (RE:FLOW)
+  - [x] OSM road, clinic, and school exposure extraction
+  - [x] Service continuity network graph (CHARKEEP)
+  - [x] **Decision Flip Engine:** Budget-constrained inspection shortlist & assumption flip
+  - [x] Interactive Jamuna Decision Panel in frontend LeftPanel (`JamunaDecisionPanel.tsx`)
+  - [x] Automated tests for recurrence, CHARKEEP network, and Decision Flip engine (`tests/test_b06_jamuna_decisions.py`)
 
 - [ ] **B07 — Specialty and Research Cases**
   - [ ] Local InSAR (GUNW) wrapped/unwrapped phase & coherence inspector (X1)

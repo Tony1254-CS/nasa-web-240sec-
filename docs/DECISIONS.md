@@ -44,3 +44,14 @@ This document records the foundational architectural, scientific, and product de
 * **Status:** LOCKED / ACCEPTED
 * **Context:** Remote sensing algorithms are sensitive to parameter tuning (e.g. Otsu thresholds, speckle filters). Presenting a single boundary creates a false sense of certainty.
 * **Decision:** Implement **Break My Finding** (`W06`), allowing the user to dynamically perturb parameters (threshold offsets $[-2, -1, 0, +1, +2]$ dB) to reveal the **Robust Core** (pixels that remain classified across all settings) versus the **Contested Fringe**.
+
+
+---
+
+### ADR-006: Decision Flip Engine & CHARKEEP Service Graph (Milestone B06)
+* **Status:** ACCEPTED
+* **Context:** Flood damage assessment often produces large lists of severed paths and flooded chars that exceed emergency response budgets. In addition, critical access cuts (such as the Chilmari–Roumari ferry link) isolate deep communities even when local roads remain dry.
+* **Decision:**
+  - Build the **CHARKEEP** topological network graph modeling roads, ferry crossings, community clinic hubs, and primary schools across Chilmari and Roumari.
+  - Implement a budget-constrained **Decision Flip Engine**: given an inspection quota (e.g., $15,000 / 3 teams), prioritize sites where an erroneous satellite classification (e.g. wet sand misclassified as open water) would flip an aid or evacuation decision.
+  - Compute verifiable **Decision Flip Receipts** displaying topological impact, cost, and people safeguarded.
