@@ -9,9 +9,9 @@
 
 | Metric | Status |
 |---|---|
-| **Overall Progress** | `[████░░░░░░] 33%` (4 / 12 Milestones Complete) |
-| **Current Phase** | **Phase 2: Core Observation & Change Engine** |
-| **Active Milestone** | **B04 — Change Detection & "Break My Finding"** |
+| **Overall Progress** | `[█████░░░░░] 42%` (5 / 12 Milestones Complete) |
+| **Current Phase** | **Phase 3: Regional Missions & Deep Science** |
+| **Active Milestone** | **B05 — Sundarbans Investigation** |
 | **Active Directory** | `fluvisar-next/` |
 | **Blockers / Open Issues** | None |
 
@@ -70,13 +70,14 @@
   - [x] Linked context tracks: radar power, stage ladder with danger line, NDVI, rainfall (`ContextTracks.tsx`)
   - [x] Compatible pair selector with orbit geometry matching and stage $\Delta h$ limits (`PairSelectorModal.tsx`)
 
-- [ ] **B04 — Change Detection & "Break My Finding"**
-  - [ ] Otsu exploratory thresholding with real pixel histogram
-  - [ ] Water/non-water candidate classification and transition classes
-  - [ ] Minimum Mapping Unit (MMU) area filtering
-  - [ ] **Break My Finding:** Threshold offsets `[-2, -1, 0, +1, +2]` dB and filter variants
-  - [ ] Robust Core vs. Contested Fringe calculation
-  - [ ] 7 Check Groups (product/geometry, alignment, classification sensitivity, hydrology, subsequent observations, independent comparison, controls)
+- [x] **B04 — Change Detection & "Break My Finding"**
+  - [x] Otsu exploratory thresholding with real pixel histogram (`water.py`)
+  - [x] 4-class transition detection (Stable Water, Stable Land, Erosion Candidate, Accretion Candidate)
+  - [x] Break My Finding threshold perturbation $[-2, -1, 0, +1, +2]$ dB variants
+  - [x] Robust Core vs. Contested Fringe calculation
+  - [x] 7 Check Groups engine (product/geometry, alignment, classification sensitivity, hydrology, subsequent observations, independent comparison, controls)
+  - [x] Interactive Break My Finding modal with live histogram and check breakdown (`BreakMyFindingModal.tsx`)
+  - [x] Automated tests for Otsu, transitions, core/fringe invariant, and checks (`tests/test_b04_change_and_checks.py`)
 
 ---
 
