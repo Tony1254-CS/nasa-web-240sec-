@@ -5,6 +5,7 @@ export type ViewId = 'M0' | 'J1' | 'J2' | 'J3' | 'S1' | 'S2' | 'X1' | 'C1';
 export type WorkspaceMode = 'explore' | 'investigate' | 'act';
 export type Language = 'en' | 'bn';
 export type Audience = 'public' | 'decision' | 'analyst';
+export type ActiveTab = 'atlas' | 'investigate' | 'stories' | 'learn' | 'reports';
 
 export interface MapCamera {
   center: [number, number];
@@ -24,6 +25,7 @@ export interface PixelSample {
 
 export interface WorkspaceState {
   // Navigation & Region
+  activeTab: ActiveTab;
   regionId: RegionId;
   caseId: string;
   runId: string;
@@ -49,10 +51,14 @@ export interface WorkspaceState {
   selectedPatch: any | null;
   selectedSample: PixelSample | null;
   
+  // Sonification & Audio
+  isSonificationEnabled: boolean;
+
   // Map State
   camera: MapCamera;
   
   // Actions
+  setActiveTab: (tab: ActiveTab) => void;
   setRegion: (regionId: RegionId) => void;
   setCase: (caseId: string) => void;
   setView: (viewId: ViewId) => void;
@@ -64,6 +70,7 @@ export interface WorkspaceState {
   toggleLayer: (layerId: string) => void;
   setSelectedFinding: (findingId: string | null) => void;
   setSelectedSample: (sample: PixelSample | null) => void;
+  toggleSonification: () => void;
   setCamera: (camera: MapCamera) => void;
 }
 
@@ -83,6 +90,7 @@ const REGION_DEFAULTS: Record<RegionId, { center: [number, number]; zoom: number
 };
 
 export const useWorkspaceStore = create<WorkspaceState>((set) => ({
+  activeTab: 'atlas',
   regionId: 'jamuna',
   caseId: 'river-memory',
   runId: 'run-2026-prod-01',
@@ -112,11 +120,13 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
     unit: 'dB',
     masked: false,
   },
+  isSonificationEnabled: false,
   camera: {
     center: [89.75, 25.575],
     zoom: 6.8, // View of full Bangladesh for M0 Atlas
   },
 
+  setActiveTab: (activeTab) => set({ activeTab }),
   setRegion: (regionId) =>
     set((state) => {
       if (state.regionId === regionId) return state;
@@ -137,7 +147,7 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
     }),
 
   setCase: (caseId) => set({ caseId, selectedFindingId: null, selectedPatch: null }),
-  setView: (viewId) => set({ viewId }),
+  setView: (viewId) => set({ viewId, activeTab: viewId === 'M0' ? 'atlas' : 'investigate' }),
   setMode: (mode) => set({ mode }),
   setLanguage: (language) => set({ language }),
   setAudience: (audience) => set({ audience }),
@@ -152,5 +162,6 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
     })),
   setSelectedFinding: (selectedFindingId) => set({ selectedFindingId }),
   setSelectedSample: (selectedSample) => set({ selectedSample }),
+  toggleSonification: () => set((state) => ({ isSonificationEnabled: !state.isSonificationEnabled })),
   setCamera: (camera) => set({ camera }),
 }));

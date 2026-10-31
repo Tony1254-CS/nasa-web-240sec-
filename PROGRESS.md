@@ -9,9 +9,9 @@
 
 | Metric | Status |
 |---|---|
-| **Overall Progress** | `[████████░░] 75%` (9 / 12 Milestones Complete) |
+| **Overall Progress** | `[████████░░] 83%` (10 / 12 Milestones Complete) |
 | **Current Phase** | **Phase 4: Intelligence, Stories & Decision Lab** |
-| **Active Milestone** | **B09 — Stories, Learn and Translation** |
+| **Active Milestone** | **B10 — Scenarios and Comprehension Improvements** |
 | **Active Directory** | `fluvisar-next/` |
 | **Blockers / Open Issues** | None |
 
@@ -124,12 +124,14 @@
   - [x] Complete reproducible manifest and JSON export package (`ChangePassportModal.tsx`)
   - [x] Automated tests for passport generation, revision ledger, impact ledger, and brief manifest (`tests/test_b08_evidence_and_reports.py`)
 
-- [ ] **B09 — Stories, Learn and Translation**
-  - [ ] Five localized story chapters (River change, Agriculture, Service, Mangrove, Motion)
-  - [ ] Audience Switcher: Public Bangla, Decision Maker, Analyst
-  - [ ] SAR Lab 4 mini-experiments: Cloud Blindness, Polarization Match, Speckle Filter, Fringe Counter
-  - [ ] Web sonification / audio sample representation
-  - [ ] Future NISAR panel
+- [x] **B09 — Stories, Learn and Translation**
+  - [x] Five localized story chapters: River change, Agriculture, Service, Mangrove, Motion (`StoryModeView.tsx`)
+  - [x] Audience Switcher: Public Bangla, Decision Maker, Analyst perspective adapters (E10)
+  - [x] Personal Testimony qualitative context layer with attributed consent records (E13)
+  - [x] SAR Lab 4 mini-experiments: Cloud Blindness, Polarization Match, Speckle Filter, Fringe Counter (`SarLabView.tsx`)
+  - [x] Web Audio Sonification utility: backscatter dB mapped to real-time acoustic frequencies (E22, `sonification.ts`)
+  - [x] Future NISAR capabilities horizon panel: SME2 soil moisture, forest biomass, tectonic deformation (E14)
+  - [x] Automated tests for chapters contract, physics formulas, and audience separation (`tests/test_b09_stories_and_learn.py`)
 
 - [ ] **B10 — Scenarios and Comprehension Improvements**
   - [ ] Decision & educational radar response simulator

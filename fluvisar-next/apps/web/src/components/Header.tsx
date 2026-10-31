@@ -2,27 +2,41 @@ import React, { useState } from 'react';
 import { useWorkspaceStore } from '../store/workspaceStore';
 import type { WorkspaceMode, Audience } from '../store/workspaceStore';
 import { i18n } from '../i18n/translations';
-import { Globe, Compass, BookOpen, GraduationCap, FileText, Languages } from 'lucide-react';
+import { Globe, Compass, BookOpen, GraduationCap, FileText, Languages, Volume2, VolumeX } from 'lucide-react';
 import { DecisionBriefModal } from './DecisionBriefModal';
+import { radarSonifier } from '../utils/sonification';
 
 export const Header: React.FC = () => {
   const {
+    activeTab,
     regionId,
     caseId,
-    viewId,
     mode,
     language,
     audience,
+    isSonificationEnabled,
+    setActiveTab,
     setRegion,
     setCase,
     setView,
     setMode,
     setLanguage,
     setAudience,
+    toggleSonification,
+    selectedSample
   } = useWorkspaceStore();
 
   const [isReportsOpen, setIsReportsOpen] = useState(false);
   const t = i18n[language];
+
+  const handleToggleAudio = () => {
+    toggleSonification();
+    if (!isSonificationEnabled) {
+      radarSonifier.playToneForDb(selectedSample?.value ?? -14.0);
+    } else {
+      radarSonifier.stop();
+    }
+  };
 
   return (
     <>
@@ -30,7 +44,13 @@ export const Header: React.FC = () => {
         {/* Top Navigation Bar */}
         <div className="flex items-center justify-between px-4 h-14 border-b border-[#F1F5F9]">
           {/* Brand */}
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setView('M0')}>
+          <div
+            className="flex items-center space-x-3 cursor-pointer"
+            onClick={() => {
+              setActiveTab('atlas');
+              setView('M0');
+            }}
+          >
             <div className="w-8 h-8 rounded-lg bg-[#155E75] flex items-center justify-center text-white font-bold shadow-xs">
               FS
             </div>
@@ -50,9 +70,12 @@ export const Header: React.FC = () => {
           {/* Center Primary Nav */}
           <nav className="flex items-center space-x-1">
             <button
-              onClick={() => setView('M0')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                viewId === 'M0'
+              onClick={() => {
+                setActiveTab('atlas');
+                setView('M0');
+              }}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                activeTab === 'atlas'
                   ? 'bg-[#155E75] text-white shadow-xs'
                   : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#102A43]'
               }`}
@@ -62,10 +85,13 @@ export const Header: React.FC = () => {
             </button>
 
             <button
-              onClick={() => setView(regionId === 'jamuna' ? 'J1' : 'S1')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                viewId !== 'M0'
-                  ? 'bg-[#E0F2FE] text-[#0369A1]'
+              onClick={() => {
+                setActiveTab('investigate');
+                setView(regionId === 'jamuna' ? 'J1' : 'S1');
+              }}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                activeTab === 'investigate'
+                  ? 'bg-[#155E75] text-white shadow-xs'
                   : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#102A43]'
               }`}
             >
@@ -74,7 +100,12 @@ export const Header: React.FC = () => {
             </button>
 
             <button
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium text-[#475569] hover:bg-[#F1F5F9]"
+              onClick={() => setActiveTab('stories')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                activeTab === 'stories'
+                  ? 'bg-[#155E75] text-white shadow-xs'
+                  : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#102A43]'
+              }`}
               title="Scientific Narratives"
             >
               <BookOpen className="w-4 h-4" />
@@ -82,7 +113,12 @@ export const Header: React.FC = () => {
             </button>
 
             <button
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium text-[#475569] hover:bg-[#F1F5F9]"
+              onClick={() => setActiveTab('learn')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                activeTab === 'learn'
+                  ? 'bg-[#155E75] text-white shadow-xs'
+                  : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#102A43]'
+              }`}
               title="SAR Lab & Physics Twin"
             >
               <GraduationCap className="w-4 h-4" />
@@ -99,15 +135,28 @@ export const Header: React.FC = () => {
             </button>
           </nav>
 
-          {/* Right Tools (Lang & Audience) */}
+          {/* Right Tools (Sonification, Lang & Audience) */}
           <div className="flex items-center space-x-2">
+            {/* Audio Sonification Toggle (E22) */}
+            <button
+              onClick={handleToggleAudio}
+              className={`p-1.5 rounded-lg border transition-all cursor-pointer ${
+                isSonificationEnabled
+                  ? 'bg-[#155E75] text-white border-[#155E75] shadow-xs'
+                  : 'border-[#CBD5E1] text-[#64748B] hover:bg-[#F8FAFC]'
+              }`}
+              title={isSonificationEnabled ? 'Mute Radar Sonification (E22)' : 'Enable Radar Sonification (E22)'}
+            >
+              {isSonificationEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+            </button>
+
             {/* Audience Switcher */}
             <div className="flex items-center bg-[#F1F5F9] rounded-lg p-0.5 border border-[#E2E8F0]">
               {(['public', 'decision', 'analyst'] as Audience[]).map((aud) => (
                 <button
                   key={aud}
                   onClick={() => setAudience(aud)}
-                  className={`px-2 py-1 text-xs font-medium rounded-md transition-all ${
+                  className={`px-2 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
                     audience === aud
                       ? 'bg-white text-[#102A43] shadow-xs'
                       : 'text-[#64748B] hover:text-[#102A43]'

@@ -80,3 +80,21 @@ This document records the foundational architectural, scientific, and product de
   - Implement **Append-Only Revision Ledger** (`R18`): field validation or expert comments are appended with unique revision IDs and prior state preservation. Prior versions cannot be overwritten or deleted.
   - Implement **Impact Ledger** (`W09`, `E16`): directly intersect candidate inundation masks with OSM primary schools, clinics, and severed road segments. Population is derived from BBS 2022 Census Mauza bounds with explicit uncertainty caveats rather than speculative per-hectare multipliers.
   - Generate one-page print-ready bilingual **Decision Brief** (`E17`, `W14`) with embedded mobile field inspection task QR contracts (`A01–A12`).
+
+
+---
+
+### ADR-009: Localized Scientific Stories, Multi-Audience Translation, and SAR Physics Lab (Milestone B09)
+* **Status:** ACCEPTED
+* **Context:** Communicating remote sensing observations requires bridging three distinct audiences (the public, disaster managers, and remote sensing scientists). In addition, complex physics concepts (penetration, polarimetry, speckle, fringes) are best understood through hands-on interaction rather than static text.
+* **Decision:**
+  - Structure **Scientific Story Mode** (`W12`, `E19`) into exactly 5 localized chapters across our two active biomes:
+    1. River Change (Jamuna J1)
+    2. Floodplain Recovery (Jamuna J2)
+    3. Service Continuity (Jamuna J3)
+    4. Mangrove Wetland Response (Sundarbans S1)
+    5. Relative Motion (Jamuna X1)
+  - Retain foreign hazard cases (Glacier Bay, NorCal wildfires, Mexico City earthquakes) exclusively in educational reference modules within `Learn`.
+  - Implement **Audience Switcher** (`E10`): renders identically grounded satellite facts in Public Bangla/English, Decision Maker register, or Technical Analyst terminology.
+  - Implement **SAR Lab** (`E18`) with 4 interactive mini-experiments: Cloud Blindness, Polarization Match, Speckle Noise Filtering, and InSAR Fringe Counter.
+  - Implement **Web Audio Sonification** (`E22`): maps backscatter dB into acoustic frequencies ($f = 220 \cdot 2^{(\text{dB}+25)/12}\text{ Hz}$) for multi-sensory and accessible map reading.

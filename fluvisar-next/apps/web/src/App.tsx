@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useWorkspaceStore } from './store/workspaceStore';
 import { Header } from './components/Header';
 import { AtlasView } from './components/AtlasView';
@@ -8,10 +8,20 @@ import { RightInspector } from './components/RightInspector';
 import { TimelinePlayer } from './components/TimelinePlayer';
 import { ContextTracks } from './components/ContextTracks';
 import { SwipeCompareMap } from './components/SwipeCompareMap';
+import { StoryModeView } from './components/StoryModeView';
+import { SarLabView } from './components/SarLabView';
+import { radarSonifier } from './utils/sonification';
 import './styles/tokens.css';
 
 export const App: React.FC = () => {
-  const { viewId, selectedPair } = useWorkspaceStore();
+  const { activeTab, viewId, selectedPair, isSonificationEnabled, selectedSample } = useWorkspaceStore();
+
+  // Sonification effect on sample update (E22)
+  useEffect(() => {
+    if (isSonificationEnabled && selectedSample && !selectedSample.masked) {
+      radarSonifier.playToneForDb(selectedSample.value);
+    }
+  }, [isSonificationEnabled, selectedSample]);
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#F4F7FA]">
@@ -20,8 +30,11 @@ export const App: React.FC = () => {
 
       {/* 2. Main Workspace Layout */}
       <div className="relative flex-1 flex overflow-hidden">
-        {/* If M0 Atlas mode, show full Bangladesh map with Atlas Overlay */}
-        {viewId === 'M0' ? (
+        {activeTab === 'stories' ? (
+          <StoryModeView />
+        ) : activeTab === 'learn' ? (
+          <SarLabView />
+        ) : activeTab === 'atlas' || viewId === 'M0' ? (
           <>
             <MapWorkspace />
             <AtlasView />
@@ -48,10 +61,10 @@ export const App: React.FC = () => {
       </div>
 
       {/* 3. Linked Context Tracks (Shown when investigating) */}
-      {viewId !== 'M0' && <ContextTracks />}
+      {activeTab === 'investigate' && viewId !== 'M0' && <ContextTracks />}
 
       {/* 4. Rhythm Player Timeline */}
-      <TimelinePlayer />
+      {activeTab === 'investigate' && viewId !== 'M0' && <TimelinePlayer />}
     </div>
   );
 };
