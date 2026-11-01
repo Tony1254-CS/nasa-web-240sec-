@@ -2,14 +2,14 @@ import React from 'react';
 import { useWorkspaceStore } from '../store/workspaceStore';
 import type { ViewId } from '../store/workspaceStore';
 import { i18n } from '../i18n/translations';
-import { Layers, Activity, Navigation } from 'lucide-react';
+import { Layers, Activity, Navigation, X } from 'lucide-react';
 import { SundarbansPolarizationPanel } from './SundarbansPolarizationPanel';
 import { JamunaDecisionPanel } from './JamunaDecisionPanel';
 import { InSARSpecialtyPanel } from './InSARSpecialtyPanel';
 import { ScenarioLabPanel } from './ScenarioLabPanel';
 
 export const LeftPanel: React.FC = () => {
-  const { regionId, viewId, setView, language, mode, layerVisibility, toggleLayer } = useWorkspaceStore();
+  const { regionId, viewId, setView, language, mode, layerVisibility, toggleLayer, toggleLeftPanel } = useWorkspaceStore();
   const t = i18n[language];
   const isBn = language === 'bn';
 
@@ -45,9 +45,18 @@ export const LeftPanel: React.FC = () => {
             {mode === 'explore' ? '🔭 Explore' : mode === 'investigate' ? '🔬 Investigate' : '⚡ Act & Explain'}
           </span>
         </span>
-        <span className="text-[10px] opacity-80 uppercase tracking-wider font-semibold">
-          {mode === 'explore' ? 'Discovery' : mode === 'investigate' ? 'Deep Physics' : 'Field Actions'}
-        </span>
+        <div className="flex items-center space-x-2">
+          <span className="text-[10px] opacity-80 uppercase tracking-wider font-semibold">
+            {mode === 'explore' ? 'Discovery' : mode === 'investigate' ? 'Deep Physics' : 'Field Actions'}
+          </span>
+          <button
+            onClick={toggleLeftPanel}
+            className="p-1 rounded-md text-slate-500 hover:text-slate-900 hover:bg-black/10 cursor-pointer"
+            title="Close Panel"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
       </div>
 
       {/* MODE: EXPLORE -> Quick Focal Points Navigator */}
