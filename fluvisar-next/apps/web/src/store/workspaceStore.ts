@@ -62,12 +62,6 @@ export interface WorkspaceState {
   // Sonification & Audio
   isSonificationEnabled: boolean;
 
-  // Responsive Workspace Panel Visibility
-  isLeftPanelOpen: boolean;
-  isRightPanelOpen: boolean;
-  isTracksOpen: boolean;
-  activeFeatureId: string | null;
-
   // Map State
   camera: MapCamera;
 
@@ -90,11 +84,6 @@ export interface WorkspaceState {
   setSelectedSample: (sample: PixelSample | null) => void;
   toggleSonification: () => void;
   togglePlayback: () => void;
-  toggleLeftPanel: () => void;
-  toggleRightPanel: () => void;
-  toggleTracks: () => void;
-  setPanels: (panels: { left?: boolean; right?: boolean; tracks?: boolean }) => void;
-  setActiveFeature: (featureId: string | null) => void;
   setCamera: (camera: MapCamera) => void;
 }
 
@@ -149,10 +138,6 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
     masked: false,
   },
   isSonificationEnabled: false,
-  isLeftPanelOpen: false, // Default to clean fullscreen map!
-  isRightPanelOpen: false,
-  isTracksOpen: false,
-  activeFeatureId: null,
   camera: {
     center: [89.75, 25.575],
     zoom: 6.8, // View of full Bangladesh for M0 Atlas
@@ -220,146 +205,5 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   setSelectedSample: (selectedSample) => set({ selectedSample }),
   toggleSonification: () => set((state) => ({ isSonificationEnabled: !state.isSonificationEnabled })),
   togglePlayback: () => set((state) => ({ isPlaying: !state.isPlaying })),
-  toggleLeftPanel: () => set((state) => ({ isLeftPanelOpen: !state.isLeftPanelOpen })),
-  toggleRightPanel: () => set((state) => ({ isRightPanelOpen: !state.isRightPanelOpen })),
-  toggleTracks: () => set((state) => ({ isTracksOpen: !state.isTracksOpen })),
-  setPanels: (panels) =>
-    set((state) => ({
-      isLeftPanelOpen: panels.left !== undefined ? panels.left : state.isLeftPanelOpen,
-      isRightPanelOpen: panels.right !== undefined ? panels.right : state.isRightPanelOpen,
-      isTracksOpen: panels.tracks !== undefined ? panels.tracks : state.isTracksOpen,
-    })),
-  setActiveFeature: (activeFeatureId) =>
-    set(() => {
-      if (!activeFeatureId) {
-        return { activeFeatureId: null };
-      }
-      switch (activeFeatureId) {
-        case 'time-machine':
-          return {
-            activeFeatureId,
-            activeTab: 'investigate',
-            comparisonMode: 'dates',
-            isLeftPanelOpen: false,
-            isRightPanelOpen: false,
-            isTracksOpen: false,
-          };
-        case 'sat-vs-radar':
-          return {
-            activeFeatureId,
-            activeTab: 'investigate',
-            comparisonMode: 'sensors',
-            isLeftPanelOpen: false,
-            isRightPanelOpen: false,
-            isTracksOpen: false,
-          };
-        case 'chilmari-erosion':
-          return {
-            activeFeatureId,
-            activeTab: 'investigate',
-            regionId: 'jamuna',
-            viewId: 'J1',
-            selectedFindingId: 'FINDING-JAMUNA-2026-CHILMARI-01',
-            isLeftPanelOpen: false,
-            isRightPanelOpen: true,
-            isTracksOpen: false,
-          };
-        case 'mandaler-char':
-          return {
-            activeFeatureId,
-            activeTab: 'investigate',
-            regionId: 'jamuna',
-            viewId: 'J2',
-            selectedFindingId: 'FINDING-JAMUNA-2026-MANDALER-01',
-            isLeftPanelOpen: false,
-            isRightPanelOpen: true,
-            isTracksOpen: false,
-          };
-        case 'mangrove-pulse':
-          return {
-            activeFeatureId,
-            activeTab: 'investigate',
-            regionId: 'sundarbans',
-            viewId: 'S1',
-            selectedFindingId: 'FINDING-SUNDARBANS-2026-DUBLAR-01',
-            isLeftPanelOpen: true,
-            isRightPanelOpen: false,
-            isTracksOpen: false,
-          };
-        case 'river-memory':
-          return {
-            activeFeatureId,
-            activeTab: 'investigate',
-            regionId: 'jamuna',
-            viewId: 'J1',
-            isLeftPanelOpen: true,
-            isRightPanelOpen: false,
-            isTracksOpen: false,
-          };
-        case 'radar-pol':
-          return {
-            activeFeatureId,
-            activeTab: 'investigate',
-            regionId: 'sundarbans',
-            viewId: 'S1',
-            isLeftPanelOpen: true,
-            isRightPanelOpen: false,
-          };
-        case 'context-tracks':
-          return {
-            activeFeatureId,
-            activeTab: 'investigate',
-            isTracksOpen: true,
-          };
-        case 'scenario-lab':
-          return {
-            activeFeatureId,
-            activeTab: 'investigate',
-            regionId: 'jamuna',
-            viewId: 'C1',
-            isLeftPanelOpen: true,
-            isRightPanelOpen: false,
-          };
-        case 'insar-motion':
-          return {
-            activeFeatureId,
-            activeTab: 'investigate',
-            regionId: 'jamuna',
-            viewId: 'X1',
-            isLeftPanelOpen: true,
-            isRightPanelOpen: false,
-          };
-        case 'qc-audit':
-          return {
-            activeFeatureId,
-            activeTab: 'investigate',
-            isRightPanelOpen: true,
-          };
-        case 'impact-ledger':
-          return {
-            activeFeatureId,
-            activeTab: 'investigate',
-            isRightPanelOpen: true,
-          };
-        case 'stories':
-          return {
-            activeFeatureId,
-            activeTab: 'stories',
-          };
-        case 'sar-lab':
-          return {
-            activeFeatureId,
-            activeTab: 'learn',
-          };
-        case 'atlas':
-          return {
-            activeFeatureId,
-            activeTab: 'atlas',
-            viewId: 'M0',
-          };
-        default:
-          return { activeFeatureId };
-      }
-    }),
   setCamera: (camera) => set({ camera }),
 }));

@@ -66,8 +66,6 @@ export const MapWorkspace: React.FC = () => {
     setRegion,
     setView,
     setSelectedSample,
-    setSelectedFinding,
-    setPanels,
     swipePosition,
     comparisonMode,
     selectedPair,
@@ -1233,7 +1231,7 @@ export const MapWorkspace: React.FC = () => {
               <div
                 className="absolute pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
                 style={{ left: '38%', top: '54%' }}
-                onClick={() => {
+                onClick={() =>
                   setSelectedSample({
                     lon: 89.668,
                     lat: 25.568,
@@ -1241,10 +1239,8 @@ export const MapWorkspace: React.FC = () => {
                     unit: 'dB',
                     masked: false,
                     reason: 'Chilmari West Bank Active Collapse (145.8 ha)',
-                  });
-                  setSelectedFinding('FINDING-JAMUNA-2026-CHILMARI-01');
-                  setPanels({ right: true });
-                }}
+                  })
+                }
               >
                 <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#DC2626]/95 text-white text-[11px] font-bold shadow-xl border border-white hover:scale-105 transition-transform">
                   <span className="w-2 h-2 rounded-full bg-white animate-ping" />
@@ -1256,7 +1252,7 @@ export const MapWorkspace: React.FC = () => {
               <div
                 className="absolute pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
                 style={{ left: '57%', top: '44%' }}
-                onClick={() => {
+                onClick={() =>
                   setSelectedSample({
                     lon: 89.735,
                     lat: 25.595,
@@ -1264,10 +1260,8 @@ export const MapWorkspace: React.FC = () => {
                     unit: 'dB',
                     masked: false,
                     reason: 'Mandaler Char Emergent Silt Bar (88.4 ha)',
-                  });
-                  setSelectedFinding('FINDING-JAMUNA-2026-MANDALER-01');
-                  setPanels({ right: true });
-                }}
+                  })
+                }
               >
                 <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#059669]/95 text-white text-[11px] font-bold shadow-xl border border-white hover:scale-105 transition-transform">
                   <span>🌱 {isBn ? 'মন্ডলের চর পলি চর: ৮৮.৪ হে.' : 'Mandaler Char Silt: 88.4 ha (+0.48 NDVI)'}</span>
@@ -1280,7 +1274,7 @@ export const MapWorkspace: React.FC = () => {
               <div
                 className="absolute pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
                 style={{ left: '52%', top: '58%' }}
-                onClick={() => {
+                onClick={() =>
                   setSelectedSample({
                     lon: 89.725,
                     lat: 21.825,
@@ -1288,10 +1282,8 @@ export const MapWorkspace: React.FC = () => {
                     unit: 'dB',
                     masked: false,
                     reason: 'Dublar Char Sub-Canopy Tidal Pulse (+3.5 dB HH)',
-                  });
-                  setSelectedFinding('FINDING-SUNDARBANS-2026-DUBLAR-01');
-                  setPanels({ right: true });
-                }}
+                  })
+                }
               >
                 <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#EA580C]/95 text-white text-[11px] font-bold shadow-xl border border-white hover:scale-105 transition-transform">
                   <span className="w-2 h-2 rounded-full bg-white animate-ping" />
