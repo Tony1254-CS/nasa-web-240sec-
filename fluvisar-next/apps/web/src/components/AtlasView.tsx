@@ -1,15 +1,18 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useWorkspaceStore } from '../store/workspaceStore';
 import { i18n } from '../i18n/translations';
 import { Compass, Eye, Calendar, Database, CheckCircle2 } from 'lucide-react';
 
 export const AtlasView: React.FC = () => {
+  const navigate = useNavigate();
   const { language, setRegion, setView } = useWorkspaceStore();
   const t = i18n[language];
 
   const handleSelectRegion = (region: 'jamuna' | 'sundarbans', view: 'J1' | 'S1') => {
     setRegion(region);
     setView(view);
+    navigate(`/observatory/${region}`);
   };
 
   return (

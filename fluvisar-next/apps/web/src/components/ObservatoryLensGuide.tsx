@@ -6,12 +6,16 @@ import {
   X,
   Sliders,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Bot,
+  Sparkles
 } from 'lucide-react';
 import { JamunaDecisionPanel } from './JamunaDecisionPanel';
 import { InSARSpecialtyPanel } from './InSARSpecialtyPanel';
 import { ScenarioLabPanel } from './ScenarioLabPanel';
 import { SundarbansPolarizationPanel } from './SundarbansPolarizationPanel';
+import { SourceCitationBadge } from './SourceCitationBadge';
+import { AGENT_PERSONAS } from '../data/agenticSystem';
 
 interface LensInfo {
   id: ViewId;
@@ -23,6 +27,8 @@ interface LensInfo {
   whatYouSeeBn: string;
   takeawayEn: string;
   takeawayBn: string;
+  leadAgentId: string;
+  primarySources: string[];
 }
 
 const LENS_DETAILS: Record<string, LensInfo> = {
@@ -36,6 +42,8 @@ const LENS_DETAILS: Record<string, LensInfo> = {
     whatYouSeeBn: 'লাল ড্যাশড বক্সে ১৪৫.৮ হেক্টর স্থায়ী ভাঙন; সবুজ ড্যাশড বক্সে ৮৮.৪ হেক্টর নতুন জেগে ওঠা চর দেখা যাচ্ছে।',
     takeawayEn: 'Equal-stage hydrological baseline (Aug 26 vs Sep 19) confirms this is permanent bank collapse into the main channel.',
     takeawayBn: 'পানির স্তর সমান থাকা অবস্থায় নেওয়া রাডার ছবিতে নিশ্চিত প্রমাণ মিলেছে যে এটি স্থায়ী ভাঙন।',
+    leadAgentId: 'sar-analyst',
+    primarySources: ['NISAR_L2_GCOV', 'BWDB_CHILMARI'],
   },
   J2: {
     id: 'J2',
@@ -47,6 +55,8 @@ const LENS_DETAILS: Record<string, LensInfo> = {
     whatYouSeeBn: 'গাছপালা ও ফসলের সবুজত্ব (NDVI)। পানি নেমে যাওয়ায় সবুজ সূচক ০.৪৮ এ উন্নীত হয়েছে।',
     takeawayEn: '72% of pilot agricultural units are dry by late September. Priority seed distribution recommended for Chilmari depot.',
     takeawayBn: 'সেপ্টেম্বরের শেষে ৭২% জমি শুকিয়েছে। কৃষকদের দ্রুত বীজ ও সার সহায়তা দেওয়া প্রয়োজন।',
+    leadAgentId: 'hydrology-dynamics',
+    primarySources: ['COPERNICUS_S2A', 'NISAR_L2_GCOV'],
   },
   J3: {
     id: 'J3',
@@ -58,6 +68,8 @@ const LENS_DETAILS: Record<string, LensInfo> = {
     whatYouSeeBn: 'কমলা পয়েন্টগুলো হলো খেয়াঘাট ও ক্লিনিক। লাল দাগ দিয়ে বিচ্ছিন্ন নৌপথ চিহ্নিত করা হয়েছে।',
     takeawayEn: 'Ferry ramp breach isolated 3,420 island villagers. Emergency engine boat shuttle must be deployed.',
     takeawayBn: 'খেয়াঘাট ভেসে যাওয়ায় ৩,৪২০ জন মানুষ বিচ্ছিন্ন হয়ে পড়েছে। জরুরি স্পিডবোট সার্ভিস চালু করা দরকার।',
+    leadAgentId: 'sendai-risk',
+    primarySources: ['OSM_OVERPASS', 'WORLDPOP_BGD'],
   },
   X1: {
     id: 'X1',
@@ -69,6 +81,8 @@ const LENS_DETAILS: Record<string, LensInfo> = {
     whatYouSeeBn: 'রঙধনু ফ্রিঞ্জ রিং। প্রতি রঙ চক্রে ১১.৯ সেন্টিমিটার ভূমি দেবে যাওয়ার হিসাব করা হয়।',
     takeawayEn: '8.2 mm soil compaction measured on the outer char. Embankment foundation requires structural reinforcement.',
     takeawayBn: 'বাইরের চরে ৮.২ মিমি মাটি দেবে গেছে। নদী রক্ষা বাঁধ মজবুত করার ব্যবস্থা নেওয়া দরকার।',
+    leadAgentId: 'skeptical-auditor',
+    primarySources: ['NISAR_L2_GCOV'],
   },
   C1: {
     id: 'C1',
@@ -80,6 +94,8 @@ const LENS_DETAILS: Record<string, LensInfo> = {
     whatYouSeeBn: 'বেগুনি রঙের সিমুলেশন লেয়ার, যা সম্ভাব্য নতুন প্লাবন এলাকা প্রদর্শন করে।',
     takeawayEn: 'An extra +1.0m flood stage submerges an additional 42.5 ha and cuts off 1,850 more community members.',
     takeawayBn: 'আরও ১ মিটার পানি বাড়লে অতিরিক্ত ৪২.৫ হেক্টর জমি ডুববে এবং ১,৮৫০ মানুষ ঝুঁকিতে পড়বে।',
+    leadAgentId: 'hydrology-dynamics',
+    primarySources: ['BWDB_CHILMARI', 'NISAR_L2_GCOV'],
   },
   S1: {
     id: 'S1',
@@ -88,31 +104,36 @@ const LENS_DETAILS: Record<string, LensInfo> = {
     taglineEn: 'Penetrating dense mangrove foliage with L-band radar to detect tidal water.',
     taglineBn: 'গাছের ঘন পাতার নিচ দিয়ে এল-ব্যান্ড রাডারে জোয়ারের পানি শনাক্তকরণ।',
     whatYouSeeEn: 'HH radar channel highlights double-bounce reflection (+3.5 dB) between tree trunks and standing tidal water.',
-    whatYouSeeBn: 'এইচএইচ পোলারাইজেশন চ্যানেলে গাছের গুঁড়ি ও পানির ডাবল-বাউন্স সংকেত উজ্জ্বল হয়ে ফুটে উঠেছে।',
-    takeawayEn: 'Isolates 312 ha of sub-canopy tidal inundation completely invisible to standard optical cameras.',
-    takeawayBn: 'সাধারণ ক্যামেরায় অদৃশ্য থাকলেও রাডারে ৩১২ হেক্টর বনাঞ্চলের তলায় জোয়ারের পানি নিশ্চিত হয়েছে।',
+    whatYouSeeBn: 'গাছের কাণ্ড ও জোয়ারের পানির প্রতিফলনে এইচএইচ চ্যানেলে উজ্জ্বল প্রতিফলন (+৩.৫ dB) দেখা যাচ্ছে।',
+    takeawayEn: '312 ha submerged during high spring tide (+2.2m CD), conforming to astronomical tidal harmonics.',
+    takeawayBn: 'উচ্চ জোয়ারের সময় ৩১২ হেক্টর ম্যানগ্রোভ বনের তলদেশ প্লাবিত হয়েছিল, যা স্বাস্থ্যকর শ্বাসমূলের লক্ষণ।',
+    leadAgentId: 'sar-analyst',
+    primarySources: ['NISAR_L2_GCOV', 'BIWTA_DUBLAR'],
   },
   S2: {
     id: 'S2',
-    titleEn: 'Mangrove Canopy Volume & Forest Health',
-    titleBn: 'ম্যানগ্রোভ ক্যানোপির ঘনত্ব ও বন সুরক্ষা',
-    taglineEn: 'Monitoring forest volume scattering and cyclone recovery across Dublar Char.',
+    titleEn: 'Post-Cyclone Mangrove Canopy Health',
+    titleBn: 'ঘূর্ণিঝড়-পরবর্তী ম্যানগ্রোভ বনের স্বাস্থ্য',
+    taglineEn: 'Assessing canopy density recovery and deforestation bounds.',
     taglineBn: 'ঘূর্ণিঝড়-পরবর্তী ম্যানগ্রোভ বনের পাতার বৃদ্ধি ও সুরক্ষা পর্যবেক্ষণ।',
     whatYouSeeEn: 'HV cross-polarization highlighting multiple-scattering inside dense tree branches.',
     whatYouSeeBn: 'এইচভি চ্যানেলে ঘন ডালপালার ক্যানোপি আয়তন স্পষ্ট দেখা যাচ্ছে।',
     takeawayEn: 'Canopy density stable across core reserve; outer fringe exhibits natural post-monsoon leaf flush.',
     takeawayBn: 'মূল বনাঞ্চল সুরক্ষিত রয়েছে এবং বাইরের প্রান্তে নতুন পাতা গজানোর প্রমাণ মিলেছে।',
+    leadAgentId: 'skeptical-auditor',
+    primarySources: ['NISAR_L2_GCOV', 'GMW_MANGROVES'],
   },
 };
 
 export const ObservatoryLensGuide: React.FC = () => {
-  const { regionId, viewId, setView, language } = useWorkspaceStore();
+  const { regionId, viewId, setView, language, setAgentDrawerOpen } = useWorkspaceStore();
   const [isOpen, setIsOpen] = useState(true);
   const [showTools, setShowTools] = useState(false);
 
   const isBn = language === 'bn';
   const isJamuna = regionId === 'jamuna';
   const info = LENS_DETAILS[viewId] ?? LENS_DETAILS[isJamuna ? 'J1' : 'S1'];
+  const leadAgent = AGENT_PERSONAS[info.leadAgentId] ?? AGENT_PERSONAS['sar-analyst'];
 
   const availableLenses: { id: ViewId; label: string; tag: string }[] = isJamuna
     ? [
@@ -133,7 +154,7 @@ export const ObservatoryLensGuide: React.FC = () => {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="absolute top-3 left-3 z-20 flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-white/95 text-[#102A43] border border-[#CBD5E1] shadow-lg backdrop-blur-md hover:bg-slate-50 transition-all cursor-pointer text-xs font-bold"
+        className="absolute top-3 left-3 z-20 flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-white/95 text-[#102A43] border border-[#CBD5E1] shadow-lg backdrop-blur-md hover:bg-slate-50 transition-all cursor-pointer text-xs font-bold select-none"
         title="Open Mission Lens Guide"
       >
         <Compass className="w-4 h-4 text-[#0284C7] animate-spin-slow" />
@@ -143,7 +164,7 @@ export const ObservatoryLensGuide: React.FC = () => {
   }
 
   return (
-    <div className="absolute top-3 left-3 z-20 w-[360px] sm:w-[400px] max-w-[calc(100vw-24px)] max-h-[calc(100vh-100px)] rounded-2xl bg-white/95 backdrop-blur-xl border border-[#CBD5E1] shadow-2xl text-[#102A43] text-xs flex flex-col overflow-hidden select-none transition-all animate-in fade-in zoom-in-95 duration-150">
+    <div className="absolute top-3 left-3 z-20 w-[360px] sm:w-[410px] max-w-[calc(100vw-24px)] max-h-[calc(100vh-100px)] rounded-2xl bg-white/95 backdrop-blur-xl border border-[#CBD5E1] shadow-2xl text-[#102A43] text-xs flex flex-col overflow-hidden select-none transition-all animate-in fade-in zoom-in-95 duration-150">
       {/* Top Header */}
       <div className="p-3.5 bg-[#F8FAFC] border-b border-[#E2E8F0] flex items-center justify-between shrink-0">
         <div className="flex items-center space-x-2">
@@ -192,6 +213,22 @@ export const ObservatoryLensGuide: React.FC = () => {
 
       {/* Plain Language Explanations & Scrollable Body */}
       <div className="p-3.5 space-y-2.5 overflow-y-auto flex-1">
+        {/* Agent Lead Attribution & Grounding Badges */}
+        <div className="flex items-center justify-between pb-1">
+          <div className="flex items-center space-x-1.5">
+            <Bot className="w-3.5 h-3.5 text-cyan-700" />
+            <span className="text-[10px] text-slate-600 font-medium">
+              {isBn ? 'বিশ্লেষক:' : 'Lead:'} <strong className="text-slate-800">{leadAgent.badge}</strong>
+            </span>
+          </div>
+
+          <div className="flex items-center space-x-1">
+            {info.primarySources.map((sId) => (
+              <SourceCitationBadge key={sId} sourceId={sId} />
+            ))}
+          </div>
+        </div>
+
         {/* What to observe */}
         <div className="p-2.5 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] space-y-1">
           <div className="text-[10px] uppercase font-bold text-[#166534] tracking-wider flex items-center space-x-1">
@@ -214,7 +251,19 @@ export const ObservatoryLensGuide: React.FC = () => {
           </p>
         </div>
 
-        {/* Specialized Tool Toggle (If lens has interactive sliders/switches) */}
+        {/* Ask the Agent Crew Button */}
+        <button
+          onClick={() => setAgentDrawerOpen(true)}
+          className="w-full py-2 px-3 rounded-xl bg-[#155E75] hover:bg-[#0E7490] text-white font-bold text-[11px] flex items-center justify-between transition-colors shadow-xs cursor-pointer"
+        >
+          <span className="flex items-center space-x-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+            <span>{isBn ? 'এই লেন্স সম্পর্কে এজেন্ট ক্রুকে জিজ্ঞাসা করুন' : 'Consult Agent Crew for this Lens'}</span>
+          </span>
+          <span className="text-[10px] text-cyan-400 font-mono">Trace →</span>
+        </button>
+
+        {/* Specialized Tool Toggle */}
         {(viewId === 'X1' || viewId === 'C1' || viewId === 'J3' || viewId === 'S1' || viewId === 'S2') && (
           <div>
             <button
@@ -238,16 +287,11 @@ export const ObservatoryLensGuide: React.FC = () => {
 
             {/* Embedded Specialized Tool Body */}
             {showTools && (
-              <div className="mt-2 p-2 rounded-xl bg-white border border-[#CBD5E1] text-[#102A43] animate-in fade-in duration-150">
-                {viewId === 'X1' ? (
-                  <InSARSpecialtyPanel />
-                ) : viewId === 'C1' ? (
-                  <ScenarioLabPanel />
-                ) : viewId === 'J3' ? (
-                  <JamunaDecisionPanel />
-                ) : (
-                  <SundarbansPolarizationPanel />
-                )}
+              <div className="mt-2.5 p-3 rounded-xl border border-[#CBD5E1] bg-white shadow-xs">
+                {viewId === 'X1' && <InSARSpecialtyPanel />}
+                {viewId === 'C1' && <ScenarioLabPanel />}
+                {viewId === 'J3' && <JamunaDecisionPanel />}
+                {(viewId === 'S1' || viewId === 'S2') && <SundarbansPolarizationPanel />}
               </div>
             )}
           </div>

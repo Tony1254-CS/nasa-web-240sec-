@@ -38,6 +38,8 @@ export interface WorkspaceState {
   isLeftPanelOpen: boolean;
   isRightInspectorOpen: boolean;
   isContextTracksOpen: boolean;
+  isAgentDrawerOpen: boolean;
+  selectedSourceId: string | null;
 
   // Basemap & Visualization
   basemapType: BasemapType;
@@ -96,6 +98,8 @@ export interface WorkspaceState {
   setLeftPanelOpen: (isOpen: boolean) => void;
   setRightInspectorOpen: (isOpen: boolean) => void;
   setContextTracksOpen: (isOpen: boolean) => void;
+  setAgentDrawerOpen: (isOpen: boolean) => void;
+  setSelectedSourceId: (sourceId: string | null) => void;
 }
 
 const REGION_DEFAULTS: Record<RegionId, { center: [number, number]; zoom: number; defaultView: ViewId; defaultCase: string }> = {
@@ -118,6 +122,8 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   isLeftPanelOpen: false,
   isRightInspectorOpen: false,
   isContextTracksOpen: false,
+  isAgentDrawerOpen: false,
+  selectedSourceId: null,
   regionId: 'jamuna',
   caseId: 'river-memory',
   runId: 'run-2026-prod-01',
@@ -253,4 +259,6 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   setLeftPanelOpen: (isLeftPanelOpen) => set({ isLeftPanelOpen }),
   setRightInspectorOpen: (isRightInspectorOpen) => set({ isRightInspectorOpen }),
   setContextTracksOpen: (isContextTracksOpen) => set({ isContextTracksOpen }),
+  setAgentDrawerOpen: (isAgentDrawerOpen) => set({ isAgentDrawerOpen }),
+  setSelectedSourceId: (selectedSourceId) => set({ selectedSourceId }),
 }));

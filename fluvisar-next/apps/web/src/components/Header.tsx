@@ -1,29 +1,36 @@
 import React, { useState } from 'react';
+import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useWorkspaceStore } from '../store/workspaceStore';
 import type { WorkspaceMode, Audience } from '../store/workspaceStore';
 import { i18n } from '../i18n/translations';
-import { Globe, Compass, BookOpen, GraduationCap, FileText, Languages, Volume2, VolumeX } from 'lucide-react';
+import { Globe, Compass, BookOpen, GraduationCap, FileText, Languages, Volume2, VolumeX, Home, Bot, ShieldCheck } from 'lucide-react';
 import { DecisionBriefModal } from './DecisionBriefModal';
+import { AgentStatusBanner } from './AgentStatusBanner';
 import { radarSonifier } from '../utils/sonification';
 
 export const Header: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const {
-    activeTab,
+
     regionId,
     caseId,
     mode,
     language,
     audience,
     isSonificationEnabled,
-    setActiveTab,
+
     setRegion,
     setCase,
-    setView,
+
     setMode,
     setLanguage,
     setAudience,
     toggleSonification,
-    selectedSample
+    selectedSample,
+    isAgentDrawerOpen,
+    setAgentDrawerOpen,
+    setSelectedSourceId,
   } = useWorkspaceStore();
 
   const [isReportsOpen, setIsReportsOpen] = useState(false);
@@ -44,12 +51,9 @@ export const Header: React.FC = () => {
         {/* Top Navigation Bar */}
         <div className="flex items-center justify-between px-4 h-14 border-b border-[#F1F5F9]">
           {/* Brand */}
-          <div
+          <Link
+            to="/"
             className="flex items-center space-x-3 cursor-pointer"
-            onClick={() => {
-              setActiveTab('atlas');
-              setView('M0');
-            }}
           >
             <div className="w-8 h-8 rounded-lg bg-[#155E75] flex items-center justify-center text-white font-bold shadow-xs">
               FS
@@ -65,78 +69,124 @@ export const Header: React.FC = () => {
                 {t.tagline}
               </p>
             </div>
-          </div>
+          </Link>
 
           {/* Center Primary Nav */}
           <nav className="flex items-center space-x-1">
-            <button
-              onClick={() => {
-                setActiveTab('atlas');
-                setView('M0');
-              }}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                activeTab === 'atlas'
-                  ? 'bg-[#155E75] text-white shadow-xs'
-                  : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#102A43]'
-              }`}
+            <NavLink
+              to="/"
+              end
+              className={({ isActive }) =>
+                `flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                  isActive
+                    ? 'bg-[#155E75] text-white shadow-xs'
+                    : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#102A43]'
+                }`
+              }
             >
-              <Globe className="w-4 h-4" />
-              <span>{t.nav.atlas}</span>
-            </button>
+              <Home className="w-4 h-4" />
+              <span>{t.nav.home ?? (language === 'bn' ? 'হোম' : 'Home')}</span>
+            </NavLink>
 
-            <button
-              onClick={() => {
-                setActiveTab('investigate');
-                setView(regionId === 'jamuna' ? 'J1' : 'S1');
-              }}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                activeTab === 'investigate'
-                  ? 'bg-[#155E75] text-white shadow-xs'
-                  : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#102A43]'
-              }`}
+            <NavLink
+              to="/observatory"
+              className={({ isActive }) =>
+                `flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                  isActive || location.pathname.startsWith('/observatory')
+                    ? 'bg-[#155E75] text-white shadow-xs'
+                    : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#102A43]'
+                }`
+              }
             >
               <Compass className="w-4 h-4" />
               <span>{t.nav.investigate}</span>
-            </button>
+            </NavLink>
 
-            <button
-              onClick={() => setActiveTab('stories')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                activeTab === 'stories'
-                  ? 'bg-[#155E75] text-white shadow-xs'
-                  : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#102A43]'
-              }`}
+            <NavLink
+              to="/atlas"
+              className={({ isActive }) =>
+                `flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                  isActive
+                    ? 'bg-[#155E75] text-white shadow-xs'
+                    : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#102A43]'
+                }`
+              }
+            >
+              <Globe className="w-4 h-4" />
+              <span>{t.nav.atlas}</span>
+            </NavLink>
+
+            <NavLink
+              to="/stories"
+              className={({ isActive }) =>
+                `flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                  isActive
+                    ? 'bg-[#155E75] text-white shadow-xs'
+                    : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#102A43]'
+                }`
+              }
               title="Scientific Narratives"
             >
               <BookOpen className="w-4 h-4" />
               <span>{t.nav.stories}</span>
-            </button>
+            </NavLink>
 
-            <button
-              onClick={() => setActiveTab('learn')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                activeTab === 'learn'
-                  ? 'bg-[#155E75] text-white shadow-xs'
-                  : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#102A43]'
-              }`}
+            <NavLink
+              to="/learn"
+              className={({ isActive }) =>
+                `flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                  isActive
+                    ? 'bg-[#155E75] text-white shadow-xs'
+                    : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#102A43]'
+                }`
+              }
               title="SAR Lab & Physics Twin"
             >
               <GraduationCap className="w-4 h-4" />
               <span>{t.nav.learn}</span>
-            </button>
+            </NavLink>
 
-            <button
-              onClick={() => setIsReportsOpen(true)}
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium text-[#475569] hover:bg-[#F1F5F9] hover:text-[#102A43] transition-colors cursor-pointer"
+            <NavLink
+              to="/reports"
+              className={({ isActive }) =>
+                `flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                  isActive
+                    ? 'bg-[#155E75] text-white shadow-xs'
+                    : 'text-[#475569] hover:bg-[#F1F5F9] hover:text-[#102A43]'
+                }`
+              }
               title="Reproducible Reports & Briefs"
             >
               <FileText className="w-4 h-4" />
               <span>{t.nav.reports}</span>
-            </button>
+            </NavLink>
           </nav>
 
           {/* Right Tools (Sonification, Lang & Audience) */}
           <div className="flex items-center space-x-2">
+            {/* Autonomous Science Crew Trigger */}
+            <button
+              onClick={() => setAgentDrawerOpen(!isAgentDrawerOpen)}
+              className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-slate-700 text-xs font-bold transition-all shadow-xs cursor-pointer group"
+              title="Open Autonomous Scientific Multi-Agent Console"
+            >
+              <Bot className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-12 transition-transform" />
+              <span className="hidden lg:inline">{language === 'bn' ? 'সায়েন্স ক্রু' : 'Agent Crew'}</span>
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+              </span>
+            </button>
+
+            {/* Grounded Source Registry Trigger */}
+            <button
+              onClick={() => setSelectedSourceId('NISAR_L2_GCOV')}
+              className="hidden sm:flex items-center space-x-1 px-2.5 py-1.5 rounded-lg border border-[#CBD5E1] bg-white text-[#102A43] hover:bg-[#F8FAFC] text-xs font-bold transition-colors cursor-pointer"
+              title="Inspect Verified NASA & Ground Sources Registry"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
+              <span>{language === 'bn' ? 'সোর্স রেজিস্ট্রি' : 'Sources'}</span>
+            </button>
             {/* Audio Sonification Toggle (E22) */}
             <button
               onClick={handleToggleAudio}
@@ -184,7 +234,12 @@ export const Header: React.FC = () => {
             {/* Region Selector */}
             <div className="flex items-center space-x-1 bg-white p-0.5 rounded-lg border border-[#CBD5E1]">
               <button
-                onClick={() => setRegion('jamuna')}
+                onClick={() => {
+                  setRegion('jamuna');
+                  if (location.pathname.startsWith('/observatory')) {
+                    navigate('/observatory/jamuna');
+                  }
+                }}
                 className={`px-3 py-1 rounded-md font-semibold transition-all cursor-pointer ${
                   regionId === 'jamuna'
                     ? 'bg-[#155E75] text-white shadow-xs'
@@ -194,7 +249,12 @@ export const Header: React.FC = () => {
                 {t.regions.jamuna}
               </button>
               <button
-                onClick={() => setRegion('sundarbans')}
+                onClick={() => {
+                  setRegion('sundarbans');
+                  if (location.pathname.startsWith('/observatory')) {
+                    navigate('/observatory/sundarbans');
+                  }
+                }}
                 className={`px-3 py-1 rounded-md font-semibold transition-all cursor-pointer ${
                   regionId === 'sundarbans'
                     ? 'bg-[#155E75] text-white shadow-xs'
@@ -228,6 +288,9 @@ export const Header: React.FC = () => {
               </select>
             </div>
           </div>
+
+          {/* Live Autonomous Science Crew Telemetry Pill */}
+          <AgentStatusBanner />
 
           {/* Mode Switcher: Explore / Investigate / Act */}
           <div className="flex items-center bg-[#E2E8F0] p-0.5 rounded-lg">

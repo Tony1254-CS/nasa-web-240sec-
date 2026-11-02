@@ -76,8 +76,10 @@ export const SwipeCompareMap: React.FC<SwipeCompareProps> = ({ dateA, dateB }) =
       ref={containerRef}
       className="absolute inset-0 z-15 pointer-events-none flex flex-col justify-end overflow-hidden"
     >
-      {/* Top Controls Overlay (Compact, non-overlapping) */}
-      <div className="absolute top-3 left-14 z-20 pointer-events-auto flex items-center space-x-1.5 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-xl border border-[#CBD5E1] shadow-lg text-xs">
+      {/* Top Controls Overlay (Centered over swipe divider) */}
+      <div
+        className="absolute top-3 left-1/2 -translate-x-1/2 z-20 pointer-events-auto flex items-center space-x-1.5 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-xl border border-[#CBD5E1] shadow-lg text-xs transition-all duration-200"
+      >
         {/* Mode Selector */}
         <div className="flex items-center bg-[#F1F5F9] p-0.5 rounded-lg border border-[#E2E8F0]">
           <button

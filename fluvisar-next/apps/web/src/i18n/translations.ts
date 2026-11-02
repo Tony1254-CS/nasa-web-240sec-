@@ -6,6 +6,7 @@ export const i18n = {
     appName: "FluviSAR",
     tagline: "Follow the change. Test the explanation. Choose the next useful observation.",
     nav: {
+      home: "Home",
       atlas: "Atlas",
       investigate: "Investigate",
       stories: "Stories",
@@ -69,6 +70,7 @@ export const i18n = {
     appName: "FluviSAR",
     tagline: "পরিবর্তন পর্যবেক্ষণ করুন। ব্যাখ্যা পরীক্ষা করুন। প্রয়োজনীয় পর্যবেক্ষণ নির্ধারণ করুন।",
     nav: {
+      home: "হোম",
       atlas: "অ্যাটলাস",
       investigate: "তদন্ত",
       stories: "গল্প",

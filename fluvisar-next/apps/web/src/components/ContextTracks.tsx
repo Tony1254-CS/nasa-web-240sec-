@@ -1,6 +1,6 @@
 import React from 'react';
 import { useWorkspaceStore } from '../store/workspaceStore';
-import { Activity, CloudRain, Waves, Leaf } from 'lucide-react';
+import { Activity, CloudRain, Waves, Leaf, ChevronUp, ChevronDown } from 'lucide-react';
 
 interface ObservationPoint {
   date: string;
@@ -21,31 +21,45 @@ const JAMUNA_SERIES: ObservationPoint[] = [
 ];
 
 export const ContextTracks: React.FC = () => {
-  const { selectedDate, setSelectedDate } = useWorkspaceStore();
+  const { selectedDate, setSelectedDate, isContextTracksOpen, toggleContextTracks } = useWorkspaceStore();
   const series = JAMUNA_SERIES;
 
   return (
-    <div className="bg-[#F8FAFC] border-t border-[#CBD5E1] p-3 select-none text-xs">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center space-x-1.5 font-bold text-[#102A43] text-xs">
+    <div className="bg-[#F8FAFC] border-t border-[#CBD5E1] select-none text-xs transition-all">
+      {/* Collapsible Bar Header */}
+      <div
+        onClick={toggleContextTracks}
+        className="flex items-center justify-between px-3 py-1.5 hover:bg-slate-200/50 cursor-pointer transition-colors"
+      >
+        <div className="flex items-center space-x-2 font-bold text-[#102A43] text-xs">
           <Activity className="w-3.5 h-3.5 text-[#155E75]" />
           <span>Multisensor Environmental Tracks (Shared Time Axis)</span>
+          <span className="text-[10px] font-normal text-slate-500">
+            {isContextTracksOpen ? '(Click to collapse)' : '(Click to expand 4-sensor charts)'}
+          </span>
         </div>
         <div className="flex items-center space-x-3 text-[11px] text-[#64748B]">
-          <span className="flex items-center space-x-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#155E75]" />
-            <span>Radar Power</span>
+          <span className="hidden sm:flex items-center space-x-1">
+            <span className="w-2 h-2 rounded-full bg-[#155E75]" />
+            <span>Radar dB</span>
           </span>
-          <span className="flex items-center space-x-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#0072B2]" />
-            <span>Stage / Hydrograph</span>
+          <span className="hidden sm:flex items-center space-x-1">
+            <span className="w-2 h-2 rounded-full bg-[#0072B2]" />
+            <span>Hydrograph</span>
           </span>
-          <span className="flex items-center space-x-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#009E73]" />
-            <span>Optical NDVI</span>
+          <span className="hidden sm:flex items-center space-x-1">
+            <span className="w-2 h-2 rounded-full bg-[#009E73]" />
+            <span>NDVI</span>
           </span>
+          <button className="p-0.5 text-slate-500 hover:text-slate-800">
+            {isContextTracksOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+          </button>
         </div>
       </div>
+
+      {/* Expanded Chart Multiples */}
+      {isContextTracksOpen && (
+        <div className="px-3 pb-3 pt-1 border-t border-slate-200">
 
       {/* Aligned Small Multiples */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
@@ -185,7 +199,9 @@ export const ContextTracks: React.FC = () => {
             })}
           </div>
         </div>
+        </div>
       </div>
+      )}
     </div>
   );
 };

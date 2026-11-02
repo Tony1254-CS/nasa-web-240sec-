@@ -19,6 +19,7 @@ import {
   AlertCircle,
   Download,
   CheckCircle2,
+  X,
 } from 'lucide-react';
 import { BreakMyFindingModal } from './BreakMyFindingModal';
 import { ChangePassportModal } from './ChangePassportModal';
@@ -33,6 +34,7 @@ export const RightInspector: React.FC = () => {
     selectedFindingId,
     selectedSample,
     setSelectedDate,
+    setRightInspectorOpen,
   } = useWorkspaceStore();
 
   const t = i18n[language];
@@ -54,9 +56,18 @@ export const RightInspector: React.FC = () => {
               <ShieldCheck className="w-4 h-4" />
               <span>{t.inspector.title}</span>
             </div>
-            <span className="font-mono text-[10px] text-[#64748B] bg-white px-1.5 py-0.5 rounded border border-[#CBD5E1]">
-              {selectedFindingId ?? (isJamuna ? 'JAM-2026-F01' : 'SUN-2026-F02')}
-            </span>
+            <div className="flex items-center space-x-2">
+              <span className="font-mono text-[10px] text-[#64748B] bg-white px-1.5 py-0.5 rounded border border-[#CBD5E1]">
+                {selectedFindingId ?? (isJamuna ? 'JAM-2026-F01' : 'SUN-2026-F02')}
+              </span>
+              <button
+                onClick={() => setRightInspectorOpen(false)}
+                className="p-1 rounded-md hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+                title="Close Inspector"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
 
           <div className="font-bold text-[#102A43] text-sm leading-snug">

@@ -21,6 +21,7 @@ import {
   getSundarbansPulseForDate,
 } from '../data/geoData';
 
+
 // Configure static, direct MapLibre Web Worker to eliminate Vite ESM loader issues
 maplibregl.setWorkerUrl('/maplibre-gl-worker.mjs');
 
@@ -66,6 +67,10 @@ export const MapWorkspace: React.FC = () => {
     setRegion,
     setView,
     setSelectedSample,
+    setSelectedFinding,
+    isRightInspectorOpen,
+    isAgentDrawerOpen,
+    selectedFindingId,
     swipePosition,
     comparisonMode,
     selectedPair,
@@ -74,6 +79,7 @@ export const MapWorkspace: React.FC = () => {
   } = useWorkspaceStore();
 
   const isBn = language === 'bn';
+  const isDrawerOpen = isRightInspectorOpen || Boolean(selectedFindingId) || isAgentDrawerOpen;
 
   // LATEST-WINS state ref: async map callbacks ('load'/'styledata') must apply the user's
   // CURRENT basemap choice — not the mount-time snapshot captured in the first render closure.
@@ -344,7 +350,7 @@ export const MapWorkspace: React.FC = () => {
       attributionControl: false,
     });
 
-    mapB.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-left');
+    // Retain clean metric scale bar; zoom controls are seamlessly in top-right floating toolbar
     mapB.addControl(new maplibregl.ScaleControl({ maxWidth: 100, unit: 'metric' }), 'bottom-left');
     mapB.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
 
@@ -1231,7 +1237,8 @@ export const MapWorkspace: React.FC = () => {
               <div
                 className="absolute pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
                 style={{ left: '38%', top: '54%' }}
-                onClick={() =>
+                onClick={() => {
+                  setSelectedFinding('JAM-2026-F01');
                   setSelectedSample({
                     lon: 89.668,
                     lat: 25.568,
@@ -1239,8 +1246,8 @@ export const MapWorkspace: React.FC = () => {
                     unit: 'dB',
                     masked: false,
                     reason: 'Chilmari West Bank Active Collapse (145.8 ha)',
-                  })
-                }
+                  });
+                }}
               >
                 <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#DC2626]/95 text-white text-[11px] font-bold shadow-xl border border-white hover:scale-105 transition-transform">
                   <span className="w-2 h-2 rounded-full bg-white animate-ping" />
@@ -1252,7 +1259,8 @@ export const MapWorkspace: React.FC = () => {
               <div
                 className="absolute pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
                 style={{ left: '57%', top: '44%' }}
-                onClick={() =>
+                onClick={() => {
+                  setSelectedFinding('JAM-2026-F02');
                   setSelectedSample({
                     lon: 89.735,
                     lat: 25.595,
@@ -1260,8 +1268,8 @@ export const MapWorkspace: React.FC = () => {
                     unit: 'dB',
                     masked: false,
                     reason: 'Mandaler Char Emergent Silt Bar (88.4 ha)',
-                  })
-                }
+                  });
+                }}
               >
                 <div className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#059669]/95 text-white text-[11px] font-bold shadow-xl border border-white hover:scale-105 transition-transform">
                   <span>🌱 {isBn ? 'মন্ডলের চর পলি চর: ৮৮.৪ হে.' : 'Mandaler Char Silt: 88.4 ha (+0.48 NDVI)'}</span>
@@ -1296,7 +1304,7 @@ export const MapWorkspace: React.FC = () => {
       )}
 
       {/* Floating 3-Way Basemap Switcher & Snapshot Pill (Top Right, Sleek & Compact) */}
-      <div className="absolute top-3 right-3 z-20 flex items-center space-x-1.5 pointer-events-auto">
+      <div className="absolute top-3 z-20 flex items-center space-x-1.5 pointer-events-auto transition-all duration-200" style={{ right: isDrawerOpen ? "470px" : "12px" }}>
         <div className="flex items-center bg-white/95 backdrop-blur-md p-0.5 rounded-xl border border-[#CBD5E1] shadow-lg text-xs">
           <button
             onClick={() => setBasemapType('satellite')}
