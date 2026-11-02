@@ -211,7 +211,7 @@ export const ReportsView: React.FC = () => {
           </div>
 
           {/* 3-Column Telemetry Matrix with Citations */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <div className="p-3.5 rounded-xl border border-rose-200 bg-rose-50/50 space-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] uppercase font-bold text-rose-700">Recession Area</span>
@@ -249,7 +249,7 @@ export const ReportsView: React.FC = () => {
               </span>
               <SourceCitationBadge sourceId="OSM_OVERPASS" />
             </div>
-            <table className="w-full text-left text-xs border border-[#CBD5E1] rounded-lg overflow-hidden">
+            <div className="overflow-x-auto rounded-lg border border-[#CBD5E1]"><table className="w-full min-w-[500px] text-left text-xs">
               <thead className="bg-[#F1F5F9] text-[#475569] font-bold text-[11px]">
                 <tr>
                   <th className="p-2.5">Asset Name</th>
@@ -284,7 +284,7 @@ export const ReportsView: React.FC = () => {
                   </td>
                 </tr>
               </tbody>
-            </table>
+            </table></div>
           </div>
 
           {/* Autonomous Multi-Agent Attestation Box (Light Theme) */}

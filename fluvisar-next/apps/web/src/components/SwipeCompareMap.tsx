@@ -17,10 +17,20 @@ const DATE_METRICS: Record<string, { stage: string; desc: string; descBn: string
 };
 
 export const SwipeCompareMap: React.FC<SwipeCompareProps> = ({ dateA, dateB }) => {
-  const { swipePosition, setSwipePosition, comparisonMode, setComparisonMode, language } = useWorkspaceStore();
+  const {
+    swipePosition,
+    setSwipePosition,
+    comparisonMode,
+    setComparisonMode,
+    language,
+    isRightInspectorOpen,
+    selectedFindingId,
+    isAgentDrawerOpen
+  } = useWorkspaceStore();
   const [isDualSplit, setIsDualSplit] = React.useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isBn = language === 'bn';
+  const isDrawerOpen = isRightInspectorOpen || Boolean(selectedFindingId) || isAgentDrawerOpen;
 
   const metaA = DATE_METRICS[dateA] ?? { stage: '18.9m', desc: 'Monsoon Flood Peak', descBn: 'মনসুন বন্যা' };
   const metaB = DATE_METRICS[dateB] ?? { stage: '16.4m', desc: 'Post-Flood Recession', descBn: 'পানি হ্রাস' };
@@ -162,19 +172,22 @@ export const SwipeCompareMap: React.FC<SwipeCompareProps> = ({ dateA, dateB }) =
         </div>
       )}
 
-      {/* Bottom Corner Floating Info Badges */}
-      <div className="absolute bottom-6 left-6 z-10 pointer-events-none bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#CBD5E1] text-[11px] font-bold text-[#102A43] shadow-lg flex items-center space-x-2">
-        <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] ring-4 ring-[#E0F2FE]" />
-        <span>
+      {/* Bottom Corner Floating Info Badges (Responsive & Drawer-Aware) */}
+      <div className="absolute bottom-3 left-3 z-10 pointer-events-none bg-white/95 backdrop-blur-md px-2.5 sm:px-3 py-1.5 rounded-xl border border-[#CBD5E1] text-[10px] sm:text-[11px] font-bold text-[#102A43] shadow-lg flex items-center space-x-1.5 max-w-[calc(50vw-20px)] sm:max-w-xs truncate select-none">
+        <span className="w-2.5 h-2.5 rounded-full bg-[#0284C7] ring-4 ring-[#E0F2FE] shrink-0" />
+        <span className="truncate">
           {comparisonMode === 'dates'
             ? `◀ ${isBn ? 'পূর্বে' : 'Before'}: ${dateA} (${isBn ? metaA.descBn : `${metaA.desc} — ${metaA.stage}`})`
             : `◀ ${isBn ? 'বাম' : 'Left'}: 🛰️ ${isBn ? 'হাই-রেজ অপটিক্যাল স্যাটেলাইট' : 'High-Res Optical Satellite (Esri/NASA)'}`}
         </span>
       </div>
 
-      <div className="absolute bottom-6 right-6 z-10 pointer-events-none bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#CBD5E1] text-[11px] font-bold text-[#102A43] shadow-lg flex items-center space-x-2">
-        <span className="w-2.5 h-2.5 rounded-full bg-[#EF4444] ring-4 ring-[#FEE2E2]" />
-        <span>
+      <div
+        className="absolute bottom-3 z-10 pointer-events-none bg-white/95 backdrop-blur-md px-2.5 sm:px-3 py-1.5 rounded-xl border border-[#CBD5E1] text-[10px] sm:text-[11px] font-bold text-[#102A43] shadow-lg flex items-center space-x-1.5 max-w-[calc(50vw-20px)] sm:max-w-xs truncate transition-all duration-200 select-none"
+        style={{ right: isDrawerOpen ? "min(440px, calc(100vw - 340px))" : "12px" }}
+      >
+        <span className="w-2.5 h-2.5 rounded-full bg-[#EF4444] ring-4 ring-[#FEE2E2] shrink-0" />
+        <span className="truncate">
           {comparisonMode === 'dates'
             ? `▶ ${isBn ? 'পরে' : 'After'}: ${dateB} (${isBn ? metaB.descBn : `${metaB.desc} — ${metaB.stage}`})`
             : `▶ ${isBn ? 'ডান' : 'Right'}: 📡 ${isBn ? 'মাইক্রোওয়েভ রাডার ও নদীভাঙন' : 'NISAR SAR Radar Microwave & Erosion'}`}

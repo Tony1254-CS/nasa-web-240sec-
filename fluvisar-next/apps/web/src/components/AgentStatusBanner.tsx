@@ -7,7 +7,7 @@ export const AgentStatusBanner: React.FC = () => {
   const isBn = language === 'bn';
 
   return (
-    <div className="hidden lg:flex items-center space-x-2 px-3 py-1 rounded-full bg-white border border-[#CBD5E1] shadow-2xs text-xs select-none hover:border-cyan-500 transition-all">
+    <div className="hidden md:flex items-center space-x-1.5 lg:space-x-2 px-2.5 py-0.5 lg:py-1 rounded-full bg-white border border-[#CBD5E1] shadow-2xs text-xs select-none hover:border-cyan-500 transition-all shrink-0">
       {/* Pulsing Live Indicator */}
       <div className="flex items-center space-x-1.5 shrink-0">
         <span className="relative flex h-2 w-2">
@@ -20,10 +20,9 @@ export const AgentStatusBanner: React.FC = () => {
         </span>
       </div>
 
-      <span className="text-slate-300">|</span>
-
-      {/* 4 Agent Mini Pills */}
-      <div className="flex items-center space-x-1 text-[10px] font-mono font-bold">
+      {/* 4 Agent Mini Pills (Only on XL+ screens to prevent laptop layout breaking) */}
+      <div className="hidden xl:flex items-center space-x-1 text-[10px] font-mono font-bold">
+        <span className="text-slate-300">|</span>
         <span className="px-1.5 py-0.2 rounded bg-sky-50 text-sky-800 border border-sky-200">
           🛰️ SAR
         </span>
@@ -41,7 +40,7 @@ export const AgentStatusBanner: React.FC = () => {
       <span className="text-slate-300">|</span>
 
       {/* Consensus Score */}
-      <div className="flex items-center space-x-1 text-[11px] text-emerald-700 font-bold font-mono">
+      <div className="flex items-center space-x-1 text-[10px] lg:text-[11px] text-emerald-700 font-bold font-mono shrink-0">
         <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
         <span>99.4% {isBn ? 'ঐকমত্য' : 'Consensus'}</span>
       </div>
@@ -49,10 +48,11 @@ export const AgentStatusBanner: React.FC = () => {
       {/* Trigger Button */}
       <button
         onClick={() => setAgentDrawerOpen(!isAgentDrawerOpen)}
-        className="ml-1 px-2.5 py-0.5 rounded-full bg-[#155E75] hover:bg-[#0E7490] text-white font-bold text-[10px] flex items-center space-x-1 transition-all shadow-2xs cursor-pointer hover:scale-105"
+        className="ml-1 px-2 py-0.5 rounded-full bg-[#155E75] hover:bg-[#0E7490] text-white font-bold text-[10px] flex items-center space-x-1 transition-all shadow-2xs cursor-pointer hover:scale-105 shrink-0"
+        title="Open Full Autonomous Science Console"
       >
         <Sparkles className="w-3 h-3 text-cyan-200 animate-pulse" />
-        <span>{isBn ? 'ট্রেস' : 'Trace'}</span>
+        <span className="hidden sm:inline">{isBn ? 'ট্রেস' : 'Trace'}</span>
         <ChevronRight className="w-3 h-3" />
       </button>
     </div>

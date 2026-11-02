@@ -154,31 +154,31 @@ export const ObservatoryLensGuide: React.FC = () => {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="absolute top-3 left-3 z-20 flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-white/95 text-[#102A43] border border-[#CBD5E1] shadow-lg backdrop-blur-md hover:bg-slate-50 transition-all cursor-pointer text-xs font-bold select-none"
+        className="absolute top-3 left-3 z-20 flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-white/95 text-[#102A43] border border-[#CBD5E1] shadow-lg backdrop-blur-md hover:bg-slate-50 transition-all cursor-pointer text-xs font-bold select-none max-w-[240px] sm:max-w-xs"
         title="Open Mission Lens Guide"
       >
-        <Compass className="w-4 h-4 text-[#0284C7] animate-spin-slow" />
-        <span>{isBn ? `লেন্স: ${info.titleBn}` : `Lens: ${info.titleEn}`}</span>
+        <Compass className="w-4 h-4 text-[#0284C7] shrink-0 animate-spin-slow" />
+        <span className="truncate">{isBn ? `লেন্স: ${info.titleBn}` : `Lens: ${info.titleEn}`}</span>
       </button>
     );
   }
 
   return (
-    <div className="absolute top-3 left-3 z-20 w-[360px] sm:w-[410px] max-w-[calc(100vw-24px)] max-h-[calc(100vh-100px)] rounded-2xl bg-white/95 backdrop-blur-xl border border-[#CBD5E1] shadow-2xl text-[#102A43] text-xs flex flex-col overflow-hidden select-none transition-all animate-in fade-in zoom-in-95 duration-150">
+    <div className="absolute top-3 left-3 z-20 w-[310px] sm:w-[350px] md:w-[380px] max-w-[calc(100vw-24px)] max-h-[calc(100vh-230px)] min-h-[260px] rounded-2xl bg-white/95 backdrop-blur-xl border border-[#CBD5E1] shadow-2xl text-[#102A43] text-xs flex flex-col overflow-hidden select-none transition-all animate-in fade-in zoom-in-95 duration-150">
       {/* Top Header */}
-      <div className="p-3.5 bg-[#F8FAFC] border-b border-[#E2E8F0] flex items-center justify-between shrink-0">
-        <div className="flex items-center space-x-2">
-          <span className="p-1.5 rounded-lg bg-[#E0F2FE] text-[#0284C7] border border-[#BAE6FD]">
+      <div className="p-3 bg-[#F8FAFC] border-b border-[#E2E8F0] flex items-center justify-between shrink-0">
+        <div className="flex items-center space-x-2 overflow-hidden">
+          <span className="p-1.5 rounded-lg bg-[#E0F2FE] text-[#0284C7] border border-[#BAE6FD] shrink-0">
             <Compass className="w-4 h-4" />
           </span>
-          <div>
+          <div className="overflow-hidden">
             <div className="flex items-center space-x-1.5">
-              <span className="font-bold text-[#102A43] text-xs">{isBn ? info.titleBn : info.titleEn}</span>
-              <span className="font-mono text-[9px] bg-[#F1F5F9] text-[#0369A1] px-1.5 py-0.2 rounded border border-[#CBD5E1]">
+              <span className="font-bold text-[#102A43] text-xs truncate">{isBn ? info.titleBn : info.titleEn}</span>
+              <span className="font-mono text-[9px] bg-[#F1F5F9] text-[#0369A1] px-1.5 py-0.2 rounded border border-[#CBD5E1] shrink-0">
                 {info.id}
               </span>
             </div>
-            <p className="text-[10px] text-[#64748B] line-clamp-1">{isBn ? info.taglineBn : info.taglineEn}</p>
+            <p className="text-[10px] text-[#64748B] truncate">{isBn ? info.taglineBn : info.taglineEn}</p>
           </div>
         </div>
 

@@ -62,7 +62,7 @@ export const ContextTracks: React.FC = () => {
         <div className="px-3 pb-3 pt-1 border-t border-slate-200">
 
       {/* Aligned Small Multiples */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
         {/* Track 1: Radar Power (dB) */}
         <div className="bg-white p-2.5 rounded-lg border border-[#E2E8F0] shadow-2xs">
           <div className="flex items-center justify-between text-[11px] text-[#475569] mb-1">

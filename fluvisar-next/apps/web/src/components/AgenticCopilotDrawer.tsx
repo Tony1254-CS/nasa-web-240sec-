@@ -114,7 +114,12 @@ export const AgenticCopilotDrawer: React.FC = () => {
 
   return (
     <>
-      <div className="fixed inset-y-0 right-0 z-40 w-[420px] sm:w-[460px] max-w-[calc(100vw-16px)] bg-white text-slate-800 shadow-2xl border-l border-slate-300 flex flex-col h-full text-xs select-none animate-in slide-in-from-right duration-200 overflow-hidden">
+      {/* Mobile backdrop */}
+      <div
+        className="fixed inset-0 bg-black/30 backdrop-blur-xs z-39 sm:hidden"
+        onClick={() => setAgentDrawerOpen(false)}
+      />
+      <div className="fixed inset-y-0 right-0 z-40 w-full sm:w-[380px] md:w-[400px] lg:w-[430px] max-w-full sm:max-w-[calc(100vw-16px)] bg-white text-slate-800 shadow-2xl border-l border-slate-300 flex flex-col h-full text-xs select-none animate-in slide-in-from-right duration-200 overflow-hidden">
         {/* 1. Header (Clean Crisp Light Theme) */}
         <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-start justify-between">
           <div>

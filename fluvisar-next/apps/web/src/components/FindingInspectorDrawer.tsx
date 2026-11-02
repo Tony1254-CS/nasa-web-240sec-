@@ -99,7 +99,12 @@ export const FindingInspectorDrawer: React.FC = () => {
 
   return (
     <>
-      <div className="absolute top-0 right-0 bottom-0 z-30 w-[390px] sm:w-[440px] max-w-[calc(100vw-20px)] bg-white border-l border-slate-300 shadow-2xl flex flex-col h-full text-xs text-slate-800 select-none animate-in slide-in-from-right duration-200 overflow-hidden">
+      {/* Mobile backdrop */}
+      <div
+        className="fixed inset-0 bg-black/30 backdrop-blur-xs z-29 sm:hidden"
+        onClick={handleClose}
+      />
+      <div className="absolute top-0 right-0 bottom-0 z-30 w-full sm:w-[370px] md:w-[390px] lg:w-[420px] max-w-full sm:max-w-[calc(100vw-20px)] bg-white border-l border-slate-300 shadow-2xl flex flex-col h-full text-xs text-slate-800 select-none animate-in slide-in-from-right duration-200 overflow-hidden">
         {/* 1. Header with Multi-Agent Attribution */}
         <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-start justify-between">
           <div>

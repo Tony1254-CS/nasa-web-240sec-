@@ -53,7 +53,7 @@ export const SarLabView: React.FC = () => {
         </div>
 
         {/* Experiment Navigation Tabs */}
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {[
             { id: 'cloud', num: 1, title: isBn ? '১. মেঘের অন্ধত্ব' : '1. Cloud Blindness', icon: Cloud },
             { id: 'pol', num: 2, title: isBn ? '২. পোলারাইজেশন' : '2. Polarization Match', icon: Radio },
@@ -79,7 +79,7 @@ export const SarLabView: React.FC = () => {
         </div>
 
         {/* Experiment Main Body */}
-        <div className="bg-white rounded-xl p-8 border border-[#CBD5E1] shadow-md space-y-6">
+        <div className="bg-white rounded-xl p-5 sm:p-8 border border-[#CBD5E1] shadow-md space-y-6">
           {/* Experiment 1: Cloud Blindness */}
           {activeExp === 'cloud' && (
             <div className="space-y-4">
@@ -95,7 +95,7 @@ export const SarLabView: React.FC = () => {
               </div>
 
               {/* Interactive Visual Comparison */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Optical Sentinel-2 */}
                 <div className="border border-[#CBD5E1] rounded-lg p-3 bg-[#F8FAFC] space-y-2">
                   <div className="flex justify-between text-xs font-semibold text-[#102A43]">

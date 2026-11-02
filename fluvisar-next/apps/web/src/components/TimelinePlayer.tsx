@@ -138,7 +138,7 @@ export const TimelinePlayer: React.FC = () => {
             </button>
           </div>
 
-          <div className="flex items-center space-x-1 text-[#64748B]">
+          <div className="hidden sm:flex items-center space-x-1 text-[#64748B] truncate max-w-[50vw]">
             <AlertCircle className="w-3.5 h-3.5 text-[#0284C7]" />
             <span>{t.timeline.gapNotice}: Missing dates are never interpolated as water or land.</span>
           </div>

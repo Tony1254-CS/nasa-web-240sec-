@@ -204,7 +204,7 @@ export const StoryModeView: React.FC = () => {
         </div>
 
         {/* Chapter Navigation Tabs */}
-        <div className="grid grid-cols-5 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
           {chapters.map((ch, idx) => (
             <button
               key={ch.id}
@@ -226,7 +226,7 @@ export const StoryModeView: React.FC = () => {
         </div>
 
         {/* Active Chapter Card */}
-        <div className="bg-white rounded-xl p-8 border border-[#CBD5E1] shadow-md space-y-6">
+        <div className="bg-white rounded-xl p-5 sm:p-8 border border-[#CBD5E1] shadow-md space-y-6">
           {/* Chapter Title & Subtitle */}
           <div className="border-b border-[#F1F5F9] pb-4">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#0284C7] bg-[#E0F2FE] px-2 py-0.5 rounded">

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { Camera, Check } from 'lucide-react';
+import { Camera, Check, ChevronDown, ChevronUp, Layers } from 'lucide-react';
 import { useWorkspaceStore } from '../store/workspaceStore';
 import type { BasemapType, OverlayStyle } from '../store/workspaceStore';
 import {
@@ -47,6 +47,7 @@ export const MapWorkspace: React.FC = () => {
 
   const [currentZoom, setCurrentZoom] = useState<number>(11.5);
   const [snapshotTaken, setSnapshotTaken] = useState<boolean>(false);
+  const [isLegendOpen, setIsLegendOpen] = useState<boolean>(true);
 
   // TEMPORARY basemap debug harness (?debug=1): live map state + real-browser tile probe.
   // Lets the user report one string instead of guessing. Remove after verification.
@@ -1303,8 +1304,11 @@ export const MapWorkspace: React.FC = () => {
         </div>
       )}
 
-      {/* Floating 3-Way Basemap Switcher & Snapshot Pill (Top Right, Sleek & Compact) */}
-      <div className="absolute top-3 z-20 flex items-center space-x-1.5 pointer-events-auto transition-all duration-200" style={{ right: isDrawerOpen ? "470px" : "12px" }}>
+      {/* Floating 3-Way Basemap Switcher & Outlines Pill (Top Right, Sleek & Compact ~230px) */}
+      <div
+        className="absolute top-3 z-20 flex items-center space-x-1.5 pointer-events-auto transition-all duration-200"
+        style={{ right: isDrawerOpen ? "min(440px, calc(100vw - 340px))" : "12px" }}
+      >
         <div className="flex items-center bg-white/95 backdrop-blur-md p-0.5 rounded-xl border border-[#CBD5E1] shadow-lg text-xs">
           <button
             onClick={() => setBasemapType('satellite')}
@@ -1315,7 +1319,7 @@ export const MapWorkspace: React.FC = () => {
             }`}
             title="Switch to Real High-Resolution True-Color Optical Satellite Imagery"
           >
-            <span>🛰️ {isBn ? 'স্যাটেলাইট' : 'Satellite'}</span>
+            <span>🛰️ <span className="hidden sm:inline">{isBn ? 'স্যাটেলাইট' : 'Satellite'}</span></span>
           </button>
 
           <button
@@ -1327,7 +1331,7 @@ export const MapWorkspace: React.FC = () => {
             }`}
             title="Switch to Calibrated NISAR L-band SAR Microwave Amplitude Radar (Grayscale γ⁰ dB)"
           >
-            <span>📡 {isBn ? 'রাডার' : 'Radar'}</span>
+            <span>📡 <span className="hidden sm:inline">{isBn ? 'রাডার' : 'Radar'}</span></span>
           </button>
 
           <button
@@ -1339,147 +1343,155 @@ export const MapWorkspace: React.FC = () => {
             }`}
             title="Switch to OpenStreetMap Cartographic Vector Map"
           >
-            <span>🗺️ {isBn ? 'কার্টো' : 'Carto'}</span>
+            <span>🗺️ <span className="hidden sm:inline">{isBn ? 'কার্টো' : 'Carto'}</span></span>
           </button>
         </div>
 
-        {/* Clean Outlines vs Subtle Tint Toggle (Solves colored polygon blocking satellite view) */}
+        {/* Clean Outlines vs Subtle Tint Toggle */}
         <button
           onClick={() => setOverlayStyle(overlayStyle === 'outlines' ? 'tinted' : 'outlines')}
-          className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-xl border font-bold text-xs shadow-lg transition-all cursor-pointer ${
+          className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-xl border font-bold text-xs shadow-lg transition-all cursor-pointer shrink-0 ${
             overlayStyle === 'outlines'
               ? 'bg-[#0284C7] text-white border-[#0284C7]'
               : 'bg-white/95 backdrop-blur-md text-[#475569] border-[#CBD5E1] hover:bg-[#F1F5F9]'
           }`}
           title="Toggle between Clean Outlines (100% Unobstructed Satellite) and Subtle Thematic Tint"
         >
-          <span>{overlayStyle === 'outlines' ? (isBn ? '✏️ শুধু আউটলাইন' : '✏️ Outlines Only') : (isBn ? '🎨 হালকা রঙ' : '🎨 Tinted')}</span>
+          <span>{overlayStyle === 'outlines' ? (isBn ? '✏️ শুধু আউটলাইন' : '✏️ Outlines') : (isBn ? '🎨 হালকা রঙ' : '🎨 Tinted')}</span>
+        </button>
+      </div>
+
+      {/* Floating Vertical GIS Map Tools (Zoom + / -, Snapshot ~36px wide) */}
+      <div
+        className="absolute top-16 z-20 flex flex-col items-center bg-white/95 backdrop-blur-md p-1 rounded-xl border border-[#CBD5E1] shadow-lg text-xs space-y-1 transition-all duration-200 pointer-events-auto select-none"
+        style={{ right: isDrawerOpen ? "min(440px, calc(100vw - 340px))" : "12px" }}
+      >
+        <button
+          onClick={() => {
+            if (mapRefB.current) mapRefB.current.zoomIn({ duration: 300 });
+          }}
+          className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F1F5F9] text-[#102A43] hover:text-[#0284C7] transition-colors cursor-pointer text-base font-black"
+          title="Zoom In (+)"
+        >
+          +
         </button>
 
-        {/* 📸 Instant Map Snapshot Button */}
+        <span className="text-[10px] font-mono font-bold text-[#0284C7] px-1 py-0.5 rounded bg-[#E0F2FE]">
+          {currentZoom}x
+        </span>
+
+        <button
+          onClick={() => {
+            if (mapRefB.current) mapRefB.current.zoomOut({ duration: 300 });
+          }}
+          className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F1F5F9] text-[#102A43] hover:text-[#0284C7] transition-colors cursor-pointer text-base font-black"
+          title="Zoom Out (-)"
+        >
+          -
+        </button>
+
+        <div className="w-5 h-px bg-[#E2E8F0] my-0.5" />
+
+        {/* Instant Map Snapshot Button */}
         <button
           onClick={handleCaptureSnapshot}
-          className={`flex items-center space-x-1 px-2.5 py-1.5 rounded-xl border font-bold text-xs shadow-lg transition-all cursor-pointer ${
+          className={`w-7 h-7 flex items-center justify-center rounded-lg transition-all cursor-pointer ${
             snapshotTaken
-              ? 'bg-[#059669] text-white border-[#059669]'
-              : 'bg-white/95 backdrop-blur-md text-[#102A43] border-[#CBD5E1] hover:bg-[#F1F5F9]'
+              ? 'bg-[#059669] text-white'
+              : 'hover:bg-[#F1F5F9] text-[#155E75]'
           }`}
           title="Capture and download high-resolution map snapshot (PNG)"
         >
-          {snapshotTaken ? <Check className="w-3.5 h-3.5" /> : <Camera className="w-3.5 h-3.5 text-[#155E75]" />}
-          <span>{snapshotTaken ? (isBn ? 'সংরক্ষিত!' : 'Saved!') : (isBn ? 'স্ক্রিনশট' : 'Snapshot')}</span>
+          {snapshotTaken ? <Check className="w-4 h-4 text-white" /> : <Camera className="w-4 h-4" />}
         </button>
-
-        {/* 🔍 Zoom In / Out Slider Control */}
-        <div className="flex items-center space-x-2 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#CBD5E1] shadow-lg text-xs font-bold text-[#102A43]">
-          <button
-            onClick={() => {
-              if (mapRefB.current) mapRefB.current.zoomOut({ duration: 300 });
-            }}
-            className="w-5 h-5 flex items-center justify-center rounded hover:bg-[#F1F5F9] text-[#475569] hover:text-[#0284C7] transition-colors cursor-pointer text-sm font-black"
-            title="Zoom Out (-)"
-          >
-            -
-          </button>
-          <input
-            type="range"
-            min="6"
-            max="16"
-            step="0.1"
-            value={currentZoom}
-            onChange={(e) => {
-              const z = parseFloat(e.target.value);
-              setCurrentZoom(z);
-              if (mapRefB.current) {
-                mapRefB.current.setZoom(z);
-              }
-            }}
-            className="w-20 h-1.5 bg-[#E2E8F0] rounded-lg appearance-none cursor-pointer accent-[#0284C7]"
-            title={`Current Zoom: ${currentZoom}x`}
-          />
-          <button
-            onClick={() => {
-              if (mapRefB.current) mapRefB.current.zoomIn({ duration: 300 });
-            }}
-            className="w-5 h-5 flex items-center justify-center rounded hover:bg-[#F1F5F9] text-[#475569] hover:text-[#0284C7] transition-colors cursor-pointer text-sm font-black"
-            title="Zoom In (+)"
-          >
-            +
-          </button>
-          <span className="text-[10px] font-mono text-[#0284C7] min-w-[28px]">{currentZoom}x</span>
-        </div>
       </div>
 
-      {/* Dynamic Scientific Legend Indicator */}
+      {/* Dynamic Scientific Legend Indicator (Collapsible & Drawer-Aware) */}
       {viewId !== 'M0' && (
-        <div className="absolute bottom-6 right-4 z-10 bg-white/95 backdrop-blur-md border border-[#CBD5E1] rounded-xl p-3 shadow-lg text-xs space-y-1.5 pointer-events-none">
-          <div className="font-bold text-[#102A43] text-[11px] uppercase tracking-wider flex items-center justify-between">
-            <span>{regionId === 'jamuna' ? (isBn ? 'যমুনা নদী গতিবিদ্যা' : 'Jamuna River Dynamics') : (isBn ? 'সুন্দরবন জলাভূমি ও রাডার' : 'Sundarbans Wetland Pulse')}</span>
-            <span className="text-[9px] font-mono text-[#0284C7] bg-[#E0F2FE] px-1.5 py-0.5 rounded">NISAR L2</span>
+        <div
+          className="absolute bottom-4 sm:bottom-6 z-15 bg-white/95 backdrop-blur-md border border-[#CBD5E1] rounded-xl shadow-lg text-xs transition-all duration-200 pointer-events-auto select-none max-w-[280px] sm:max-w-xs"
+          style={{ right: isDrawerOpen ? "min(440px, calc(100vw - 340px))" : "12px" }}
+        >
+          <div
+            onClick={() => setIsLegendOpen(!isLegendOpen)}
+            className="p-2 sm:p-2.5 font-bold text-[#102A43] text-[11px] uppercase tracking-wider flex items-center justify-between cursor-pointer hover:bg-slate-50 rounded-xl"
+          >
+            <div className="flex items-center space-x-1.5 truncate">
+              <Layers className="w-3.5 h-3.5 text-[#0284C7] shrink-0" />
+              <span className="truncate">{regionId === 'jamuna' ? (isBn ? 'যমুনা গতিবিদ্যা' : 'Jamuna Dynamics') : (isBn ? 'সুন্দরবন জলাভূমি' : 'Sundarbans Pulse')}</span>
+            </div>
+            <div className="flex items-center space-x-1.5 shrink-0 ml-1">
+              <span className="text-[9px] font-mono text-[#0284C7] bg-[#E0F2FE] px-1.5 py-0.5 rounded">NISAR L2</span>
+              {isLegendOpen ? <ChevronDown className="w-3.5 h-3.5 text-slate-500" /> : <ChevronUp className="w-3.5 h-3.5 text-slate-500" />}
+            </div>
           </div>
 
-          {regionId === 'jamuna' ? (
-            <>
-              <div className="flex items-center space-x-2">
-                {overlayStyle === 'outlines' ? (
-                  <div className="w-4 h-0.5 bg-[#38BDF8] rounded-full" />
-                ) : (
-                  <div className="w-3.5 h-3.5 rounded bg-[#0284C7]/30 border border-[#0284C7]" />
-                )}
-                <span className="text-[#334155] text-[11px]">{isBn ? 'নদীর চ্যানেল জলভাগ (γ⁰ ≤ -১৪ dB)' : 'Receded Thalweg Braids (γ⁰ ≤ -14 dB)'}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                {overlayStyle === 'outlines' ? (
-                  <div className="w-4 border-t-2 border-dashed border-[#EF4444]" />
-                ) : (
-                  <div className="w-3.5 h-3.5 rounded bg-[#DC2626]/40 border-2 border-[#EF4444] border-dashed" />
-                )}
-                <span className="text-[#334155] text-[11px] font-semibold text-[#DC2626]">{isBn ? 'চিলমারী ভাঙন বলয় (১৪৫.৮ হেক্টর)' : 'Chilmari Erosion Cut (145.8 ha)'}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                {overlayStyle === 'outlines' ? (
-                  <div className="w-4 border-t-2 border-dashed border-[#10B981]" />
-                ) : (
-                  <div className="w-3.5 h-3.5 rounded bg-[#059669]/35 border border-[#10B981]" />
-                )}
-                <span className="text-[#334155] text-[11px]">{isBn ? 'মন্ডলের চর নতুন পলি (৮৮.৪ হেক্টর)' : 'Mandaler Char Emergent Silt (88.4 ha)'}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-[#F59E0B] border border-white" />
-                <span className="text-[#334155] text-[11px]">{isBn ? 'প্রাথমিক বিদ্যালয় ও ফেরি ঘাট' : 'Schools & Ferry Terminals'}</span>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex items-center space-x-2">
-                {overlayStyle === 'outlines' ? (
-                  <div className="w-4 h-0.5 bg-[#38BDF8] rounded-full" />
-                ) : (
-                  <div className="w-3.5 h-3.5 rounded bg-[#0284C7]/30 border border-[#0284C7]" />
-                )}
-                <span className="text-[#334155] text-[11px]">{isBn ? 'পশুর মোহনা ও খাঁড়ি জলপথ' : 'Passur Estuary Thalweg'}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                {overlayStyle === 'outlines' ? (
-                  <div className="w-4 border-t-2 border-dashed border-[#15803D]" />
-                ) : (
-                  <div className="w-3.5 h-3.5 rounded bg-[#15803D]/25 border border-[#15803D]" />
-                )}
-                <span className="text-[#334155] text-[11px]">{isBn ? 'ঘন ম্যানগ্রোভ ক্যানোপি (Pauli HV)' : 'Mangrove Canopy (Volume Scattering)'}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                {overlayStyle === 'outlines' ? (
-                  <div className="w-4 border-t-2 border-dashed border-[#F97316]" />
-                ) : (
-                  <div className="w-3.5 h-3.5 rounded bg-[#EA580C]/40 border-2 border-[#F97316] border-dashed" />
-                )}
-                <span className="text-[#334155] text-[11px] font-semibold text-[#EA580C]">{isBn ? 'দুবলার চরে জোয়ার প্লাবন (+৩.৫ dB)' : 'Sub-Canopy Tidal Pulse (+3.5 dB HH)'}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-[#10B981] border border-white" />
-                <span className="text-[#334155] text-[11px]">{isBn ? 'ফরেস্ট রেঞ্জার স্টেশন ও সাইক্লোন শেল্টার' : 'Forest Posts & Cyclone Shelters'}</span>
-              </div>
-            </>
+          {isLegendOpen && (
+            <div className="px-3 pb-3 pt-1 space-y-1.5 border-t border-[#F1F5F9]">
+              {regionId === 'jamuna' ? (
+                <>
+                  <div className="flex items-center space-x-2">
+                    {overlayStyle === 'outlines' ? (
+                      <div className="w-4 h-0.5 bg-[#38BDF8] rounded-full shrink-0" />
+                    ) : (
+                      <div className="w-3.5 h-3.5 rounded bg-[#0284C7]/30 border border-[#0284C7] shrink-0" />
+                    )}
+                    <span className="text-[#334155] text-[11px] truncate">{isBn ? 'নদীর চ্যানেল জলভাগ (γ⁰ ≤ -১৪ dB)' : 'Receded Thalweg (γ⁰ ≤ -14 dB)'}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {overlayStyle === 'outlines' ? (
+                      <div className="w-4 border-t-2 border-dashed border-[#EF4444] shrink-0" />
+                    ) : (
+                      <div className="w-3.5 h-3.5 rounded bg-[#DC2626]/40 border-2 border-[#EF4444] border-dashed shrink-0" />
+                    )}
+                    <span className="text-[#334155] text-[11px] font-semibold text-[#DC2626] truncate">{isBn ? 'চিলমারী ভাঙন বলয় (১৪৫.৮ হে.)' : 'Chilmari Erosion (145.8 ha)'}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {overlayStyle === 'outlines' ? (
+                      <div className="w-4 border-t-2 border-dashed border-[#10B981] shrink-0" />
+                    ) : (
+                      <div className="w-3.5 h-3.5 rounded bg-[#059669]/35 border border-[#10B981] shrink-0" />
+                    )}
+                    <span className="text-[#334155] text-[11px] truncate">{isBn ? 'মন্ডলের চর নতুন পলি (৮৮.৪ হে.)' : 'Mandaler Char Silt (88.4 ha)'}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#F59E0B] border border-white shrink-0" />
+                    <span className="text-[#334155] text-[11px] truncate">{isBn ? 'প্রাথমিক বিদ্যালয় ও ফেরি ঘাট' : 'Schools & Ferry Terminals'}</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center space-x-2">
+                    {overlayStyle === 'outlines' ? (
+                      <div className="w-4 h-0.5 bg-[#38BDF8] rounded-full shrink-0" />
+                    ) : (
+                      <div className="w-3.5 h-3.5 rounded bg-[#0284C7]/30 border border-[#0284C7] shrink-0" />
+                    )}
+                    <span className="text-[#334155] text-[11px] truncate">{isBn ? 'পশুর মোহনা ও খাঁড়ি জলপথ' : 'Passur Estuary Thalweg'}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {overlayStyle === 'outlines' ? (
+                      <div className="w-4 border-t-2 border-dashed border-[#15803D] shrink-0" />
+                    ) : (
+                      <div className="w-3.5 h-3.5 rounded bg-[#15803D]/25 border border-[#15803D] shrink-0" />
+                    )}
+                    <span className="text-[#334155] text-[11px] truncate">{isBn ? 'ঘন ম্যানগ্রোভ ক্যানোপি (Pauli HV)' : 'Mangrove Canopy (Pauli HV)'}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {overlayStyle === 'outlines' ? (
+                      <div className="w-4 border-t-2 border-dashed border-[#F97316] shrink-0" />
+                    ) : (
+                      <div className="w-3.5 h-3.5 rounded bg-[#EA580C]/40 border-2 border-[#F97316] border-dashed shrink-0" />
+                    )}
+                    <span className="text-[#334155] text-[11px] font-semibold text-[#EA580C] truncate">{isBn ? 'দুবলার চরে জোয়ার প্লাবন (+৩.৫ dB)' : 'Sub-Canopy Tidal Pulse (+3.5 dB)'}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#10B981] border border-white shrink-0" />
+                    <span className="text-[#334155] text-[11px] truncate">{isBn ? 'ফরেস্ট রেঞ্জার ও সাইক্লোন শেল্টার' : 'Forest Posts & Shelters'}</span>
+                  </div>
+                </>
+              )}
+            </div>
           )}
         </div>
       )}
