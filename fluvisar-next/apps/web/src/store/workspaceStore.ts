@@ -5,7 +5,7 @@ export type ViewId = 'M0' | 'J1' | 'J2' | 'J3' | 'S1' | 'S2' | 'X1' | 'C1';
 export type WorkspaceMode = 'explore' | 'investigate' | 'act';
 export type Language = 'en' | 'bn';
 export type Audience = 'public' | 'decision' | 'analyst';
-export type ActiveTab = 'atlas' | 'investigate' | 'stories' | 'learn' | 'reports';
+export type ActiveTab = 'landing' | 'atlas' | 'investigate' | 'stories' | 'learn' | 'reports';
 export type BasemapType = 'satellite' | 'sar' | 'carto';
 export type OverlayStyle = 'outlines' | 'tinted';
 
@@ -33,6 +33,11 @@ export interface WorkspaceState {
   runId: string;
   viewId: ViewId;
   mode: WorkspaceMode;
+
+  // Drawer & Panel Visibility (Progressive Disclosure)
+  isLeftPanelOpen: boolean;
+  isRightInspectorOpen: boolean;
+  isContextTracksOpen: boolean;
 
   // Basemap & Visualization
   basemapType: BasemapType;
@@ -85,6 +90,12 @@ export interface WorkspaceState {
   toggleSonification: () => void;
   togglePlayback: () => void;
   setCamera: (camera: MapCamera) => void;
+  toggleLeftPanel: () => void;
+  toggleRightInspector: () => void;
+  toggleContextTracks: () => void;
+  setLeftPanelOpen: (isOpen: boolean) => void;
+  setRightInspectorOpen: (isOpen: boolean) => void;
+  setContextTracksOpen: (isOpen: boolean) => void;
 }
 
 const REGION_DEFAULTS: Record<RegionId, { center: [number, number]; zoom: number; defaultView: ViewId; defaultCase: string }> = {
@@ -103,7 +114,10 @@ const REGION_DEFAULTS: Record<RegionId, { center: [number, number]; zoom: number
 };
 
 export const useWorkspaceStore = create<WorkspaceState>((set) => ({
-  activeTab: 'investigate',
+  activeTab: 'landing',
+  isLeftPanelOpen: false,
+  isRightInspectorOpen: false,
+  isContextTracksOpen: false,
   regionId: 'jamuna',
   caseId: 'river-memory',
   runId: 'run-2026-prod-01',
@@ -170,7 +184,33 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
 
   setCase: (caseId) => set({ caseId, selectedFindingId: null, selectedPatch: null }),
   setView: (viewId) => set({ viewId, activeTab: viewId === 'M0' ? 'atlas' : 'investigate' }),
-  setMode: (mode) => set({ mode }),
+  setMode: (mode) =>
+    set((state) => {
+      const isJamuna = state.regionId === 'jamuna';
+      if (mode === 'explore') {
+        return {
+          mode,
+          viewId: isJamuna ? 'J1' : 'S1',
+          activeTab: 'investigate',
+          isLeftPanelOpen: true,
+        };
+      } else if (mode === 'investigate') {
+        return {
+          mode,
+          viewId: 'X1',
+          activeTab: 'investigate',
+          isRightInspectorOpen: true,
+        };
+      } else if (mode === 'act') {
+        return {
+          mode,
+          viewId: isJamuna ? 'J3' : 'C1',
+          activeTab: 'investigate',
+          isLeftPanelOpen: true,
+        };
+      }
+      return { mode };
+    }),
   setLanguage: (language) => set({ language }),
   setAudience: (audience) => set({ audience }),
   setSelectedDate: (selectedDate) =>
@@ -201,9 +241,16 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
         [layerId]: !state.layerVisibility[layerId],
       },
     })),
-  setSelectedFinding: (selectedFindingId) => set({ selectedFindingId }),
+  setSelectedFinding: (selectedFindingId) =>
+    set({ selectedFindingId, ...(selectedFindingId ? { isRightInspectorOpen: true } : {}) }),
   setSelectedSample: (selectedSample) => set({ selectedSample }),
   toggleSonification: () => set((state) => ({ isSonificationEnabled: !state.isSonificationEnabled })),
   togglePlayback: () => set((state) => ({ isPlaying: !state.isPlaying })),
   setCamera: (camera) => set({ camera }),
+  toggleLeftPanel: () => set((state) => ({ isLeftPanelOpen: !state.isLeftPanelOpen })),
+  toggleRightInspector: () => set((state) => ({ isRightInspectorOpen: !state.isRightInspectorOpen })),
+  toggleContextTracks: () => set((state) => ({ isContextTracksOpen: !state.isContextTracksOpen })),
+  setLeftPanelOpen: (isLeftPanelOpen) => set({ isLeftPanelOpen }),
+  setRightInspectorOpen: (isRightInspectorOpen) => set({ isRightInspectorOpen }),
+  setContextTracksOpen: (isContextTracksOpen) => set({ isContextTracksOpen }),
 }));
