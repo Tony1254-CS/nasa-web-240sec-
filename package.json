@@ -1,0 +1,13 @@
+{
+  "name": "fluvisar",
+  "private": true,
+  "version": "1.0.0",
+  "description": "FluviSAR: Radar Earth Observatory (NASA Space Apps Challenge 2026)",
+  "scripts": {
+    "dev": "npm --prefix fluvisar-next/apps/web run dev",
+    "build": "npm --prefix fluvisar-next/apps/web run build",
+    "preview": "npm --prefix fluvisar-next/apps/web run preview",
+    "lint": "npm --prefix fluvisar-next/apps/web run lint"
+  }
+}
+
