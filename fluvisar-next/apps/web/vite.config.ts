@@ -12,6 +12,7 @@ export default defineConfig({
   // silently skipping edits (browser kept serving stale modules → "fix keno dekhtesena").
   // Polling guarantees edits are detected reliably. node_modules is ignored to keep CPU sane.
   server: {
+    proxy: { '/api': 'http://127.0.0.1:8000' },
     watch: {
       usePolling: true,
       interval: 300,

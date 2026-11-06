@@ -1,0 +1,400 @@
+/* ══════════════════════════════════════════════════════
+   Navbar — unified navigation for all pages
+   ══════════════════════════════════════════════════════ */
+
+.legacy-pages .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--navbar-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--s5);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border);
+  z-index: 1000;
+  transition: background var(--duration-normal) var(--ease-out),
+              border-color var(--duration-normal) var(--ease-out),
+              box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.legacy-pages .navbar--scrolled {
+  background: var(--overlay-strong);
+  border-color: var(--navbar-border);
+  box-shadow: 0 2px 20px rgba(var(--shadow-rgb), 0.2);
+}
+
+.legacy-pages .navbar--transparent {
+  background: transparent;
+  border-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.legacy-pages .navbar--transparent.navbar--scrolled {
+  background: var(--overlay-strong);
+  border-color: var(--navbar-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 2px 20px rgba(var(--shadow-rgb), 0.2);
+}
+
+/* ── Left group ── */
+.legacy-pages .navbar__left {
+  display: flex;
+  align-items: center;
+  gap: var(--s5);
+}
+
+/* ── Brand ── */
+.legacy-pages .navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  text-decoration: none;
+  color: var(--text);
+  transition: opacity var(--duration-fast);
+}
+.legacy-pages .navbar__brand:hover {
+  opacity: 0.85;
+  color: var(--text);
+}
+
+.legacy-pages .navbar__brand-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.legacy-pages .navbar__brand-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.legacy-pages .navbar__brand-icon::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 1px solid var(--border-accent);
+  animation: orbit-pulse 3s ease-in-out infinite;
+}
+
+@keyframes orbit-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.15); opacity: 0.8; }
+}
+
+.legacy-pages .navbar__brand-text {
+  font-family: var(--font-num);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  letter-spacing: 0.12em;
+  color: var(--water);
+  white-space: nowrap;
+}
+
+/* ── Nav links ── */
+.legacy-pages .navbar__nav {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.legacy-pages .navbar__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--navbar-height);
+  padding: 0 var(--s4);
+  color: var(--text-2);
+  text-decoration: none;
+  font-size: var(--text-base);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+
+.legacy-pages .navbar__link:hover {
+  color: var(--text);
+}
+
+.legacy-pages .navbar__link--active {
+  color: var(--water);
+}
+
+.legacy-pages .navbar__link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--s4);
+  right: var(--s4);
+  height: 2px;
+  background: var(--water);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.legacy-pages .navbar__link--active::after,
+.legacy-pages .navbar__link:hover::after {
+  transform: scaleX(1);
+}
+
+/* ── Right group ── */
+.legacy-pages .navbar__right {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+}
+
+.legacy-pages .navbar__status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-num);
+  font-size: var(--text-xs);
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+}
+
+.legacy-pages .navbar__status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--pass);
+  box-shadow: 0 0 6px var(--pass);
+  animation: status-blink 2.5s ease-in-out infinite;
+}
+
+@keyframes status-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.legacy-pages .navbar__btn {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  text-decoration: none;
+}
+
+.legacy-pages .navbar__btn:hover {
+  border-color: var(--water);
+  color: var(--water);
+  box-shadow: 0 0 12px rgba(var(--water-rgb), 0.1);
+}
+
+.legacy-pages .navbar__btn--primary {
+  background: var(--water);
+  color: var(--on-accent);
+  border-color: var(--water);
+}
+
+.legacy-pages .navbar__btn--primary:hover {
+  background: var(--water-strong);
+  color: var(--on-accent);
+  box-shadow: 0 0 16px rgba(var(--water-rgb), 0.3);
+}
+
+.legacy-pages .navbar__dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.legacy-pages .navbar__dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  min-width: 180px;
+  box-shadow: var(--glass-shadow);
+  z-index: 1;
+  border-radius: var(--r-md);
+  padding: var(--s2) 0;
+  margin-top: 8px;
+}
+
+/* Bridge the gap so hover state isn't lost */
+.legacy-pages .navbar__dropdown-content::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 0;
+  width: 100%;
+  height: 10px;
+}
+
+.legacy-pages .navbar__dropdown:hover .navbar__dropdown-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.legacy-pages .navbar__dropdown--left .navbar__dropdown-content { right: auto; left: 0; }
+
+.legacy-pages .navbar__dropdown-content a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 16px;
+  color: var(--text);
+  font-size: var(--text-base);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all var(--duration-fast);
+}
+.legacy-pages .navbar__dropdown-content a:hover {
+  background: rgba(var(--water-rgb), 0.1);
+  color: var(--water);
+}
+
+.legacy-pages .navbar__dropdown-content button {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  padding: 8px 16px;
+  font-size: var(--text-base);
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+
+.legacy-pages .navbar__dropdown-content button:hover {
+  background: rgba(var(--water-rgb), 0.1);
+  color: var(--water);
+}
+
+/* ── Mobile menu toggle ── */
+.legacy-pages .navbar__toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text);
+  padding: var(--s2);
+  cursor: pointer;
+}
+
+.legacy-pages .navbar__toggle-bar {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  margin: 4px 0;
+  transition: transform var(--duration-normal) var(--ease-out),
+              opacity var(--duration-fast);
+}
+
+/* ── Reach selector (for /app page) ── */
+.legacy-pages .navbar__reach-select {
+  background: var(--overlay-faint);
+  color: var(--water);
+  border: 1px solid rgba(var(--water-rgb), 0.3);
+  border-radius: var(--r-md);
+  padding: 4px 12px;
+  font-family: var(--font-num);
+  font-size: var(--text-xs);
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+}
+
+.legacy-pages .navbar__reach-select:hover,
+.legacy-pages .navbar__reach-select:focus {
+  border-color: rgba(var(--water-rgb), 0.6);
+  box-shadow: 0 0 10px rgba(var(--water-rgb), 0.15);
+}
+
+/* ── Spacer for fixed navbar ── */
+.legacy-pages .navbar-spacer {
+  height: var(--navbar-height);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .legacy-pages .navbar__nav {
+    position: fixed;
+    top: var(--navbar-height);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--overlay-strong);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--navbar-border);
+    padding: var(--s2) 0;
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform var(--duration-normal) var(--ease-out),
+                opacity var(--duration-normal) var(--ease-out);
+  }
+
+  .legacy-pages .navbar__nav--open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .legacy-pages .navbar__link {
+    height: auto;
+    padding: var(--s3) var(--s5);
+    width: 100%;
+  }
+
+  .legacy-pages .navbar__link::after {
+    display: none;
+  }
+
+  .legacy-pages .navbar__toggle {
+    display: block;
+  }
+
+  .legacy-pages .navbar__right {
+    display: none;
+  }
+}
+
+
+/* Landing: the hero is always a dark radar image, so the transparent (not yet scrolled) navbar
+   uses the dark palette in both themes and gets a soft dark fade so links stay readable. */
+.legacy-pages .navbar--transparent:not(.navbar--scrolled) {
+  --text: #EEF0F2;
+  --text-2: #D2D8DE;
+  --text-3: #AEB7BF;
+  --water: #39C4D9;
+  --water-strong: #4DD8EC;
+  --water-rgb: 57, 196, 217;
+  --pass: #7FBF8E;
+  --line-strong: rgba(255, 255, 255, 0.28);
+  --fg-rgb: 255, 255, 255;
+  --btn-primary-bg: #ffffff;
+  --btn-primary-fg: #000000;
+  background: linear-gradient(to bottom, rgba(6, 10, 14, 0.78) 0%, rgba(6, 10, 14, 0.35) 70%, transparent 100%);
+}

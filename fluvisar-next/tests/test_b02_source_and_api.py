@@ -78,21 +78,48 @@ def test_fastapi_endpoints():
     ids = [r["id"] for r in regions]
     assert "jamuna" in ids
     assert "sundarbans" in ids
+    assert all(len(region['observation_dates']) >= 6 for region in regions)
+    assert all(len(region['optical_dates']) >= 6 for region in regions)
 
     # 3. Artifact Sampling API
-    sample_res = client.get("/api/artifacts/art-jamuna-gcov/sample?lon=89.75&lat=25.55")
+    import json
+    catalogue = json.loads((BASE_DIR / "apps/web/public/observations/index.json").read_text(encoding="utf-8"))
+    observation = catalogue["regions"]["jamuna"]["observations"][0]
+    # A non-default historical pair resolves its own measured geometry and areas.
+    region = catalogue['regions']['jamuna']
+    pair_url = next(iter(region['pair_bundles'].values()))
+    historical = json.loads((BASE_DIR/'apps/web/public'/pair_url.lstrip('/')).read_text(encoding='utf-8'))
+    pair_response = client.get(f"/api/runs/{historical['run_id']}/bundle")
+    assert pair_response.status_code == 200
+    assert pair_response.json()['pair'] == historical['pair']
+    assert pair_response.json()['metrics'] == historical['metrics']
+    sample_res = client.get(f"/api/artifacts/{observation['id']}/sample?lon=89.75&lat=25.55")
     assert sample_res.status_code == 200
     data = sample_res.json()
     assert data["masked"] == False
     assert isinstance(data["value"], float)
     assert data["unit"] == "dB"
+    assert data["source_observation_id"] == observation["id"]
+    assert data["pixel_resolution_m"] == 30
 
     # 4. Out of bounds sampling
-    oob_res = client.get("/api/artifacts/art-jamuna-gcov/sample?lon=91.00&lat=25.55")
+    oob_res = client.get(f"/api/artifacts/{observation['id']}/sample?lon=91.00&lat=25.55")
     assert oob_res.status_code == 200
     oob_data = oob_res.json()
     assert oob_data["masked"] == True
     assert oob_data["value"] is None
+
+    # Unknown IDs must not return a plausible fabricated value or run.
+    assert client.get("/api/artifacts/not-a-real-observation/sample?lon=89.75&lat=25.55").status_code == 404
+    assert client.get("/api/runs/not-a-real-run/bundle").status_code == 404
+
+    # The reported sample must equal the stored numeric pixel.
+    import rasterio
+    from rasterio.warp import transform
+    with rasterio.open(BASE_DIR / observation["numeric_path"]) as dataset:
+        xs, ys = transform("EPSG:4326", dataset.crs, [89.75], [25.55])
+        expected = float(next(dataset.sample([(xs[0], ys[0])]))[0])
+    assert data["value"] == expected
 
 if __name__ == "__main__":
     test_linear_power_to_db_conversion()

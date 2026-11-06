@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600&display=swap');
+
+.legacy-pages, .legacy-pages[data-theme="dark"] {
+  /* ── Core palette (preserved) ── */
+  --bg:#0E1113; --map-bg:#15191C; --panel:#12161A; --line:#2A3036; --line-strong:#3A424A;
+  --text:#EEF0F2; --text-2:#C3CAD0; --text-3:#9CA5AD;
+  --water:#39C4D9; --erosion:#E4572E; --accretion:#D9B26A; --ambiguous:#8A9299; --forecast:#E6E8EA;
+  --pass:#7FBF8E; --warn:#E0B34A; --fail:#E4572E; --na:#6F7880;
+
+  /* ── Extended palette ── */
+  /* Glass system */
+  --glass-bg: rgba(18, 22, 26, 0.72);
+  --glass-border: rgba(57, 196, 217, 0.12);
+  --glass-blur: blur(24px) saturate(135%);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(57, 196, 217, 0.08);
+
+  /* Glow system */
+  --glow-water: 0 0 20px rgba(57, 196, 217, 0.15), 0 0 60px rgba(57, 196, 217, 0.05);
+  --glow-erosion: 0 0 20px rgba(228, 87, 46, 0.15);
+  --glow-pass: 0 0 20px rgba(127, 191, 142, 0.15);
+
+  --water-dim: rgba(57, 196, 217, 0.15);
+  --water-glow: rgba(57, 196, 217, 0.4);
+  --water-strong: #4DD8EC;
+  --panel-elevated: #181D22;
+  --panel-hover: #1C2228;
+  --surface: #0B0D0F;
+  --surface-2: #161A1E;
+  --border-accent: rgba(57, 196, 217, 0.2);
+  --gradient-hero: linear-gradient(135deg, #0E1113 0%, #121820 50%, #0E1113 100%);
+  --gradient-card: linear-gradient(180deg, rgba(57,196,217,0.04) 0%, transparent 100%);
+
+  /* ── Typography (preserved + extended) ── */
+  --font-text:"IBM Plex Sans", "Inter", system-ui, sans-serif;
+  --font-num:"IBM Plex Mono", ui-monospace, monospace;
+  --font-display:"Inter", "IBM Plex Sans", system-ui, sans-serif;
+  --font-hero:"Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-hero-body:"Manrope", "IBM Plex Sans", system-ui, sans-serif;
+
+  /* ── Type scale ── */
+  --text-xs: 0.78rem;
+  --text-sm: 0.9rem;
+  --text-base: 1rem;
+  --text-md: 1.08rem;
+  --text-lg: 1.2rem;
+  --text-xl: 1.4rem;
+  --text-2xl: 1.8rem;
+  --text-3xl: 2.4rem;
+  --text-4xl: 3.2rem;
+
+  /* ── Spacing (preserved) ── */
+  --r:2px; --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --s7:48px; --s8:64px; --s9:96px;
+
+  /* ── Radii ── */
+  --r-sm: 3px;
+  --r-md: 6px;
+  --r-lg: 10px;
+  --r-xl: 16px;
+  --r-full: 9999px;
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+  --shadow-glow: 0 0 20px rgba(57,196,217,0.15);
+
+  /* ── Transitions ── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+
+  /* ── Navbar ── */
+  --navbar-height: 56px;
+  --navbar-bg: rgba(14, 17, 19, 0.85);
+  --navbar-border: rgba(57, 196, 217, 0.15);
+
+  /* ── Theme-switched surfaces & hero ── */
+  --fg-rgb: 255, 255, 255;
+  --scrim-rgb: 8, 12, 16;
+  --water-rgb: 57, 196, 217;
+  --panel-rgb: 14, 17, 19;
+  --overlay-strong: rgba(14, 17, 19, 0.95);
+  --overlay: rgba(14, 17, 19, 0.85);
+  --overlay-soft: rgba(18, 22, 26, 0.72);
+  --overlay-faint: rgba(18, 22, 26, 0.6);
+  --overlay-heavy: rgba(18, 22, 26, 0.9);
+  --on-accent: #04222b;
+  --shadow-rgb: 0, 0, 0;
+  --hero-bg: radial-gradient(circle at 50% 0%, #0c1824 0%, #000000 70%);
+  --grid-line: rgba(255, 255, 255, 0.03);
+  --hero-title: #ffffff;
+  --hero-title-grad: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+  --hero-accent-grad: linear-gradient(135deg, #39C4D9 0%, #3b82f6 100%);
+  --hero-sub: #cbd5e1;
+  --btn-primary-bg: #ffffff;
+  --btn-primary-fg: #000000;
+  --btn-primary-glow: rgba(255, 255, 255, 0.2);
+  --btn-sec-bg: rgba(255, 255, 255, 0.05);
+  --btn-sec-bg-hover: rgba(255, 255, 255, 0.1);
+  --btn-sec-fg: #ffffff;
+  --btn-sec-border: rgba(255, 255, 255, 0.1);
+  --btn-sec-border-hover: rgba(255, 255, 255, 0.2);
+  --radar-opacity: 1;
+}
+
+.legacy-pages[data-theme="light"] {
+  --bg: #F8FAFC;
+  --map-bg: #E2E8F0;
+  --panel: #FFFFFF;
+  --line: #CBD5E1;
+  --line-strong: #94A3B8;
+  
+  --text: #0F172A;
+  --text-2: #2B3A4F;
+  --text-3: #526071;
+  
+  --water: #0EA5E9;
+  --water-strong: #0284C7;
+  
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(14, 165, 233, 0.15);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(14, 165, 233, 0.1);
+  
+  --glow-water: 0 0 20px rgba(14, 165, 233, 0.15);
+  
+  --panel-elevated: #F1F5F9;
+  --panel-hover: #E2E8F0;
+  --surface: #FFFFFF;
+  --surface-2: #F8FAFC;
+  
+  --navbar-bg: rgba(255, 255, 255, 0.85);
+  
+  /* Background gradients */
+  --gradient-hero: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 50%, #F8FAFC 100%);
+  --gradient-card: linear-gradient(180deg, rgba(14, 165, 233, 0.02) 0%, transparent 100%);
+
+  --fg-rgb: 15, 23, 42;
+  --scrim-rgb: 248, 250, 252;
+  --water-rgb: 14, 165, 233;
+  --panel-rgb: 255, 255, 255;
+  --overlay-strong: rgba(255, 255, 255, 0.95);
+  --overlay: rgba(255, 255, 255, 0.85);
+  --overlay-soft: rgba(255, 255, 255, 0.72);
+  --overlay-faint: rgba(255, 255, 255, 0.6);
+  --overlay-heavy: rgba(255, 255, 255, 0.92);
+  --on-accent: #ffffff;
+  --shadow-rgb: 15, 23, 42;
+  --navbar-border: rgba(14, 165, 233, 0.25);
+  --water-dim: rgba(14, 165, 233, 0.12);
+  --water-glow: rgba(14, 165, 233, 0.3);
+  --border-accent: rgba(14, 165, 233, 0.25);
+  --shadow-sm: 0 1px 3px rgba(15,23,42,0.08);
+  --shadow-md: 0 4px 16px rgba(15,23,42,0.10);
+  --shadow-lg: 0 8px 32px rgba(15,23,42,0.14);
+  --erosion: #DC4A1F; --accretion: #B8892F; --pass: #2F8F4E; --warn: #B7791F; --fail: #DC4A1F;
+  --ambiguous: #64748B; --na: #64748B; --forecast: #0F172A;
+
+  --hero-bg: radial-gradient(circle at 50% 0%, #ffffff 0%, #E2E8F0 75%);
+  --grid-line: rgba(15, 23, 42, 0.05);
+  --hero-title: #0F172A;
+  --hero-title-grad: linear-gradient(135deg, #0B1220 0%, #312E81 100%);
+  --hero-accent-grad: linear-gradient(135deg, #0369A1 0%, #1D4ED8 100%);
+  --hero-sub: #334155;
+  --btn-primary-bg: #0F172A;
+  --btn-primary-fg: #ffffff;
+  --btn-primary-glow: rgba(15, 23, 42, 0.2);
+  --btn-sec-bg: rgba(15, 23, 42, 0.04);
+  --btn-sec-bg-hover: rgba(15, 23, 42, 0.08);
+  --btn-sec-fg: #0F172A;
+  --btn-sec-border: rgba(15, 23, 42, 0.15);
+  --btn-sec-border-hover: rgba(15, 23, 42, 0.3);
+  --radar-opacity: 0.35;
+}

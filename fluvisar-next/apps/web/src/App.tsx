@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
-import { Routes, Route, Navigate, useParams, useNavigate } from 'react-router-dom';
+import React, { lazy, Suspense, useEffect } from 'react';
+import { Routes, Route, Navigate, useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useWorkspaceStore } from './store/workspaceStore';
 import { Header } from './components/Header';
 import { LandingPageView } from './components/LandingPageView';
 import { AtlasView } from './components/AtlasView';
 import { MapWorkspace } from './components/MapWorkspace';
-import { ObservatoryLensGuide } from './components/ObservatoryLensGuide';
+import { ObservatoryFeaturePanel } from './components/ObservatoryFeaturePanel';
 import { FindingInspectorDrawer } from './components/FindingInspectorDrawer';
 import { TimelinePlayer } from './components/TimelinePlayer';
 import { ContextTracks } from './components/ContextTracks';
@@ -18,14 +18,30 @@ import { AgenticCopilotDrawer } from './components/AgenticCopilotDrawer';
 import { SourceProvenanceModal } from './components/SourceProvenanceModal';
 import { radarSonifier } from './utils/sonification';
 import './styles/tokens.css';
+import { LegacyPageLayout } from './features/legacy/LegacyPageLayout';
+import { EvidenceProvider, currentEvidence } from './data/evidence';
+import { Navbar } from './features/legacy/components/Navbar';
+import { ObservatoryHeader } from './components/ObservatoryHeader';
+import './styles/observatory-redesign.css';
+
+const DecisionDesk = lazy(() => import('./features/legacy/pages/DecisionDesk').then(m=>({default:m.DecisionDesk})));
+const IntelligencePage = lazy(() => import('./features/legacy/pages/Intelligence').then(m=>({default:m.IntelligencePage})));
+const SARLabPage = lazy(() => import('./features/legacy/pages/SARLab').then(m=>({default:m.SARLabPage})));
 
 // 1. Observatory Route Component (Handles /observatory and /observatory/:regionId)
 const ObservatoryRoute: React.FC = () => {
   const { regionId: urlRegionId } = useParams<{ regionId?: string }>();
   const { regionId, setRegion, selectedPair } = useWorkspaceStore();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  useEffect(()=>{
+    useWorkspaceStore.setState({comparisonEnabled:false,basemapType:'satellite',isRightInspectorOpen:false,selectedFindingId:null});
+  },[]);
 
   useEffect(() => {
+    const state=useWorkspaceStore.getState();
+    if(state.viewId==='M0')state.setView((urlRegionId??regionId)==='sundarbans'?'S1':'J1');
     if (urlRegionId === 'jamuna' || urlRegionId === 'sundarbans') {
       if (regionId !== urlRegionId) {
         setRegion(urlRegionId);
@@ -35,11 +51,20 @@ const ObservatoryRoute: React.FC = () => {
     }
   }, [urlRegionId, regionId, setRegion, navigate]);
 
+  useEffect(() => {
+    const state = useWorkspaceStore.getState();
+    const t0 = searchParams.get('t0'), t1 = searchParams.get('t1');
+    const dates=currentEvidence(state.regionId).observations.map(o=>o.date);
+    if (t0 && t1 && t0 < t1 && dates.includes(t0) && dates.includes(t1)) state.setSelectedPair([t0,t1]);
+    const finding = searchParams.get('finding');
+    if (finding && (!searchParams.get('run') || searchParams.get('run') === state.runId)) state.setSelectedFinding(finding);
+  }, [searchParams, urlRegionId]);
+
   return (
     <div className="flex flex-col flex-1 h-full overflow-hidden">
-      <main className="flex-1 relative flex flex-col overflow-hidden w-full h-full">
+      <main className="observatory-stage flex-1 relative flex flex-col overflow-hidden w-full h-full">
         {/* Full Viewport Map Canvas */}
-        <MapWorkspace />
+        <MapWorkspace observatory />
 
         {/* Coverage Curtain Support Overlay (N02) */}
         <CoverageCurtainOverlay />
@@ -50,7 +75,7 @@ const ObservatoryRoute: React.FC = () => {
         )}
 
         {/* 1. Sleek Active Lens Guide & Explainer (Replaces clunky LeftPanel) */}
-        <ObservatoryLensGuide />
+        <ObservatoryFeaturePanel />
 
         {/* 2. Focused Finding Inspector Drawer (Replaces clunky RightInspector) */}
         <FindingInspectorDrawer />
@@ -81,7 +106,9 @@ const AtlasRoute: React.FC = () => {
 };
 
 // 3. Main App Root Component
-export const App: React.FC = () => {
+const WorkspaceApp: React.FC = () => {
+  const {pathname}=useLocation();
+  const mapRoute=pathname.startsWith('/observatory')||pathname==='/atlas';
   const { isSonificationEnabled, selectedSample } = useWorkspaceStore();
 
   // Sonification effect on sample update (E22)
@@ -92,9 +119,9 @@ export const App: React.FC = () => {
   }, [isSonificationEnabled, selectedSample]);
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#F4F7FA]">
+    <div className={'workspace-shell'+(mapRoute?' observatory-shell':'')+(pathname.startsWith('/observatory')?' observatory-redesign':'')}>
       {/* 1. Universal Top Header Navigation & Mode Bar */}
-      <Header />
+      {mapRoute&&(pathname.startsWith('/observatory')?<ObservatoryHeader/>:<Header />)}
 
       {/* 2. Real URL Route Tree */}
       <div className="relative flex-1 flex overflow-hidden">
@@ -118,5 +145,16 @@ export const App: React.FC = () => {
     </div>
   );
 };
+
+export const App: React.FC = () => <EvidenceProvider><LegacyPageLayout><Navbar/><Routes>
+  <Route path="/" element={<LandingPageView/>}/>
+  <Route path="/impact" element={<Suspense fallback={<div className="desk-standby">Loading Decision Desk…</div>}><DecisionDesk /></Suspense>} />
+  <Route path="/imact" element={<Navigate to="/impact" replace />} />
+  <Route path="/intelligence" element={<Suspense fallback={<div className="desk-standby">Loading ML Intelligence…</div>}><IntelligencePage /></Suspense>} />
+  <Route path="/sar-lab" element={<Suspense fallback={<div className="desk-standby">Loading SAR Lab…</div>}><SARLabPage /></Suspense>} />
+  <Route path="/learn" element={<Navigate to="/sar-lab" replace/>}/>
+  <Route path="/learn/:experimentId" element={<Navigate to="/sar-lab#simulations" replace/>}/>
+  <Route path="*" element={<WorkspaceApp />} />
+</Routes></LegacyPageLayout></EvidenceProvider>;
 
 export default App;

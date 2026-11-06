@@ -8,6 +8,7 @@ export type Audience = 'public' | 'decision' | 'analyst';
 export type ActiveTab = 'landing' | 'atlas' | 'investigate' | 'stories' | 'learn' | 'reports';
 export type BasemapType = 'satellite' | 'sar' | 'carto';
 export type OverlayStyle = 'outlines' | 'tinted';
+export type PolarizationChannel = 'HH' | 'HV' | 'VV' | 'VH' | 'Ratio' | 'RGB' | 'Pauli';
 
 export interface MapCamera {
   center: [number, number];
@@ -23,6 +24,7 @@ export interface PixelSample {
   unit: string;
   masked: boolean;
   reason?: string | null;
+  source_channel?: string;
 }
 
 export interface WorkspaceState {
@@ -44,8 +46,11 @@ export interface WorkspaceState {
   // Basemap & Visualization
   basemapType: BasemapType;
   overlayStyle: OverlayStyle;
+  selectedPol: PolarizationChannel;
   swipePosition: number; // 0 - 100 percentage
   comparisonMode: 'dates' | 'sensors';
+  comparisonLayout: 'swipe' | 'split';
+  comparisonEnabled: boolean;
 
   // Localization & Audience
   language: Language;
@@ -53,6 +58,8 @@ export interface WorkspaceState {
 
   // Temporal & Observation State
   selectedDate: string;
+  selectedOpticalDate: string;
+  selectedOpticalPair: [string,string] | null;
   availableDates: string[];
   selectedPair: [string, string] | null;
   isPlaying: boolean;
@@ -76,8 +83,11 @@ export interface WorkspaceState {
   setActiveTab: (tab: ActiveTab) => void;
   setBasemapType: (basemap: BasemapType) => void;
   setOverlayStyle: (style: OverlayStyle) => void;
+  setSelectedPol: (pol: PolarizationChannel) => void;
   setSwipePosition: (pos: number) => void;
   setComparisonMode: (mode: 'dates' | 'sensors') => void;
+  setComparisonLayout: (layout:'swipe'|'split') => void;
+  setComparisonEnabled: (enabled:boolean) => void;
   setRegion: (regionId: RegionId) => void;
   setCase: (caseId: string) => void;
   setView: (viewId: ViewId) => void;
@@ -85,6 +95,10 @@ export interface WorkspaceState {
   setLanguage: (lang: Language) => void;
   setAudience: (aud: Audience) => void;
   setSelectedDate: (date: string) => void;
+  /** Inspect a date inside the current comparison without selecting a different analysis pair. */
+  setDisplayDate: (date: string) => void;
+  setOpticalDate: (date:string) => void;
+  setOpticalPair: (pair:[string,string]) => void;
   setSelectedPair: (pair: [string, string] | null) => void;
   toggleLayer: (layerId: string) => void;
   setSelectedFinding: (findingId: string | null) => void;
@@ -126,18 +140,23 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   selectedSourceId: null,
   regionId: 'jamuna',
   caseId: 'river-memory',
-  runId: 'run-2026-prod-01',
+  runId: 'loading-observations',
   viewId: 'J1', // Direct to Jamuna investigation by default
   mode: 'explore',
   basemapType: 'satellite', // Default to REAL satellite imagery!
   overlayStyle: 'outlines', // Default to crisp OUTLINES ONLY so satellite photo is 100% visible!
+  selectedPol: 'VV',
   swipePosition: 50,
   comparisonMode: 'dates',
+  comparisonLayout: 'swipe',
+  comparisonEnabled: true,
   language: 'en', // Default English with toggle to BN
   audience: 'public',
-  selectedDate: '2026-08-26',
-  availableDates: ['2026-06-23', '2026-07-17', '2026-08-10', '2026-08-26', '2026-09-19', '2026-10-21'],
-  selectedPair: ['2026-08-26', '2026-09-19'],
+  selectedDate: '',
+  selectedOpticalDate: '',
+  selectedOpticalPair: null,
+  availableDates: [],
+  selectedPair: null,
   isPlaying: false,
   activeLens: 'amplitude',
   layerVisibility: {
@@ -150,13 +169,7 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   },
   selectedFindingId: null,
   selectedPatch: null,
-  selectedSample: {
-    lon: 89.75,
-    lat: 25.575,
-    value: -14.2,
-    unit: 'dB',
-    masked: false,
-  },
+  selectedSample: null,
   isSonificationEnabled: false,
   camera: {
     center: [89.75, 25.575],
@@ -166,8 +179,11 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   setActiveTab: (activeTab) => set({ activeTab }),
   setBasemapType: (basemapType) => set({ basemapType }),
   setOverlayStyle: (overlayStyle) => set({ overlayStyle }),
+  setSelectedPol: (selectedPol) => set({ selectedPol }),
   setSwipePosition: (swipePosition: number) => set({ swipePosition }),
   setComparisonMode: (comparisonMode: 'dates' | 'sensors') => set({ comparisonMode }),
+  setComparisonLayout: (comparisonLayout) => set({ comparisonLayout }),
+  setComparisonEnabled: (comparisonEnabled) => set({ comparisonEnabled }),
   setRegion: (regionId) =>
     set((state) => {
       if (state.regionId === regionId) return state;
@@ -219,6 +235,9 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
     }),
   setLanguage: (language) => set({ language }),
   setAudience: (audience) => set({ audience }),
+  setDisplayDate: (selectedDate) => set({ selectedDate }),
+  setOpticalDate: (selectedOpticalDate) => set({selectedOpticalDate}),
+  setOpticalPair: (selectedOpticalPair) => set({selectedOpticalPair,selectedOpticalDate:selectedOpticalPair[1]}),
   setSelectedDate: (selectedDate) =>
     set((state) => {
       let newPair: [string, string] | null = state.selectedPair;
@@ -229,15 +248,14 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
           newPair = [state.availableDates[currIdx - 1], selectedDate];
         } else if (state.availableDates.length > 1) {
           // If earliest date picked, compare against peak flood crest or next date
-          const peakIdx = state.availableDates.indexOf('2026-08-26');
-          newPair = [selectedDate, peakIdx !== -1 ? '2026-08-26' : state.availableDates[1]];
+          newPair = [selectedDate, state.availableDates[1]];
         }
       }
       return { selectedDate, selectedPair: newPair };
     }),
   setSelectedPair: (selectedPair) =>
     set({
-      selectedPair,
+      selectedPair,selectedFindingId:null,selectedSample:null,isRightInspectorOpen:false,
       ...(selectedPair ? { selectedDate: selectedPair[1] } : {}),
     }),
   toggleLayer: (layerId) =>
