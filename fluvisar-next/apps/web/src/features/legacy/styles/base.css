@@ -1,10 +1,13 @@
 /* ── Reset & Base ── */
+.legacy-pages,
 .legacy-pages *,
 .legacy-pages *::before,
 .legacy-pages *::after {
   box-sizing: border-box;
+}
+
+.legacy-pages :where(h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote, dl, dd) {
   margin: 0;
-  padding: 0;
 }
 
 .legacy-pages {

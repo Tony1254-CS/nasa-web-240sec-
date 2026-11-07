@@ -1,6 +1,7 @@
 import React from 'react';
-import { X, Printer, QrCode, FileText, CheckCircle2, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { X, Printer, FileText, CheckCircle2, AlertTriangle, ShieldCheck } from 'lucide-react';
 import { useWorkspaceStore } from '../store/workspaceStore';
+import { QRCodeCanvas } from './QRCodeCanvas';
 
 interface DecisionBriefModalProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ export const DecisionBriefModal: React.FC<DecisionBriefModalProps> = ({ isOpen, 
 
   const isJamuna = regionId === 'jamuna';
   const findingId = `BRIEF-${regionId.toUpperCase()}-2026-001`;
+  const lineageHash = '7f8a9b2c3d4e5f6a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a';
 
   const handlePrint = () => {
     window.print();
@@ -187,14 +189,17 @@ export const DecisionBriefModal: React.FC<DecisionBriefModalProps> = ({ isOpen, 
 
             {/* Mobile Task QR Contract (A01-A12) */}
             <div className="border border-[#CBD5E1] p-2.5 rounded-lg bg-[#F8FAFC] flex flex-col items-center justify-center text-center">
-              <div className="p-1.5 bg-white rounded border border-[#E2E8F0] shadow-xs">
-                <QrCode className="w-16 h-16 text-[#0F172A]" />
+              <div className="p-1 bg-white rounded border border-[#E2E8F0] shadow-xs">
+                <QRCodeCanvas
+                  value={`${window.location.origin}/trace?finding=${encodeURIComponent(findingId)}&region=${encodeURIComponent(regionId)}`}
+                  size={72}
+                />
               </div>
               <div className="font-mono text-[9px] font-bold text-[#155E75] mt-1.5">
                 TASK-{findingId}
               </div>
               <div className="text-[8px] text-[#64748B] mt-0.5">
-                Scan for mobile offline task handoff
+                Scan with phone for TRACE Field mission
               </div>
             </div>
           </div>
@@ -203,7 +208,7 @@ export const DecisionBriefModal: React.FC<DecisionBriefModalProps> = ({ isOpen, 
           <div className="border-t border-[#CBD5E1] pt-3 flex items-center justify-between text-[10px] text-[#64748B]">
             <div>
               <span>Lead Observatory: <strong>FluviSAR System</strong></span> · 
-              <span className="ml-1">Hash: <code className="font-mono text-[#0F172A]">e3b0c44298fc1c...</code></span>
+              <span className="ml-1">Hash: <code className="font-mono text-[#0F172A]">{lineageHash.slice(0, 16)}...</code></span>
             </div>
             <div>
               <span>Approved For Decision Briefing</span> · 

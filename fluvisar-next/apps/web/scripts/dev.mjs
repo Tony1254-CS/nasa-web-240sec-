@@ -12,7 +12,7 @@ let apiRunning=false;
 try { apiRunning=(await fetch('http://127.0.0.1:8000/api/health',{signal:AbortSignal.timeout(1200)})).ok; } catch {}
 if(!apiRunning){
   try {
-    const api=spawn(python,['-m','uvicorn','app.main:app','--app-dir','services/api','--host','127.0.0.1','--port','8000'],{cwd:project,stdio:'inherit',windowsHide:true});
+    const api=spawn(python,['-m','uvicorn','app.main:app','--app-dir','services/api','--host','127.0.0.1','--port','8000','--reload'],{cwd:project,stdio:'inherit',windowsHide:true});
     children.push(api);
     api.on('error',error=>{console.warn('Observation API failed to launch:',error.message);console.warn('Running frontend in standalone mode.');});
   } catch (err) {

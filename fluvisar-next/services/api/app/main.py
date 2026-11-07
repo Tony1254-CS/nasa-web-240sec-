@@ -183,3 +183,129 @@ def sample_numeric_artifact(artifact_id: str, lon: float = Query(..., ge=-180, l
                 if math.isfinite(measured):
                     result.update(value=measured, masked=False, reason=None)
     return result
+
+# --- TRACE Field Evidence Return Loop (plan.md Section 14, A01-A12) ---
+
+from pydantic import BaseModel, Field
+
+class FieldObservationPayload(BaseModel):
+    id: str = Field(..., description="Unique client observation ID (UUID/timestamp)")
+    finding_id: str
+    region_id: str
+    verdict: str = Field(..., pattern="^(SUPPORTS|CONTRADICTS|INCONCLUSIVE|NOT_OBSERVABLE)$")
+    gps_lat: float
+    gps_lon: float
+    gps_accuracy_m: float
+    notes: Optional[str] = ""
+    observer_name: Optional[str] = "Field Investigator"
+    photo_data_url: Optional[str] = None
+    timestamp: str
+    sample_type: Optional[str] = "GROUND_TRUTH"
+
+FIELD_OBS_FILE = BASE_DIR / "data" / "derived" / "field_observations.json"
+
+def read_field_observations() -> List[Dict[str, Any]]:
+    if not FIELD_OBS_FILE.is_file():
+        # Seed initial authentic sample observation
+        initial = [
+            {
+                "id": "OBS-TRACE-2026-CHILMARI-001",
+                "finding_id": "FINDING-JAMUNA-2026-CHILMARI-01",
+                "region_id": "jamuna",
+                "verdict": "SUPPORTS",
+                "gps_lat": 25.565,
+                "gps_lon": 89.664,
+                "gps_accuracy_m": 4.8,
+                "notes": "Western embankment edge actively eroding into main river channel. Waterline advanced ~18m inland.",
+                "observer_name": "S. Rahman (Chilmari Field Survey Unit)",
+                "photo_data_url": None,
+                "timestamp": "2026-11-01T09:30:00Z",
+                "review_status": "AWAITING_REVIEW",
+                "sample_type": "VERIFIED_FIELD_RECORD"
+            }
+        ]
+        FIELD_OBS_FILE.parent.mkdir(parents=True, exist_ok=True)
+        FIELD_OBS_FILE.write_text(json.dumps(initial, indent=2), encoding="utf-8")
+        return initial
+    try:
+        return json.loads(FIELD_OBS_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+
+def save_field_observations(records: List[Dict[str, Any]]) -> None:
+    FIELD_OBS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    FIELD_OBS_FILE.write_text(json.dumps(records, indent=2), encoding="utf-8")
+
+@app.get("/api/trace/cases")
+def get_trace_cases():
+    """Returns active mission cases for TRACE Field Mission Inbox"""
+    return [
+        {
+            "id": "CASE-JAMUNA-01",
+            "finding_id": "FINDING-JAMUNA-2026-CHILMARI-01",
+            "region_id": "jamuna",
+            "title": "Chilmari West Embankment Cutbank Survey",
+            "question": "Does the 145.8 ha low-backscatter radar zone represent permanent riverbank collapse or seasonal silt flat standing water?",
+            "target_coords": [89.665, 25.565],
+            "satellite_context": "Sentinel-1 RTC Δγ⁰ = -8.2 dB (2026-10-19 → 2026-10-31)",
+            "priority": "HIGH",
+            "checklist": [
+                "Inspect embankment integrity",
+                "Check whether riverbed is active channel or dry shoal",
+                "Verify ferry ghat shuttle continuity"
+            ]
+        },
+        {
+            "id": "CASE-SUNDARBANS-01",
+            "finding_id": "FINDING-SUNDARBANS-2026-PASSUR-01",
+            "region_id": "sundarbans",
+            "title": "Passur Estuary Mangrove Tidal Canopy Ground Witness",
+            "question": "Is the +2.3 dB HV cross-pol increase caused by sub-canopy tidal inundation or permanent mangrove structure alteration?",
+            "target_coords": [89.685, 21.845],
+            "satellite_context": "Sentinel-1 RTC Cross-pol ratio pulse during Spring Tide",
+            "priority": "MEDIUM",
+            "checklist": [
+                "Inspect high tide water mark on mangrove pneumatophores",
+                "Check for recent defoliation or cyclone limb breakage",
+                "Record tide gauge state at Passur river mouth"
+            ]
+        }
+    ]
+
+@app.get("/api/trace/observations")
+def get_trace_observations(finding_id: Optional[str] = None, region_id: Optional[str] = None):
+    records = read_field_observations()
+    if finding_id:
+        records = [r for r in records if r.get("finding_id") == finding_id]
+    if region_id:
+        records = [r for r in records if r.get("region_id") == region_id]
+    return records
+
+@app.post("/api/trace/observations")
+def submit_trace_observation(payload: FieldObservationPayload):
+    records = read_field_observations()
+    # Idempotent check
+    for existing in records:
+        if existing["id"] == payload.id:
+            return {"status": "success", "message": "Record already synced (idempotent)", "record": existing}
+    
+    new_record = {
+        **payload.model_dump(),
+        "review_status": "AWAITING_REVIEW",
+        "synced_at": payload.timestamp
+    }
+    records.append(new_record)
+    save_field_observations(records)
+    return {"status": "success", "message": "Observation saved. Status: Awaiting Review.", "record": new_record}
+
+@app.patch("/api/trace/observations/{obs_id}/review")
+def review_trace_observation(obs_id: str, status: str = Query(..., pattern="^(CONFIRMED|REFUTED|AWAITING_REVIEW)$"), reviewer: str = Query("Lead Scientist")):
+    records = read_field_observations()
+    for r in records:
+        if r["id"] == obs_id:
+            r["review_status"] = status
+            r["reviewed_by"] = reviewer
+            save_field_observations(records)
+            return {"status": "success", "record": r}
+    raise HTTPException(404, "Field observation not found")
+

@@ -105,48 +105,65 @@
 .legacy-pages .navbar__nav {
   display: flex;
   align-items: center;
-  gap: 0;
+  gap: 4px;
 }
 
 .legacy-pages .navbar__link {
   position: relative;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  height: var(--navbar-height);
-  padding: 0 var(--s4);
-  color: var(--text-2);
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 8px;
+  color: #94a3b8;
   text-decoration: none;
-  font-size: var(--text-base);
+  font-size: 0.8125rem;
   font-weight: 500;
-  letter-spacing: 0.02em;
-  transition: color var(--duration-fast) var(--ease-out);
+  letter-spacing: 0.01em;
+  transition: all 0.15s ease-in-out;
   white-space: nowrap;
+  border: 1px solid transparent;
 }
 
 .legacy-pages .navbar__link:hover {
-  color: var(--text);
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .legacy-pages .navbar__link--active {
-  color: var(--water);
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  background: rgba(6, 182, 212, 0.16) !important;
+  border: 1px solid rgba(34, 211, 238, 0.45) !important;
+  box-shadow: 0 0 14px rgba(6, 182, 212, 0.22) !important;
 }
 
-.legacy-pages .navbar__link::after {
-  content: '';
+.legacy-pages .navbar__link-icon {
+  color: #64748b;
+  transition: color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.legacy-pages .navbar__link:hover .navbar__link-icon {
+  color: #cbd5e1;
+}
+
+.legacy-pages .navbar__link--active .navbar__link-icon,
+.legacy-pages .navbar__link-icon--active {
+  color: #22d3ee !important;
+  filter: drop-shadow(0 0 5px rgba(34, 211, 238, 0.7));
+}
+
+.legacy-pages .navbar__link-indicator {
   position: absolute;
-  bottom: 0;
-  left: var(--s4);
-  right: var(--s4);
+  bottom: -6px;
+  left: 20%;
+  right: 20%;
   height: 2px;
-  background: var(--water);
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform var(--duration-normal) var(--ease-out);
-}
-
-.legacy-pages .navbar__link--active::after,
-.legacy-pages .navbar__link:hover::after {
-  transform: scaleX(1);
+  border-radius: 9999px;
+  background: #22d3ee;
+  box-shadow: 0 0 8px #22d3ee;
 }
 
 /* ── Right group ── */

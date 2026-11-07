@@ -27,6 +27,7 @@ import './styles/observatory-redesign.css';
 const DecisionDesk = lazy(() => import('./features/legacy/pages/DecisionDesk').then(m=>({default:m.DecisionDesk})));
 const IntelligencePage = lazy(() => import('./features/legacy/pages/Intelligence').then(m=>({default:m.IntelligencePage})));
 const SARLabPage = lazy(() => import('./features/legacy/pages/SARLab').then(m=>({default:m.SARLabPage})));
+const TraceFieldApp = lazy(() => import('./features/trace/TraceFieldApp').then(m=>({default:m.TraceFieldApp})));
 
 // 1. Observatory Route Component (Handles /observatory and /observatory/:regionId)
 const ObservatoryRoute: React.FC = () => {
@@ -92,14 +93,8 @@ const ObservatoryRoute: React.FC = () => {
 
 // 2. Atlas Route Component (Handles /atlas)
 const AtlasRoute: React.FC = () => {
-  const { setView } = useWorkspaceStore();
-  useEffect(() => {
-    setView('M0');
-  }, [setView]);
-
   return (
-    <div className="relative flex-1 flex overflow-hidden w-full h-full">
-      <MapWorkspace />
+    <div className="relative flex-1 w-full h-full overflow-hidden bg-[#080d14]">
       <AtlasView />
     </div>
   );
@@ -108,7 +103,7 @@ const AtlasRoute: React.FC = () => {
 // 3. Main App Root Component
 const WorkspaceApp: React.FC = () => {
   const {pathname}=useLocation();
-  const mapRoute=pathname.startsWith('/observatory')||pathname==='/atlas';
+  const mapRoute=pathname.startsWith('/observatory');
   const { isSonificationEnabled, selectedSample } = useWorkspaceStore();
 
   // Sonification effect on sample update (E22)
@@ -135,6 +130,8 @@ const WorkspaceApp: React.FC = () => {
           <Route path="/learn" element={<SarLabView />} />
           <Route path="/learn/:experimentId" element={<SarLabView />} />
           <Route path="/reports" element={<ReportsView />} />
+          <Route path="/trace" element={<Suspense fallback={<div className="desk-standby">Loading TRACE Field…</div>}><TraceFieldApp /></Suspense>} />
+          <Route path="/field" element={<Navigate to="/trace" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
@@ -150,6 +147,8 @@ export const App: React.FC = () => <EvidenceProvider><LegacyPageLayout><Navbar/>
   <Route path="/" element={<LandingPageView/>}/>
   <Route path="/impact" element={<Suspense fallback={<div className="desk-standby">Loading Decision Desk…</div>}><DecisionDesk /></Suspense>} />
   <Route path="/imact" element={<Navigate to="/impact" replace />} />
+  <Route path="/trace" element={<Suspense fallback={<div className="desk-standby">Loading TRACE Field…</div>}><TraceFieldApp /></Suspense>} />
+  <Route path="/field" element={<Navigate to="/trace" replace />} />
   <Route path="/intelligence" element={<Suspense fallback={<div className="desk-standby">Loading ML Intelligence…</div>}><IntelligencePage /></Suspense>} />
   <Route path="/sar-lab" element={<Suspense fallback={<div className="desk-standby">Loading SAR Lab…</div>}><SARLabPage /></Suspense>} />
   <Route path="/learn" element={<Navigate to="/sar-lab" replace/>}/>
