@@ -70,9 +70,10 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
  const {regionId,viewId,basemapType,satelliteView,overlayStyle,comparisonMode,comparisonLayout,comparisonEnabled,swipePosition,selectedDate,selectedPair,selectedOpticalDate,selectedOpticalPair,selectedPol,activeLens,layerVisibility,isRightInspectorOpen,selectedFindingId,isAgentDrawerOpen,setBasemapType,setOverlayStyle}=useWorkspaceStore();
  const elementA=useRef<HTMLDivElement>(null),elementB=useRef<HTMLDivElement>(null);
  const maps=useRef<{a:maplibregl.Map|null;b:maplibregl.Map|null}>({a:null,b:null});
+ const mapGeneration=useRef(0);
  const markers=useRef<maplibregl.Marker[]>([]);
  const aborts=useRef<{a:AbortController|null;b:AbortController|null}>({a:null,b:null});
- const [loaded,setLoaded]=useState({a:false,b:false}),[radarLoaded,setRadarLoaded]=useState(false),[zoom,setZoom]=useState(11.8),[saved,setSaved]=useState(false),[legend,setLegend]=useState(()=>!matchMedia('(max-width:760px)').matches);
+ const [loaded,setLoaded]=useState({a:false,b:false,generation:0}),[radarLoaded,setRadarLoaded]=useState(false),[zoom,setZoom]=useState(11.8),[saved,setSaved]=useState(false),[legend,setLegend]=useState(()=>!matchMedia('(max-width:760px)').matches);
  const [flyStage,setFlyStage]=useState('');const flight=useRef<((fit?:boolean)=>void)|null>(null);const arrived=useRef('');
  const compare=comparisonEnabled&&viewId!=='M0';
  const split=compare&&comparisonLayout==='split';
@@ -82,7 +83,8 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
 
  useEffect(()=>{
   if(!elementA.current||!elementB.current)return;
-  setLoaded({a:false,b:false});setRadarLoaded(false);
+  const generation=++mapGeneration.current;
+  setLoaded({a:false,b:false,generation});setRadarLoaded(false);
   let synchronizing=false;
   const recordCamera=(map:maplibregl.Map)=>{
    const [w,s,e,n]=evidence.bbox,point=map.project([(w+e)/2,(s+n)/2]);
@@ -136,7 +138,7 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
      const [w,s,e,n]=study.bbox;markers.current.push(new maplibregl.Marker({element:button}).setLngLat([(w+e)/2,(s+n)/2]).addTo(map));
     }
     updateContextVisibility(map,evidence,side);recordCamera(map);
-    setLoaded(previous=>({...previous,[side]:true}));
+    setLoaded(previous=>generation===mapGeneration.current?{...previous,[side]:true,generation}:previous);
    });
    map.on('click',async event=>{
     const state=useWorkspaceStore.getState();
@@ -165,7 +167,7 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
 
  useEffect(()=>{
   for(const side of ['a','b'] as const){
-   const map=maps.current[side];if(!map||!loaded[side]||!map.getLayer('observation'))continue;
+   const map=maps.current[side];if(!map||!loaded[side]||loaded.generation!==mapGeneration.current||!map.getLayer('observation'))continue;
    const type=compare&&comparisonMode==='sensors'?(side==='a'?'satellite':'sar'):basemapType;
    const optical=selectedOpticalObservation(evidence,side);
    const showDated=type!=='carto'&&satelliteView==='dated';
@@ -207,24 +209,24 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
  },[evidence,corners,loaded,basemapType,satelliteView,compare,comparisonMode,selectedDate,selectedPair,selectedOpticalDate,selectedOpticalPair,selectedPol,activeLens,layerVisibility,overlayStyle,comparisonReady,viewId]);
 
  const replay=()=>{
-  const map=maps.current.b;if(!map||!loaded.b)return;
+  const map=maps.current.b;if(!map||!loaded.b||loaded.generation!==mapGeneration.current)return;
   flight.current?.(false);
   const compact=map.getContainer().clientWidth<600;
   flight.current=flyToStudyArea(map,evidence.bbox,{padding:{top:compact?112:76,bottom:compact?90:42,left:compact?24:64,right:compact?24:64},maxZoom:14,bearing:0,pitch:0},setFlyStage,overviewCamera(evidence));
  };
  useEffect(()=>{
-  const map=maps.current.b;if(!map||!loaded.b||!loaded.a)return;
+  const map=maps.current.b;if(!map||!loaded.b||!loaded.a||loaded.generation!==mapGeneration.current)return;
   if(viewId==='M0'){fitAtlasOverview(map);return;}
   if(observatory&&arrived.current!==regionId){arrived.current=regionId;if(!compare&&!selectedFindingId){replay();return;}}
   flight.current?.(false);flight.current=null;
   if(!selectedFindingId)coverStudyArea(map,evidence);
 
- },[evidence,loaded.b,loaded.a,viewId==='M0',split,compare]);
+ },[evidence,loaded.b,loaded.a,loaded.generation,viewId==='M0',split,compare]);
  useEffect(()=>{
-  if(!loaded.b||!selectedFindingId)return;
+  if(!loaded.b||loaded.generation!==mapGeneration.current||!selectedFindingId)return;
   const finding=evidence.findings.features.find(f=>f.properties.id===selectedFindingId);if(!finding)return;
   flight.current?.(false);maps.current.b?.flyTo({center:finding.properties.centroid,zoom:14,duration:850});
- },[selectedFindingId,loaded.b,evidence]);
+ },[selectedFindingId,loaded.b,loaded.generation,evidence]);
 
  const recenter=()=>{flight.current?.(false);const map=maps.current.b;if(!map)return;if(observatory)coverStudyArea(map,evidence);else map.jumpTo({center:regionId==='jamuna'?[89.75,25.575]:[89.70,21.875],zoom:regionId==='jamuna'?11.5:11.8});};
  const capture=()=>{const a=maps.current.a,b=maps.current.b;if(!a||!b)return;try{const canvas=document.createElement('canvas'),ca=a.getCanvas(),cb=b.getCanvas();canvas.width=split?ca.width+cb.width:cb.width;canvas.height=cb.height;const ctx=canvas.getContext('2d')!;if(split){ctx.drawImage(ca,0,0);ctx.drawImage(cb,ca.width,0);}else{ctx.drawImage(cb,0,0);if(compare){ctx.save();ctx.beginPath();ctx.rect(0,0,canvas.width*swipePosition/100,canvas.height);ctx.clip();ctx.drawImage(ca,0,0);ctx.restore();}}const link=document.createElement('a');link.href=canvas.toDataURL('image/png');link.download='FluviSAR_'+regionId+'_'+comparisonMode+'.png';link.click();setSaved(true);}catch(error){console.error('Snapshot failed',error);}};

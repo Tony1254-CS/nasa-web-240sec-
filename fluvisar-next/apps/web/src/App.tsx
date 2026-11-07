@@ -38,7 +38,7 @@ const ObservatoryRoute: React.FC = () => {
   const [searchParams] = useSearchParams();
 
   useEffect(()=>{
-    useWorkspaceStore.setState({comparisonEnabled:false,basemapType:'sar',isRightInspectorOpen:false,selectedFindingId:null});
+    useWorkspaceStore.setState({comparisonEnabled:false,basemapType:'satellite',isRightInspectorOpen:false,selectedFindingId:null});
   },[]);
 
   useEffect(() => {

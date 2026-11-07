@@ -4,7 +4,7 @@ The Observatory fly-in and shared assistant preserve the current study-area data
 
 ## Geographic camera sequence
 
-`MapWorkspace` uses one camera to drive the synchronized before/after views. The sequence moves from a wide view through Bangladesh into the registered observation bounding box. The final camera retains zoom 11.4 and pitch 55 degrees in both regions; comparison views use shared study bounds. Radar is the default; imagery switches retain the current center, zoom, pitch and bearing. Image-source coordinates never change.
+`MapWorkspace` uses one camera to drive the synchronized before/after views. The sequence moves from a wide view through Bangladesh into the registered observation bounding box. The final camera retains zoom 11.4 and pitch 55 degrees in both regions; comparison views use shared study bounds. Satellite is the restored default; imagery switches retain the current center, zoom, pitch and bearing. Image-source coordinates never change.
 
 - Runs once per region on each fresh Observatory mount, with Replay and Skip controls. A previous session-level seen flag no longer suppresses the introduction.
 - Dragging, scrolling, touching or using the keyboard interrupts the flight.

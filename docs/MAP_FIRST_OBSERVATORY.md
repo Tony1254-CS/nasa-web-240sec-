@@ -5,7 +5,7 @@ use a compact feature drawer on phones. Both regions open at zoom 11.4 and pitch
 centres on 89.75, 25.575; Sundarbans centres on the estuary at 89.74, 21.83. Comparisons use
 shared top-down framing. Recenter and Replay return to the regional default. Each fresh Observatory visit zooms in from a wide view before arriving at that camera; previously seen sessions no longer suppress it. User interaction, Skip, comparison changes and reduced-motion preferences interrupt or bypass the introduction.
 
-Both regions start on measured radar, with the same tilted study-area camera. Switching imagery preserves the live camera. Sundarbans offers detailed Esri satellite context. This mosaic has no claimed
+Both regions start on Satellite, restoring the requested cinematic view and tilted study-area camera. Switching imagery preserves the live camera. Sundarbans offers detailed Esri satellite context. This mosaic has no claimed
 acquisition date. Dated observations switches to actual Sentinel-2 imagery; optical timeline passes and date comparisons retain the actual selected acquisition. Radar mode uses its separate six-pass timeline. Every retained date remains selectable. The two
 least-cloudy retained scenes form the initial optical pair; cloud/shadow
 percentages are shown in map labels and pair choices. Images with more than 10%

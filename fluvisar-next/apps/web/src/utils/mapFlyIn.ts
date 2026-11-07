@@ -4,7 +4,7 @@ import type { Map, FitBoundsOptions } from 'maplibre-gl';
 export function flyToStudyArea(map:Map,bounds:[number,number,number,number],options:FitBoundsOptions,onStage:(stage:string)=>void,destination?:{center:[number,number];zoom:number;pitch:number;bearing:number}){
  let stopped=false;const flight={};
  const center:[number,number]=[(bounds[0]+bounds[2])/2,(bounds[1]+bounds[3])/2];
- const remove=()=>{map.off('moveend',advance);for(const event of ['mousedown','touchstart','wheel','keydown'] as const)map.getContainer().removeEventListener(event,interrupt);};
+ const remove=()=>{map.off('moveend',advance);map.off('sourcedata',ready);for(const event of ['mousedown','touchstart','wheel','keydown'] as const)map.getContainer().removeEventListener(event,interrupt);};
  const finish=(fit:boolean)=>{if(stopped)return;stopped=true;remove();map.stop();if(fit){map.resize();if(destination)map.jumpTo(destination);else map.fitBounds(bounds,{...options,duration:0});}onStage('');};
  const interrupt=()=>finish(false);
  const stages=[
@@ -15,8 +15,11 @@ export function flyToStudyArea(map:Map,bounds:[number,number,number,number],opti
  let index=0;
  // resize() also emits moveend. Only this flight's own events advance its stages.
  const advance=(event?:unknown)=>{if(stopped||event&&(event as {fluvisarFlight?:object}).fluvisarFlight!==flight)return;if(index===stages.length){finish(true);return;}stages[index++]();};
+ const start=()=>{if(stopped)return;map.off('sourcedata',ready);map.on('moveend',advance);advance();};
+ const ready=()=>{if(map.isSourceLoaded('satellite'))start();};
  if(matchMedia('(prefers-reduced-motion: reduce)').matches){finish(true);return()=>finish(true);}
  for(const event of ['mousedown','touchstart','wheel','keydown'] as const)map.getContainer().addEventListener(event,interrupt,{passive:true});
- map.on('moveend',advance);advance();
+ // Let the initial geographic image appear before flying through it.
+ if(map.getSource('satellite')&&!map.isSourceLoaded('satellite')){onStage('Loading satellite context');map.on('sourcedata',ready);}else start();
  return (fit=true)=>finish(fit);
 }

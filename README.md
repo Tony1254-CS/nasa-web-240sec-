@@ -209,7 +209,7 @@ Esri World Imagery supplies context beyond valid dated optical coverage. It is a
 Each fresh Observatory visit animates from a wide geographic view into the existing zoom 11.4 / 55-degree study-area camera, including sessions that previously viewed the area. Skip, Replay, interaction cancellation and reduced-motion support remain available; comparison views share exact study-area framing.
 
 The desktop Observatory keeps the investigation panel on the left; phones use a
-feature drawer. Both regions open on measured radar at zoom 11.4 with a 55-degree tilted overview. Switching Radar, Satellite or Carto preserves the live camera rather than refitting the image. Sundarbans offers
+feature drawer. Both regions open on Satellite at zoom 11.4 with a 55-degree tilted overview. Switching Radar, Satellite or Carto preserves the live camera rather than refitting the image. Sundarbans offers
 the detailed Esri satellite mosaic as an optional context view, labelled without an acquisition
 date. In Satellite mode, selecting an optical timeline pass or date comparison opens actual Sentinel-2
 observations. Initial optical comparisons use the two least-cloudy retained
@@ -412,7 +412,7 @@ Five chapters explain the active region's bundle: start with the signal, classif
 
 ### 10.3 Source-linked reports — `/reports`
 
-Reports expose the default comparison's measurements, quality record, source list, interpretation and manifest export. For a custom radar pair or selected finding, use the context-bound Evidence report and Change Passport.
+Reports expose the default comparison's measurements, quality record, source list, interpretation and manifest export. The shared one-page brief opens in an isolated, scrollable paper dialog, prints to A4 with working comparison QR and uses actual source-linked exposure rather than legacy demo figures. For a custom radar pair or selected finding, use the context-bound Evidence report and Change Passport.
 
 **Implementation:** [ReportsView.tsx](fluvisar-next/apps/web/src/components/ReportsView.tsx).
 
@@ -658,11 +658,12 @@ npm run build
 npm run test:e2e -- --workers=1
 ```
 
-The current browser suite registers **75 tests in fourteen files**:
+The current browser suite registers **79 tests in fifteen files**:
 
 | Suite | Main coverage |
 | --- | --- |
-| `place-watch.spec.ts` | Source hashes and measured place proximity, assumption-only timing and exports, responsive watchlist, tilted Radar default, camera-preserving imagery switches and right-corner chat |
+| `decision-brief.spec.ts` | Shared report entry points in both regions, source-bound metrics and QR, isolated responsive layout, A4 printing and region-change fly-in continuity |
+| `place-watch.spec.ts` | Source hashes and measured place proximity, assumption-only timing and exports, responsive watchlist, restored tilted Satellite default, camera-preserving imagery switches and right-corner chat |
 | `atlas-outlook.spec.ts` | Chronological forecasting, elapsed date gaps, physical bounds, source-linked case cards and exports, responsive themes, docked chat and repeatable automatic zoom-in |
 | `responsive-audit.spec.ts` | All ten public pages at five desktop/laptop/phone sizes in both themes; header reachability, overflow and unclipped intro content |
 | `about-lab.spec.ts` | Original crew and imagery provenance, story navigation, themes, responsive layout and preserved Lab controls/interactions |
@@ -741,7 +742,7 @@ The checked-in Dockerfile/Compose setup is an earlier scaffold. It references a 
 - Field records are browser-local and await review; there is no automatic remote-team verification.
 - WorldCover is historical and OSM is incomplete. No source-backed exposed-population or financial-loss estimate is supplied by Evidence.
 - The interface is English-first. Language/audience controls and some Bangla content exist, but reviewed end-to-end bilingual coverage is incomplete.
-- The separate **Govt Brief / PDF + QR template modal** still contains illustrative values and historical sensor wording. Use the source-linked Evidence report, Change Passport and `/reports` for measured results; the template is not an authoritative analytical brief.
+- **Govt Brief / PDF + QR** uses the current registered comparison and, when opened from the finding inspector, its actual finding scope. It reports measured transition areas, sensitivity and mapped intersections without claiming affected population or confirmed damage. Its QR reopens that comparison; a local development address must be deployed before phone sharing.
 - Older architecture, feature catalogues and milestone documents describe a broader target design. Use this README's source-linked runtime sections when describing the current build.
 
 ### 18.2 Next integration work
@@ -749,7 +750,7 @@ The checked-in Dockerfile/Compose setup is an earlier scaffold. It references a 
 - Independent stage/tide, water-reference and temporal-persistence validation.
 - Real-product NISAR or interferometric integration after appropriate inputs are acquired and verified.
 - Reviewed field synchronization, consent and human revision workflows.
-- Complete bilingual coverage and replacement of remaining illustrative brief templates.
+- Complete bilingual coverage and extend independently reviewed report interpretation.
 - Production packaging, reverse-proxy setup and deployment validation.
 
 ## 19. Documentation and contribution

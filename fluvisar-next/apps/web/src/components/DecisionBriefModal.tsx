@@ -1,217 +1,40 @@
-import React from 'react';
-import { X, Printer, QrCode, FileText, CheckCircle2, AlertTriangle, ShieldCheck } from 'lucide-react';
-import { useWorkspaceStore } from '../store/workspaceStore';
+import {useEffect,useRef,useState} from 'react';
+import {createPortal} from 'react-dom';
+import {X,Printer,FileText,ShieldCheck,CheckCircle2,ExternalLink} from 'lucide-react';
+import {useWorkspaceStore} from '../store/workspaceStore';
+import {useEvidence,useObservatoryEvidence,number,readableDate} from '../data/evidence';
+import {useDecisionContext} from '../features/legacy/data/decision';
+import '../styles/decision-brief.css';
 
-interface DecisionBriefModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+interface DecisionBriefModalProps {isOpen:boolean;onClose:()=>void;scope?:'study'|'selection';findingId?:string}
+
+/** Shared paper surface isolated from page resets, transforms and clipping. */
+export function DecisionBriefModal({isOpen,onClose,scope='selection',findingId}:DecisionBriefModalProps){
+ const base=useEvidence(),observatory=useObservatoryEvidence(),state=useWorkspaceStore();
+ const evidence=scope==='study'?base.evidence:observatory.evidence;
+ const finding=scope==='selection'?evidence.findings.features.find(f=>f.properties.id===(findingId??state.selectedFindingId)):undefined;
+ const context=useDecisionContext(evidence.run_id,finding?.properties.id??null,isOpen&&(scope==='study'||observatory.comparisonReady));
+ const dialog=useRef<HTMLDialogElement>(null),[qr,setQr]=useState('');
+ const pairSources=evidence.pair.map(date=>evidence.observations.find(o=>o.date===date)!);
+ const url=new URL('/observatory/'+evidence.region_id,window.location.origin);
+ url.search=new URLSearchParams({run:evidence.run_id,t0:evidence.pair[0],t1:evidence.pair[1],...(finding?{finding:finding.properties.id}:{})}).toString();
+ const link=url.toString(),data=context.data;
+ useEffect(()=>{if(!isOpen)return;const opener=document.activeElement;dialog.current?.showModal();document.body.classList.add('decision-brief-active');return()=>{dialog.current?.close();document.body.classList.remove('decision-brief-active');if(opener instanceof HTMLElement&&opener.isConnected)opener.focus({preventScroll:true});};},[isOpen]);
+ useEffect(()=>{if(!isOpen)return;let active=true;setQr('');import('qrcode').then(module=>module.toDataURL(link,{errorCorrectionLevel:'M',margin:4,width:320,color:{dark:'#102a43',light:'#ffffff'}})).then(value=>{if(active)setQr(value);}).catch(()=>{});return()=>{active=false;};},[isOpen,link]);
+ if(!isOpen)return null;
+ const passed=evidence.qc.filter(q=>q.status==='pass').length;
+ const sensitivity=(evidence.threshold_sensitivity??[]) as {threshold_db:number;land_to_water_ha:number;water_to_land_ha:number}[];
+ const field=regionField(evidence.region_id==='sundarbans');
+ return createPortal(<dialog ref={dialog} className="decision-brief-dialog" aria-label="Source-linked regional decision brief" onCancel={event=>{event.preventDefault();onClose();}} onClick={event=>{if(event.target===event.currentTarget){const b=event.currentTarget.getBoundingClientRect();if(event.clientX<b.left||event.clientX>b.right||event.clientY<b.top||event.clientY>b.bottom)onClose();}}}>
+  <header className="db-toolbar"><div><FileText size={18}/><span>{evidence.region_id==='jamuna'?'Jamuna':'Sundarbans'} decision brief</span></div><nav aria-label="Brief actions"><button onClick={async()=>{await document.fonts.ready;window.print();}} disabled={(!data&&!context.error)||!qr}><Printer size={15}/>Print / Export PDF</button><button aria-label="Close decision brief" onClick={onClose}><X size={20}/></button></nav></header>
+  <div className="db-scroll"><article className="db-paper">
+   <header className="db-heading"><div><div className="db-brand">FLUVISAR <span>RAPID DECISION BRIEF</span></div><h1>{evidence.name}</h1><p lang="bn">{evidence.region_id==='jamuna'?'যমুনা নদী পর্যবেক্ষণ ও মাঠ যাচাই সারসংক্ষেপ':'সুন্দরবন পর্যবেক্ষণ ও মাঠ যাচাই সারসংক্ষেপ'}</p><p>NASA Space Apps project · source-linked satellite screening</p></div><dl><div><dt>Recorded comparison</dt><dd>{evidence.pair.map(readableDate).join(' → ')}</dd></div><div><dt>Scope</dt><dd>{finding?'Selected finding':'Study area'}</dd></div><div><dt>Evidence status</dt><dd className="db-review">Independent review required</dd></div></dl></header>
+   <section className="db-section"><h2><span>01</span>Scientific observation</h2><div className="db-observation"><div><p>Sentinel-1 C-band VV/VH observations identify land–water transition candidates on a common 30 m grid. These are screening results, not confirmed erosion, flood damage or habitat loss.</p><div className="db-metrics"><div><span>Land → water</span><strong data-testid="brief-land-water">{number(evidence.metrics.land_to_water_ha,2)} <small>ha</small></strong></div><div><span>Water → land</span><strong>{number(evidence.metrics.water_to_land_ha,2)} <small>ha</small></strong></div><div><span>Common valid support</span><strong>{number(evidence.metrics.common_valid_fraction*100,1)}<small>%</small></strong><p>{number(evidence.metrics.common_valid_area_ha,1)} ha</p></div></div>{finding&&<p className="db-selected"><b>Selected candidate:</b> {finding.properties.category.replaceAll('-',' ')} · {number(finding.properties.area_ha,2)} ha · {number(finding.properties.pixel_count,0)} classified pixels<br/><code>{finding.properties.id}</code></p>}</div><aside className="db-quality"><h3><ShieldCheck size={14}/>Quality & sensitivity</h3><p><b>{passed} / {evidence.qc.length}</b> recorded checks pass</p><p>{evidence.qc.length-passed} checks require interpretation/review.</p>{sensitivity.length>0&&<p>Land → water range<br/><b>{number(Math.min(...sensitivity.map(s=>s.land_to_water_ha)),2)}–{number(Math.max(...sensitivity.map(s=>s.land_to_water_ha)),2)} ha</b><br/>across recorded −18 / −17 / −16 dB masks; not a confidence interval.</p>}</aside></div></section>
+   <section className="db-section"><h2><span>02</span>Mapped exposure ledger</h2><p className="db-caption">Intersection with recorded change geometry · {finding?'selected finding':'study area'} · potential exposure, not confirmed damage or affected population.</p>{data?<><div className="db-table-wrap"><table><thead><tr><th>Observed transition</th><th>Buildings</th><th>Road ways</th><th>Road overlap</th><th>Facilities</th><th>Settlements</th></tr></thead><tbody>{(['land-to-water','water-to-land'] as const).map(category=>{const row=data.exposure.assets?.[category];return <tr key={category}><th>{category.replaceAll('-',' ')}</th><td>{row?.building??0}</td><td>{row?.road??0}</td><td>{number(row?.road_length_m??0,1)} m</td><td>{row?.facility??0}</td><td>{row?.settlement??0}</td></tr>;})}</tbody></table></div><p className="db-caption">{data.exposure.source?.osm_attribution??'© OpenStreetMap contributors'} · archived mapped objects; incomplete coverage. {data.exposure.intersections?.length??0} intersecting records in this scope. <a href="/impact">Review source records in Decision Desk.</a></p></>:<div className="db-context-status" role="status">{context.error?<><p>Exposure analysis could not be read. No asset counts are claimed in this brief.</p><button onClick={context.retry}>Retry exposure analysis</button></>:<p>Reading source-linked exposure analysis…</p>}</div>}</section>
+   <section className="db-section db-field"><div><h2><span>03</span>Field verification & handoff</h2><ul>{field.map(item=><li key={item}><CheckCircle2 size={14}/><span>{item}</span></li>)}</ul><p className="db-caption">Use dated location/photo records and human review before making a permanent-change or damage claim. No future overpass date is asserted.</p></div><aside className="db-qr">{qr?<img src={qr} width="120" height="120" alt="QR code to reopen this exact comparison"/>:<span>Preparing comparison QR…</span>}<b>Reopen the exact comparison</b><a href={link}>Open source-linked map <ExternalLink size={10}/></a>{['localhost','127.0.0.1'].includes(window.location.hostname)&&<small>Local address: deploy the site before sharing this QR with a phone.</small>}</aside></section>
+   <section className="db-section db-lineage"><h2><span>04</span>Source lineage</h2><div className="db-source-grid">{pairSources.map(source=><div key={source.id}><a href={source.source_url} target="_blank" rel="noreferrer">{source.datetime} · {source.sensor}</a><code>{source.id}</code><p>VV SHA-256: <code>{String(typeof source.numeric_sha256==='string'?source.numeric_sha256:(source.numeric_sha256 as Record<string,string>)?.vv??'')}</code></p></div>)}</div><p className="db-run">Run: <code>{evidence.run_id}</code></p></section>
+   <footer className="db-footer"><span>FluviSAR · screening evidence for independent review</span><span>Recorded data · no approval or emergency warning implied</span></footer>
+  </article></div>
+ </dialog>,document.body);
 }
-
-export const DecisionBriefModal: React.FC<DecisionBriefModalProps> = ({ isOpen, onClose }) => {
-  const { regionId, selectedDate } = useWorkspaceStore();
-
-  if (!isOpen) return null;
-
-  const isJamuna = regionId === 'jamuna';
-  const findingId = `BRIEF-${regionId.toUpperCase()}-2026-001`;
-
-  const handlePrint = () => {
-    window.print();
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 print:p-0 print:bg-white">
-      <div className="bg-white rounded-xl shadow-2xl border border-[#CBD5E1] w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden print:max-h-none print:border-none print:shadow-none animate-in fade-in zoom-in-95 duration-150">
-        {/* Modal Top Actions (Hidden in Print) */}
-        <div className="flex items-center justify-between px-5 py-3 border-b border-[#E2E8F0] bg-[#F8FAFC] print:hidden">
-          <div className="flex items-center space-x-2 text-[#102A43] font-bold text-sm">
-            <FileText className="w-4 h-4 text-[#155E75]" />
-            <span>{isJamuna ? 'Jamuna Riverbank Decision Brief' : 'Sundarbans Canopy Pulse Brief'}</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={handlePrint}
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#155E75] hover:bg-[#0E7490] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
-            >
-              <Printer className="w-3.5 h-3.5" />
-              <span>Print / Export PDF</span>
-            </button>
-            <button
-              onClick={onClose}
-              className="p-1 rounded-lg hover:bg-[#E2E8F0] text-[#64748B] hover:text-[#102A43] transition-colors cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Printable One-Page Content (A4 / Letter target) */}
-        <div className="p-8 overflow-y-auto space-y-6 flex-1 text-[#102A43] print:p-4 print:overflow-visible text-xs leading-relaxed font-sans">
-          {/* Official Document Header */}
-          <div className="border-b-2 border-[#155E75] pb-4 flex items-start justify-between">
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="font-extrabold text-lg text-[#155E75] tracking-tight">FLUVISAR</span>
-                <span className="text-[10px] bg-[#E0F2FE] text-[#0369A1] font-bold px-2 py-0.5 rounded uppercase">
-                  Rapid Decision Brief
-                </span>
-              </div>
-              <h1 className="text-base font-bold text-[#0F172A] mt-1">
-                {isJamuna
-                  ? 'যমুনা নদী অববাহিকা দ্রুত সিদ্ধান্ত সারসংক্ষেপ (Chilmari–Roumari Reach)'
-                  : 'সুন্দরবন ম্যানগ্রোভ ক্যানোপি ও জোয়ার পর্যবেক্ষণ সারসংক্ষেপ (Dublar–Passur Reach)'}
-              </h1>
-              <p className="text-[11px] text-[#64748B] mt-0.5">
-                Authority: NASA Space Apps Challenge 2026 · NISAR L2 GCOV / GUNW Verified Lineage
-              </p>
-            </div>
-            <div className="text-right text-[10px] text-[#475569]">
-              <div>ID: <strong className="font-mono text-[#0F172A]">{findingId}</strong></div>
-              <div>Date: <strong className="font-mono text-[#0F172A]">{selectedDate}</strong></div>
-              <div>Status: <span className="text-[#16A34A] font-bold">ACTIVE PROPOSED</span></div>
-            </div>
-          </div>
-
-          {/* Core Finding Statement & Evidence Grid */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="col-span-2 space-y-2">
-              <h2 className="font-bold text-xs uppercase tracking-wider text-[#155E75]">
-                1. Scientific Observation Finding
-              </h2>
-              <div className="bg-[#F8FAFC] p-3 rounded-lg border border-[#E2E8F0] space-y-1.5">
-                <p className="text-xs text-[#1E293B] font-medium leading-normal">
-                  {isJamuna
-                    ? 'যমুনার চিলমারী পশ্চিম বাঁকে ১৮৪ হেক্টর নদীভাঙন/পানির বিস্তার শনাক্ত হয়েছে। এর মধ্যে ১৪৫.৮ হেক্টর রবাস্ট কোর (সব থ্রেশহোল্ডে স্থায়ী পানি) এবং ২৮.৪ হেক্টর প্রান্তিক প্লাবন।'
-                    : 'পাসুর ও দুবলার চরে ৩১২ হেক্টর ম্যানগ্রোভ জোয়ারের পানির নিচে নিমজ্জিত। HH/HV ক্রস-পোলারাইজেশন রেশিও -6.2 dB যা ডাবল-বাউন্স প্রতিফলন নিশ্চিত করে।'}
-                </p>
-                <div className="flex items-center space-x-3 text-[10px] text-[#64748B] pt-1 border-t border-[#E2E8F0]">
-                  <span>Sensor: <strong>NISAR L-band (23.84cm)</strong></span>
-                  <span>Orbit: <strong>Descending Track 42</strong></span>
-                  <span>Spatial Res: <strong>20m Posting</strong></span>
-                </div>
-              </div>
-            </div>
-
-            {/* Robustness Breakdown Card */}
-            <div className="bg-[#EFF6FF] border border-[#BFDBFE] p-3 rounded-lg flex flex-col justify-between">
-              <div>
-                <span className="text-[10px] font-bold uppercase text-[#1E40AF]">Uncertainty Envelope</span>
-                <div className="mt-2 space-y-1 text-[11px]">
-                  <div className="flex justify-between">
-                    <span className="text-[#1E3A8A]">Robust Core:</span>
-                    <strong className="font-mono text-[#1E40AF]">145.8 ha</strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#1E3A8A]">Contested Fringe:</span>
-                    <strong className="font-mono text-[#D97706]">28.4 ha</strong>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#1E3A8A]">Confidence Ratio:</span>
-                    <strong className="font-mono text-[#16A34A]">83.7%</strong>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center space-x-1 text-[9px] text-[#2563EB] mt-2">
-                <ShieldCheck className="w-3 h-3" />
-                <span>Passed 6 of 7 Scientific Checks</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Impact Ledger (What Changed for Whom) */}
-          <div className="space-y-2">
-            <h2 className="font-bold text-xs uppercase tracking-wider text-[#155E75]">
-              2. Human & Infrastructure Impact Ledger (W09 / E16)
-            </h2>
-            <div className="border border-[#CBD5E1] rounded-lg overflow-hidden">
-              <table className="w-full text-left border-collapse text-[11px]">
-                <thead>
-                  <tr className="bg-[#F1F5F9] border-b border-[#CBD5E1] text-[#475569]">
-                    <th className="p-2 font-semibold">Exposed Asset / Sector</th>
-                    <th className="p-2 font-semibold">Identified Locations</th>
-                    <th className="p-2 font-semibold">Tally / Metric</th>
-                    <th className="p-2 font-semibold">Action Priority</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#E2E8F0]">
-                  <tr>
-                    <td className="p-2 font-medium text-[#0F172A]">Primary Education</td>
-                    <td className="p-2 text-[#475569]">Chilmari Model Primary School, Mandaler Char Govt School</td>
-                    <td className="p-2 font-mono font-bold text-[#155E75]">2 Schools exposed (&lt;50m)</td>
-                    <td className="p-2 text-[#C2410C] font-semibold">Immediate Inspection</td>
-                  </tr>
-                  <tr>
-                    <td className="p-2 font-medium text-[#0F172A]">Community Healthcare</td>
-                    <td className="p-2 text-[#475569]">Roumari Riverside Community Clinic</td>
-                    <td className="p-2 font-mono font-bold text-[#155E75]">1 Clinic within 80m fringe</td>
-                    <td className="p-2 text-[#D97706] font-semibold">Logistics Contingency</td>
-                  </tr>
-                  <tr>
-                    <td className="p-2 font-medium text-[#0F172A]">Transportation Access</td>
-                    <td className="p-2 text-[#475569]">Chilmari Ghat Approach Embankment Road</td>
-                    <td className="p-2 font-mono font-bold text-[#155E75]">1.4 km road segment severed</td>
-                    <td className="p-2 text-[#C2410C] font-semibold">Deploy Ferry Shuttle</td>
-                  </tr>
-                  <tr>
-                    <td className="p-2 font-medium text-[#0F172A]">Settlement Population</td>
-                    <td className="p-2 text-[#475569]">Chars 4 & 5 (BBS 2022 Census Mauza layer)</td>
-                    <td className="p-2 font-mono font-bold text-[#0F172A]">~1,850 Residents exposed</td>
-                    <td className="p-2 text-[#16A34A] font-semibold">Supply Route Check</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Recommended Field Inspection Protocol & Mobile QR Handoff */}
-          <div className="grid grid-cols-3 gap-4 pt-2 border-t border-[#E2E8F0]">
-            <div className="col-span-2 space-y-2">
-              <h2 className="font-bold text-xs uppercase tracking-wider text-[#155E75]">
-                3. Shortlisted Field Verification Objectives
-              </h2>
-              <div className="space-y-1.5 text-[11px] text-[#334155]">
-                <div className="flex items-start space-x-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#16A34A] shrink-0 mt-0.5" />
-                  <span><strong>Embankment Edge Survey:</strong> Verify whether western Chilmari bend breach is dry sand bar or standing water channel.</span>
-                </div>
-                <div className="flex items-start space-x-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#16A34A] shrink-0 mt-0.5" />
-                  <span><strong>Ferry Crossing Continuity:</strong> Confirm if ferry engine boat shuttle is maintaining service to Roumari East Ghat.</span>
-                </div>
-                <div className="flex items-start space-x-1.5">
-                  <AlertTriangle className="w-3.5 h-3.5 text-[#C2410C] shrink-0 mt-0.5" />
-                  <span><strong>Next Satellite Pass:</strong> Await 21 Oct 2026 NISAR overpass to confirm recession trajectory.</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Mobile Task QR Contract (A01-A12) */}
-            <div className="border border-[#CBD5E1] p-2.5 rounded-lg bg-[#F8FAFC] flex flex-col items-center justify-center text-center">
-              <div className="p-1.5 bg-white rounded border border-[#E2E8F0] shadow-xs">
-                <QrCode className="w-16 h-16 text-[#0F172A]" />
-              </div>
-              <div className="font-mono text-[9px] font-bold text-[#155E75] mt-1.5">
-                TASK-{findingId}
-              </div>
-              <div className="text-[8px] text-[#64748B] mt-0.5">
-                Scan for mobile offline task handoff
-              </div>
-            </div>
-          </div>
-
-          {/* Signoff & Authority Footer */}
-          <div className="border-t border-[#CBD5E1] pt-3 flex items-center justify-between text-[10px] text-[#64748B]">
-            <div>
-              <span>Lead Observatory: <strong>FluviSAR System</strong></span> · 
-              <span className="ml-1">Hash: <code className="font-mono text-[#0F172A]">e3b0c44298fc1c...</code></span>
-            </div>
-            <div>
-              <span>Approved For Decision Briefing</span> · 
-              <span className="ml-1 font-semibold text-[#155E75]">Open Science / CC-BY-4.0</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+function regionField(tidal:boolean){return tidal?['Record the acquisition-matched tide/water condition and shoreline location.','Photograph vegetation and water conditions; distinguish tidal inundation from persistent habitat change.','Verify nearby mapped assets and record dated field evidence for independent review.']:['Record river stage and inspect whether the mapped transition is inundation, exposed sediment or visible bank retreat.','Check the actual condition of intersecting roads, facilities and access routes.','Record dated GPS/photo evidence and review against both source acquisitions.'];}

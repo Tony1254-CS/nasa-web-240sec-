@@ -114,6 +114,6 @@ Rebuild from `fluvisar-next`:
 
 The four `place-watch.spec.ts` cases verify source hashes and IDs, scenario
 arithmetic and null failure-date semantics, filters/selection/export, responsive
-themes, Radar defaults and camera-preserving imagery changes. All 74 generated
+themes, restored Satellite defaults and camera-preserving imagery changes. All 74 generated
 distances and nearest-point connectors were independently checked by scanning
 every retained land-to-water geometry rather than using the spatial index.

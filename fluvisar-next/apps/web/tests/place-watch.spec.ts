@@ -11,12 +11,12 @@ test('place watch retains auditable source hashes and timing never claims a fail
   for(const [i,p] of r.rows.entries()){expect(p.distanceM).toBeGreaterThanOrEqual(0);expect(p.sourceUrl).toMatch(/^https:\/\/www.openstreetmap.org\//);expect(catalogue.regions[id].findings.features.some((f:any)=>f.properties.id===p.findingId&&f.properties.category==='land-to-water')).toBe(true);if(i)expect(p.distanceM).toBeGreaterThanOrEqual(r.rows[i-1].distanceM);}
  }
 });
-test('Radar opens tilted and every imagery switch preserves the live camera; chat docks at right',async({page})=>{
+test('Restored Satellite opens tilted and every imagery switch preserves the live camera; chat docks at right',async({page})=>{
  test.setTimeout(90000);await page.emulateMedia({reducedMotion:'reduce'});
  const camera=async()=>JSON.parse((await page.locator('.map-pane-b').getAttribute('data-camera'))!);
  for(const region of ['jamuna','sundarbans']){
   await page.goto('/observatory/'+region);await expect(page.locator('.map-pane-b')).toHaveAttribute('data-map-loaded','true');await expect.poll(async()=>(await camera()).pitch).toBeCloseTo(55);
-  await expect(page.locator('.restored-basemaps button').filter({hasText:'Radar'})).toHaveAttribute('aria-pressed','true');expect((await camera()).zoom).toBeCloseTo(11.4);
+  await expect(page.locator('.restored-basemaps button').filter({hasText:'Satellite'})).toHaveAttribute('aria-pressed','true');expect((await camera()).zoom).toBeCloseTo(11.4);
   await page.getByRole('slider',{name:'Map zoom',exact:true}).fill('12.2');await expect.poll(async()=>(await camera()).zoom).toBeCloseTo(12.2);
   const before=await camera();for(const text of ['Satellite','Radar','Carto','Radar']){await page.locator('.restored-basemaps button').filter({hasText:text}).click();await expect.poll(async()=>(await camera()).zoom).toBeCloseTo(before.zoom);expect(await camera()).toEqual(before);}
   await page.screenshot({path:'test-results/radar-preserved-'+region+'.png'});

@@ -197,3 +197,41 @@ files and SAR Lab source remain unchanged. There are now 75 registered tests
 in fourteen files; this was not a fresh run of the whole suite.
 
 The production TypeScript/Vite build passed after these changes.
+
+## Shared brief rendering and restored Satellite arrival - 8 November 2026
+
+The shared Decision Brief previously inherited legacy resets, oversize headings,
+low-contrast text and clipped ancestor layouts. It now renders through a body
+portal in a native dialog with isolated paper styles, persistent actions and a
+scrollable preview. The same component serves Reports, the Observatory feature
+panel and finding inspector. A finding inspector passes its actual displayed
+finding ID even when it is the default inspected candidate. Reports explicitly
+uses the study/default comparison scope.
+
+The former demo figures, sensor/approval claims and decorative QR were replaced
+with the registered comparison, actual transition/sensitivity/QC values,
+source-linked exposure analysis and a generated comparison QR. Source SHA-256s
+use the actual VV hash rather than rendering the hash object as text. Print
+isolates the paper from the underlying page and preserves its entire content.
+
+The 14-case brief/assistant/place-watch run passed after correcting finding scope.
+Brief coverage includes all three entry points in both regions, 1920/1366/390/360
+px widths in both themes, scroll/actions, source values and A4 exports. Both
+regional PDFs were confirmed to contain exactly one page, rasterized with
+PyMuPDF and visually reviewed alongside the phone preview. The targeted print
+case passed again after the final report scope fix.
+
+The user explicitly chose the previous Satellite default. Zoom 11.4, pitch 55
+and bearing 0 are retained, together with camera-preserving Radar switches.
+Map readiness now belongs to its current instance generation, preventing stale
+loaded flags from cancelling a replacement map's arrival. The fly-in waits for
+initial geographic imagery before starting, remains skippable/interruption-safe
+and respects reduced motion. Three targeted camera tests passed after these
+changes: replay/skip alignment, repeat fresh visits and live region changes.
+The restored regional satellite arrival screenshot was reviewed. There are 79
+registered tests in fifteen files; this entry describes targeted runs.
+
+The production build passed. Production preview loaded the generated QR chunk
+and source-linked briefs in both regions without page errors. Both exported A4
+PDFs were again confirmed as one complete page with lineage/footer text present;
+their rasterized layouts were reviewed. The temporary preview was stopped.
