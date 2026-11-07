@@ -1,7 +1,7 @@
 import {test,expect} from '@playwright/test';
 import {readFile} from 'node:fs/promises';
 const catalog=JSON.parse(await readFile(new URL('../public/observations/index.json',import.meta.url),'utf8'));
-const crew=[['Sabbir Ahmed','Mission Commander'],['Sanjid Talukder','Data Scientist'],['Sakibul Hassan Shovon','AI Engineer'],['Yasin Arafat','Hydro Analyst']];
+const crew=[['Sabbir Ahmed','Mission Commander'],['Sanjid Talukder','Data Scientist'],['Sakibul Hassan Shovon','AI/ML Engineer'],['Yasin Arafat','Hydro Analyst']];
 
 test('About tells the project story with the original team and registered imagery',async({page})=>{
  const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));await page.goto('/about');await expect(page.getByRole('navigation',{name:'Primary',exact:true})).toHaveCount(1);await expect(page.getByRole('heading',{level:1})).toContainText('A changing landscape.');

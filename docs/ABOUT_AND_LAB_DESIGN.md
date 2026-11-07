@@ -4,14 +4,16 @@
 
 `/about` presents the project as four chapters: the question, the landscapes, the approach and the people. `/about-us` redirects to the same page. Primary navigation and the landing footer expose the story. The chapter navigation supports direct anchors, a reading indicator and mobile scrolling.
 
-Names and project roles are retained from the earlier `nasa-2026-web/web/src/pages/About.tsx`:
+Names and project roles follow the earlier `nasa-2026-web/web/src/pages/About.tsx`:
 
 | Name | Project role | Contribution |
 | --- | --- | --- |
 | Sabbir Ahmed | Mission Commander | System Architecture & AI Pipeline |
 | Sanjid Talukder | Data Scientist | SAR Processing & Remote Sensing |
-| Sakibul Hassan Shovon | AI Engineer | Interactive Visualization & UX |
+| Sakibul Hassan Shovon | AI/ML Engineer | Interactive Visualization & UX |
 | Yasin Arafat | Hydro Analyst | River Dynamics & Quality Assurance |
+
+Sakibul Hassan Shovon's role is AI/ML Engineer, as specified by the team.
 
 Only the GitHub link present in the original team record is used. Initials represent team members; no invented biographies or portraits are added. Landscape images, dates and acquisition counts come from the active registered catalogue. The copy describes the current Sentinel-1 evidence workflow rather than carrying forward the earlier project's NISAR operational-data claims. Source details remain in Reports.
 
