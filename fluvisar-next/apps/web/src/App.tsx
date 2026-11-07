@@ -26,7 +26,7 @@ import { EvidenceWorkbench } from './components/EvidenceWorkbench';
 import './styles/observatory-redesign.css';
 
 const DecisionDesk = lazy(() => import('./features/legacy/pages/ImpactDesk').then(m=>({default:m.DecisionDesk})));
-const IntelligencePage = lazy(() => import('./features/legacy/pages/Intelligence').then(m=>({default:m.IntelligencePage})));
+const IntelligencePage = lazy(() => import('./features/legacy/pages/IntelligenceWorkspace').then(m=>({default:m.IntelligencePage})));
 const SARLabPage = lazy(() => import('./features/legacy/pages/SARLab').then(m=>({default:m.SARLabPage})));
 
 // 1. Observatory Route Component (Handles /observatory and /observatory/:regionId)

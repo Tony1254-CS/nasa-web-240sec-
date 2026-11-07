@@ -343,7 +343,7 @@ Actual exposure and the **What-if scenario** are distinct outputs. Exposure is s
 
 ### 9.1 Generated-data model sandbox
 
-The interactive sandbox demonstrates a **Random Forest** and **Temporal MLP** using generated radar-change scenarios. It provides what-if inputs and diagnostics including:
+The **Model playground** demonstrates a **Random Forest** and **Temporal MLP** using generated radar-change scenarios. Both models' responses are visible for the same input, with explicit disagreement/review states, named local experiments, reset/original comparison and reproducible JSON export. It preserves what-if inputs and diagnostics including:
 
 - Feature-space and pixel-scenario exploration.
 - Training behavior and generated-data confusion matrices.
@@ -356,9 +356,11 @@ Scores describe the generated exercise. They are not real-case accuracy, calibra
 
 ### 9.2 Workspace evidence
 
-The separate evidence view reads the registered radar pair, masks, candidates, numerical statistics and quality record. The generated sandbox and measured observation bundle remain distinct.
+**Real observations** is the default workspace. It reads the selected registered pair, masks, georeferenced candidates, numerical statistics and quality record for either region, with all six radar acquisitions and every available comparison pair. Candidate review ordering, repeat observations, source-linked explanations and Observatory/Decision Desk handoffs retain the selected evidence context. Operational labels are VV/VH; generated HH examples remain in the model workspaces.
 
-**Implementation:** [Intelligence.tsx](fluvisar-next/apps/web/src/features/legacy/pages/Intelligence.tsx).
+Four visible workspaces organize all tools: **Real observations**, **Model playground**, **Robustness & review**, and **Model evaluation**. Diagnostic controls persist across tabs and saved experiment snapshots. A guided walkthrough explains scenario selection, pixel inspection, model comparison, speckle and review decisions. Desktop/mobile and both themes share a consistent container grid.
+
+**Implementation:** [IntelligenceWorkspace.tsx](fluvisar-next/apps/web/src/features/legacy/pages/IntelligenceWorkspace.tsx), retaining the scientific modules in [Intelligence.tsx](fluvisar-next/apps/web/src/features/legacy/pages/Intelligence.tsx). See [Intelligence workspace methods and preservation map](docs/INTELLIGENCE_WORKSPACE.md).
 
 ## 10. SAR Lab, stories and reports
 
@@ -625,7 +627,7 @@ npm run build
 npm run test:e2e -- --workers=1
 ```
 
-The current browser suite registers **28 tests in six files**:
+The current browser suite registers **34 tests in seven files**:
 
 | Suite | Main coverage |
 | --- | --- |
@@ -635,6 +637,7 @@ The current browser suite registers **28 tests in six files**:
 | `evidence-workflow.spec.ts` | Both six-stage reviews, field photo/GPS storage/export, isolation and mobile access |
 | `evidence-readability.spec.ts` | Adjacent report/map panes, typography and mobile tab layout |
 | `impact-desk.spec.ts` | Both regions, history, divider alignment, pair-specific metrics/exports, exposure, scenarios, deep links and mobile/light theme |
+| `intelligence-workspace.spec.ts` | Real-data identity/pairs/handoffs, linked model experiments and save/restore, retained diagnostics, walkthrough, panel alignment and mobile/light theme |
 
 ### 16.2 Active API and scientific checks
 

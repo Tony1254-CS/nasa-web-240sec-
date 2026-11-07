@@ -64,7 +64,7 @@ test('mobile layouts, navigation, and theme remain consistent',async({page})=>{
 
 test('ML education stays explicit while the evidence tab reads real observations',async({page})=>{
  const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
- await page.goto('/intelligence');await expect(page.getByRole('tab',{name:/Model sandbox/})).toContainText('SYNTHETIC');await page.getByRole('tab',{name:/Workspace evidence/}).click();await expect(page.locator('.ml-real-summary')).toContainText(jamuna.metrics.land_to_water_ha.toLocaleString('en-US',{maximumFractionDigits:1}));
+ await page.goto('/intelligence');await expect(page.getByRole('tab',{name:/Model playground/})).toContainText('SYNTHETIC');await expect(page.getByRole('tab',{name:/Real observations/})).toHaveAttribute('aria-selected','true');await expect(page.locator('.ml-real-summary')).toContainText(jamuna.metrics.land_to_water_ha.toLocaleString('en-US',{maximumFractionDigits:1}));
  await page.goto('/sar-lab');await expect(page.locator('.sar-lab__hero')).toBeVisible();await page.getByRole('button',{name:'SCAN CHANGE MAP',exact:true}).click();await expect(page.getByRole('button',{name:'REPLAY MAP SCAN',exact:true})).toBeVisible();
  expect(await page.locator('img').evaluateAll(images=>images.filter(image=>!(image as HTMLImageElement).complete||!(image as HTMLImageElement).naturalWidth).map(image=>(image as HTMLImageElement).src))).toEqual([]);expect(errors).toEqual([]);
 });
