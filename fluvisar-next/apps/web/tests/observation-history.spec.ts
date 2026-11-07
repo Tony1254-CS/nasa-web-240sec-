@@ -57,7 +57,7 @@ test('radar pair changes imagery and measured candidate areas together',async({p
  await expect(page.locator('.map-pane-a')).toHaveAttribute('data-observation-id',observations[0].id);
  await expect(page.locator('.map-pane-b')).toHaveAttribute('data-observation-id',observations[5].id);
  const url=region.pair_bundles[observations[0].date+'_'+observations[5].date];const pair=await(await request.get(url)).json();
- await page.getByRole('navigation',{name:'Investigation tools'}).getByRole('button',{name:'Explore',exact:true}).click();
+ await page.getByRole('navigation',{name:'Feature categories'}).getByRole('button',{name:'Explore',exact:true}).click();
  await expect(page.locator('.obs-stats')).toContainText(pair.metrics.land_to_water_ha.toLocaleString('en-US',{maximumFractionDigits:2}));
  await page.getByRole('button',{name:'Sat vs Radar',exact:true}).click();
  await page.getByRole('button',{name:'Next satellite pass'}).click();
@@ -68,7 +68,7 @@ test('radar pair changes imagery and measured candidate areas together',async({p
 test('theme toggle applies to the header, feature rail, timeline and tools in both regions',async({page})=>{
  for(const region of ['jamuna','sundarbans']){
   await open(page,region);
-  await expect(page.locator('.map-pane-b')).toHaveAttribute('data-optical-loaded','true');
+  await expect.poll(()=>page.locator('.map-pane-b').evaluate(el=>(el as HTMLElement).dataset.opticalLoaded==='true'||(el as HTMLElement).dataset.opticalDetailLoaded==='true')).toBe(true);
   if(await page.locator('.legacy-pages').getAttribute('data-theme')!=='dark')await page.getByRole('button',{name:'Toggle Light/Dark Theme'}).click();
   for(const selector of ['.obs-header','.obs-sidebar','.restored-timeline','.restored-map-tools'])await expect(page.locator(selector)).toHaveCSS('background-color','rgb(19, 33, 41)');
   await page.screenshot({path:'test-results/'+region+'-dark-history.png'});

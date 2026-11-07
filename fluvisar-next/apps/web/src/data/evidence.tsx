@@ -46,13 +46,18 @@ export function currentEvidence(region:RegionId) {
   if(!cached) throw new Error('Observation catalogue is still loading.');
   return cached.regions[region];
 }
+// Prefer the two least-cloudy retained observations; preserve every date in the timeline.
+export function initialOpticalPair(evidence:RegionEvidence):[string,string]|null{
+ const clear=[...(evidence.optical_observations??[])].sort((a,b)=>a.cloud_fraction-b.cloud_fraction||a.date.localeCompare(b.date)).slice(0,2).map(o=>o.date).sort();
+ return clear.length===2?[clear[0],clear[1]]:evidence.optical_pair??null;
+}
 const EvidenceContext=createContext<EvidenceIndex|null>(null);
 export function EvidenceProvider({children}:{children:ReactNode}) {
   const [index,setIndex]=useState<EvidenceIndex|null>(null);
   const [error,setError]=useState('');
   const region=useWorkspaceStore(s=>s.regionId);
-  useEffect(()=>{let active=true; loadEvidence().then(value=>{if(active){const evidence=value.regions[useWorkspaceStore.getState().regionId];useWorkspaceStore.setState({runId:evidence.run_id,availableDates:evidence.observations.map(o=>o.date).sort(),selectedPair:evidence.pair,selectedDate:evidence.pair[1],selectedSample:null,selectedOpticalPair:evidence.optical_pair??null,selectedOpticalDate:evidence.optical_pair?.[1]??''});setIndex(value);}}).catch(cause=>{if(active)setError(String(cause));});return()=>{active=false;};},[]);
-  useEffect(()=>{if(index){const evidence=index.regions[region];useWorkspaceStore.setState({runId:evidence.run_id,availableDates:evidence.observations.map(o=>o.date).sort(),selectedPair:evidence.pair,selectedDate:evidence.pair[1],selectedFindingId:null,selectedSample:null,selectedOpticalPair:evidence.optical_pair??null,selectedOpticalDate:evidence.optical_pair?.[1]??''});}},[index,region]);
+  useEffect(()=>{let active=true; loadEvidence().then(value=>{if(active){const evidence=value.regions[useWorkspaceStore.getState().regionId];useWorkspaceStore.setState({runId:evidence.run_id,availableDates:evidence.observations.map(o=>o.date).sort(),selectedPair:evidence.pair,selectedDate:evidence.pair[1],selectedSample:null,selectedOpticalPair:initialOpticalPair(evidence),selectedOpticalDate:initialOpticalPair(evidence)?.[1]??''});setIndex(value);}}).catch(cause=>{if(active)setError(String(cause));});return()=>{active=false;};},[]);
+  useEffect(()=>{if(index){const evidence=index.regions[region];useWorkspaceStore.setState({runId:evidence.run_id,availableDates:evidence.observations.map(o=>o.date).sort(),selectedPair:evidence.pair,selectedDate:evidence.pair[1],selectedFindingId:null,selectedSample:null,selectedOpticalPair:initialOpticalPair(evidence),selectedOpticalDate:initialOpticalPair(evidence)?.[1]??''});}},[index,region]);
   if(error) return <div className="data-boot"><h1>Observation connection interrupted</h1><p>{error}</p><button onClick={()=>window.location.reload()}>Retry loading data</button></div>;
   if(!index) return <div className="data-boot"><div className="data-boot-radar"/><p>Opening the satellite evidence catalogue…</p></div>;
   return <EvidenceContext.Provider value={index}>{children}</EvidenceContext.Provider>;

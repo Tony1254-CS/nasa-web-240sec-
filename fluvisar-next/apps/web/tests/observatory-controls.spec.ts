@@ -9,6 +9,7 @@ async function aligned(page:Page){await expect.poll(async()=>{const [a,b]=await 
 async function footprintFits(page:Page){
  await expect.poll(async()=>{
   const [,b]=await cameras(page),box=await page.locator('.map-pane-b').boundingBox();if(!box)return false;
+  if(b.pitch>=40&&await page.locator('.restored-map-workspace').getAttribute('data-comparison-enabled')==='false')return b.center[0]>89.6&&b.center[0]<89.9&&b.center[1]>25.4&&b.center[1]<25.75;
   const [[w,n],[e,s]]=b.bounds;
   return w>=15&&n>=75&&e<=box.width-15&&s<=box.height-15&&(s-n)>box.height*.35;
  }).toBe(true);
@@ -23,10 +24,9 @@ test('both study areas open on real satellite context with the entire georeferen
   await expect(page.getByRole('button',{name:'Compare before & after'})).toBeVisible();
   await expect(page.getByRole('button',{name:'Investigate a change',exact:false})).toBeVisible();
   await footprintFits(page);await aligned(page);
-  await expect(page.getByRole('complementary',{name:'Observatory features'})).toBeHidden();
+  await expect(page.getByRole('complementary',{name:'Observatory features'})).toBeVisible();
   const map=(await page.locator('.restored-map-workspace').boundingBox())!;
-  expect(map.width).toBeGreaterThanOrEqual(page.viewportSize()!.width-2);
-  await expect(page.getByRole('navigation',{name:'Investigation tools'})).toBeVisible();
+  const rail=await page.locator('.obs-sidebar').boundingBox();expect(map.x).toBeGreaterThanOrEqual(rail!.x+rail!.width-1);
   await page.getByRole('button',{name:'Zoom in',exact:true}).click();
   await page.getByRole('button',{name:'Recenter study area'}).click();await footprintFits(page);
   await page.screenshot({path:'test-results/observatory-'+region+'-redesign.png'});
@@ -49,7 +49,6 @@ test('date comparison, dragged swipe and split maintain geographic alignment',as
 
 test('radar, planning, InSAR, evidence, coverage and observation pairing are discoverable',async({page})=>{
  const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));await ready(page);
- await page.getByRole('navigation',{name:'Investigation tools'}).getByRole('button',{name:'Radar & layers',exact:true}).click();
  const categories=page.getByRole('navigation',{name:'Feature categories'});
  await categories.getByRole('button',{name:'Radar',exact:true}).click();
  const channels=page.getByRole('group',{name:'Polarization channels'});
@@ -58,10 +57,9 @@ test('radar, planning, InSAR, evidence, coverage and observation pairing are dis
  await page.getByRole('button',{name:/Ground motion experiment/}).click();await expect(page.getByRole('slider',{name:'Minimum coherence'})).toBeVisible();
  await page.getByRole('button',{name:/Scenario planner/}).click();await expect(page.getByRole('slider',{name:'Hypothetical stage change'})).toBeVisible();
  await page.getByRole('button',{name:/Service continuity/}).click();await expect(page.locator('.restored-calculator')).toBeVisible();
- await page.getByRole('button',{name:'Close features'}).click();
  await page.getByRole('button',{name:'Toggle coverage curtain'}).click();await expect(page.getByText('Observation denominator mask',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Close coverage curtain'}).click();
  await page.getByRole('button',{name:/Comparison Pair:/}).click();await expect(page.getByRole('dialog',{name:'Comparison pair selector'})).toBeVisible();await page.getByRole('button',{name:'Use this pair',exact:true}).click();
- await page.getByRole('navigation',{name:'Investigation tools'}).getByRole('button',{name:'Explore',exact:true}).click();await page.getByRole('complementary',{name:'Observatory features'}).getByRole('button',{name:/Investigate a change/}).click();
+ await page.getByRole('navigation',{name:'Feature categories'}).getByRole('button',{name:'Explore',exact:true}).click();await page.getByRole('complementary',{name:'Observatory features'}).getByRole('button',{name:/Investigate a change/}).click();
  const tabs=page.getByRole('navigation',{name:'Finding inspector tabs'});await expect(tabs).toBeVisible();await tabs.getByRole('button',{name:'audit',exact:true}).click();await expect(page.getByRole('slider',{name:'Audit water threshold'})).toBeVisible();
  expect(errors).toEqual([]);
 });

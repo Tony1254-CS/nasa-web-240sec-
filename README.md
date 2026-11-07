@@ -194,9 +194,9 @@ The atlas presents the two regions, their acquisition windows, sensor metadata, 
 
 ### 5.1 Map, geography and display modes
 
-The MapLibre workspace fits the actual study bounds and supports:
+The MapLibre workspace opens on the configured study areas and fits shared study bounds during comparisons. It supports:
 
-- **Satellite:** dated Sentinel-2 L2A true-colour source imagery.
+- **Satellite:** detailed Esri context or dated Sentinel-2 L2A true-colour observations, explicitly labelled.
 - **Radar:** calibrated Sentinel-1 RTC displays registered to the numerical footprint.
 - **Carto:** OpenStreetMap context.
 - Recenter, zoom buttons, a precision zoom slider, scale and attribution.
@@ -206,11 +206,17 @@ Esri World Imagery supplies context beyond valid dated optical coverage. It is a
 
 The map includes a synchronized geographic fly-in with Skip, Replay, reduced-motion support and exact study-area framing.
 
-The Observatory uses a full-width map, a horizontal desktop investigation toolbar,
-on-demand feature panels and a collapsible, resizable finding inspector. Dated
-optical detail loads from locally served lossless tiles generated directly from
-the original 10 m Sentinel-2 source, while the larger context image remains beneath
-it. See [map layout, imagery provenance and rebuild instructions](docs/MAP_FIRST_OBSERVATORY.md).
+The desktop Observatory keeps the investigation panel on the left; phones use a
+feature drawer. Jamuna opens in an angled river overview. Sundarbans starts with
+the detailed Esri satellite mosaic, labelled as context without an acquisition
+date. Selecting a timeline pass or date comparison opens actual Sentinel-2
+observations. Initial optical comparisons use the two least-cloudy retained
+scenes, and cloud/shadow percentages remain visible. A floating launcher opens
+the source-connected assistant from the bottom right.
+
+Dated optical detail loads from locally served lossless tiles generated from
+original 10 m Sentinel-2 sources. See [map layout, imagery provenance and rebuild
+instructions](docs/MAP_FIRST_OBSERVATORY.md).
 
 ### 5.2 Before/after comparison
 
@@ -650,14 +656,14 @@ npm run build
 npm run test:e2e -- --workers=1
 ```
 
-The current browser suite registers **61 tests in eleven files**:
+The current browser suite registers **63 tests in eleven files**:
 
 | Suite | Main coverage |
 | --- | --- |
 | `responsive-audit.spec.ts` | All ten public pages at five desktop/laptop/phone sizes in both themes; header reachability, overflow and unclipped intro content |
 | `about-lab.spec.ts` | Original crew and imagery provenance, story navigation, themes, responsive layout and preserved Lab controls/interactions |
 | `legacy-pages.spec.ts` | Routes, navigation, report/source consistency, exports and learning modules |
-| `map-first.spec.ts` | Full-width map, on-demand tools, collapsible inspector and source-linked tiles for every optical date |
+| `map-first.spec.ts` | Left panel, regional camera defaults, floating chat, cloud/context labels, split alignment and source-linked tiles for every optical date |
 | `observatory-controls.spec.ts` | Study framing, camera alignment, controls, tools and region navigation |
 | `observation-history.spec.ts` | Served-image checksums, date/image mapping, pair persistence, metrics and themes |
 | `evidence-workflow.spec.ts` | Both six-stage reviews, field photo/GPS storage/export, isolation and mobile access |

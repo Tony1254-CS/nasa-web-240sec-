@@ -82,3 +82,26 @@ Verification:
 These remain Chromium viewport checks and screenshot review, rather than physical
 phone testing. The retained source detail is 10 m; zooming further enlarges those
 pixels. Context beyond retained dated coverage depends on the external basemap.
+
+
+## Restored rail and regional views - 8 November 2026
+
+The desktop left panel is restored, with compact cards on shorter laptop screens.
+Jamuna opens at 89.75, 25.575, zoom 10.9 and pitch 55 degrees (phone: 10.2 and 45).
+Date comparisons return both cameras to the same top-down study framing.
+Sundarbans defaults to detailed Esri context, explicitly not date-matched; date
+selection opens retained Sentinel-2 observations. Initial optical pairs use the
+two least-cloudy available scenes. The white areas in the June 4 Sundarbans scene
+are retained source clouds (21.59% ROI cloud/shadow), now explained in the UI.
+A bottom-right assistant launcher has reserved timeline space and opens the same
+source-connected dialog.
+
+The 25-case focused regression run initially passed 22 cases. Three checks needed
+updates for the requested camera and rendering contract: tolerance for floating
+point pitch, awaiting the retained imagery after the camera intro, and accepting
+ready native detail rather than requiring the older context preview. The four
+related date/detail/theme/camera reruns passed. The final two regional UI checks
+passed again after compact-rail styling; a further context/split check passed
+with the detailed basemap fully loaded. Screenshots were reviewed at 1920, 1366
+and 390 px widths. The production build passed. All observation files and SAR Lab
+source remain unchanged. The suite now registers 63 tests in eleven files.

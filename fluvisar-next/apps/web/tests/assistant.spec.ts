@@ -18,9 +18,9 @@ test('region fly-in is skippable, repeatable and ends with aligned comparison ca
  await expect(page.locator('.restored-map-workspace')).toHaveAttribute('data-flyin-active','true');
  await page.setViewportSize({width:390,height:844});
  await expect(page.getByRole('button',{name:'Replay fly-in',exact:true})).toBeVisible();
- const fitted=await page.locator('.radar-map-canvas').evaluate(el=>({camera:JSON.parse((el as HTMLElement).dataset.camera!),width:el.clientWidth,height:el.clientHeight}));expect(fitted.camera.bounds[0][0]).toBeGreaterThanOrEqual(15);expect(fitted.camera.bounds[0][1]).toBeGreaterThanOrEqual(75);expect(fitted.camera.bounds[1][0]).toBeLessThanOrEqual(fitted.width-15);expect(fitted.camera.bounds[1][1]).toBeLessThanOrEqual(fitted.height-15);
+ const fitted=await page.locator('.radar-map-canvas').evaluate(el=>({camera:JSON.parse((el as HTMLElement).dataset.camera!),width:el.clientWidth,height:el.clientHeight}));expect(fitted.camera.pitch).toBeGreaterThanOrEqual(45);expect(fitted.camera.center[0]).toBeCloseTo(89.75);
  await page.getByRole('combobox',{name:'Study region'}).selectOption('sundarbans');
- await expect(page.locator('.radar-map-canvas')).toHaveAttribute('data-observation-url',/sundarbans/);await expect(page.getByRole('button',{name:'Replay fly-in',exact:true})).toBeVisible();await page.getByRole('button',{name:'Replay fly-in',exact:true}).click();await page.getByRole('button',{name:'Skip intro',exact:true}).click();
+ await expect(page.locator('.radar-map-canvas')).toHaveAttribute('data-observation-id','esri-context');await expect(page.getByRole('button',{name:'Replay fly-in',exact:true})).toBeVisible();await page.getByRole('button',{name:'Replay fly-in',exact:true}).click();await page.getByRole('button',{name:'Skip intro',exact:true}).click();
 });
 
 test('assistant uses real run values, sources, history, exports and map handoff',async({page})=>{

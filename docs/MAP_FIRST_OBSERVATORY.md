@@ -1,15 +1,22 @@
 # Map-first Observatory
 
-Both `/observatory/jamuna` and `/observatory/sundarbans` use the full workspace
-width for the map. Desktop investigation controls sit in a horizontal toolbar.
-Explore, Radar & layers and More tools open the existing investigation panel
-on demand. Phone users retain the compact Explore features drawer.
+Both Observatory routes keep the investigation panel on the left on desktop and
+use a compact feature drawer on phones. Jamuna opens with an angled, close river
+view (desktop: centre 89.75, 25.575; zoom 10.9; pitch 55 degrees). Comparisons use
+shared top-down framing. Recenter and Replay return to the regional default.
 
-The finding inspector opens when requested or when a finding is selected. Its
-details can collapse; desktop users can resize it from its lower corner.
-All six dates, playback, date pairing, swipe/split comparison, radar channels,
-coverage, evidence workflows, exports and contextual data chat remain available.
-Measured areas, numeric radar products and the geographic study bounds are unchanged.
+Sundarbans starts on detailed Esri satellite context. This mosaic has no claimed
+acquisition date. Selecting a pass, Dated observations, or a date comparison
+opens actual Sentinel-2 imagery. Every retained date remains selectable. The two
+least-cloudy retained scenes form the initial optical pair; cloud/shadow
+percentages are shown in map labels and pair choices. Images with more than 10%
+ROI cloud/shadow show a notice explaining their white cloud areas. Clouds remain
+in the source imagery.
+
+The finding inspector can collapse and resize on desktop. All radar channels,
+coverage, six Evidence stages, Live Analysis, exports and contextual chat remain.
+A floating assistant launcher sits at bottom right, with space reserved in the
+timeline. Measured areas, numeric products and geographic study bounds are unchanged.
 
 ## Dated optical detail
 
