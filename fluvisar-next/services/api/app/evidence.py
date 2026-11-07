@@ -71,12 +71,19 @@ def impact(bundle,finding_id):
  for category in ['land-to-water','water-to-land']:
   category_features=[f for f in selected if f['properties']['category']==category]
   projected=[transform_geom('EPSG:4326',crs,f['geometry']) for f in category_features]
-  union=unary_union([make_valid(shape(g)) for g in projected])
+  projected_shapes=[make_valid(shape(g)) for g in projected]
+  geographic_shapes=[make_valid(shape(f['geometry'])) for f in category_features]
   counts={'building':0,'road':0,'facility':0,'settlement':0};road_length=0
-  if not union.is_empty:
-   query=unary_union([make_valid(shape(f['geometry'])) for f in category_features])
-   for index in tree.query(query,predicate='intersects'):
-    asset=assets[index];geometry=make_valid(shape(transform_geom('EPSG:4326',crs,asset['geometry'])));overlap=geometry.intersection(union)
+  if projected_shapes:
+   # Join each candidate against the spatial index first. Intersect assets only
+   # with nearby candidate geometry rather than the entire complex reach union.
+   # This preserves exact overlap while avoiding minute-long seasonal comparisons.
+   matches={}
+   for candidate_index,asset_index_value in tree.query(geographic_shapes,predicate='intersects').T:
+    matches.setdefault(int(asset_index_value),[]).append(int(candidate_index))
+   for index,candidate_indices in matches.items():
+    local_union=unary_union([projected_shapes[i] for i in candidate_indices])
+    asset=assets[index];geometry=make_valid(shape(transform_geom('EPSG:4326',crs,asset['geometry'])));overlap=geometry.intersection(local_union)
     if overlap.is_empty:continue
     if geometry.geom_type in ('Polygon','MultiPolygon') and overlap.area<=0:continue
     if geometry.geom_type in ('LineString','MultiLineString') and overlap.length<=0:continue

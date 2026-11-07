@@ -321,18 +321,21 @@ Storage uses the browser's `fluvisar-field-evidence` **IndexedDB** database. Rec
 
 **Route:** `/impact`.
 
-The Decision Desk presents the active region's default analysis bundle as a human review workspace:
+The Decision Desk presents any registered comparison for the active region as a human review workspace:
 
-- A mapped candidate overview and area-ranked review ledger.
-- Candidate selection with provenance and quality evidence.
-- Browser-local review status.
-- **Radar → reality** comparison of the retained analysis acquisitions.
-- A declared **Impact scenario** for examining a hypothetical review envelope.
-- Source/context inspection and manual field-handoff exports.
+- Dated optical satellite context, VV/VH radar, water masks and a geographically aligned before/after divider.
+- All six radar acquisitions, fifteen selectable pairs per region and measured water-area histories.
+- Every candidate in a searchable ledger; ordering by area, mapped-asset intersection count, threshold sensitivity or outstanding review.
+- Exact building/road/facility intersections, road overlap length and historical land-cover overlap for the study area or selected finding.
+- Source-specific NASA rainfall context and archived NISAR GCOV discovery records through November 7, 2026.
+- Candidate provenance, numerical hashes, quality checks and browser-local review status.
+- Real authored field observations with optional requested GPS and photo, stored on the device.
+- A separately labelled **What-if scenario**, preserving corridor controls and live OSM queries.
+- A source-linked printable decision brief, pair-specific case JSON and working region/pair/finding deep links.
 
-The **Impact stage inside Evidence** computes archived source-based intersections. The **Impact scenario in Decision Desk** is a user-defined scenario; these are different outputs. Ranking is not a calibrated risk score. Manual JSON handoff does not imply automatic synchronization with another field platform.
+Actual exposure and the **What-if scenario** are distinct outputs. Exposure is spatial intersection, not confirmed damage or population affected. Priority ordering is not a calibrated risk score. NISAR catalog/browse context does not replace the numerical Sentinel-1 observations underlying the transition metrics. NASA POWER supplies IMERG where valid; recent gaps use explicitly labelled MERRA-2/GEOS-IT model precipitation. Field data and review states remain device-local.
 
-**Implementation:** [DecisionDesk.tsx](fluvisar-next/apps/web/src/features/legacy/pages/DecisionDesk.tsx).
+**Implementation:** [ImpactDesk.tsx](fluvisar-next/apps/web/src/features/legacy/pages/ImpactDesk.tsx). See [Decision Desk methods and workflow](docs/DECISION_DESK.md).
 
 ## 9. ML Intelligence
 
@@ -563,6 +566,7 @@ The API serves registered artifacts and calculations. Interactive schemas are av
 | GET | `/api/runs/{run_id}/bundle` | Default or historical radar comparison |
 | GET | `/api/artifacts/{artifact_id}/sample` | Numerical sample; `lon`, `lat`, optional `channel=vv` or `vh` |
 | GET | `/api/runs/{run_id}/evidence/{stage}` | Source-backed Evidence stage |
+| GET | `/api/runs/{run_id}/decision-context` | Actual observation history, exposure, candidate review statistics and NASA context; optional `finding_id` |
 
 Stage values are `detect`, `investigate`, `challenge`, `explain`, `field` and `impact`. Optional parameters are `finding_id`, `optical_before` and `optical_after`; dates must exist in the catalogue.
 
@@ -582,6 +586,8 @@ From `fluvisar-next/`, with the environment from Quick start:
 .venv-data/Scripts/python.exe scripts/ingest_sentinel1.py --before 2026-11-05
 .venv-data/Scripts/python.exe scripts/extend_observation_history.py
 .venv-data/Scripts/python.exe scripts/ingest_evidence_context.py
+.venv-data/Scripts/python.exe scripts/ingest_decision_context.py
+.venv-data/Scripts/python.exe scripts/warm_decision_cache.py
 .venv-data/Scripts/python.exe scripts/validate_observations.py
 ```
 
@@ -593,6 +599,8 @@ On macOS/Linux, replace `.venv-data/Scripts/python.exe` with `.venv-data/bin/pyt
 | `extend_observation_history.py` | Same-orbit history, dated optical scenes and additional radar pair results |
 | `expand_optical_context.py` | Larger dated optical source tile; invoked by history extension |
 | `ingest_evidence_context.py` | Archived OSM geometry and aligned WorldCover reference |
+| `ingest_decision_context.py` | NASA POWER IMERG/model rainfall, raw response hashes and ASF NISAR discovery |
+| `warm_decision_cache.py` | Precompute all thirty registered Decision Desk comparisons; source/method signatures invalidate cache |
 | `render_polarizations.py` | Source-derived ratio and RGB displays |
 | `validate_observations.py` | Catalogue consistency, pixel statistics, masks, geometry areas and checksums |
 
@@ -617,7 +625,7 @@ npm run build
 npm run test:e2e -- --workers=1
 ```
 
-The current browser suite registers **23 tests in five files**:
+The current browser suite registers **28 tests in six files**:
 
 | Suite | Main coverage |
 | --- | --- |
@@ -626,17 +634,18 @@ The current browser suite registers **23 tests in five files**:
 | `observation-history.spec.ts` | Served-image checksums, date/image mapping, pair persistence, metrics and themes |
 | `evidence-workflow.spec.ts` | Both six-stage reviews, field photo/GPS storage/export, isolation and mobile access |
 | `evidence-readability.spec.ts` | Adjacent report/map panes, typography and mobile tab layout |
+| `impact-desk.spec.ts` | Both regions, history, divider alignment, pair-specific metrics/exports, exposure, scenarios, deep links and mobile/light theme |
 
 ### 16.2 Active API and scientific checks
 
 From `fluvisar-next/`:
 
 ```powershell
-.venv-data/Scripts/python.exe -m pytest tests/test_b02_source_and_api.py tests/test_evidence_workflow.py -q
+.venv-data/Scripts/python.exe -m pytest tests/test_b02_source_and_api.py tests/test_evidence_workflow.py tests/test_decision_desk.py -q
 .venv-data/Scripts/python.exe scripts/validate_observations.py
 ```
 
-These API/Evidence suites currently contain **13 tests**. They check stored numerical samples, histogram counts, retained threshold results, finding scope, source-date rejection, exposure records and historical inventories. Artifact validation checks all selectable radar comparisons and optical/radar display lineage.
+These API/Evidence suites currently contain **18 tests**. They check stored numerical samples, histogram counts, retained threshold results, finding scope, source-date rejection, exposure records, historical inventories, actual water-area histories, review statistics and NASA archive integrity. Artifact validation checks all selectable radar comparisons and optical/radar display lineage.
 
 Additional milestone tests live in `tests/`. The older `run_all_tests.py` runs a fixed milestone list and is not a substitute for the active pytest/browser suites above. Passing implementation tests does not establish independent ground-truth validation or real-data ML accuracy.
 

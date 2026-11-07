@@ -199,3 +199,14 @@ def review_evidence_stage(run_id: str, stage: str, finding_id: Optional[str] = N
         raise HTTPException(404, str(error)) from error
     except ValueError as error:
         raise HTTPException(503, str(error)) from error
+
+@app.get('/api/runs/{run_id}/decision-context')
+def review_decision_context(run_id: str, finding_id: Optional[str] = None):
+    from app.decision import decision_context
+    get_run_bundle(run_id)
+    try:
+        return decision_context(run_id, finding_id)
+    except KeyError as error:
+        raise HTTPException(404, str(error)) from error
+    except ValueError as error:
+        raise HTTPException(503, str(error)) from error

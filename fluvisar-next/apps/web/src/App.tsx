@@ -25,7 +25,7 @@ import { ObservatoryHeader } from './components/ObservatoryHeader';
 import { EvidenceWorkbench } from './components/EvidenceWorkbench';
 import './styles/observatory-redesign.css';
 
-const DecisionDesk = lazy(() => import('./features/legacy/pages/DecisionDesk').then(m=>({default:m.DecisionDesk})));
+const DecisionDesk = lazy(() => import('./features/legacy/pages/ImpactDesk').then(m=>({default:m.DecisionDesk})));
 const IntelligencePage = lazy(() => import('./features/legacy/pages/Intelligence').then(m=>({default:m.IntelligencePage})));
 const SARLabPage = lazy(() => import('./features/legacy/pages/SARLab').then(m=>({default:m.SARLabPage})));
 

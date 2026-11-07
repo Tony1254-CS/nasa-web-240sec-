@@ -39,11 +39,11 @@ test('real measurements and source identity agree across regions, report and exp
 
 test('Decision Desk uses actual classified area and review status persists',async({page})=>{
  const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
- await page.goto('/impact');await expect(page.locator('.desk-hero h1')).toContainText(String(jamuna.findings.features.length));
- await expect(page.locator('.desk-metric.is-erosion .desk-metric-value')).toContainText(jamuna.metrics.land_to_water_ha.toLocaleString('en-US',{maximumFractionDigits:1}));
- await page.getByRole('combobox',{name:'Review status',exact:true}).selectOption('Field review queued');await page.reload();await expect(page.getByRole('combobox',{name:'Review status',exact:true})).toHaveValue('Field review queued');
- await page.getByRole('tab',{name:/Radar.*reality/i}).click();await expect(page.locator('.cmp-before')).toHaveAttribute('src',jamuna.observations[0].vv_url);await expect(page.locator('.cmp-after')).toHaveAttribute('src',jamuna.observations[1].vv_url);
- await page.getByRole('combobox',{name:'Investigation region'}).selectOption('sundarbans');await expect(page.locator('.desk-hero h1')).toContainText(String(sundarbans.findings.features.length));expect(errors).toEqual([]);
+ await page.goto('/impact');await expect(page.locator('.id-workspace-tabs')).toContainText(String(jamuna.findings.features.length));
+ await expect(page.getByTestId('impact-land-water')).toContainText(jamuna.metrics.land_to_water_ha.toLocaleString('en-US',{maximumFractionDigits:1}));
+ await page.locator('.id-candidate').first().click();await page.getByRole('combobox',{name:'Review status',exact:true}).selectOption('Field review queued');await page.reload();await page.locator('.id-candidate').first().click();await expect(page.getByRole('combobox',{name:'Review status',exact:true})).toHaveValue('Field review queued');
+ await page.getByRole('button',{name:'Compare dates',exact:true}).click();await expect(page.getByRole('slider',{name:'Before after comparison slider'})).toBeVisible();
+ await page.getByRole('combobox',{name:'Investigation region'}).selectOption('sundarbans');await expect(page.locator('.id-workspace-tabs')).toContainText(String(sundarbans.findings.features.length));expect(errors).toEqual([]);
 });
 
 test('numeric API samples the actual raster instead of a coordinate formula',async({request})=>{

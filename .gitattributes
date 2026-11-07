@@ -1,1 +1,4 @@
 graphify-out/graph.json merge=graphify
+
+# Preserve downloaded response bytes for recorded SHA-256 provenance.
+fluvisar-next/data/raw/**/decision-context/*.json -text

@@ -34,3 +34,4 @@ graphify-out/.rebuild.lock
 nasa-2026-web/
 test-results/
 playwright-report/
+fluvisar-next/data/derived/decision-cache/
