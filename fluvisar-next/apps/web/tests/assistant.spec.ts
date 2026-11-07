@@ -35,15 +35,33 @@ test('assistant uses real run values, sources, history, exports and map handoff'
 test('chat with data opens scoped discussion without resizing cards; mobile and light theme fit',async({page})=>{
  await page.goto('/intelligence');const card=page.locator('.iw-real-stats>article').first();const before=await card.boundingBox();
  await card.getByRole('button',{name:/Chat with Data:/}).click();
- await expect(page.getByRole('dialog',{name:'FluviSAR Assistant'})).toBeVisible();await expect(page.getByLabel('Ask about this evidence')).toHaveValue(/Land.*water/);
- await page.getByRole('button',{name:'Send question'}).click();await expect(page.locator('.fl-message.is-assistant')).toContainText('land → water');
+ await expect(page.getByRole('dialog',{name:'FluviSAR Assistant'})).toHaveCount(0);await expect(page.locator('.fl-inspection-guide')).toBeVisible();await expect(card).toHaveAttribute('data-chat-target','true');expect(await page.locator('[data-chat-target]').count()).toBeGreaterThanOrEqual(4);
+ await page.screenshot({path:'test-results/data-chat-highlight.png'});await card.click();await expect(page.locator('[data-chat-target]')).toHaveCount(0);
+ await expect(page.getByRole('dialog',{name:'FluviSAR Assistant'})).toBeVisible();await expect(page.locator('.fl-subject-chip')).toContainText(/Land.*water/);
+ await expect(page.locator('.fl-message.is-assistant')).toContainText('land → water');
  expect(await card.boundingBox()).toEqual(before);
  await page.getByRole('button',{name:'Close assistant'}).click();await page.getByRole('combobox',{name:'Investigation region'}).selectOption('sundarbans');
+ await card.getByRole('button',{name:/Chat with Data:/}).click();await expect(card).toHaveAttribute('data-chat-target','true');await page.keyboard.press('Escape');await expect(page.locator('[data-chat-target]')).toHaveCount(0);await expect(page.getByRole('dialog',{name:'FluviSAR Assistant'})).toHaveCount(0);
  await page.getByRole('button',{name:'Ask FluviSAR',exact:true}).click();await expect(page.locator('.fl-scope')).toContainText('Sundarbans');await expect(page.locator('.fl-message')).toHaveCount(0);
  await page.setViewportSize({width:390,height:844});await page.evaluate(()=>{document.querySelector('.legacy-pages')?.setAttribute('data-theme','light');});
  const box=await page.getByRole('dialog',{name:'FluviSAR Assistant'}).boundingBox();expect(box!.x).toBeGreaterThanOrEqual(0);expect(box!.x+box!.width).toBeLessThanOrEqual(390);expect(box!.y+box!.height).toBeLessThanOrEqual(844);
  await page.screenshot({path:'test-results/assistant-mobile.png'});
  await page.getByRole('button',{name:'What changed?',exact:true}).click();await expect(page.locator('.fl-message.is-assistant')).toContainText('land → water');
+});
+
+test('report Chat with Data highlights its boxes before opening a scoped conversation',async({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/observatory/sundarbans');await page.getByRole('button',{name:'Evidence options'}).click();await page.getByRole('button',{name:/^Detect/}).click();
+ const report=page.getByRole('dialog',{name:'Evidence workspace'});await expect(report.locator('.ew-metric').first()).toBeVisible();await report.getByRole('button',{name:'Chat with Data',exact:true}).click();
+ await expect(page.getByRole('dialog',{name:'FluviSAR Assistant'})).toHaveCount(0);await expect(report.locator('[data-chat-target]').first()).toBeVisible();expect(await page.locator('[data-chat-target]').evaluateAll(nodes=>nodes.every(n=>n.closest('.evidence-workbench')))).toBe(true);
+ await report.locator('[data-chat-target]').first().focus();await page.keyboard.press('Enter');await expect(page.getByRole('dialog',{name:'FluviSAR Assistant'})).toBeVisible();await expect(page.locator('.fl-scope')).toContainText('Sundarbans');await expect(page.locator('[data-chat-target]')).toHaveCount(0);
+});
+
+test('landing light mode has a light radar scrim and readable text; dark mode retains its contrast',async({page})=>{
+ await page.goto('/');const background=await page.locator('.hero-radar').evaluate(el=>getComputedStyle(el).backgroundImage);const darkScrim=await page.locator('.hero-scrim').evaluate(el=>getComputedStyle(el).backgroundImage);
+ await page.getByRole('button',{name:'Toggle Light/Dark Theme'}).click();await expect(page.locator('.navbar')).toHaveCSS('background-color','rgb(255, 255, 255)');await expect(page.locator('.headline-gradient')).toHaveCSS('-webkit-text-fill-color','rgb(16, 42, 67)');await expect(page.locator('.subheadline')).toHaveCSS('color','rgb(51, 65, 85)');await expect(page.locator('.hero-scrim')).toHaveCSS('background-image',/248, 250, 252/);
+ expect(await page.locator('.hero-radar').evaluate(el=>getComputedStyle(el).backgroundImage)).toBe(background);await page.screenshot({path:'test-results/landing-light-fixed.png'});
+ await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(391);await page.screenshot({path:'test-results/landing-light-mobile.png'});
+ await page.getByRole('button',{name:'Toggle Light/Dark Theme'}).click();await expect(page.locator('.navbar')).toHaveCSS('background-color','rgb(17, 26, 32)');expect(await page.locator('.hero-scrim').evaluate(el=>getComputedStyle(el).backgroundImage)).toBe(darkScrim);
 });
 
 test('reduced motion bypasses animation and connection errors allow retry',async({page})=>{

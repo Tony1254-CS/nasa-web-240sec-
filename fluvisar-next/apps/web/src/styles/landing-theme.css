@@ -1,0 +1,11 @@
+/* A light hero needs a light photographic scrim, rather than dark text on radar. */
+.legacy-pages[data-theme="light"] .science-landing .hero-scrim{background:linear-gradient(180deg,rgba(248,250,252,.96),rgba(248,250,252,.89) 45%,rgba(248,250,252,.97))}
+.legacy-pages[data-theme="light"] .science-landing .landing-main-hero{background:#f8fafc;color:#102a43}
+.legacy-pages[data-theme="light"] .science-landing .headline-gradient{background:none;-webkit-text-fill-color:#102a43;color:#102a43}
+.legacy-pages[data-theme="light"] .science-landing .headline-accent{background:linear-gradient(120deg,#075985,#1d4ed8);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.legacy-pages[data-theme="light"] .science-landing .subheadline{color:#334155}
+.legacy-pages[data-theme="light"] .science-landing :is(.hero-caption,.landing-evidence-strip){color:#475569}
+.legacy-pages[data-theme="light"] .science-landing .hero-content-elegant .eyebrow{color:#075985;border-color:#94b8c8;background:#ffffffc9}
+.legacy-pages[data-theme="light"] .science-landing .btn-elegant-secondary{background:#ffffffc9;color:#102a43;border-color:#94a3b8}
+.legacy-pages[data-theme="light"]:has(.science-landing) .navbar{background:#fff;border-color:#cbd5e1}
+.legacy-pages[data-theme="dark"]:has(.science-landing) .navbar{background:#111a20;border-color:#30434b}

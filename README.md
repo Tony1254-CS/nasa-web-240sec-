@@ -290,7 +290,7 @@ A zero mapped intersection can reflect sparse mapping or the selected geometry. 
 
 ### 6.5 Ask FluviSAR and Chat with Data
 
-A shared assistant explains the active region, radar pair and selected finding, with source links, map handoffs, English/Bengali questions and on-device conversation export/history. Ask FluviSAR opens a centred modal from the header. Contextual Chat with Data buttons appear only beside supported metrics, model explanations or the current Evidence stage; there is no floating launcher covering map controls.
+A shared assistant explains the active region, radar pair and selected finding, with source links, map handoffs, English/Bengali questions and on-device conversation export/history. Ask FluviSAR opens a centred modal from the header. Contextual Chat with Data buttons appear only beside supported metrics, model explanations or the current Evidence stage; the button first highlights supported boxes, then selecting a box opens its chat. There is no floating launcher covering map controls.
 
 Data-based answers use registered backend calculations. Optional Gemini function calling adds natural-language interpretation when a server-side credential is configured; provider errors and unsupported numerical output fall back to the verified data answer. Model experiments remain explicitly synthetic. See [Assistant and map implementation](docs/ASSISTANT_AND_MAP.md) for configuration, scope and limitations.
 
@@ -637,7 +637,7 @@ npm run build
 npm run test:e2e -- --workers=1
 ```
 
-The current browser suite registers **39 tests in eight files**:
+The current browser suite registers **41 tests in eight files**:
 
 | Suite | Main coverage |
 | --- | --- |
