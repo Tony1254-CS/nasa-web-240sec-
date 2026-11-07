@@ -204,6 +204,8 @@ The MapLibre workspace fits the actual study bounds and supports:
 
 Esri World Imagery supplies context beyond valid dated optical coverage. It is a context mosaic, not another date-matched observation. Optical clouds remain in the original images.
 
+The map includes a synchronized geographic fly-in with Skip, Replay, reduced-motion support and exact study-area framing.
+
 ### 5.2 Before/after comparison
 
 Two synchronized maps share center, zoom, bearing and pitch.
@@ -285,6 +287,12 @@ Impact uses an archived OpenStreetMap extract and an aligned **ESA WorldCover 20
 A zero mapped intersection can reflect sparse mapping or the selected geometry. It is not proof that no assets exist. A 2021 reference-class overlap does not establish current habitat or crop loss.
 
 **Implementation:** [EvidenceWorkbench](fluvisar-next/apps/web/src/components/EvidenceWorkbench.tsx), [stage panels](fluvisar-next/apps/web/src/components/EvidenceStagePanels.tsx), [workflow state](fluvisar-next/apps/web/src/store/evidenceWorkflowStore.ts), [review service](fluvisar-next/services/api/app/evidence.py). See the [Evidence workflow guide](docs/EVIDENCE_WORKFLOW.md).
+
+### 6.5 Ask FluviSAR and Chat with Data
+
+A shared assistant explains the active region, radar pair and selected finding, with source links, map handoffs, English/Bengali questions and on-device conversation export/history. Chat with Data opens a discussion for highlighted metrics, diagnostic panels or the current Evidence stage without resizing the page cards.
+
+Data-based answers use registered backend calculations. Optional Gemini function calling adds natural-language interpretation when a server-side credential is configured; provider errors and unsupported numerical output fall back to the verified data answer. Model experiments remain explicitly synthetic. See [Assistant and map implementation](docs/ASSISTANT_AND_MAP.md) for configuration, scope and limitations.
 
 ## 7. Field observations and exports
 
@@ -568,6 +576,8 @@ The API serves registered artifacts and calculations. Interactive schemas are av
 | GET | `/api/runs/{run_id}/bundle` | Default or historical radar comparison |
 | GET | `/api/artifacts/{artifact_id}/sample` | Numerical sample; `lon`, `lat`, optional `channel=vv` or `vh` |
 | GET | `/api/runs/{run_id}/evidence/{stage}` | Source-backed Evidence stage |
+| GET | `/api/assistant/status` | Assistant mode and supported data tools |
+| POST | `/api/assistant/ask` | Run-scoped, source-linked data answers with optional generative explanation |
 | GET | `/api/runs/{run_id}/decision-context` | Actual observation history, exposure, candidate review statistics and NASA context; optional `finding_id` |
 
 Stage values are `detect`, `investigate`, `challenge`, `explain`, `field` and `impact`. Optional parameters are `finding_id`, `optical_before` and `optical_after`; dates must exist in the catalogue.
@@ -627,7 +637,7 @@ npm run build
 npm run test:e2e -- --workers=1
 ```
 
-The current browser suite registers **34 tests in seven files**:
+The current browser suite registers **38 tests in eight files**:
 
 | Suite | Main coverage |
 | --- | --- |
@@ -637,6 +647,7 @@ The current browser suite registers **34 tests in seven files**:
 | `evidence-workflow.spec.ts` | Both six-stage reviews, field photo/GPS storage/export, isolation and mobile access |
 | `evidence-readability.spec.ts` | Adjacent report/map panes, typography and mobile tab layout |
 | `impact-desk.spec.ts` | Both regions, history, divider alignment, pair-specific metrics/exports, exposure, scenarios, deep links and mobile/light theme |
+| `assistant.spec.ts` | Geographic fly-in/alignment, scoped source-linked chat, map handoffs/export, card inspection, mobile/light theme and connection retry |
 | `intelligence-workspace.spec.ts` | Real-data identity/pairs/handoffs, linked model experiments and save/restore, retained diagnostics, walkthrough, panel alignment and mobile/light theme |
 
 ### 16.2 Active API and scientific checks

@@ -14,7 +14,7 @@ import { StoryModeView } from './components/StoryModeView';
 import { SarLabView } from './components/SarLabView';
 import { ReportsView } from './components/ReportsView';
 import { CoverageCurtainOverlay } from './components/CoverageCurtainOverlay';
-import { AgenticCopilotDrawer } from './components/AgenticCopilotDrawer';
+import { FluviAssistant } from './components/FluviAssistant';
 import { SourceProvenanceModal } from './components/SourceProvenanceModal';
 import { radarSonifier } from './utils/sonification';
 import './styles/tokens.css';
@@ -142,7 +142,6 @@ const WorkspaceApp: React.FC = () => {
       </div>
 
       {/* 3. Global Autonomous Agentic Copilot & Verified Provenance Inspector */}
-      <AgenticCopilotDrawer />
       <SourceProvenanceModal />
     </div>
   );
@@ -157,6 +156,6 @@ export const App: React.FC = () => <EvidenceProvider><LegacyPageLayout><Navbar/>
   <Route path="/learn" element={<Navigate to="/sar-lab" replace/>}/>
   <Route path="/learn/:experimentId" element={<Navigate to="/sar-lab#simulations" replace/>}/>
   <Route path="*" element={<WorkspaceApp />} />
-</Routes></LegacyPageLayout></EvidenceProvider>;
+</Routes><FluviAssistant/></LegacyPageLayout></EvidenceProvider>;
 
 export default App;

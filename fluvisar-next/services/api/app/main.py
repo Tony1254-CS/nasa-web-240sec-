@@ -16,6 +16,9 @@ app = FastAPI(
     description="Backend API for NASA Space Apps NISAR Web Observatory"
 )
 
+from app.assistant import router as assistant_router
+app.include_router(assistant_router)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
