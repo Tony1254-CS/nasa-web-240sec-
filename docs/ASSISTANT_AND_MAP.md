@@ -14,7 +14,7 @@ The Observatory fly-in and shared assistant preserve the current study-area data
 
 ## One assistant, two entry points
 
-**Ask FluviSAR** opens the shared panel on every application route. **Chat with Data** highlights inspectable metrics, diagnostic panels and evidence cards; clicking or pressing Enter prepares a question about the selected subject. The Evidence report also opens a discussion for its active stage. Neither entry point inserts chat content into existing cards or changes their dimensions.
+**Ask FluviSAR** lives in the primary navigation and opens a centred native modal with focus containment, Escape dismissal and focus restoration. **Chat with Data** appears beside supported metrics, model workspace explanations and the active Evidence report stage; it opens a discussion directly for that subject. There is no floating launcher or page-wide inspection mode. Atlas and other unsupported surfaces do not show a Chat with Data action. Opening the assistant does not resize the underlying cards.
 
 The panel displays the active region, registered comparison dates and selected finding. Model workspaces have a separate synthetic context. Conversations persist on the device by run and measured/model context. Each answer retains its own pair and finding metadata, sources and map handoff, including when a later question uses another scope. Users can clear or export the conversation. Local field photos are not read or sent.
 

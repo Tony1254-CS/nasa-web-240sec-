@@ -1,3 +1,4 @@
+import '../styles/atlas.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowUpRight, MapPin } from 'lucide-react';
 import { PageIntro } from './EvidenceUI';

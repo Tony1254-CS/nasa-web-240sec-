@@ -121,7 +121,7 @@ const WorkspaceApp: React.FC = () => {
   }, [isSonificationEnabled, selectedSample]);
 
   return (
-    <div className={'workspace-shell'+(mapRoute?' observatory-shell':'')+(pathname.startsWith('/observatory')?' observatory-redesign':'')}>
+    <div className={'workspace-shell'+(pathname==='/atlas'?' atlas-shell':'')+(mapRoute?' observatory-shell':'')+(pathname.startsWith('/observatory')?' observatory-redesign':'')}>
       {/* 1. Universal Top Header Navigation & Mode Bar */}
       {mapRoute&&(pathname.startsWith('/observatory')?<ObservatoryHeader/>:<Header />)}
 

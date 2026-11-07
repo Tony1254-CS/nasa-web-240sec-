@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Brain, ClipboardList, FileText, Menu, Microscope, Moon, Sun } from 'lucide-react';
+import { Brain, ClipboardList, FileText, Menu, Microscope, Moon, Sun, MessageSquare } from 'lucide-react';
 import { LegacyThemeContext } from '../theme';
 import { useWorkspaceStore } from '../../../store/workspaceStore';
 
@@ -22,7 +22,7 @@ export function Navbar({ transparent = false }: { transparent?: boolean }) {
         <Link to="/reports" className="navbar__btn"><FileText size={16}/> Report</Link>
       </div>
     </div>
-    <div className="navbar__right">
+    <div className="navbar__right"><button className="navbar__btn navbar__assistant" aria-label="Ask FluviSAR" onClick={()=>useWorkspaceStore.getState().setAgentDrawerOpen(true)}><MessageSquare size={16}/><span>Ask FluviSAR</span></button>
       <select className="navbar__reach-select" aria-label="Investigation region" value={regionId} onChange={e=>{const region=e.target.value as 'jamuna'|'sundarbans';setRegion(region);if(location.pathname.startsWith('/observatory'))navigate('/observatory/'+region);}}><option value="jamuna">Jamuna</option><option value="sundarbans">Sundarbans</option></select>
       <button className="navbar__btn" onClick={toggleTheme} aria-label="Toggle Light/Dark Theme">{theme==='dark'?<Sun size={18}/>:<Moon size={18}/>}</button>
       <button className="navbar__mobile-toggle" onClick={()=>setOpen(!open)} aria-label="Toggle navigation" aria-expanded={open}><Menu size={20}/></button>
