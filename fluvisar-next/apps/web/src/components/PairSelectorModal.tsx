@@ -53,10 +53,10 @@ export const PairSelectorModal: React.FC<PairSelectorProps> = ({ isOpen, onClose
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 select-none">
-      <div className="bg-white rounded-xl border border-[#CBD5E1] shadow-xl max-w-xl w-full overflow-hidden text-xs">
+    <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 pt-16 sm:pt-20 pb-6 select-none animate-in fade-in duration-150">
+      <div className="bg-white rounded-2xl border border-[#CBD5E1] shadow-2xl max-w-xl w-full overflow-hidden text-xs flex flex-col max-h-[84vh] animate-in zoom-in-95 duration-150">
         {/* Modal Header */}
-        <div className="flex items-center justify-between p-4 border-b border-[#F1F5F9] bg-[#F8FAFC]">
+        <div className="flex items-center justify-between p-4 border-b border-[#F1F5F9] bg-[#F8FAFC] shrink-0">
           <div>
             <h3 className="text-sm font-bold text-[#102A43]">SAR Time Machine: Compatible Pair Selector</h3>
             <p className="text-[11px] text-[#64748B] mt-0.5">

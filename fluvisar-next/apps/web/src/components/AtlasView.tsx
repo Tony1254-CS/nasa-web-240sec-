@@ -689,9 +689,9 @@ export function AtlasView() {
 
         {/* 5. INTERACTIVE SCIENTIFIC PREVIEW MODAL */}
         {previewCase && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xs p-4 select-text">
-            <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-xl w-full text-xs space-y-4 text-slate-100 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-              <div className="flex justify-between items-start border-b border-slate-800 pb-3">
+          <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 pt-16 sm:pt-20 pb-6 select-text animate-in fade-in duration-150">
+            <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-xl w-full text-xs space-y-4 text-slate-100 shadow-2xl animate-in zoom-in-95 duration-150 max-h-[84vh] flex flex-col overflow-hidden">
+              <div className="flex justify-between items-start border-b border-slate-800 pb-3 shrink-0">
                 <div>
                   <span className={`text-[10px] font-mono px-2 py-0.5 rounded border font-semibold ${previewCase.statusBadge}`}>
                     {previewCase.status}
@@ -740,7 +740,7 @@ export function AtlasView() {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800">
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-800 shrink-0">
                 <button
                   type="button"
                   onClick={() => setPreviewCase(null)}

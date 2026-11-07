@@ -44,10 +44,10 @@ export const BreakMyFindingModal: React.FC<BreakMyFindingModalProps> = ({ isOpen
   const stageConfounded = stageDelta > 1.0;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 select-none animate-in fade-in duration-150">
-      <div className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl max-w-3xl w-full overflow-hidden text-xs flex flex-col max-h-[92vh] text-slate-100">
+    <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 pt-16 sm:pt-20 pb-6 select-none animate-in fade-in duration-150">
+      <div className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-3xl w-full overflow-hidden text-xs flex flex-col max-h-[84vh] text-slate-100 animate-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950">
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-800 bg-slate-950 shrink-0">
           <div className="flex items-center space-x-2.5">
             <div className="w-8 h-8 rounded-lg bg-cyan-700 text-white flex items-center justify-center shadow-xs">
               <SlidersHorizontal className="w-4 h-4" />
@@ -281,7 +281,7 @@ export const BreakMyFindingModal: React.FC<BreakMyFindingModalProps> = ({ isOpen
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-800 bg-slate-950 flex items-center justify-between text-xs text-slate-400">
+        <div className="p-4 border-t border-slate-800 bg-slate-950 flex items-center justify-between text-xs text-slate-400 shrink-0">
           <div className="flex items-center gap-1.5">
             <ShieldCheck size={14} className="text-cyan-400" />
             <span>Robustness score is a parameter sensitivity audit, NOT an arbitrary correctness percentage.</span>

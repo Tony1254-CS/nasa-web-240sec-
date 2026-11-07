@@ -22,10 +22,10 @@ export const DecisionBriefModal: React.FC<DecisionBriefModalProps> = ({ isOpen, 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 print:p-0 print:bg-white">
-      <div className="bg-white rounded-xl shadow-2xl border border-[#CBD5E1] w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden print:max-h-none print:border-none print:shadow-none animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 pt-16 sm:pt-20 pb-6 print:p-0 print:bg-white animate-in fade-in duration-150">
+      <div className="bg-white rounded-2xl shadow-2xl border border-[#CBD5E1] w-full max-w-3xl max-h-[84vh] flex flex-col overflow-hidden print:max-h-none print:border-none print:shadow-none animate-in zoom-in-95 duration-150">
         {/* Modal Top Actions (Hidden in Print) */}
-        <div className="flex items-center justify-between px-5 py-3 border-b border-[#E2E8F0] bg-[#F8FAFC] print:hidden">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-[#E2E8F0] bg-[#F8FAFC] print:hidden shrink-0">
           <div className="flex items-center space-x-2 text-[#102A43] font-bold text-sm">
             <FileText className="w-4 h-4 text-[#155E75]" />
             <span>{isJamuna ? 'Jamuna Riverbank Decision Brief' : 'Sundarbans Canopy Pulse Brief'}</span>

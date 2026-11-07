@@ -135,10 +135,10 @@ export const ChangePassportModal: React.FC<ChangePassportModalProps> = ({ isOpen
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 select-none animate-in fade-in duration-150">
-      <div className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl max-w-3xl w-full overflow-hidden text-xs flex flex-col max-h-[92vh] text-slate-100">
+    <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 pt-16 sm:pt-20 pb-6 select-none animate-in fade-in duration-150">
+      <div className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-3xl w-full overflow-hidden text-xs flex flex-col max-h-[84vh] text-slate-100 animate-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-slate-800 bg-slate-950">
+        <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-800 bg-slate-950 shrink-0">
           <div className="flex items-center space-x-2.5">
             <div className="w-8 h-8 rounded-lg bg-cyan-700 text-white flex items-center justify-center">
               <FileCheck2 className="w-4 h-4" />
@@ -301,7 +301,7 @@ export const ChangePassportModal: React.FC<ChangePassportModalProps> = ({ isOpen
         </div>
 
         {/* Footer Actions */}
-        <div className="p-3.5 bg-slate-950 border-t border-slate-800 flex items-center justify-between text-xs">
+        <div className="p-3.5 bg-slate-950 border-t border-slate-800 flex items-center justify-between text-xs shrink-0">
           <div className="flex items-center space-x-2">
             <button
               onClick={() => handleCopy(shareableUrl, setCopiedUrl)}
