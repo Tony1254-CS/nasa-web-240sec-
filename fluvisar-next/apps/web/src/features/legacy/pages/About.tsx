@@ -8,7 +8,7 @@ const chapters=[{id:'question',label:'The question'},{id:'landscapes',label:'The
 const crew=[
  {name:'Sabbir Ahmed',role:'Mission Commander',work:'System Architecture & AI Pipeline',initials:'SA',github:'https://github.com/Tony1254-CS',handle:'@Tony1254-CS'},
  {name:'Sanjid Talukder',role:'Data Scientist',work:'SAR Processing & Remote Sensing',initials:'ST'},
- {name:'Sakibul Hassan Shovon',role:'AI Engineer',work:'Interactive Visualization & UX',initials:'SH'},
+ {name:'Sakibul Hassan Shovon',role:'AI/ML Engineer',work:'Interactive Visualization & UX',initials:'SH'},
  {name:'Yasin Arafat',role:'Hydro Analyst',work:'River Dynamics & Quality Assurance',initials:'YA'},
 ];
 

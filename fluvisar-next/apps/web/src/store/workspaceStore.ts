@@ -45,6 +45,8 @@ export interface WorkspaceState {
 
   // Basemap & Visualization
   basemapType: BasemapType;
+  satelliteView: 'dated'|'context';
+  setSatelliteView: (view:'dated'|'context') => void;
   overlayStyle: OverlayStyle;
   selectedPol: PolarizationChannel;
   swipePosition: number; // 0 - 100 percentage
@@ -143,6 +145,7 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   runId: 'loading-observations',
   viewId: 'J1', // Direct to Jamuna investigation by default
   mode: 'explore',
+  satelliteView: 'dated',
   basemapType: 'satellite', // Default to REAL satellite imagery!
   overlayStyle: 'outlines', // Default to crisp OUTLINES ONLY so satellite photo is 100% visible!
   selectedPol: 'VV',
@@ -177,13 +180,14 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   },
 
   setActiveTab: (activeTab) => set({ activeTab }),
+  setSatelliteView: (satelliteView) => set({satelliteView}),
   setBasemapType: (basemapType) => set({ basemapType }),
   setOverlayStyle: (overlayStyle) => set({ overlayStyle }),
   setSelectedPol: (selectedPol) => set({ selectedPol }),
   setSwipePosition: (swipePosition: number) => set({ swipePosition }),
   setComparisonMode: (comparisonMode: 'dates' | 'sensors') => set({ comparisonMode }),
   setComparisonLayout: (comparisonLayout) => set({ comparisonLayout }),
-  setComparisonEnabled: (comparisonEnabled) => set({ comparisonEnabled }),
+  setComparisonEnabled: (comparisonEnabled) => set(state=>({comparisonEnabled,...(comparisonEnabled&&state.comparisonMode==='dates'&&state.basemapType==='satellite'?{satelliteView:'dated' as const}:{})})),
   setRegion: (regionId) =>
     set((state) => {
       if (state.regionId === regionId) return state;
@@ -191,6 +195,9 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
       // Reset incompatible state per Section 18.1
       return {
         regionId,
+        satelliteView: regionId==='sundarbans'?'context':'dated',
+        basemapType: 'satellite',
+        comparisonEnabled: false,
         activeTab: 'investigate',
         caseId: def.defaultCase,
         viewId: def.defaultView,
@@ -236,8 +243,8 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   setLanguage: (language) => set({ language }),
   setAudience: (audience) => set({ audience }),
   setDisplayDate: (selectedDate) => set({ selectedDate }),
-  setOpticalDate: (selectedOpticalDate) => set({selectedOpticalDate}),
-  setOpticalPair: (selectedOpticalPair) => set({selectedOpticalPair,selectedOpticalDate:selectedOpticalPair[1]}),
+  setOpticalDate: (selectedOpticalDate) => set({selectedOpticalDate,satelliteView:'dated'}),
+  setOpticalPair: (selectedOpticalPair) => set({selectedOpticalPair,selectedOpticalDate:selectedOpticalPair[1],satelliteView:'dated'}),
   setSelectedDate: (selectedDate) =>
     set((state) => {
       let newPair: [string, string] | null = state.selectedPair;

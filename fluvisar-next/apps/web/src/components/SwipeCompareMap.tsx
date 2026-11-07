@@ -5,14 +5,14 @@ import type { KeyboardEvent, PointerEvent } from 'react';
 
 export function SwipeCompareMap({dateA,dateB}:{dateA:string;dateB:string}){
  const {evidence}=useEvidence();
- const {swipePosition,setSwipePosition,comparisonMode,setComparisonMode,comparisonLayout,setComparisonLayout,comparisonEnabled,setComparisonEnabled,basemapType,selectedDate,selectedPair,selectedOpticalDate,selectedOpticalPair}=useWorkspaceStore();
+ const {swipePosition,setSwipePosition,comparisonMode,setComparisonMode,comparisonLayout,setComparisonLayout,comparisonEnabled,setComparisonEnabled,basemapType,satelliteView,selectedDate,selectedPair,selectedOpticalDate,selectedOpticalPair}=useWorkspaceStore();
  const optical=basemapType==='satellite';
  const radarPair=selectedPair??[dateA,dateB];
  const opticalPair=selectedOpticalPair??evidence.optical_pair;
  const radarDate=comparisonEnabled&&comparisonMode==='dates'?radarPair[1]:selectedDate;
  const opticalDate=comparisonEnabled&&comparisonMode==='dates'?opticalPair?.[1]:selectedOpticalDate;
  const opticalScene=evidence.optical_observations?.find(o=>o.date===opticalDate);
- const opticalLabel=(date:string|undefined)=>date?'Sentinel-2 optical · '+readableDate(date):'Esri context mosaic';
+ const opticalLabel=(date:string|undefined)=>satelliteView==='context'?'Esri satellite mosaic / not date-matched':date?'Sentinel-2 optical · '+readableDate(date)+' / '+Math.round((evidence.optical_observations?.find(o=>o.date===date)?.cloud_fraction??0)*100)+'% ROI cloud/shadow':'Esri context mosaic';
  const radarLabel=(date:string)=>'Sentinel-1 radar · '+readableDate(date);
  const leftLabel=comparisonMode==='sensors'?opticalLabel(selectedOpticalDate):optical?opticalLabel(opticalPair?.[0]):radarLabel(radarPair[0]);
  const rightLabel=comparisonMode==='sensors'?radarLabel(selectedDate):optical?opticalLabel(opticalDate):radarLabel(radarDate);
@@ -37,7 +37,9 @@ export function SwipeCompareMap({dateA,dateB}:{dateA:string;dateB:string}){
 
  const pointer=(event:PointerEvent<HTMLDivElement>)=>{if(event.type!=='pointerdown'&&!event.currentTarget.hasPointerCapture(event.pointerId))return;if(event.type==='pointerdown')event.currentTarget.setPointerCapture(event.pointerId);const rect=event.currentTarget.parentElement!.getBoundingClientRect();setSwipePosition(Math.max(2,Math.min(98,(event.clientX-rect.left)/rect.width*100)));};
  const keyboard=(event:KeyboardEvent<HTMLDivElement>)=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();setSwipePosition(Math.max(2,Math.min(98,swipePosition+(event.key==='ArrowLeft'?-1:1))));}};
+ const cloudy=satelliteView==='dated'&&(basemapType==='satellite'||comparisonEnabled&&comparisonMode==='sensors')?(evidence.optical_observations??[]).filter(o=>(comparisonEnabled&&comparisonMode==='dates'?(opticalPair??[]):[selectedOpticalDate]).includes(o.date)&&o.cloud_fraction>.1):[];
  return <div className="restored-comparison-overlay">
+  {cloudy.length>0&&<div className="obs-cloud-note" role="status"><b>White areas are recorded clouds.</b><span>{cloudy.map(o=>readableDate(o.date)+': '+Math.round(o.cloud_fraction*100)+'% ROI cloud/shadow').join(' / ')}. Choose another date or Radar to inspect beneath clouds.</span></div>}
   <div className="restored-comparison-toolbar" aria-label="Comparison controls">
     <div className="comparison-mode-buttons">
       <button className={comparisonEnabled&&comparisonMode==='dates'?'selected':''} onClick={()=>{setComparisonMode('dates');setComparisonEnabled(true);}}><Calendar size={13}/>Dates</button>
@@ -61,7 +63,7 @@ export function SwipeCompareMap({dateA,dateB}:{dateA:string;dateB:string}){
   {comparisonEnabled&&comparisonLayout==='swipe'&&<div className="restored-swipe-handle" style={{left:swipePosition+'%'}} role="slider" aria-label="Map comparison slider" aria-valuemin={2} aria-valuemax={98} aria-valuenow={Math.round(swipePosition)} tabIndex={0} onKeyDown={keyboard} onPointerDown={pointer} onPointerUp={event=>{if(event.currentTarget.hasPointerCapture(event.pointerId))event.currentTarget.releasePointerCapture(event.pointerId);}} onPointerMove={pointer}><div className="swipe-divider-line"/><div className="swipe-knob">↔</div><div className="swipe-description">{comparisonMode==='sensors'?'Optical ↔ Radar':'Drag to compare actual acquisitions'}</div></div>}
   {comparisonEnabled&&comparisonLayout==='split'&&<div className="restored-split-divider"/>}
   {comparisonEnabled&&<><div className="restored-compare-label left">{leftLabel}</div><div className="restored-compare-label right">{rightLabel}</div></>}
-  {!comparisonEnabled&&<div className="restored-compare-label right">{optical?opticalLabel(selectedOpticalDate):radarLabel(selectedDate)}{opticalScene?' · '+Math.round(opticalScene.cloud_fraction*100)+'% ROI cloud/shadow':''}</div>}
+  {!comparisonEnabled&&<div className="restored-compare-label right">{optical?opticalLabel(selectedOpticalDate):radarLabel(selectedDate)}{optical&&satelliteView==='dated'&&opticalScene?.detail_tiles_url?' / 10 m source':''}</div>}
   <span className="comparison-source-sr">{evidence.observations[0].sensor}</span>
  </div>;
 }

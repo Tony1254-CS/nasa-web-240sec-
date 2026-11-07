@@ -86,3 +86,15 @@ Verification includes production build, browser tests for public routes and rest
 - `scripts/expand_optical_context.py`: expands the dated optical display to the original source tile without stretching the study crop.
 - `public/observations/{region}/pairs/`: independently calculated pair geometry, metrics and transition rasters.
 - `tests/observation-history.spec.ts`: real served-image hashes, date-to-source mapping, pair persistence, updated measurements and theme switching.
+
+
+## Source-resolution optical tiles
+
+The map-first Observatory overlays a local, date-specific detail pyramid on the
+larger context image. `scripts/build_optical_detail_tiles.py` reads original
+10 m Sentinel-2 TCI COG pixels for each study area and publishes lossless WebP
+map tiles at levels 10-14. Date selection and before/after comparison select the
+corresponding tile pyramid. Each date carries a source/projection/checksum
+manifest. `validate_observations.py` verifies all retained tile checksums as well
+as the existing numerical and display invariants. See
+[map-first Observatory](MAP_FIRST_OBSERVATORY.md) for generation and UI details.

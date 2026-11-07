@@ -194,9 +194,9 @@ The atlas presents the two regions, their acquisition windows, sensor metadata, 
 
 ### 5.1 Map, geography and display modes
 
-The MapLibre workspace fits the actual study bounds and supports:
+The MapLibre workspace opens on the configured study areas and fits shared study bounds during comparisons. It supports:
 
-- **Satellite:** dated Sentinel-2 L2A true-colour source imagery.
+- **Satellite:** detailed Esri context or dated Sentinel-2 L2A true-colour observations, explicitly labelled.
 - **Radar:** calibrated Sentinel-1 RTC displays registered to the numerical footprint.
 - **Carto:** OpenStreetMap context.
 - Recenter, zoom buttons, a precision zoom slider, scale and attribution.
@@ -205,6 +205,18 @@ The MapLibre workspace fits the actual study bounds and supports:
 Esri World Imagery supplies context beyond valid dated optical coverage. It is a context mosaic, not another date-matched observation. Optical clouds remain in the original images.
 
 The map includes a synchronized geographic fly-in with Skip, Replay, reduced-motion support and exact study-area framing.
+
+The desktop Observatory keeps the investigation panel on the left; phones use a
+feature drawer. Jamuna opens in an angled river overview. Sundarbans starts with
+the detailed Esri satellite mosaic, labelled as context without an acquisition
+date. Selecting a timeline pass or date comparison opens actual Sentinel-2
+observations. Initial optical comparisons use the two least-cloudy retained
+scenes, and cloud/shadow percentages remain visible. A floating launcher opens
+the source-connected assistant from the bottom right.
+
+Dated optical detail loads from locally served lossless tiles generated from
+original 10 m Sentinel-2 sources. See [map layout, imagery provenance and rebuild
+instructions](docs/MAP_FIRST_OBSERVATORY.md).
 
 ### 5.2 Before/after comparison
 
@@ -644,12 +656,14 @@ npm run build
 npm run test:e2e -- --workers=1
 ```
 
-The current browser suite registers **45 tests in nine files**:
+The current browser suite registers **63 tests in eleven files**:
 
 | Suite | Main coverage |
 | --- | --- |
+| `responsive-audit.spec.ts` | All ten public pages at five desktop/laptop/phone sizes in both themes; header reachability, overflow and unclipped intro content |
 | `about-lab.spec.ts` | Original crew and imagery provenance, story navigation, themes, responsive layout and preserved Lab controls/interactions |
 | `legacy-pages.spec.ts` | Routes, navigation, report/source consistency, exports and learning modules |
+| `map-first.spec.ts` | Left panel, regional camera defaults, floating chat, cloud/context labels, split alignment and source-linked tiles for every optical date |
 | `observatory-controls.spec.ts` | Study framing, camera alignment, controls, tools and region navigation |
 | `observation-history.spec.ts` | Served-image checksums, date/image mapping, pair persistence, metrics and themes |
 | `evidence-workflow.spec.ts` | Both six-stage reviews, field photo/GPS storage/export, isolation and mobile access |
@@ -657,6 +671,8 @@ The current browser suite registers **45 tests in nine files**:
 | `impact-desk.spec.ts` | Both regions, history, divider alignment, pair-specific metrics/exports, exposure, scenarios, deep links and mobile/light theme |
 | `assistant.spec.ts` | Geographic fly-in/alignment, scoped source-linked chat, map handoffs/export, card inspection, mobile/light theme and connection retry |
 | `intelligence-workspace.spec.ts` | Real-data identity/pairs/handoffs, linked model experiments and save/restore, retained diagnostics, walkthrough, panel alignment and mobile/light theme |
+
+The latest [cross-device audit](docs/RESPONSIVE_QA.md) records desktop, laptop and phone coverage, fixes and production-preview checks.
 
 ### 16.2 Active API and scientific checks
 

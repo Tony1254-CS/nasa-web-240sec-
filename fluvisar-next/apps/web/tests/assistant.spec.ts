@@ -5,6 +5,10 @@ const catalog=JSON.parse(await readFile(new URL('../public/observations/index.js
 test('region fly-in is skippable, repeatable and ends with aligned comparison cameras',async({page})=>{
  await page.goto('/observatory/jamuna');
  await expect(page.locator('.radar-map-canvas')).toHaveAttribute('data-map-loaded','true');
+ // Start a controlled replay before testing Skip: the automatic intro may
+ // already have completed while a busy browser was loading its first map.
+ await expect(page.getByRole('button',{name:'Replay fly-in',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Replay fly-in',exact:true}).click();
  await page.getByRole('button',{name:'Skip intro',exact:true}).click();
  await expect(page.locator('.restored-map-workspace')).toHaveAttribute('data-flyin-active','false');
  const positions=await page.locator('.restored-map-pane').evaluateAll(nodes=>nodes.map(n=>JSON.parse((n as HTMLElement).dataset.camera!)));
@@ -12,9 +16,11 @@ test('region fly-in is skippable, repeatable and ends with aligned comparison ca
  const [w,s,e,n]=catalog.regions.jamuna.bbox;expect(positions[0].center[0]).toBeGreaterThan(w);expect(positions[0].center[0]).toBeLessThan(e);expect(positions[0].center[1]).toBeGreaterThan(s);expect(positions[0].center[1]).toBeLessThan(n);
  await page.getByRole('button',{name:'Replay fly-in',exact:true}).click();
  await expect(page.locator('.restored-map-workspace')).toHaveAttribute('data-flyin-active','true');
+ await page.setViewportSize({width:390,height:844});
  await expect(page.getByRole('button',{name:'Replay fly-in',exact:true})).toBeVisible();
+ const fitted=await page.locator('.radar-map-canvas').evaluate(el=>({camera:JSON.parse((el as HTMLElement).dataset.camera!),width:el.clientWidth,height:el.clientHeight}));expect(fitted.camera.pitch).toBeGreaterThanOrEqual(45);expect(fitted.camera.center[0]).toBeCloseTo(89.75);
  await page.getByRole('combobox',{name:'Study region'}).selectOption('sundarbans');
- await expect(page.getByRole('button',{name:'Skip intro',exact:true})).toBeVisible();await page.getByRole('button',{name:'Skip intro',exact:true}).click();
+ await expect(page.locator('.radar-map-canvas')).toHaveAttribute('data-observation-id','esri-context');await expect(page.getByRole('button',{name:'Replay fly-in',exact:true})).toBeVisible();await page.getByRole('button',{name:'Replay fly-in',exact:true}).click();await page.getByRole('button',{name:'Skip intro',exact:true}).click();
 });
 
 test('assistant uses real run values, sources, history, exports and map handoff',async({page})=>{

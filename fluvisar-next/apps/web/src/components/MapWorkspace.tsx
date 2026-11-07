@@ -3,7 +3,7 @@ import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { flyToStudyArea } from '../utils/mapFlyIn';
 import { Camera, Check, Crosshair, Layers, Minus, Plus, ChevronDown, ChevronUp } from 'lucide-react';
-import { useObservatoryEvidence as useEvidence, number, type RegionEvidence } from '../data/evidence';
+import { useObservatoryEvidence as useEvidence, number, type RegionEvidence, type OpticalObservation } from '../data/evidence';
 import { useWorkspaceStore } from '../store/workspaceStore';
 maplibregl.setWorkerUrl('/maplibre-gl-worker.mjs');
 
@@ -29,20 +29,32 @@ function opticalCorners(observation:{[key:string]:unknown},fallback:Corners):Cor
  const bbox=observation.display_bbox as number[]|undefined;
  return bbox?[[bbox[0],bbox[3]],[bbox[2],bbox[3]],[bbox[2],bbox[1]],[bbox[0],bbox[1]]]:fallback;
 }
+function addOpticalDetail(map:maplibregl.Map,evidence:RegionEvidence,optical:OpticalObservation){
+ if(!optical.detail_tiles_url)return;
+ map.getContainer().dataset.opticalDetailLoaded='false';
+ map.addSource('optical-detail',{type:'raster',tiles:[String(optical.detail_tiles_url)],tileSize:256,bounds:evidence.bbox,minzoom:Number(optical.detail_minzoom),maxzoom:Number(optical.detail_maxzoom),attribution:'Copernicus Sentinel-2; original dated 10 m TCI'});
+ map.addLayer({id:'optical-detail',type:'raster',source:'optical-detail',paint:{'raster-opacity':1,'raster-resampling':'linear','raster-fade-duration':0}},'observation');
+ map.getContainer().dataset.opticalDetailUrl=String(optical.detail_tiles_url);
+}
+function overviewCamera(map:maplibregl.Map,evidence:RegionEvidence){
+ const state=useWorkspaceStore.getState();
+ return evidence.region_id==='jamuna'&&!state.comparisonEnabled&&state.basemapType==='satellite'?{center:[89.75,25.575] as [number,number],zoom:map.getContainer().clientWidth<600?10.2:10.9,pitch:map.getContainer().clientWidth<600?45:55,bearing:0}:undefined;
+}
 function coverStudyArea(map:maplibregl.Map,evidence:RegionEvidence){
  map.resize();
+ const overview=overviewCamera(map,evidence);if(overview){map.jumpTo(overview);return;}
  const [w,s,e,n]=evidence.bbox;
  const compact=map.getContainer().clientWidth<600;
- map.fitBounds([[w,s],[e,n]],{padding:{top:compact?112:86,bottom:compact?90:80,left:compact?24:64,right:compact?24:64},maxZoom:14,duration:0,bearing:0,pitch:0});
+ map.fitBounds([[w,s],[e,n]],{padding:{top:compact?112:76,bottom:compact?90:42,left:compact?24:64,right:compact?24:64},maxZoom:14,duration:0,bearing:0,pitch:0});
 }
 export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
  const {evidence,comparisonReady}=useEvidence();
- const {regionId,viewId,basemapType,overlayStyle,comparisonMode,comparisonLayout,comparisonEnabled,swipePosition,selectedDate,selectedPair,selectedOpticalDate,selectedOpticalPair,selectedPol,activeLens,layerVisibility,isRightInspectorOpen,selectedFindingId,isAgentDrawerOpen,setBasemapType,setOverlayStyle}=useWorkspaceStore();
+ const {regionId,viewId,basemapType,satelliteView,overlayStyle,comparisonMode,comparisonLayout,comparisonEnabled,swipePosition,selectedDate,selectedPair,selectedOpticalDate,selectedOpticalPair,selectedPol,activeLens,layerVisibility,isRightInspectorOpen,selectedFindingId,isAgentDrawerOpen,setBasemapType,setOverlayStyle}=useWorkspaceStore();
  const elementA=useRef<HTMLDivElement>(null),elementB=useRef<HTMLDivElement>(null);
  const maps=useRef<{a:maplibregl.Map|null;b:maplibregl.Map|null}>({a:null,b:null});
  const markers=useRef<maplibregl.Marker[]>([]);
  const aborts=useRef<{a:AbortController|null;b:AbortController|null}>({a:null,b:null});
- const [loaded,setLoaded]=useState({a:false,b:false}),[radarLoaded,setRadarLoaded]=useState(false),[zoom,setZoom]=useState(11.8),[saved,setSaved]=useState(false),[legend,setLegend]=useState(true);
+ const [loaded,setLoaded]=useState({a:false,b:false}),[radarLoaded,setRadarLoaded]=useState(false),[zoom,setZoom]=useState(11.8),[saved,setSaved]=useState(false),[legend,setLegend]=useState(false);
  const [flyStage,setFlyStage]=useState('');const flight=useRef<((fit?:boolean)=>void)|null>(null);const arrived=useRef('');
  const compare=comparisonEnabled&&viewId!=='M0';
  const split=compare&&comparisonLayout==='split';
@@ -65,19 +77,24 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
    setZoom(Number(source.getZoom().toFixed(1)));
   };
   for(const side of ['b','a'] as const){
-   const map=new maplibregl.Map({container:(side==='a'?elementA.current:elementB.current)!,canvasContextAttributes:{preserveDrawingBuffer:true},attributionControl:false,
-    style:{version:8,sources:{satellite:{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'},carto:{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,attribution:'© OpenStreetMap contributors'}},layers:[{id:'background',type:'background',paint:{'background-color':'#0f172a'}},{id:'satellite',type:'raster',source:'satellite',paint:{'raster-opacity':1}},{id:'carto',type:'raster',source:'carto',layout:{visibility:'none'}}]},
+   const map=new maplibregl.Map({container:(side==='a'?elementA.current:elementB.current)!,trackResize:false,canvasContextAttributes:{preserveDrawingBuffer:true},attributionControl:false,
+    style:{version:8,sources:{satellite:{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'},carto:{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,attribution:'© OpenStreetMap contributors'}},layers:[{id:'background',type:'background',paint:{'background-color':'#0f172a'}},{id:'satellite',type:'raster',source:'satellite',paint:{'raster-opacity':1,'raster-fade-duration':0}},{id:'carto',type:'raster',source:'carto',layout:{visibility:'none'}}]},
     center:regionId==='jamuna'?[89.75,25.575]:[89.70,21.875],zoom:viewId==='M0'?6.8:regionId==='jamuna'?11.5:11.8,minZoom:1,maxZoom:18});
    maps.current[side]=map;
    map.addControl(new maplibregl.ScaleControl({unit:'metric',maxWidth:100}),'bottom-left');
    if(side==='b')map.addControl(new maplibregl.AttributionControl({compact:true,customAttribution:'Copernicus Sentinel-1 / Sentinel-2'}),'bottom-right');
    map.on('move',()=>sync(side,side==='a'?'b':'a'));
-   map.on('sourcedata',event=>{if(side==='b'&&event.sourceId==='observation'&&event.isSourceLoaded)setRadarLoaded(true);if(event.sourceId==='optical-observation'&&event.isSourceLoaded)map.getContainer().dataset.opticalLoaded='true';});
+   map.on('sourcedata',event=>{if(side==='b'&&event.sourceId==='observation'&&event.isSourceLoaded)setRadarLoaded(true);if(event.sourceId==='optical-observation'&&event.sourceDataType==='metadata'&&(map.getSource('optical-observation') as maplibregl.ImageSource)?.loaded())map.getContainer().dataset.opticalLoaded='true';});
+   map.on('movestart',()=>{map.getContainer().dataset.opticalDetailLoaded='false';});
+   // Source events precede the renderer's cache update. Readiness is measured
+   // after rendering, when all tiles required by the current camera are known.
+   map.on('render',()=>{if(map.getSource('satellite'))map.getContainer().dataset.contextLoaded=String(map.isSourceLoaded('satellite'));const opticalSource=map.getSource('optical-observation') as maplibregl.ImageSource|undefined;if(opticalSource)map.getContainer().dataset.opticalLoaded=String(opticalSource.loaded());if(map.getSource('optical-detail'))map.getContainer().dataset.opticalDetailLoaded=String(map.isSourceLoaded('optical-detail'));});
    map.once('style.load',()=>{
     map.addSource('observation',{type:'image',url:actualRadarUrl(evidence,side),coordinates:corners});
     map.addLayer({id:'observation',type:'raster',source:'observation',layout:{visibility:'none'},paint:{'raster-opacity':1,'raster-resampling':'nearest'}});
     const optical=selectedOpticalObservation(evidence,side);
-    if(optical){map.getContainer().dataset.opticalUrl=optical.url;map.getContainer().dataset.opticalLoaded='false';map.addSource('optical-observation',{type:'image',url:optical.url,coordinates:opticalCorners(optical,corners)});map.addLayer({id:'optical-observation',type:'raster',source:'optical-observation',paint:{'raster-opacity':1,'raster-resampling':'linear'}});map.moveLayer('optical-observation','observation');}
+    if(optical){map.getContainer().dataset.opticalUrl=optical.url;map.getContainer().dataset.opticalLoaded='false';map.addSource('optical-observation',{type:'image',url:optical.url,coordinates:opticalCorners(optical,corners)});map.addLayer({id:'optical-observation',type:'raster',source:'optical-observation',paint:{'raster-opacity':1,'raster-resampling':'linear','raster-fade-duration':0}});map.moveLayer('optical-observation','observation');}
+    if(optical)addOpticalDetail(map,evidence,optical);
     map.addSource('water-mask',{type:'image',url:selectedObservation(evidence,side).water_url,coordinates:corners});
     map.addLayer({id:'water-mask',type:'raster',source:'water-mask',layout:{visibility:'none'},paint:{'raster-opacity':0.5,'raster-resampling':'nearest'}});
     map.addSource('findings',{type:'geojson',data:evidence.findings});
@@ -117,7 +134,9 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
     catch(error){if(!controller.signal.aborted)useWorkspaceStore.getState().setSelectedSample({lon,lat,value:null,unit:'dB',masked:true,reason:String(error)});}
    });
   }
-  const observer=new ResizeObserver(()=>{for(const map of Object.values(maps.current))map?.resize();sync('b','a');});observer.observe(elementB.current);observer.observe(elementA.current);
+  // Resize both views as one operation. A follower resize must not jump the
+  // primary camera and interrupt its fly-in before the final study-area fit.
+  const observer=new ResizeObserver(()=>{synchronizing=true;try{for(const map of Object.values(maps.current))map?.resize();}finally{synchronizing=false;}sync('b','a');});observer.observe(elementB.current);observer.observe(elementA.current);
   return()=>{flight.current?.(false);flight.current=null;observer.disconnect();for(const marker of markers.current)marker.remove();markers.current=[];for(const side of ['a','b'] as const){aborts.current[side]?.abort();maps.current[side]?.remove();maps.current[side]=null;}};
  },[evidence,corners,regionId,observatory]);
 
@@ -126,14 +145,24 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
    const map=maps.current[side];if(!map||!loaded[side]||!map.getLayer('observation'))continue;
    const type=compare&&comparisonMode==='sensors'?(side==='a'?'satellite':'sar'):basemapType;
    const optical=selectedOpticalObservation(evidence,side);
+   const showDated=type!=='carto'&&satelliteView==='dated';
    if(map.getLayer('optical-observation')){
-    map.setLayoutProperty('optical-observation','visibility',type!=='carto'?'visible':'none');
+    map.setLayoutProperty('optical-observation','visibility',showDated?'visible':'none');
     if(optical&&map.getContainer().dataset.opticalUrl!==optical.url){map.getContainer().dataset.opticalLoaded='false';map.getContainer().dataset.opticalUrl=optical.url;(map.getSource('optical-observation') as maplibregl.ImageSource).updateImage({url:optical.url,coordinates:opticalCorners(optical,corners)});}
    }
-   const shown=type==='satellite'?optical:selectedObservation(evidence,side);
+   if(map.getLayer('optical-detail')){
+    map.setLayoutProperty('optical-detail','visibility',showDated?'visible':'none');
+    if(optical?.detail_tiles_url&&map.getContainer().dataset.opticalDetailUrl!==optical.detail_tiles_url){
+     // A new source clears parent tiles from the previous acquisition as well.
+     map.removeLayer('optical-detail');map.removeSource('optical-detail');
+     addOpticalDetail(map,evidence,optical);
+     map.setLayoutProperty('optical-detail','visibility',showDated?'visible':'none');
+    }
+   }
+   const shown=type==='satellite'?(satelliteView==='dated'?optical:undefined):selectedObservation(evidence,side);
    map.getContainer().dataset.observationId=shown?.id??'esri-context';
    map.getContainer().dataset.observationDate=shown?.date??'';
-   map.getContainer().dataset.observationUrl=type==='satellite'?optical?.url??'':actualRadarUrl(evidence,side);
+   map.getContainer().dataset.observationUrl=type==='satellite'?(satelliteView==='dated'?optical?.url??'':'esri-context'):actualRadarUrl(evidence,side);
    map.setLayoutProperty('satellite','visibility',type==='carto'?'none':'visible');
    map.setLayoutProperty('carto','visibility',type==='carto'?'visible':'none');
    map.setLayoutProperty('observation','visibility',type==='sar'?'visible':'none');
@@ -147,13 +176,13 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
    map.setLayoutProperty('support-outline','visibility',layerVisibility.coverage?'visible':'none');
   }
   for(const marker of markers.current)marker.getElement().style.display=comparisonReady&&(basemapType==='sar'||compare&&comparisonMode==='sensors')&&layerVisibility.transitions?'':'none';
- },[evidence,corners,loaded,basemapType,compare,comparisonMode,selectedDate,selectedPair,selectedOpticalDate,selectedOpticalPair,selectedPol,activeLens,layerVisibility,overlayStyle,comparisonReady]);
+ },[evidence,corners,loaded,basemapType,satelliteView,compare,comparisonMode,selectedDate,selectedPair,selectedOpticalDate,selectedOpticalPair,selectedPol,activeLens,layerVisibility,overlayStyle,comparisonReady]);
 
  const replay=()=>{
   const map=maps.current.b;if(!map||!loaded.b)return;
   flight.current?.(false);
   const compact=map.getContainer().clientWidth<600;
-  flight.current=flyToStudyArea(map,evidence.bbox,{padding:{top:compact?112:86,bottom:compact?90:80,left:compact?24:64,right:compact?24:64},maxZoom:14,bearing:0,pitch:0},setFlyStage);
+  flight.current=flyToStudyArea(map,evidence.bbox,{padding:{top:compact?112:76,bottom:compact?90:42,left:compact?24:64,right:compact?24:64},maxZoom:14,bearing:0,pitch:0},setFlyStage,overviewCamera(map,evidence));
  };
  useEffect(()=>{
   const map=maps.current.b;if(!map||!loaded.b||!loaded.a)return;
@@ -161,7 +190,7 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
   let seen=false;try{seen=sessionStorage.getItem('fluvisar-flyin:'+regionId)==='seen';}catch{/* Session storage optional. */}
   if(observatory&&!seen&&arrived.current!==regionId){arrived.current=regionId;try{sessionStorage.setItem('fluvisar-flyin:'+regionId,'seen');}catch{}replay();}
   else if(!flyStage)coverStudyArea(map,evidence);
- },[evidence,loaded.b,loaded.a,viewId==='M0',split]);
+ },[evidence,loaded.b,loaded.a,viewId==='M0',split,compare,basemapType]);
  useEffect(()=>{
   if(!loaded.b||!selectedFindingId)return;
   const finding=evidence.findings.features.find(f=>f.properties.id===selectedFindingId);if(!finding)return;
@@ -176,7 +205,7 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
   <div ref={elementB} className="restored-map-pane map-pane-b radar-map-canvas" data-map-loaded={loaded.b} data-radar-loaded={radarLoaded} style={split?{left:'50%',width:'50%'}:{left:0,width:'100%'}}/>
   <div ref={elementA} className="restored-map-pane map-pane-a" data-map-loaded={loaded.a} style={split?{left:0,width:'50%',visibility:compare?'visible':'hidden'}:{left:0,width:'100%',visibility:compare?'visible':'hidden',clipPath:'inset(0 '+(100-swipePosition)+'% 0 0)',pointerEvents:'none'}}/>
   <div className="restored-map-options" style={{right}} aria-label="Map display options"><div className="restored-basemaps">{(['satellite','sar','carto'] as const).map(type=><button key={type} aria-pressed={basemapType===type} title={type==='sar'?'Calibrated Sentinel-1 RTC radar':type==='satellite'?'High-resolution satellite imagery':'OpenStreetMap cartography'} onClick={()=>{setBasemapType(type);if(comparisonMode==='sensors')useWorkspaceStore.getState().setComparisonMode('dates');}} className={basemapType===type?'selected':''}>{type==='satellite'?'🛰️ Satellite':type==='sar'?'📡 Radar':'🗺️ Carto'}</button>)}</div><button aria-label="Toggle outlines and tint" className={'restored-outline-toggle '+(overlayStyle==='outlines'?'selected':'')} onClick={()=>setOverlayStyle(overlayStyle==='outlines'?'tinted':'outlines')}>{overlayStyle==='outlines'?'✏️ Outlines':'🎨 Tinted'}</button></div>
-  <div className="restored-map-tools" style={{right}}><button aria-label="Zoom in" title="Zoom in" onClick={()=>maps.current.b?.zoomIn()}><Plus size={16}/></button>{observatory&&<input aria-label="Map zoom" type="range" min="1" max="18" step="0.1" value={zoom} onChange={event=>maps.current.b?.jumpTo({zoom:Number(event.target.value)})}/>}<span>{zoom.toFixed(1)}</span><button aria-label="Zoom out" title="Zoom out" onClick={()=>maps.current.b?.zoomOut()}><Minus size={16}/></button><hr/><button aria-label="Recenter study area" title="Fit the complete study area" onClick={recenter}><Crosshair size={16}/></button><button aria-label="Download map image" title="Download map snapshot" onClick={capture}>{saved?<Check size={16}/>:<Camera size={16}/>}</button></div>
+  <div className="restored-map-tools" style={{right}}><button aria-label="Zoom in" title="Zoom in" onClick={()=>maps.current.b?.zoomIn()}><Plus size={16}/></button>{observatory&&<input aria-label="Map zoom" type="range" min="1" max="18" step="0.1" value={zoom} onChange={event=>maps.current.b?.jumpTo({zoom:Number(event.target.value)})}/>}<span>{zoom.toFixed(1)}</span><button aria-label="Zoom out" title="Zoom out" onClick={()=>maps.current.b?.zoomOut()}><Minus size={16}/></button><hr/><button aria-label="Recenter study area" title="Return to the default study view" onClick={recenter}><Crosshair size={16}/></button><button aria-label="Download map image" title="Download map snapshot" onClick={capture}>{saved?<Check size={16}/>:<Camera size={16}/>}</button></div>
   {viewId!=='M0'&&<div className="restored-map-legend" style={{right}}><button onClick={()=>setLegend(!legend)} aria-expanded={legend}><Layers size={14}/>Radar transitions{legend?<ChevronDown size={14}/>:<ChevronUp size={14}/>}</button>{legend&&comparisonReady&&<div><p><i className="candidate-red"/>Land → water: {number(evidence.metrics.land_to_water_ha,2)} ha</p><p><i className="candidate-green"/>Water → land: {number(evidence.metrics.water_to_land_ha,2)} ha</p><small>Source-derived screening candidates · {evidence.observations[0].sensor}</small></div>}</div>}
  </div>;
 }

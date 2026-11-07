@@ -39,6 +39,7 @@ export function FluviAssistant(){
  const chips=synthetic?['How do these models work?','Are model scores real-world accuracy?','How do I use this website?']:scope?['Explain this finding','Show water area history','Is this reliable?']:['What changed?','Where is the largest candidate?','Show water area history','Which satellite sources are used?'];
  return <>
   <DataChatInspection/>
+  <button style={{display:open?'none':undefined}} className="fl-floating-launcher" aria-label="Open FluviSAR chat" title="Ask FluviSAR" onClick={()=>state.setAgentDrawerOpen(true)}><Bot size={25}/><span>Ask FluviSAR</span></button>
   {open&&<dialog ref={dialog} className="fl-assistant" aria-modal="true" aria-label="FluviSAR Assistant" onCancel={event=>{event.preventDefault();state.setAgentDrawerOpen(false);}} onClick={event=>{if(event.target!==event.currentTarget)return;const box=event.currentTarget.getBoundingClientRect();if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)state.setAgentDrawerOpen(false);}}>
    <header><div className="fl-avatar"><Bot size={23}/></div><div><h2>FluviSAR Assistant</h2><span><i/>{mode==='ai'?'AI + registered evidence':'Data-based answers'}</span></div><button aria-label="Close assistant" onClick={()=>state.setAgentDrawerOpen(false)}><X size={21}/></button></header>
    <div className="fl-scope"><b>{evidence.name}</b><span>{evidence.pair.join(' → ')}</span><small>{synthetic?'SYNTHETIC MODEL WORKSPACE':scope?'SELECTED FINDING · '+scope:'MEASURED · STUDY AREA'}</small></div>

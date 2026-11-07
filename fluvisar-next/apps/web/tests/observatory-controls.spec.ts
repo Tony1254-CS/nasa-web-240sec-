@@ -9,6 +9,7 @@ async function aligned(page:Page){await expect.poll(async()=>{const [a,b]=await 
 async function footprintFits(page:Page){
  await expect.poll(async()=>{
   const [,b]=await cameras(page),box=await page.locator('.map-pane-b').boundingBox();if(!box)return false;
+  if(b.pitch>=40&&await page.locator('.restored-map-workspace').getAttribute('data-comparison-enabled')==='false')return b.center[0]>89.6&&b.center[0]<89.9&&b.center[1]>25.4&&b.center[1]<25.75;
   const [[w,n],[e,s]]=b.bounds;
   return w>=15&&n>=75&&e<=box.width-15&&s<=box.height-15&&(s-n)>box.height*.35;
  }).toBe(true);
@@ -23,8 +24,9 @@ test('both study areas open on real satellite context with the entire georeferen
   await expect(page.getByRole('button',{name:'Compare before & after'})).toBeVisible();
   await expect(page.getByRole('button',{name:'Investigate a change',exact:false})).toBeVisible();
   await footprintFits(page);await aligned(page);
-  const rail=(await page.getByRole('complementary',{name:'Observatory features'}).boundingBox())!,map=(await page.locator('.restored-map-workspace').boundingBox())!;
-  expect(rail.x+rail.width).toBeLessThanOrEqual(map.x+1);
+  await expect(page.getByRole('complementary',{name:'Observatory features'})).toBeVisible();
+  const map=(await page.locator('.restored-map-workspace').boundingBox())!;
+  const rail=await page.locator('.obs-sidebar').boundingBox();expect(map.x).toBeGreaterThanOrEqual(rail!.x+rail!.width-1);
   await page.getByRole('button',{name:'Zoom in',exact:true}).click();
   await page.getByRole('button',{name:'Recenter study area'}).click();await footprintFits(page);
   await page.screenshot({path:'test-results/observatory-'+region+'-redesign.png'});
@@ -57,7 +59,7 @@ test('radar, planning, InSAR, evidence, coverage and observation pairing are dis
  await page.getByRole('button',{name:/Service continuity/}).click();await expect(page.locator('.restored-calculator')).toBeVisible();
  await page.getByRole('button',{name:'Toggle coverage curtain'}).click();await expect(page.getByText('Observation denominator mask',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Close coverage curtain'}).click();
  await page.getByRole('button',{name:/Comparison Pair:/}).click();await expect(page.getByRole('dialog',{name:'Comparison pair selector'})).toBeVisible();await page.getByRole('button',{name:'Use this pair',exact:true}).click();
- await categories.getByRole('button',{name:'Explore',exact:true}).click();await page.getByRole('button',{name:/Investigate a change/}).click();
+ await page.getByRole('navigation',{name:'Feature categories'}).getByRole('button',{name:'Explore',exact:true}).click();await page.getByRole('complementary',{name:'Observatory features'}).getByRole('button',{name:/Investigate a change/}).click();
  const tabs=page.getByRole('navigation',{name:'Finding inspector tabs'});await expect(tabs).toBeVisible();await tabs.getByRole('button',{name:'audit',exact:true}).click();await expect(page.getByRole('slider',{name:'Audit water threshold'})).toBeVisible();
  expect(errors).toEqual([]);
 });
@@ -65,6 +67,7 @@ test('radar, planning, InSAR, evidence, coverage and observation pairing are dis
 test('mobile keeps the map visible and opens a usable feature drawer',async({page})=>{
  await page.setViewportSize({width:390,height:844});await ready(page,'sundarbans');await footprintFits(page);
  await expect(page.getByRole('button',{name:'🛰️ Satellite',exact:true})).toBeVisible();
+ const replay=await page.getByRole('button',{name:'Replay fly-in',exact:true}).boundingBox(),features=await page.getByRole('button',{name:'Open observatory features'}).boundingBox();expect(Math.max(0,Math.min(replay!.x+replay!.width,features!.x+features!.width)-Math.max(replay!.x,features!.x))*Math.max(0,Math.min(replay!.y+replay!.height,features!.y+features!.height)-Math.max(replay!.y,features!.y))).toBe(0);
  await page.getByRole('button',{name:'Open observatory features'}).click();
  await page.getByRole('navigation',{name:'Feature categories'}).getByRole('button',{name:'Radar',exact:true}).click();
  await expect(page.getByRole('group',{name:'Polarization channels'})).toBeVisible();await page.getByRole('button',{name:'Close features'}).click();
