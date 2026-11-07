@@ -19,3 +19,5 @@
 
 
 @media print{.id-print-document th{background:#edf4f1!important;color:#18372e!important}}
+
+.impact-desk .id-audience .id-detail-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.impact-desk .id-audience .id-detail-tabs button{min-width:0}
