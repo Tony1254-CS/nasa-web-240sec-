@@ -73,9 +73,9 @@ test('requested Jamuna overview and floating chat fit desktop, laptop and phone'
  for(const size of [{width:1920,height:1080},{width:1366,height:768},{width:390,height:844}]){
   await page.setViewportSize(size);await page.goto('/observatory/jamuna');
   await expect(page.locator('.map-pane-b')).toHaveAttribute('data-map-loaded','true');
-  await expect.poll(async()=>JSON.parse((await page.locator('.map-pane-b').getAttribute('data-camera'))!).pitch).toBeCloseTo(size.width<600?45:55);
+  await expect.poll(async()=>JSON.parse((await page.locator('.map-pane-b').getAttribute('data-camera'))!).pitch).toBeCloseTo(55);
   const camera=JSON.parse((await page.locator('.map-pane-b').getAttribute('data-camera'))!);
-  expect(camera.zoom).toBeCloseTo(size.width<600?10.2:10.9);expect(camera.center[0]).toBeCloseTo(89.75);
+  expect(camera.zoom).toBeCloseTo(11.4);expect(camera.center[0]).toBeCloseTo(89.75);
   const rail=page.locator('.obs-sidebar');if(size.width>760)await expect(rail).toBeVisible();else await expect(rail).toBeHidden();
   const chat=page.getByRole('button',{name:'Open FluviSAR chat'}),box=(await chat.boundingBox())!;
   expect(box.x).toBeGreaterThan(size.width-100);expect(box.y).toBeGreaterThan(size.height-100);

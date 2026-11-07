@@ -90,3 +90,15 @@
  .obs-feature-card{padding:10px;margin-bottom:6px;}.obs-feature-card small{font-size:9px;line-height:1.4;margin-top:3px;}
  .obs-sidebar-footer{padding:10px 14px;}
 }
+
+/* A drag continues beyond the grip; its label and SVG never intercept input. */
+.legacy-pages .restored-swipe-handle{width:52px;user-select:none;-webkit-user-select:none;touch-action:none;}
+.legacy-pages .restored-swipe-handle>*{pointer-events:none;user-select:none;-webkit-user-select:none;}
+.legacy-pages .restored-swipe-handle[data-dragging=true] .swipe-knob{background:#d8fbff;box-shadow:0 0 0 5px #30bfd144,0 5px 14px #0005;}
+.legacy-pages .obs-radar-pair,.legacy-pages .obs-overlay-reference{display:block;margin:7px 0;line-height:1.5;}
+.legacy-pages .obs-find-change{display:block;width:100%;padding:8px 10px;margin:8px 0;border:1px solid var(--line,#cbd5e1);border-radius:6px;background:var(--water-dim,#e7f6f2);color:var(--water,#087e78);font-size:10px;font-weight:700;cursor:pointer;text-align:left;}
+@media(max-width:760px){.legacy-pages .observatory-redesign .restored-map-legend>div{display:block;max-height:160px;overflow-y:auto;}}
+
+.legacy-pages .observatory-redesign .restored-map-legend:has(>div){right:64px!important;}
+.legacy-pages .restored-map-legend .obs-radar-pair{font-size:11px;font-weight:650;color:var(--text-2,#3e5b59);}
+.legacy-pages .restored-map-legend .obs-overlay-reference{font-size:10px;color:var(--text-2,#3e5b59);}

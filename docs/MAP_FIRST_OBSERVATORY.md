@@ -1,8 +1,8 @@
 # Map-first Observatory
 
 Both Observatory routes keep the investigation panel on the left on desktop and
-use a compact feature drawer on phones. Jamuna opens with an angled, close river
-view (desktop: centre 89.75, 25.575; zoom 10.9; pitch 55 degrees). Comparisons use
+use a compact feature drawer on phones. Both regions open at zoom 11.4 and pitch 55 degrees, including phones. Jamuna
+centres on 89.75, 25.575; Sundarbans centres on the estuary at 89.74, 21.83. Comparisons use
 shared top-down framing. Recenter and Replay return to the regional default.
 
 Sundarbans starts on detailed Esri satellite context. This mosaic has no claimed
@@ -49,3 +49,25 @@ npx playwright test tests/map-first.spec.ts tests/observatory-controls.spec.ts t
 The build requires access to the public source COGs. Completed date pyramids are
 reused on subsequent builds. Published tiles are served locally with the app;
 viewing the retained study detail does not require a live satellite data API.
+
+
+## Satellite overlays and comparison gestures
+
+The actual radar-derived transition geometry is visible over Satellite and Radar
+views. The expanded desktop legend identifies its radar acquisition pair and
+separates those measurements from the optical/background image dates. Water mask
+and transition controls retain Satellite when it is already selected; masks keep
+their original Sentinel-1 dates. The largest-change action opens and locates the
+actual retained finding. Changing imagery or lens clears obsolete pixel samples.
+
+Comparison drag uses window pointer events, so leaving the grip or losing native
+capture does not stop the gesture. It supports mouse and touch, cancels cleanly,
+and leaves the map camera unchanged. Arrow keys adjust one percent (five with
+Shift); Home and End reveal the full after/before image at zero and 100 percent.
+
+
+The Compare measured radar water action switches to the actual before/after
+Sentinel-1 water observations for the measured pair. This gives a direct check
+when the optical/background images have different dates. External basemap tiles
+are suppressed where the view is fully covered by the interior of retained dated
+imagery, avoiding redundant background downloads during close inspection.

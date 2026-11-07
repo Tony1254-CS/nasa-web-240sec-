@@ -207,7 +207,7 @@ Esri World Imagery supplies context beyond valid dated optical coverage. It is a
 The map includes a synchronized geographic fly-in with Skip, Replay, reduced-motion support and exact study-area framing.
 
 The desktop Observatory keeps the investigation panel on the left; phones use a
-feature drawer. Jamuna opens in an angled river overview. Sundarbans starts with
+feature drawer. Both regions open at zoom 11.4 with a 55-degree tilted satellite overview. Sundarbans starts with
 the detailed Esri satellite mosaic, labelled as context without an acquisition
 date. Selecting a timeline pass or date comparison opens actual Sentinel-2
 observations. Initial optical comparisons use the two least-cloudy retained
@@ -656,13 +656,14 @@ npm run build
 npm run test:e2e -- --workers=1
 ```
 
-The current browser suite registers **63 tests in eleven files**:
+The current browser suite registers **66 tests in twelve files**:
 
 | Suite | Main coverage |
 | --- | --- |
 | `responsive-audit.spec.ts` | All ten public pages at five desktop/laptop/phone sizes in both themes; header reachability, overflow and unclipped intro content |
 | `about-lab.spec.ts` | Original crew and imagery provenance, story navigation, themes, responsive layout and preserved Lab controls/interactions |
 | `legacy-pages.spec.ts` | Routes, navigation, report/source consistency, exports and learning modules |
+| `satellite-interactions.spec.ts` | Mouse capture-loss recovery, phone touch swipe, full-range keyboard controls, both regional cameras and source-labelled satellite overlays |
 | `map-first.spec.ts` | Left panel, regional camera defaults, floating chat, cloud/context labels, split alignment and source-linked tiles for every optical date |
 | `observatory-controls.spec.ts` | Study framing, camera alignment, controls, tools and region navigation |
 | `observation-history.spec.ts` | Served-image checksums, date/image mapping, pair persistence, metrics and themes |

@@ -36,13 +36,22 @@ function addOpticalDetail(map:maplibregl.Map,evidence:RegionEvidence,optical:Opt
  map.addLayer({id:'optical-detail',type:'raster',source:'optical-detail',paint:{'raster-opacity':1,'raster-resampling':'linear','raster-fade-duration':0}},'observation');
  map.getContainer().dataset.opticalDetailUrl=String(optical.detail_tiles_url);
 }
-function overviewCamera(map:maplibregl.Map,evidence:RegionEvidence){
+// Avoid downloading an unseen external basemap underneath fully retained imagery.
+function updateContextVisibility(map:maplibregl.Map,evidence:RegionEvidence,side:Side){
+ if(!map.getLayer('satellite'))return;
+ const state=useWorkspaceStore.getState(),footprint=selectedOpticalObservation(evidence,side)?.display_bbox as number[]|undefined;
+ const bounds=map.getBounds();let covered=false;
+ if(footprint){const [w,s,e,n]=footprint,px=(e-w)*.08,py=(n-s)*.08;covered=bounds.getWest()>=w+px&&bounds.getEast()<=e-px&&bounds.getSouth()>=s+py&&bounds.getNorth()<=n-py;}
+ const visibility=state.basemapType==='carto'||state.viewId!=='M0'&&state.satelliteView==='dated'&&covered?'none':'visible';
+ if(map.getLayoutProperty('satellite','visibility')!==visibility)map.setLayoutProperty('satellite','visibility',visibility);
+}
+function overviewCamera(evidence:RegionEvidence){
  const state=useWorkspaceStore.getState();
- return evidence.region_id==='jamuna'&&!state.comparisonEnabled&&state.basemapType==='satellite'?{center:[89.75,25.575] as [number,number],zoom:map.getContainer().clientWidth<600?10.2:10.9,pitch:map.getContainer().clientWidth<600?45:55,bearing:0}:undefined;
+ return !state.comparisonEnabled&&state.basemapType==='satellite'?{center:(evidence.region_id==='jamuna'?[89.75,25.575]:[89.74,21.83]) as [number,number],zoom:11.4,pitch:55,bearing:0}:undefined;
 }
 function coverStudyArea(map:maplibregl.Map,evidence:RegionEvidence){
  map.resize();
- const overview=overviewCamera(map,evidence);if(overview){map.jumpTo(overview);return;}
+ const overview=overviewCamera(evidence);if(overview){map.jumpTo(overview);return;}
  const [w,s,e,n]=evidence.bbox;
  const compact=map.getContainer().clientWidth<600;
  map.fitBounds([[w,s],[e,n]],{padding:{top:compact?112:76,bottom:compact?90:42,left:compact?24:64,right:compact?24:64},maxZoom:14,duration:0,bearing:0,pitch:0});
@@ -54,13 +63,13 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
  const maps=useRef<{a:maplibregl.Map|null;b:maplibregl.Map|null}>({a:null,b:null});
  const markers=useRef<maplibregl.Marker[]>([]);
  const aborts=useRef<{a:AbortController|null;b:AbortController|null}>({a:null,b:null});
- const [loaded,setLoaded]=useState({a:false,b:false}),[radarLoaded,setRadarLoaded]=useState(false),[zoom,setZoom]=useState(11.8),[saved,setSaved]=useState(false),[legend,setLegend]=useState(false);
+ const [loaded,setLoaded]=useState({a:false,b:false}),[radarLoaded,setRadarLoaded]=useState(false),[zoom,setZoom]=useState(11.8),[saved,setSaved]=useState(false),[legend,setLegend]=useState(()=>!matchMedia('(max-width:760px)').matches);
  const [flyStage,setFlyStage]=useState('');const flight=useRef<((fit?:boolean)=>void)|null>(null);const arrived=useRef('');
  const compare=comparisonEnabled&&viewId!=='M0';
  const split=compare&&comparisonLayout==='split';
  const drawer=isRightInspectorOpen||Boolean(selectedFindingId)||isAgentDrawerOpen;
  const corners=useMemo<Corners>(()=>{const [w,s,e,n]=evidence.bbox;return [[w,n],[e,n],[e,s],[w,s]];},[evidence]);
- useEffect(()=>{for(const side of ['a','b'] as const)aborts.current[side]?.abort();useWorkspaceStore.getState().setSelectedSample(null);},[selectedDate,selectedPol,comparisonMode]);
+ useEffect(()=>{for(const side of ['a','b'] as const)aborts.current[side]?.abort();useWorkspaceStore.getState().setSelectedSample(null);},[selectedDate,selectedPol,comparisonMode,basemapType,satelliteView,activeLens,selectedOpticalDate]);
 
  useEffect(()=>{
   if(!elementA.current||!elementB.current)return;
@@ -83,7 +92,7 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
    maps.current[side]=map;
    map.addControl(new maplibregl.ScaleControl({unit:'metric',maxWidth:100}),'bottom-left');
    if(side==='b')map.addControl(new maplibregl.AttributionControl({compact:true,customAttribution:'Copernicus Sentinel-1 / Sentinel-2'}),'bottom-right');
-   map.on('move',()=>sync(side,side==='a'?'b':'a'));
+   map.on('move',()=>{updateContextVisibility(map,evidence,side);sync(side,side==='a'?'b':'a');});
    map.on('sourcedata',event=>{if(side==='b'&&event.sourceId==='observation'&&event.isSourceLoaded)setRadarLoaded(true);if(event.sourceId==='optical-observation'&&event.sourceDataType==='metadata'&&(map.getSource('optical-observation') as maplibregl.ImageSource)?.loaded())map.getContainer().dataset.opticalLoaded='true';});
    map.on('movestart',()=>{map.getContainer().dataset.opticalDetailLoaded='false';});
    // Source events precede the renderer's cache update. Readiness is measured
@@ -112,7 +121,7 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
      button.title=feature.properties.id+' · inspect source-derived candidate';button.addEventListener('click',event=>{event.stopPropagation();useWorkspaceStore.getState().setSelectedFinding(feature.properties.id);});
      markers.current.push(new maplibregl.Marker({element:button}).setLngLat(feature.properties.centroid).addTo(map));
     }
-    recordCamera(map);
+    updateContextVisibility(map,evidence,side);recordCamera(map);
     setLoaded(previous=>({...previous,[side]:true}));
    });
    map.on('click',async event=>{
@@ -163,26 +172,31 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
    map.getContainer().dataset.observationId=shown?.id??'esri-context';
    map.getContainer().dataset.observationDate=shown?.date??'';
    map.getContainer().dataset.observationUrl=type==='satellite'?(satelliteView==='dated'?optical?.url??'':'esri-context'):actualRadarUrl(evidence,side);
-   map.setLayoutProperty('satellite','visibility',type==='carto'?'none':'visible');
+   updateContextVisibility(map,evidence,side);
    map.setLayoutProperty('carto','visibility',type==='carto'?'visible':'none');
    map.setLayoutProperty('observation','visibility',type==='sar'?'visible':'none');
    (map.getSource('observation') as maplibregl.ImageSource).updateImage({url:actualRadarUrl(evidence,side),coordinates:corners});
    (map.getSource('water-mask') as maplibregl.ImageSource).updateImage({url:selectedObservation(evidence,side).water_url,coordinates:corners});
-   map.setLayoutProperty('water-mask','visibility',type==='sar'&&(activeLens==='water'||(overlayStyle==='tinted'&&layerVisibility.water))?'visible':'none');
-   const showCandidates=comparisonReady&&type==='sar'&&Boolean(layerVisibility.transitions)&&(side==='b'||!compare);
+   const waterVisible=type!=='carto'&&layerVisibility.water&&(activeLens==='water'||type==='sar'&&overlayStyle==='tinted');
+   map.setLayoutProperty('water-mask','visibility',waterVisible?'visible':'none');
+   map.getContainer().dataset.waterOverlay=String(Boolean(waterVisible));
+   map.getContainer().dataset.waterDate=selectedObservation(evidence,side).date;
+   const showCandidates=comparisonReady&&viewId!=='M0'&&type!=='carto'&&Boolean(layerVisibility.transitions)&&(side==='b'||!compare);
    for(const id of ['candidate-fill','candidate-outline'])map.setLayoutProperty(id,'visibility',showCandidates?'visible':'none');
    map.setPaintProperty('candidate-fill','fill-opacity',overlayStyle==='tinted'?0.26:0);
-   map.setPaintProperty('candidate-outline','line-width',overlayStyle==='tinted'?1.2:2);
+   map.setPaintProperty('candidate-outline','line-width',type==='satellite'?2.6:overlayStyle==='tinted'?1.2:2);
+   map.getContainer().dataset.changeOverlay=String(map.getLayoutProperty('candidate-outline','visibility')==='visible');
+   map.getContainer().dataset.changePair=evidence.pair.join(' / ');
    map.setLayoutProperty('support-outline','visibility',layerVisibility.coverage?'visible':'none');
   }
-  for(const marker of markers.current)marker.getElement().style.display=comparisonReady&&(basemapType==='sar'||compare&&comparisonMode==='sensors')&&layerVisibility.transitions?'':'none';
- },[evidence,corners,loaded,basemapType,satelliteView,compare,comparisonMode,selectedDate,selectedPair,selectedOpticalDate,selectedOpticalPair,selectedPol,activeLens,layerVisibility,overlayStyle,comparisonReady]);
+  for(const marker of markers.current)marker.getElement().style.display=comparisonReady&&viewId!=='M0'&&basemapType!=='carto'&&layerVisibility.transitions?'':'none';
+ },[evidence,corners,loaded,basemapType,satelliteView,compare,comparisonMode,selectedDate,selectedPair,selectedOpticalDate,selectedOpticalPair,selectedPol,activeLens,layerVisibility,overlayStyle,comparisonReady,viewId]);
 
  const replay=()=>{
   const map=maps.current.b;if(!map||!loaded.b)return;
   flight.current?.(false);
   const compact=map.getContainer().clientWidth<600;
-  flight.current=flyToStudyArea(map,evidence.bbox,{padding:{top:compact?112:76,bottom:compact?90:42,left:compact?24:64,right:compact?24:64},maxZoom:14,bearing:0,pitch:0},setFlyStage,overviewCamera(map,evidence));
+  flight.current=flyToStudyArea(map,evidence.bbox,{padding:{top:compact?112:76,bottom:compact?90:42,left:compact?24:64,right:compact?24:64},maxZoom:14,bearing:0,pitch:0},setFlyStage,overviewCamera(evidence));
  };
  useEffect(()=>{
   const map=maps.current.b;if(!map||!loaded.b||!loaded.a)return;
@@ -204,8 +218,8 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
   {observatory&&<div className="map-flyin-controls">{flyStage?<><span>{flyStage}</span><button onClick={()=>flight.current?.(true)}>Skip intro</button></>:<button className="flyin-replay" onClick={replay}>Replay fly-in</button>}</div>}
   <div ref={elementB} className="restored-map-pane map-pane-b radar-map-canvas" data-map-loaded={loaded.b} data-radar-loaded={radarLoaded} style={split?{left:'50%',width:'50%'}:{left:0,width:'100%'}}/>
   <div ref={elementA} className="restored-map-pane map-pane-a" data-map-loaded={loaded.a} style={split?{left:0,width:'50%',visibility:compare?'visible':'hidden'}:{left:0,width:'100%',visibility:compare?'visible':'hidden',clipPath:'inset(0 '+(100-swipePosition)+'% 0 0)',pointerEvents:'none'}}/>
-  <div className="restored-map-options" style={{right}} aria-label="Map display options"><div className="restored-basemaps">{(['satellite','sar','carto'] as const).map(type=><button key={type} aria-pressed={basemapType===type} title={type==='sar'?'Calibrated Sentinel-1 RTC radar':type==='satellite'?'High-resolution satellite imagery':'OpenStreetMap cartography'} onClick={()=>{setBasemapType(type);if(comparisonMode==='sensors')useWorkspaceStore.getState().setComparisonMode('dates');}} className={basemapType===type?'selected':''}>{type==='satellite'?'🛰️ Satellite':type==='sar'?'📡 Radar':'🗺️ Carto'}</button>)}</div><button aria-label="Toggle outlines and tint" className={'restored-outline-toggle '+(overlayStyle==='outlines'?'selected':'')} onClick={()=>setOverlayStyle(overlayStyle==='outlines'?'tinted':'outlines')}>{overlayStyle==='outlines'?'✏️ Outlines':'🎨 Tinted'}</button></div>
+  <div className="restored-map-options" style={{right}} aria-label="Map display options"><div className="restored-basemaps">{(['satellite','sar','carto'] as const).map(type=><button key={type} aria-pressed={basemapType===type} title={type==='sar'?'Calibrated Sentinel-1 RTC radar':type==='satellite'?'High-resolution satellite imagery':'OpenStreetMap cartography'} onClick={()=>{setBasemapType(type);if(comparisonMode==='sensors')useWorkspaceStore.getState().setComparisonMode('dates');}} className={basemapType===type?'selected':''}>{type==='satellite'?'🛰️ Satellite':type==='sar'?'📡 Radar':'🗺️ Carto'}</button>)}</div><button aria-label="Toggle outlines and tint" className={'restored-outline-toggle '+(layerVisibility.transitions&&overlayStyle==='outlines'?'selected':'')} onClick={()=>{if(!layerVisibility.transitions)useWorkspaceStore.getState().toggleLayer('transitions');else setOverlayStyle(overlayStyle==='outlines'?'tinted':'outlines');}}>{!layerVisibility.transitions?'Show changes':overlayStyle==='outlines'?'✏️ Outlines':'🎨 Tinted'}</button></div>
   <div className="restored-map-tools" style={{right}}><button aria-label="Zoom in" title="Zoom in" onClick={()=>maps.current.b?.zoomIn()}><Plus size={16}/></button>{observatory&&<input aria-label="Map zoom" type="range" min="1" max="18" step="0.1" value={zoom} onChange={event=>maps.current.b?.jumpTo({zoom:Number(event.target.value)})}/>}<span>{zoom.toFixed(1)}</span><button aria-label="Zoom out" title="Zoom out" onClick={()=>maps.current.b?.zoomOut()}><Minus size={16}/></button><hr/><button aria-label="Recenter study area" title="Return to the default study view" onClick={recenter}><Crosshair size={16}/></button><button aria-label="Download map image" title="Download map snapshot" onClick={capture}>{saved?<Check size={16}/>:<Camera size={16}/>}</button></div>
-  {viewId!=='M0'&&<div className="restored-map-legend" style={{right}}><button onClick={()=>setLegend(!legend)} aria-expanded={legend}><Layers size={14}/>Radar transitions{legend?<ChevronDown size={14}/>:<ChevronUp size={14}/>}</button>{legend&&comparisonReady&&<div><p><i className="candidate-red"/>Land → water: {number(evidence.metrics.land_to_water_ha,2)} ha</p><p><i className="candidate-green"/>Water → land: {number(evidence.metrics.water_to_land_ha,2)} ha</p><small>Source-derived screening candidates · {evidence.observations[0].sensor}</small></div>}</div>}
+  {viewId!=='M0'&&<div className="restored-map-legend" style={{right}}><button onClick={()=>setLegend(!legend)} aria-expanded={legend}><Layers size={14}/>Measured radar changes{legend?<ChevronDown size={14}/>:<ChevronUp size={14}/>}</button>{legend&&comparisonReady&&<div><p><i className="candidate-red"/>Land → water: {number(evidence.metrics.land_to_water_ha,2)} ha</p><p><i className="candidate-green"/>Water → land: {number(evidence.metrics.water_to_land_ha,2)} ha</p><small className="obs-radar-pair">Radar pair: {evidence.pair.join(' / ')}</small>{basemapType==='satellite'&&<small className="obs-overlay-reference">Reference overlay from radar; satellite images have separate dates.</small>}{activeLens==='water'&&<small>Water masks: Sentinel-1 {compare?evidence.pair.join(' / '):selectedDate}</small>}<button className="obs-find-change" onClick={()=>{const feature=evidence.findings.features.reduce<(typeof evidence.findings.features)[number]|undefined>((best,f)=>!best||f.properties.area_ha>best.properties.area_ha?f:best,undefined);if(feature)useWorkspaceStore.getState().setSelectedFinding(feature.properties.id);}}>Locate largest measured change</button>{basemapType==='satellite'&&<button className="obs-find-change" onClick={()=>{const state=useWorkspaceStore.getState();state.setComparisonMode('dates');state.setBasemapType('sar');useWorkspaceStore.setState({activeLens:'water',layerVisibility:{...state.layerVisibility,water:true}});state.setComparisonEnabled(true);}}>Compare measured radar water</button>}<small>Source-derived screening candidates · {evidence.observations[0].sensor}</small></div>}</div>}
  </div>;
 }

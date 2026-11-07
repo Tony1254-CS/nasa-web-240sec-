@@ -105,3 +105,35 @@ passed again after compact-rail styling; a further context/split check passed
 with the detailed basemap fully loaded. Screenshots were reviewed at 1920, 1366
 and 390 px widths. The production build passed. All observation files and SAR Lab
 source remain unchanged. The suite now registers 63 tests in eleven files.
+
+
+## Comparison drag and satellite data visibility - 8 November 2026
+
+Both regional defaults now use the requested zoom 11.4 / pitch 55 on desktop and
+phone; Sundarbans focuses on its estuary at 89.74, 21.83. Mouse/touch comparison
+uses window pointer tracking and continues after leaving the grip or losing
+native capture. Home/End reach 0/100%; Shift+arrows move 5%. Drag does not pan the
+map. The grip SVG/label cannot select text or intercept the gesture.
+
+Measured transition polygons and markers now render over Satellite as well as
+Radar, with the actual radar pair displayed separately from image dates. Water
+mask selection can preserve Satellite and retains its Sentinel-1 observation
+date. The legend opens on desktop, locates the largest retained finding, and
+links to comparison of the measured radar water pair. Old pixel samples clear
+when imagery/lens changes. Redundant external basemap downloads are suppressed
+under fully retained dated coverage during close inspection.
+
+The initial three interaction tests passed. A wider 23-case map/assistant run
+passed 21 cases and hit two loading/time-budget failures during the concurrent
+production build. After the retained-coverage loading change, five targeted
+checks passed serially, including both affected cases, mouse capture-loss,
+Chromium touch input, and actual satellite/water/geometry handoffs. The final
+regional camera/data case passed again while waiting for the appropriate imagery
+source before screenshots. Default and located-change screenshots were visually
+reviewed. Retained observation files and the original SAR Lab source are unchanged.
+The browser suite now registers 66 tests in twelve files.
+
+The final three interaction cases passed together after the readability/layout
+adjustment. Their checks include a 1366 x 768 viewport assertion that the expanded
+change legend leaves the zoom rail clear, plus full mouse/touch gestures and the
+measured-radar-water handoff. Radar dates in the legend use larger type.

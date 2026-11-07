@@ -9,13 +9,13 @@ async function aligned(page:Page){await expect.poll(async()=>{const [a,b]=await 
 async function footprintFits(page:Page){
  await expect.poll(async()=>{
   const [,b]=await cameras(page),box=await page.locator('.map-pane-b').boundingBox();if(!box)return false;
-  if(b.pitch>=40&&await page.locator('.restored-map-workspace').getAttribute('data-comparison-enabled')==='false')return b.center[0]>89.6&&b.center[0]<89.9&&b.center[1]>25.4&&b.center[1]<25.75;
+  if(b.pitch>=40&&await page.locator('.restored-map-workspace').getAttribute('data-comparison-enabled')==='false')return b.center[0]>89.5&&b.center[0]<89.9&&((b.center[1]>25.4&&b.center[1]<25.75)||(b.center[1]>21.75&&b.center[1]<22));
   const [[w,n],[e,s]]=b.bounds;
   return w>=15&&n>=75&&e<=box.width-15&&s<=box.height-15&&(s-n)>box.height*.35;
  }).toBe(true);
 }
 
-test('both study areas open on real satellite context with the entire georeferenced footprint visible',async({page})=>{
+test('both study areas open on registered satellite overviews with aligned comparison cameras',async({page})=>{
  const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
  for(const region of ['jamuna','sundarbans']){
   await ready(page,region);
