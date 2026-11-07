@@ -10,6 +10,7 @@ The Observatory fly-in and shared assistant preserve the current study-area data
 - Dragging, scrolling, touching or using the keyboard interrupts the flight.
 - Reduced-motion users go straight to the final bounds.
 - Animation uses camera completion events, with listener cleanup when a map unmounts.
+- Only tagged fly-in events advance the sequence. Both comparison maps resize together before camera synchronization resumes, so a follower resize cannot interrupt the primary flight. The final fit measures the current viewport.
 - Date/layer changes do not replay the introduction. Map handoffs focus the selected candidate centroid.
 
 ## One assistant, two entry points

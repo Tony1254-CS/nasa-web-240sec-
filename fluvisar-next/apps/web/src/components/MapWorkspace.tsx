@@ -65,7 +65,7 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
    setZoom(Number(source.getZoom().toFixed(1)));
   };
   for(const side of ['b','a'] as const){
-   const map=new maplibregl.Map({container:(side==='a'?elementA.current:elementB.current)!,canvasContextAttributes:{preserveDrawingBuffer:true},attributionControl:false,
+   const map=new maplibregl.Map({container:(side==='a'?elementA.current:elementB.current)!,trackResize:false,canvasContextAttributes:{preserveDrawingBuffer:true},attributionControl:false,
     style:{version:8,sources:{satellite:{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'},carto:{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,attribution:'© OpenStreetMap contributors'}},layers:[{id:'background',type:'background',paint:{'background-color':'#0f172a'}},{id:'satellite',type:'raster',source:'satellite',paint:{'raster-opacity':1}},{id:'carto',type:'raster',source:'carto',layout:{visibility:'none'}}]},
     center:regionId==='jamuna'?[89.75,25.575]:[89.70,21.875],zoom:viewId==='M0'?6.8:regionId==='jamuna'?11.5:11.8,minZoom:1,maxZoom:18});
    maps.current[side]=map;
@@ -117,7 +117,9 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
     catch(error){if(!controller.signal.aborted)useWorkspaceStore.getState().setSelectedSample({lon,lat,value:null,unit:'dB',masked:true,reason:String(error)});}
    });
   }
-  const observer=new ResizeObserver(()=>{for(const map of Object.values(maps.current))map?.resize();sync('b','a');});observer.observe(elementB.current);observer.observe(elementA.current);
+  // Resize both views as one operation. A follower resize must not jump the
+  // primary camera and interrupt its fly-in before the final study-area fit.
+  const observer=new ResizeObserver(()=>{synchronizing=true;try{for(const map of Object.values(maps.current))map?.resize();}finally{synchronizing=false;}sync('b','a');});observer.observe(elementB.current);observer.observe(elementA.current);
   return()=>{flight.current?.(false);flight.current=null;observer.disconnect();for(const marker of markers.current)marker.remove();markers.current=[];for(const side of ['a','b'] as const){aborts.current[side]?.abort();maps.current[side]?.remove();maps.current[side]=null;}};
  },[evidence,corners,regionId,observatory]);
 

@@ -644,10 +644,11 @@ npm run build
 npm run test:e2e -- --workers=1
 ```
 
-The current browser suite registers **45 tests in nine files**:
+The current browser suite registers **55 tests in ten files**:
 
 | Suite | Main coverage |
 | --- | --- |
+| `responsive-audit.spec.ts` | All ten public pages at five desktop/laptop/phone sizes in both themes; header reachability, overflow and unclipped intro content |
 | `about-lab.spec.ts` | Original crew and imagery provenance, story navigation, themes, responsive layout and preserved Lab controls/interactions |
 | `legacy-pages.spec.ts` | Routes, navigation, report/source consistency, exports and learning modules |
 | `observatory-controls.spec.ts` | Study framing, camera alignment, controls, tools and region navigation |
@@ -657,6 +658,8 @@ The current browser suite registers **45 tests in nine files**:
 | `impact-desk.spec.ts` | Both regions, history, divider alignment, pair-specific metrics/exports, exposure, scenarios, deep links and mobile/light theme |
 | `assistant.spec.ts` | Geographic fly-in/alignment, scoped source-linked chat, map handoffs/export, card inspection, mobile/light theme and connection retry |
 | `intelligence-workspace.spec.ts` | Real-data identity/pairs/handoffs, linked model experiments and save/restore, retained diagnostics, walkthrough, panel alignment and mobile/light theme |
+
+The latest [cross-device audit](docs/RESPONSIVE_QA.md) records desktop, laptop and phone coverage, fixes and production-preview checks.
 
 ### 16.2 Active API and scientific checks
 

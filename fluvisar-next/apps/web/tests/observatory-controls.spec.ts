@@ -65,6 +65,7 @@ test('radar, planning, InSAR, evidence, coverage and observation pairing are dis
 test('mobile keeps the map visible and opens a usable feature drawer',async({page})=>{
  await page.setViewportSize({width:390,height:844});await ready(page,'sundarbans');await footprintFits(page);
  await expect(page.getByRole('button',{name:'🛰️ Satellite',exact:true})).toBeVisible();
+ const replay=await page.getByRole('button',{name:'Replay fly-in',exact:true}).boundingBox(),features=await page.getByRole('button',{name:'Open observatory features'}).boundingBox();expect(Math.max(0,Math.min(replay!.x+replay!.width,features!.x+features!.width)-Math.max(replay!.x,features!.x))*Math.max(0,Math.min(replay!.y+replay!.height,features!.y+features!.height)-Math.max(replay!.y,features!.y))).toBe(0);
  await page.getByRole('button',{name:'Open observatory features'}).click();
  await page.getByRole('navigation',{name:'Feature categories'}).getByRole('button',{name:'Radar',exact:true}).click();
  await expect(page.getByRole('group',{name:'Polarization channels'})).toBeVisible();await page.getByRole('button',{name:'Close features'}).click();
