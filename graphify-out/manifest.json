@@ -6,9 +6,9 @@
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/package.json": {
-    "mtime": 1793416433.786525,
-    "seen": 1793425832.756984,
-    "ast_hash": "8b67f4224ef3028a2661761bc3a61b53",
+    "mtime": 1793965229.210077,
+    "seen": 1793991123.0285828,
+    "ast_hash": "06df36276cf3495730e0958aab707087",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/public/maplibre-gl-worker.mjs": {
@@ -18,15 +18,15 @@
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/App.tsx": {
-    "mtime": 1793419229.9944062,
-    "seen": 1793425832.756984,
-    "ast_hash": "5a462dd3b1dd0b9713d411fc3cc3a3a4",
+    "mtime": 1793968645.322274,
+    "seen": 1793991123.029579,
+    "ast_hash": "fd3f1ae8c8aa1e25265f02c634856b1f",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/AtlasView.tsx": {
-    "mtime": 1793419230.1695514,
-    "seen": 1793425832.756984,
-    "ast_hash": "4445ef61d873cdef77f870b1fd8ab83e",
+    "mtime": 1793964309.220471,
+    "seen": 1793991123.029579,
+    "ast_hash": "2b921d9913035fa6ad120cf1c1f9b4b0",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/BreakMyFindingModal.tsx": {
@@ -42,15 +42,15 @@
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/ContextTracks.tsx": {
-    "mtime": 1793419230.5575664,
-    "seen": 1793425832.756984,
-    "ast_hash": "148a6cc626264f1ac800cab41cff4cda",
+    "mtime": 1793969334.5835757,
+    "seen": 1793991123.0315816,
+    "ast_hash": "ee3ea1417413f5c7091eb80cd202efa4",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/CoverageCurtainOverlay.tsx": {
-    "mtime": 1793422635.776647,
-    "seen": 1793425832.756984,
-    "ast_hash": "f6be409a42305fd31dde1efb0a64c096",
+    "mtime": 1793969334.5820193,
+    "seen": 1793991123.0315816,
+    "ast_hash": "8df8bb042e55d36152c21dae864c56e9",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/DecisionBriefModal.tsx": {
@@ -60,33 +60,33 @@
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/Header.tsx": {
-    "mtime": 1793419230.7600577,
-    "seen": 1793425832.756984,
-    "ast_hash": "063752ec5dbb32593e30bdfea7ab76b0",
+    "mtime": 1793967210.3986826,
+    "seen": 1793991123.0325806,
+    "ast_hash": "f85ae3d2536d50cdfc3222794c8b4eea",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/InSARSpecialtyPanel.tsx": {
-    "mtime": 1793419230.861055,
-    "seen": 1793425832.756984,
-    "ast_hash": "6c90380a17e215f515cd27e89ed5a1bd",
+    "mtime": 1793966130.4289725,
+    "seen": 1793991123.0325806,
+    "ast_hash": "22e39288f0df89bdfc597c7d1947a3d7",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/JamunaDecisionPanel.tsx": {
-    "mtime": 1793419230.9170551,
-    "seen": 1793425832.756984,
-    "ast_hash": "8f877065384d183b34afe58a5f592e38",
+    "mtime": 1793966130.4309711,
+    "seen": 1793991123.0325806,
+    "ast_hash": "45b164e4a3f66d489b685196a8eca505",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/LeftPanel.tsx": {
-    "mtime": 1793425539.2630625,
-    "seen": 1793425832.756984,
-    "ast_hash": "df545c1349dbf55a2dfd9eaa9796e378",
+    "mtime": 1793606618.331096,
+    "seen": 1793991123.0325806,
+    "ast_hash": "cf9c37e5b84fef2bc4c547baab9a5165",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/MapWorkspace.tsx": {
-    "mtime": 1793430282.7753892,
-    "seen": 1793430796.5771737,
-    "ast_hash": "1a0e958c9d687b77908dbf17e818e1d1",
+    "mtime": 1793970501.927767,
+    "seen": 1793991123.0325806,
+    "ast_hash": "63db5073d68230697faa77ec88a0f158",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/PairSelectorModal.tsx": {
@@ -96,69 +96,69 @@
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/RightInspector.tsx": {
-    "mtime": 1793422636.1541224,
-    "seen": 1793425832.756984,
-    "ast_hash": "3b426d9d3bb37bd0dedef843efe2504d",
+    "mtime": 1793606250.430971,
+    "seen": 1793991123.0335784,
+    "ast_hash": "88d3c83a5c34ce138f8723d740a78d11",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/SarLabView.tsx": {
-    "mtime": 1793419231.7489889,
-    "seen": 1793425832.756984,
-    "ast_hash": "15f598b9923858302df7921558e3ef4c",
+    "mtime": 1793645228.5039306,
+    "seen": 1793991123.0335784,
+    "ast_hash": "b839d0a0f00daccd63a1b7c1fb0ad77d",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/ScenarioLabPanel.tsx": {
-    "mtime": 1793419231.8409908,
-    "seen": 1793425832.756984,
-    "ast_hash": "eac10e9dea05dc434b60d6fecd109deb",
+    "mtime": 1793966130.4344823,
+    "seen": 1793991123.0335784,
+    "ast_hash": "bbc4ee888093673df9fac815ea3643d1",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/StoryModeView.tsx": {
-    "mtime": 1793419231.9324636,
-    "seen": 1793425832.756984,
-    "ast_hash": "3ff430fb5e459d290bc8c1986d29318a",
+    "mtime": 1793964309.2227747,
+    "seen": 1793991123.0335784,
+    "ast_hash": "da17c92b1015f5d0313af3b6f1dbb11c",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/SundarbansPolarizationPanel.tsx": {
-    "mtime": 1793419232.0199826,
-    "seen": 1793425832.756984,
-    "ast_hash": "049185ff2641d67958f5dfd68b870f9a",
+    "mtime": 1793966066.5913272,
+    "seen": 1793991123.0335784,
+    "ast_hash": "d65381fb600c5929cd74349aeeda0a8c",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/SwipeCompareMap.tsx": {
-    "mtime": 1793430787.638821,
-    "seen": 1793430796.5771737,
-    "ast_hash": "67ebed5bf9e1fa3e87668a955fedaa90",
+    "mtime": 1793970084.1616304,
+    "seen": 1793991123.0335784,
+    "ast_hash": "7c15719d806f6e17914c58af5c3280a9",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/components/TimelinePlayer.tsx": {
-    "mtime": 1793430787.63683,
-    "seen": 1793430796.5771737,
-    "ast_hash": "648918098909fbf5c2bafea987568dc2",
+    "mtime": 1793970084.1586263,
+    "seen": 1793991123.0335784,
+    "ast_hash": "88bfd84a5c238c892396a76a549809d4",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/data/geoData.ts": {
-    "mtime": 1793428434.3212533,
-    "seen": 1793430796.5771737,
-    "ast_hash": "30f06721567f240d7d251d94081ceeef",
+    "mtime": 1793450389.1442723,
+    "seen": 1793991123.0335784,
+    "ast_hash": "197398a28c28373eb0ca6a8a687eead9",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/i18n/translations.ts": {
-    "mtime": 1793419071.099303,
-    "seen": 1793425832.756984,
-    "ast_hash": "aba371c4bb46fdb46ac3faf9a2aae057",
+    "mtime": 1793606006.775798,
+    "seen": 1793991123.0335784,
+    "ast_hash": "92412a5892e448dc5700c7a8ae31c65c",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/main.tsx": {
-    "mtime": 1793416202.618153,
-    "seen": 1793425832.756984,
-    "ast_hash": "787e5a07efeb2bf6209d5937195f2f68",
+    "mtime": 1793607336.4294164,
+    "seen": 1793991123.0335784,
+    "ast_hash": "eb6e5cca9ea276223942991a23321eff",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/store/workspaceStore.ts": {
-    "mtime": 1793430787.638821,
-    "seen": 1793430796.5771737,
-    "ast_hash": "e40b36965531b38d2bf9e64e372ceaf8",
+    "mtime": 1793969605.8789926,
+    "seen": 1793991123.0335784,
+    "ast_hash": "096f6d6fc2a50dca3c35f736ab1c0d7c",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/src/utils/sonification.ts": {
@@ -186,9 +186,9 @@
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/vite.config.ts": {
-    "mtime": 1793429869.4933288,
-    "seen": 1793430796.5771737,
-    "ast_hash": "7b9565cad9eaa515bbc86b92ab52a477",
+    "mtime": 1793964812.4968252,
+    "seen": 1793991123.0378902,
+    "ast_hash": "a00a47779c96e009593ba5a575e7a75f",
     "semantic_hash": ""
   },
   "fluvisar-next/configs/regions/jamuna.yaml": {
@@ -378,9 +378,9 @@
     "semantic_hash": ""
   },
   "fluvisar-next/services/api/app/main.py": {
-    "mtime": 1793419072.9432623,
-    "seen": 1793425832.756984,
-    "ast_hash": "7d90dbfff87ef885518359c3fd799df1",
+    "mtime": 1793969637.402206,
+    "seen": 1793991123.091542,
+    "ast_hash": "d19e0d8032309495611c0002801a1189",
     "semantic_hash": ""
   },
   "fluvisar-next/tests/run_all_tests.py": {
@@ -390,9 +390,9 @@
     "semantic_hash": ""
   },
   "fluvisar-next/tests/test_b02_source_and_api.py": {
-    "mtime": 1793419073.0994198,
-    "seen": 1793425832.756984,
-    "ast_hash": "b2997072eea8630f5322810980f21cfd",
+    "mtime": 1793970285.1386364,
+    "seen": 1793991123.092546,
+    "ast_hash": "0c296f83018d402ded788858638fa9fe",
     "semantic_hash": ""
   },
   "fluvisar-next/tests/test_b04_change_and_checks.py": {
@@ -462,15 +462,15 @@
     "semantic_hash": ""
   },
   "docs/ARCHITECTURE.md": {
-    "mtime": 1793420512.0676863,
-    "seen": 1793425832.756984,
-    "ast_hash": "6c88bb123065c0b3e152f04f78b8c362",
+    "mtime": 1793463624.083184,
+    "seen": 1793991123.1020994,
+    "ast_hash": "8d50e5216981f0acac6f5b7569162f20",
     "semantic_hash": ""
   },
   "docs/DECISIONS.md": {
-    "mtime": 1793427507.269721,
-    "seen": 1793430796.5771737,
-    "ast_hash": "28a5c006d713ab10809d17d6aaf9e60a",
+    "mtime": 1793463624.164217,
+    "seen": 1793991123.1020994,
+    "ast_hash": "86f0f60fec256b62a0ae387597f40a57",
     "semantic_hash": ""
   },
   "docs/DEVELOPER_GUIDE.md": {
@@ -480,9 +480,9 @@
     "semantic_hash": ""
   },
   "docs/EXTERNAL_DATA_SOURCES.md": {
-    "mtime": 1793420431.8261008,
-    "seen": 1793425832.756984,
-    "ast_hash": "8e03e16ee6e2df9c44bdfc5f3312a7ac",
+    "mtime": 1793464491.6926184,
+    "seen": 1793991123.103102,
+    "ast_hash": "d2ea372c7de9580c8b529afe32c0d733",
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/README.md": {
@@ -492,9 +492,9 @@
     "semantic_hash": ""
   },
   "fluvisar-next/apps/web/index.html": {
-    "mtime": 1793419229.8963974,
-    "seen": 1793425832.756984,
-    "ast_hash": "71c175ede42fd89a091871677060c6ae",
+    "mtime": 1793566996.0495646,
+    "seen": 1793991123.1046207,
+    "ast_hash": "c9bd99b69591ecd67022577aac36d3b7",
     "semantic_hash": ""
   },
   "plan.md": {
@@ -533,10 +533,1522 @@
     "ast_hash": "9960a24288958394ac50e57ff638b036",
     "semantic_hash": ""
   },
+  "fluvisar-next/apps/web/playwright.config.ts": {
+    "mtime": 1793962352.146197,
+    "seen": 1793991123.0285828,
+    "ast_hash": "c485d4561554fae3873e739c5ab2d086",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/index.json": {
+    "mtime": 1793970294.908014,
+    "seen": 1793991123.0285828,
+    "ast_hash": "d046554826fd7e8e5d994b1c8d543ec9",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-06-02_optical.json": {
+    "mtime": 1793969530.923545,
+    "seen": 1793991123.0285828,
+    "ast_hash": "63a36c1171a86da83e4b086a86642762",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-09-15_optical.json": {
+    "mtime": 1793969539.3300161,
+    "seen": 1793991123.0285828,
+    "ast_hash": "35db19c483d3e8bf0a82b093efff1fd5",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-10_optical.json": {
+    "mtime": 1793969505.8086574,
+    "seen": 1793991123.0285828,
+    "ast_hash": "9f7e8d994d1bd160338db8099c54b2c7",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-15_optical.json": {
+    "mtime": 1793969477.715375,
+    "seen": 1793991123.0285828,
+    "ast_hash": "e546af8701674260580ae9bd89e41044",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-20_optical.json": {
+    "mtime": 1793969504.5202072,
+    "seen": 1793991123.0285828,
+    "ast_hash": "92edfb65c12608d33e6f841f6b8b5033",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-25_optical.json": {
+    "mtime": 1793969468.8880553,
+    "seen": 1793991123.0285828,
+    "ast_hash": "19df1978f71d4ea75513c14d8b85bcfb",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-08-20_2026-09-25.json": {
+    "mtime": 1793969563.1449325,
+    "seen": 1793991123.0285828,
+    "ast_hash": "6fabbb44df1b180faf58c4b0f070194d",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-08-20_2026-10-07.json": {
+    "mtime": 1793969565.8009505,
+    "seen": 1793991123.0285828,
+    "ast_hash": "64fa4adc470785b1a0fab41fc34201c1",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-10-07_2026-10-19.json": {
+    "mtime": 1793969584.8830802,
+    "seen": 1793991123.0285828,
+    "ast_hash": "2420cb42593d4788f36337c6662fff03",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/manifest.json": {
+    "mtime": 1793970294.948292,
+    "seen": 1793991123.0285828,
+    "ast_hash": "d046554826fd7e8e5d994b1c8d543ec9",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-06-04_optical.json": {
+    "mtime": 1793969776.8326912,
+    "seen": 1793991123.0285828,
+    "ast_hash": "5a14b9a41ce513ffc16c6c5fece83ff6",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-09-14_optical.json": {
+    "mtime": 1793969784.924447,
+    "seen": 1793991123.0285828,
+    "ast_hash": "0072d432a77b2d7290dfe28091ee1dcc",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-12_optical.json": {
+    "mtime": 1793969733.2068517,
+    "seen": 1793991123.0285828,
+    "ast_hash": "491e483cce2e409225bd0a2f408aa3f7",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-17_optical.json": {
+    "mtime": 1793969776.370944,
+    "seen": 1793991123.0285828,
+    "ast_hash": "407f7365ad3a81699f9e67499401b2be",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-22_optical.json": {
+    "mtime": 1793969705.2235968,
+    "seen": 1793991123.0285828,
+    "ast_hash": "513d657b81f7e95043bbf77b099c92b3",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-27_optical.json": {
+    "mtime": 1793969740.4545207,
+    "seen": 1793991123.0285828,
+    "ast_hash": "ba36488e3ac312f7aa7781e8a295c878",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-08-23_2026-09-28.json": {
+    "mtime": 1793969804.3791895,
+    "seen": 1793991123.0285828,
+    "ast_hash": "acf6c1d76df5d01589ce3512270abcb4",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-08-23_2026-10-10.json": {
+    "mtime": 1793969806.1259046,
+    "seen": 1793991123.0285828,
+    "ast_hash": "612d3cd6d5be6d004d8117897dd5dc83",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-08-23_2026-10-22.json": {
+    "mtime": 1793969807.8688495,
+    "seen": 1793991123.0285828,
+    "ast_hash": "5d2cb3766271fade2fe3392d9ed5c692",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-08-23_2026-11-03.json": {
+    "mtime": 1793969809.130723,
+    "seen": 1793991123.0285828,
+    "ast_hash": "fd9a7a254bb77a0ea158f983dbc712ab",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-09-28_2026-10-10.json": {
+    "mtime": 1793969810.0149226,
+    "seen": 1793991123.0285828,
+    "ast_hash": "f3ef7a1f7b6e2b8315241e793a344c3f",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-09-28_2026-10-22.json": {
+    "mtime": 1793969810.9236853,
+    "seen": 1793991123.0285828,
+    "ast_hash": "48ab2b584958c2a3411f6bf180eca99d",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-09-28_2026-11-03.json": {
+    "mtime": 1793969812.2107441,
+    "seen": 1793991123.0285828,
+    "ast_hash": "fc7d270e6ae49a5ebf21a7a02f5e4c90",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-10-10_2026-10-22.json": {
+    "mtime": 1793969813.2506833,
+    "seen": 1793991123.0285828,
+    "ast_hash": "6869dd0af5fb02a6f030be6828602d73",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-10-10_2026-11-03.json": {
+    "mtime": 1793969814.1696384,
+    "seen": 1793991123.0285828,
+    "ast_hash": "6d7329fb2b6d2c2c756b07ade6dbf2a3",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/scripts/dev.mjs": {
+    "mtime": 1793965229.2070684,
+    "seen": 1793991123.029579,
+    "ast_hash": "86cf0042a7433174a53e1cc818087ff7",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/components/AgentStatusBanner.tsx": {
+    "mtime": 1793645706.9841044,
+    "seen": 1793991123.029579,
+    "ast_hash": "b8146f4e8e370268069341c83e37806a",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/components/AgenticCopilotDrawer.tsx": {
+    "mtime": 1793964409.0393083,
+    "seen": 1793991123.029579,
+    "ast_hash": "9f78c2a5c43744cec7246dd008c32415",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/components/EvidenceUI.tsx": {
+    "mtime": 1793964204.6705697,
+    "seen": 1793991123.0325806,
+    "ast_hash": "fde5ab554fbac904e569ee13fba00e91",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/components/FindingInspectorDrawer.tsx": {
+    "mtime": 1793971834.3449373,
+    "seen": 1793991123.0325806,
+    "ast_hash": "7b58744cc1dec44e50fb8fc4e5a45fd4",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/components/LandingPageView.tsx": {
+    "mtime": 1793965207.0851943,
+    "seen": 1793991123.0325806,
+    "ast_hash": "ec50d69e3d3ceebf7008701cd029caee",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/components/ObservatoryFeaturePanel.tsx": {
+    "mtime": 1793971908.5814946,
+    "seen": 1793991123.0325806,
+    "ast_hash": "66c53f0a84068c9e82f1ce8305cee688",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/components/ObservatoryHeader.tsx": {
+    "mtime": 1793969551.9341052,
+    "seen": 1793991123.0325806,
+    "ast_hash": "0388406d2a687228b27e1069a2bce2ac",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/components/ObservatoryLensGuide.tsx": {
+    "mtime": 1793966823.5492668,
+    "seen": 1793991123.0325806,
+    "ast_hash": "ca7f4757509f0fb848ad7443ac14aeb0",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/components/ReportsView.tsx": {
+    "mtime": 1793971924.8691785,
+    "seen": 1793991123.0335784,
+    "ast_hash": "7681516bb2ac6c10009dfa735fb5ae12",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/components/SourceCitationBadge.tsx": {
+    "mtime": 1793616462.7425704,
+    "seen": 1793991123.0335784,
+    "ast_hash": "f295494e0f79b6de1fd8ddc95167e0aa",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/components/SourceProvenanceModal.tsx": {
+    "mtime": 1793969691.7854848,
+    "seen": 1793991123.0335784,
+    "ast_hash": "c065d214c27ea6fe61d0342add22a72f",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/data/agenticSystem.ts": {
+    "mtime": 1793616463.1964505,
+    "seen": 1793991123.0335784,
+    "ast_hash": "84271f17fd09faa7fb6697ad1ecdcc6d",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/data/analysisRegistry.ts": {
+    "mtime": 1793965207.0795233,
+    "seen": 1793991123.0335784,
+    "ast_hash": "bf48b00579473098c97af40ddc05dbbc",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/data/evidence.tsx": {
+    "mtime": 1793969334.5650003,
+    "seen": 1793991123.0335784,
+    "ast_hash": "d392e8968652e28b623b8b8df6e2f480",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/data/observations.json": {
+    "mtime": 1793970294.9866176,
+    "seen": 1793991123.0335784,
+    "ast_hash": "d046554826fd7e8e5d994b1c8d543ec9",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/data/provenanceRegistry.ts": {
+    "mtime": 1793616463.6009085,
+    "seen": 1793991123.0335784,
+    "ast_hash": "793c165e8edf2d651e93677faaa143c3",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/features/legacy/LegacyPageLayout.tsx": {
+    "mtime": 1793969334.568,
+    "seen": 1793991123.0335784,
+    "ast_hash": "9ce400ac626453253daa0f3dbf73bedb",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/features/legacy/components/Navbar.tsx": {
+    "mtime": 1793964657.5703943,
+    "seen": 1793991123.0335784,
+    "ast_hash": "2d5f99e65c3d5d0f77e9cbc3243c7e41",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/features/legacy/data/load.ts": {
+    "mtime": 1793970501.8613353,
+    "seen": 1793991123.0335784,
+    "ast_hash": "6498842af59e20a14015b385315d1ad0",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/features/legacy/data/types.ts": {
+    "mtime": 1793964702.6047754,
+    "seen": 1793991123.0335784,
+    "ast_hash": "1cef0c530cd7ad0f10ea96294e23e58e",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/features/legacy/map/DecisionMap.tsx": {
+    "mtime": 1793965207.08154,
+    "seen": 1793991123.0335784,
+    "ast_hash": "f789b460835bc7e46ac09628efe321ca",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/features/legacy/pages/DecisionDesk.tsx": {
+    "mtime": 1793965207.0779984,
+    "seen": 1793991123.0335784,
+    "ast_hash": "4a7f36f1053adf01eceea060679784cf",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/features/legacy/pages/Intelligence.tsx": {
+    "mtime": 1793965333.1571696,
+    "seen": 1793991123.0335784,
+    "ast_hash": "5787186e6d15531b6e5e1f897a421318",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/features/legacy/pages/SARLab.tsx": {
+    "mtime": 1793964780.365657,
+    "seen": 1793991123.0335784,
+    "ast_hash": "6302252f25bda027ba4b689fe6d176ef",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/features/legacy/pages/sarAdvancedDiagnostics.ts": {
+    "mtime": 1793961608.4692347,
+    "seen": 1793991123.0335784,
+    "ast_hash": "880c92e11763f54c4d98fdf371d507f2",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/features/legacy/pages/sarForestDemo.ts": {
+    "mtime": 1793961608.440099,
+    "seen": 1793991123.0335784,
+    "ast_hash": "35b4a0ab4bfa1f3fb9a88c22096b615e",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/features/legacy/pages/sarSpeckleDemo.ts": {
+    "mtime": 1793961608.4602299,
+    "seen": 1793991123.0335784,
+    "ast_hash": "4628782b0b05e6365a89bd223233c8e3",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/features/legacy/pages/temporalMlpDemo.ts": {
+    "mtime": 1793961608.4501002,
+    "seen": 1793991123.0335784,
+    "ast_hash": "cfee2624b064879bbb3794e928d07107",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/src/features/legacy/theme.ts": {
+    "mtime": 1793961789.960788,
+    "seen": 1793991123.0335784,
+    "ast_hash": "851bc4ea14294986b6d0d3fdd4d8aa49",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/tests/legacy-pages.spec.ts": {
+    "mtime": 1793969846.0816143,
+    "seen": 1793991123.0348585,
+    "ast_hash": "4bcab76b38aea73f94a1b25fcd555893",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/tests/observation-history.spec.ts": {
+    "mtime": 1793970501.9297621,
+    "seen": 1793991123.0348585,
+    "ast_hash": "b48a15ca0d0d3956901c4371b730cddc",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/tests/observatory-controls.spec.ts": {
+    "mtime": 1793968681.3324995,
+    "seen": 1793991123.0348585,
+    "ast_hash": "c1d74b5516e5f87f54a6024cc8b44663",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/derived/s1-rtc-jamuna-2026-10-19-2026-10-31-30m-v1/bundle.json": {
+    "mtime": 1793964639.842538,
+    "seen": 1793991123.0398865,
+    "ast_hash": "ea941d9b3d53935a60dd06d7665b4008",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/derived/s1-rtc-sundarbans-2026-10-22-2026-11-03-30m-v1/bundle.json": {
+    "mtime": 1793964639.8455312,
+    "seen": 1793991123.0398865,
+    "ast_hash": "e6aacb33f37bd739f0cf50cb05f26ada",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/discovery-jamuna-optical.json": {
+    "mtime": 1793969154.0498736,
+    "seen": 1793991123.0398865,
+    "ast_hash": "190badcac083370f5b2b0f654f4aac8b",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/discovery-jamuna-radar.json": {
+    "mtime": 1793969153.863801,
+    "seen": 1793991123.0398865,
+    "ast_hash": "aa56bf014016ff96b23a117eb6c5420a",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/discovery-sundarbans-optical.json": {
+    "mtime": 1793969153.7225223,
+    "seen": 1793991123.0398865,
+    "ast_hash": "5b344ae91bd359a95b88507d72a3bfcd",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/discovery-sundarbans-radar.json": {
+    "mtime": 1793969153.742528,
+    "seen": 1793991123.0398865,
+    "ast_hash": "836f26c4a0bdff68f5af043c62e8d023",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/jamuna/S1D_IW_GRDH_1SDV_20260703T235456_20260703T235521_003516_0063B1_rtc.json": {
+    "mtime": 1793969421.6820588,
+    "seen": 1793991123.0398865,
+    "ast_hash": "94f90ca98da91c8a7887c02407b07c6f",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/jamuna/S1D_IW_GRDH_1SDV_20260820T235451_20260820T235516_004216_007BCA_rtc.json": {
+    "mtime": 1793969383.746624,
+    "seen": 1793991123.0398865,
+    "ast_hash": "a9a75aa99ccddc0e847b93c028f2e245",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/jamuna/S1D_IW_GRDH_1SDV_20260925T235452_20260925T235517_004741_008E00_rtc.json": {
+    "mtime": 1793969421.754408,
+    "seen": 1793991123.0398865,
+    "ast_hash": "fc5ff9d2364bdbbcf931c231e3512280",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/jamuna/S1D_IW_GRDH_1SDV_20261007T235452_20261007T235517_004916_009429_rtc.json": {
+    "mtime": 1793969539.4398572,
+    "seen": 1793991123.0398865,
+    "ast_hash": "9e9dad50343061cf157732dd1b94dfd0",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/jamuna/S1D_IW_GRDH_1SDV_20261019T235452_20261019T235517_005091_009A2D_rtc.json": {
+    "mtime": 1793969424.6017416,
+    "seen": 1793991123.0398865,
+    "ast_hash": "80a05880a7dc8b94161ca7829792d483",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/jamuna/S1D_IW_GRDH_1SDV_20261031T235452_20261031T235517_005266_00A038_rtc.json": {
+    "mtime": 1793969424.7120721,
+    "seen": 1793991123.0398865,
+    "ast_hash": "d9f56fa1d250438bd5874a5ccf53c32e",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/jamuna/S2B_45RYJ_20260602_0_L2A.json": {
+    "mtime": 1793969530.9265497,
+    "seen": 1793991123.0398865,
+    "ast_hash": "a2af56f49d69d9fa4f6f19f3e36aab0b",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/jamuna/S2B_45RYJ_20261010_0_L2A.json": {
+    "mtime": 1793969505.810654,
+    "seen": 1793991123.0398865,
+    "ast_hash": "99cb723a48cfdf992cf1fbbd0158b763",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/jamuna/S2B_45RYJ_20261020_0_L2A.json": {
+    "mtime": 1793969504.5222025,
+    "seen": 1793991123.0398865,
+    "ast_hash": "057846a5032d42dc4353aaf1aaf42e08",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/jamuna/S2C_45RYJ_20260915_0_L2A.json": {
+    "mtime": 1793969539.3330176,
+    "seen": 1793991123.0398865,
+    "ast_hash": "727ba28fa23064dae34b0b02b58b4e87",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/jamuna/S2C_45RYJ_20261015_0_L2A.json": {
+    "mtime": 1793969477.7183752,
+    "seen": 1793991123.0398865,
+    "ast_hash": "7d084ac96e7c1249aacb3f8f86c709b6",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/jamuna/S2C_45RYJ_20261025_0_L2A.json": {
+    "mtime": 1793969468.8915834,
+    "seen": 1793991123.0398865,
+    "ast_hash": "55a2bfb618c2db381813509b7b363b64",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/sundarbans/S1D_IW_GRDH_1SDV_20260706T121126_20260706T121155_003553_0064F5_rtc.json": {
+    "mtime": 1793969674.8797023,
+    "seen": 1793991123.0398865,
+    "ast_hash": "70f70ddb88d3efe0dabf65416d7c9e56",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/sundarbans/S1D_IW_GRDH_1SDV_20260823T121128_20260823T121158_004253_007D19_rtc.json": {
+    "mtime": 1793969672.9072266,
+    "seen": 1793991123.0398865,
+    "ast_hash": "149f641e09d4a5be88991e12a0d75938",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/sundarbans/S1D_IW_GRDH_1SDV_20260928T121129_20260928T121158_004778_008F55_rtc.json": {
+    "mtime": 1793969709.6125479,
+    "seen": 1793991123.0398865,
+    "ast_hash": "255c2d6747998d0a5bb6a04aec8b9acd",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/sundarbans/S1D_IW_GRDH_1SDV_20261010T121129_20261010T121159_004953_009578_rtc.json": {
+    "mtime": 1793969748.2277043,
+    "seen": 1793991123.0398865,
+    "ast_hash": "bb528b1c869ba473d460483cf1e192d9",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/sundarbans/S1D_IW_GRDH_1SDV_20261022T121129_20261022T121159_005128_009B7D_rtc.json": {
+    "mtime": 1793969676.8909626,
+    "seen": 1793991123.0398865,
+    "ast_hash": "131006fdfd31dabcf76f7a024055d6eb",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/sundarbans/S1D_IW_GRDH_1SDV_20261103T121129_20261103T121158_005303_00A17B_rtc.json": {
+    "mtime": 1793969678.9296575,
+    "seen": 1793991123.0398865,
+    "ast_hash": "c995f8af6cc9da4e79ecb1b1217ad3d5",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/sundarbans/S2A_45QYE_20260914_0_L2A.json": {
+    "mtime": 1793969784.9264467,
+    "seen": 1793991123.0398865,
+    "ast_hash": "97b02e9226373ebce27ff4c0ac1a1c21",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/sundarbans/S2B_45QYE_20261017_0_L2A.json": {
+    "mtime": 1793969776.373956,
+    "seen": 1793991123.0398865,
+    "ast_hash": "9a70f961fbc9bbc5a588c1aa3cad925b",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/sundarbans/S2B_45QYE_20261027_0_L2A.json": {
+    "mtime": 1793969740.457524,
+    "seen": 1793991123.0398865,
+    "ast_hash": "217beceb2125a18c9491333b1fd99d02",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/sundarbans/S2C_45QYE_20260604_0_L2A.json": {
+    "mtime": 1793969776.8346915,
+    "seen": 1793991123.0398865,
+    "ast_hash": "181b619f356cb27d564a2027fa70004b",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/sundarbans/S2C_45QYE_20261012_0_L2A.json": {
+    "mtime": 1793969733.2088542,
+    "seen": 1793991123.0398865,
+    "ast_hash": "79cde67bbfc13854ee7d8c00294500cf",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/data/raw/sundarbans/S2C_45QYE_20261022_0_L2A.json": {
+    "mtime": 1793969705.2255967,
+    "seen": 1793991123.0398865,
+    "ast_hash": "ad41d85e352c590919ee4485ff9e04a6",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/download_full_enclosing_scenes.py": {
+    "mtime": 1793456947.7348387,
+    "seen": 1793991123.0428836,
+    "ast_hash": "6437d2fa351ccb8ec74a8b30acd54fe5",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/download_real_imagery.py": {
+    "mtime": 1793452591.7044797,
+    "seen": 1793991123.0428836,
+    "ast_hash": "d25a562520d1786e2dcd683b3b122c5e",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/download_real_sentinel2.py": {
+    "mtime": 1793452591.823155,
+    "seen": 1793991123.0428836,
+    "ast_hash": "9047ca2f452d2f5981d6afda06d2cf3f",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/download_real_sentinel2_fast.py": {
+    "mtime": 1793452871.255608,
+    "seen": 1793991123.0428836,
+    "ast_hash": "f1fe96ac9f0c09b50feb215c024bc046",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/download_sundarbans_scenes.py": {
+    "mtime": 1793457401.9861367,
+    "seen": 1793991123.0428836,
+    "ast_hash": "285fa72789caefc6810ffe375ecf2596",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/enclosing_scenes.json": {
+    "mtime": 1793453127.4567804,
+    "seen": 1793991123.0428836,
+    "ast_hash": "022d3a312ed570d4617461e1d566e46b",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/find_enclosing_scenes.py": {
+    "mtime": 1793453220.1534064,
+    "seen": 1793991123.0428836,
+    "ast_hash": "c5c3a5bf1955994cab4cc59397ebc917",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/find_good_scenes.py": {
+    "mtime": 1793453220.2048893,
+    "seen": 1793991123.0428836,
+    "ast_hash": "61fefd42d663b24c812ec7c46016deed",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/find_sundarbans_scenes.py": {
+    "mtime": 1793457402.0970297,
+    "seen": 1793991123.0428836,
+    "ast_hash": "3f3215a0a79bdd4cecb4e715bde41f18",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/generate_satellite_rasters.py": {
+    "mtime": 1793452185.569994,
+    "seen": 1793991123.0428836,
+    "ast_hash": "35363b63fa289fff53b4aa501e2aca13",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/scripts/expand_optical_context.py": {
+    "mtime": 1793970200.31548,
+    "seen": 1793991123.091542,
+    "ast_hash": "53d59cc9df289a60024087135b204de7",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/scripts/extend_observation_history.py": {
+    "mtime": 1793970250.088689,
+    "seen": 1793991123.091542,
+    "ast_hash": "d6204c5ff1fb32db871858d9c29f1273",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/scripts/ingest_sentinel1.py": {
+    "mtime": 1793966332.669949,
+    "seen": 1793991123.091542,
+    "ast_hash": "cd5303efb8288661f5b4182ff0f7d617",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/scripts/render_polarizations.py": {
+    "mtime": 1793966332.6734834,
+    "seen": 1793991123.091542,
+    "ast_hash": "8f98418fea857da53b34260bbdd43015",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/scripts/validate_observations.py": {
+    "mtime": 1793970082.2795405,
+    "seen": 1793991123.091542,
+    "ast_hash": "b60a73529df78902a2c05518cf954267",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/sundarbans_scenes.json": {
+    "mtime": 1793457135.9663804,
+    "seen": 1793991123.091542,
+    "ast_hash": "562a4126d01e8f268b642ac6916b5a6d",
+    "semantic_hash": ""
+  },
+  "docs/LEGACY_PAGE_INTEGRATION.md": {
+    "mtime": 1793965411.0786984,
+    "seen": 1793991123.103102,
+    "ast_hash": "bf0fc3bfb5384e9148525134f50a5f52",
+    "semantic_hash": ""
+  },
+  "docs/LEGACY_PAGE_INTEGRATION_PLAN.md": {
+    "mtime": 1793962627.226931,
+    "seen": 1793991123.103102,
+    "ast_hash": "ee61dacce7e3bf05946ede82d794034a",
+    "semantic_hash": ""
+  },
+  "docs/REAL_OBSERVATIONS.md": {
+    "mtime": 1793970251.3546605,
+    "seen": 1793991123.103102,
+    "ast_hash": "0a790b4372b8e4c0d23fa0f29de1a23a",
+    "semantic_hash": ""
+  },
+  "docs/all_feature.md": {
+    "mtime": 1793464491.9648817,
+    "seen": 1793991123.103102,
+    "ast_hash": "0a630f7ec1f4d9b15bf961f8b8678ce0",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/requirements-data.txt": {
+    "mtime": 1793965411.0751817,
+    "seen": 1793991123.1046207,
+    "ast_hash": "f53702588cf533afcb3d7284bbfbf85a",
+    "semantic_hash": ""
+  },
+  "features.pdf": {
+    "mtime": 1793306853.3628466,
+    "seen": 1793991123.1057603,
+    "ast_hash": "d9fda02bddd1448a2a71e37220b42b67",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-06-02_optical.png": {
+    "mtime": 1793969530.9054925,
+    "seen": 1793991123.106762,
+    "ast_hash": "d192930c5d4b5cfc61139373355ca3c6",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-06-02_optical_context.png": {
+    "mtime": 1793970217.9366672,
+    "seen": 1793991123.106762,
+    "ast_hash": "be43a97cd6c171f204aa44832272c44c",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-07-03_ratio.png": {
+    "mtime": 1793969421.473259,
+    "seen": 1793991123.106762,
+    "ast_hash": "02c4e264097fbcf1e43fa3d9b3451c68",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-07-03_rgb.png": {
+    "mtime": 1793969421.6740494,
+    "seen": 1793991123.106762,
+    "ast_hash": "8cf35fd5fa9819532c07fe5c431ca0eb",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-07-03_vh.png": {
+    "mtime": 1793969420.1767702,
+    "seen": 1793991123.106762,
+    "ast_hash": "ef941e0d1049d8634204abbca0e9461e",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-07-03_vv.png": {
+    "mtime": 1793969338.4764516,
+    "seen": 1793991123.106762,
+    "ast_hash": "1026ab44ea127447cf0cc14b85179c5a",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-07-03_water.png": {
+    "mtime": 1793969420.2849038,
+    "seen": 1793991123.106762,
+    "ast_hash": "1a50b18ff875a0df2c0c6aa904c59825",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-08-20_ratio.png": {
+    "mtime": 1793969383.5273154,
+    "seen": 1793991123.106762,
+    "ast_hash": "98b78ecc41d08b99ac5183385e728122",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-08-20_rgb.png": {
+    "mtime": 1793969383.7366264,
+    "seen": 1793991123.106762,
+    "ast_hash": "fa984e8adb43e71d4087d4a09260d48a",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-08-20_vh.png": {
+    "mtime": 1793969382.2096276,
+    "seen": 1793991123.106762,
+    "ast_hash": "7d361aef4af99e82c9bc73bd07c85a6c",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-08-20_vv.png": {
+    "mtime": 1793969327.3718002,
+    "seen": 1793991123.106762,
+    "ast_hash": "722be66c8d412beb47f8d141ccb276a3",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-08-20_water.png": {
+    "mtime": 1793969382.3210359,
+    "seen": 1793991123.106762,
+    "ast_hash": "592246a8bb9018a3970477bc622b6c07",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-09-15_optical.png": {
+    "mtime": 1793969539.312278,
+    "seen": 1793991123.106762,
+    "ast_hash": "03dc3b17d71a2c372a6ed644a6c1a5be",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-09-15_optical_context.png": {
+    "mtime": 1793970234.3172383,
+    "seen": 1793991123.106762,
+    "ast_hash": "3256d94dcd0134edfaec3d545be0ee2e",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-09-25_ratio.png": {
+    "mtime": 1793969421.5401206,
+    "seen": 1793991123.106762,
+    "ast_hash": "21788fc47670635be1f874b45e907058",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-09-25_rgb.png": {
+    "mtime": 1793969421.742404,
+    "seen": 1793991123.1077666,
+    "ast_hash": "ca5f1d403243e5d5fb21dc68ef87ad6c",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-09-25_vh.png": {
+    "mtime": 1793969420.2411482,
+    "seen": 1793991123.1077666,
+    "ast_hash": "ac4ca68f1bbe586098daab8df7745bb5",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-09-25_vv.png": {
+    "mtime": 1793969355.323457,
+    "seen": 1793991123.1077666,
+    "ast_hash": "a257927ad5cd08c99bdbb4b6a01a1fba",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-09-25_water.png": {
+    "mtime": 1793969420.3491082,
+    "seen": 1793991123.1077666,
+    "ast_hash": "5a2afa75c9e3e645b8795c348cc07516",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-07_ratio.png": {
+    "mtime": 1793969539.1957927,
+    "seen": 1793991123.1077666,
+    "ast_hash": "6039f2e6a36c6f8b2230d9ccdce79199",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-07_rgb.png": {
+    "mtime": 1793969539.4323306,
+    "seen": 1793991123.1077666,
+    "ast_hash": "d09a02fcf2f2646329291a395d6bcc78",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-07_vh.png": {
+    "mtime": 1793969537.544603,
+    "seen": 1793991123.1077666,
+    "ast_hash": "7d7001a24eb7d4973ba6a7719b8a59f6",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-07_vv.png": {
+    "mtime": 1793969470.2907004,
+    "seen": 1793991123.1077666,
+    "ast_hash": "f9a04b73b9f7860122cf080f1bff1486",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-07_water.png": {
+    "mtime": 1793969537.675689,
+    "seen": 1793991123.1077666,
+    "ast_hash": "55bc23811aa52f2008de0d6909a5b441",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-10_optical.png": {
+    "mtime": 1793969505.7810266,
+    "seen": 1793991123.1077666,
+    "ast_hash": "70fc310a2db698ecd62eca9d002c459a",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-10_optical_context.png": {
+    "mtime": 1793970234.1878414,
+    "seen": 1793991123.1077666,
+    "ast_hash": "c0e25d9a789e7c83c48ed0bf30dcb30e",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-15_optical.png": {
+    "mtime": 1793969477.6996531,
+    "seen": 1793991123.1077666,
+    "ast_hash": "cf41b0baaa68d69d3769fb372eae434b",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-15_optical_context.png": {
+    "mtime": 1793970233.2912292,
+    "seen": 1793991123.1077666,
+    "ast_hash": "b454a543af99bec0ae0231fc8fa24851",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-19_ratio.png": {
+    "mtime": 1793969424.4082222,
+    "seen": 1793991123.1077666,
+    "ast_hash": "4c96c2770d59d9467235369a09a2dac8",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-19_rgb.png": {
+    "mtime": 1793969424.5934763,
+    "seen": 1793991123.1077666,
+    "ast_hash": "56fb91a4b89c57d7ef3931ede5796b4d",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-19_vh.png": {
+    "mtime": 1793969422.9972124,
+    "seen": 1793991123.1077666,
+    "ast_hash": "aac400bd7c9fb88cee8b28784c35545d",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-19_vv.png": {
+    "mtime": 1793969422.370442,
+    "seen": 1793991123.1077666,
+    "ast_hash": "ae92f7a938db6482180021578ec94c43",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-19_water.png": {
+    "mtime": 1793969423.1260765,
+    "seen": 1793991123.1077666,
+    "ast_hash": "1afb3d751f80c4a1a355cb584f044fb1",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-20_optical.png": {
+    "mtime": 1793969504.501847,
+    "seen": 1793991123.1077666,
+    "ast_hash": "3263e6add9f49dadcd16e55fd37140d7",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-20_optical_context.png": {
+    "mtime": 1793970255.2395997,
+    "seen": 1793991123.1077666,
+    "ast_hash": "8c81a20aaf62955d4903e8d38c67a008",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-25_optical.png": {
+    "mtime": 1793969468.8649862,
+    "seen": 1793991123.1077666,
+    "ast_hash": "55499ed03aa355c6d7b523bcf4b1f0ee",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-25_optical_context.png": {
+    "mtime": 1793970262.3344083,
+    "seen": 1793991123.1077666,
+    "ast_hash": "7974cb3242e812eba21995cdd642d1ca",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-31_ratio.png": {
+    "mtime": 1793969424.5110812,
+    "seen": 1793991123.1077666,
+    "ast_hash": "63a9946bfac5d614122481444ec1afd4",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-31_rgb.png": {
+    "mtime": 1793969424.7040768,
+    "seen": 1793991123.1077666,
+    "ast_hash": "49c722509238c002587e5729ade5df3c",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-31_vh.png": {
+    "mtime": 1793969423.0960758,
+    "seen": 1793991123.1077666,
+    "ast_hash": "9846bac8f21506c6a9be376d130d6526",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-31_vv.png": {
+    "mtime": 1793969422.431963,
+    "seen": 1793991123.1077666,
+    "ast_hash": "d18e739c3482b3717fc1e6a1e3b66f25",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/2026-10-31_water.png": {
+    "mtime": 1793969423.1993842,
+    "seen": 1793991123.1077666,
+    "ast_hash": "bdf5eb2cc3ddb0a6f649212a1e57e4b7",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/change.png": {
+    "mtime": 1793964571.6248944,
+    "seen": 1793991123.1077666,
+    "ast_hash": "ebaf383653973162d547d8f2671a3ec9",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-07-03_2026-08-20.png": {
+    "mtime": 1793969542.745839,
+    "seen": 1793991123.1077666,
+    "ast_hash": "2d995d480432b7e30dca5adc7da5eebe",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-07-03_2026-09-25.png": {
+    "mtime": 1793969547.0413322,
+    "seen": 1793991123.1077666,
+    "ast_hash": "11cdbacc54c551b03776c8e7f5879d16",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-07-03_2026-10-07.png": {
+    "mtime": 1793969550.8587444,
+    "seen": 1793991123.1077666,
+    "ast_hash": "b63911b258c3982743e8eb0ed478d213",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-07-03_2026-10-19.png": {
+    "mtime": 1793969555.3324063,
+    "seen": 1793991123.1077666,
+    "ast_hash": "5108ce7978db696c871dc31ffe4b51d0",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-07-03_2026-10-31.png": {
+    "mtime": 1793969559.9267273,
+    "seen": 1793991123.1077666,
+    "ast_hash": "82109bcda30f78c9b35eeaa6ea3fbf44",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-08-20_2026-09-25.png": {
+    "mtime": 1793969562.8235605,
+    "seen": 1793991123.1077666,
+    "ast_hash": "c88c5ddcd145b9d71b68c750f434ca6e",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-08-20_2026-10-07.png": {
+    "mtime": 1793969565.50762,
+    "seen": 1793991123.1077666,
+    "ast_hash": "3e0c4553881b19975b7bf22b2c530f2d",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-08-20_2026-10-19.png": {
+    "mtime": 1793969568.6526327,
+    "seen": 1793991123.1077666,
+    "ast_hash": "8d946330920db23ab6e06bb3be42f195",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-08-20_2026-10-31.png": {
+    "mtime": 1793969571.3779435,
+    "seen": 1793991123.1077666,
+    "ast_hash": "fa45705c5d09b9e537b0c7abf58b0997",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-09-25_2026-10-07.png": {
+    "mtime": 1793969575.1676297,
+    "seen": 1793991123.1077666,
+    "ast_hash": "050f1632ce254b6cf74c516ae8c58443",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-09-25_2026-10-19.png": {
+    "mtime": 1793969578.6833067,
+    "seen": 1793991123.1077666,
+    "ast_hash": "164f9b47d20abbd490d5acdae1494509",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-09-25_2026-10-31.png": {
+    "mtime": 1793969581.8064454,
+    "seen": 1793991123.1077666,
+    "ast_hash": "1487f5eb04f8d445889b0eb0dfda1b16",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-10-07_2026-10-19.png": {
+    "mtime": 1793969584.5941272,
+    "seen": 1793991123.1077666,
+    "ast_hash": "9934a81619dff13ce338603b2ead68dd",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/jamuna/pairs/2026-10-07_2026-10-31.png": {
+    "mtime": 1793969587.5634117,
+    "seen": 1793991123.1077666,
+    "ast_hash": "f77f2230096c458a467fdd0dde0ce9d0",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-06-04_optical.png": {
+    "mtime": 1793969776.8151298,
+    "seen": 1793991123.1077666,
+    "ast_hash": "08bdf1e603ea8ed852750fa6fe2324a3",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-06-04_optical_context.png": {
+    "mtime": 1793970251.3349147,
+    "seen": 1793991123.1077666,
+    "ast_hash": "49e0ca19bc2355c1ebb04ae57e74642f",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-07-06_ratio.png": {
+    "mtime": 1793969674.6411185,
+    "seen": 1793991123.1077666,
+    "ast_hash": "0b7ee06f18982e73533b53aa020b5e28",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-07-06_rgb.png": {
+    "mtime": 1793969674.8717008,
+    "seen": 1793991123.1077666,
+    "ast_hash": "3868fbc0880c893bc9c0673e0ab3be4b",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-07-06_vh.png": {
+    "mtime": 1793969673.6301615,
+    "seen": 1793991123.1077666,
+    "ast_hash": "d19ae4c6a6afe5dd98198af380dfb615",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-07-06_vv.png": {
+    "mtime": 1793969632.849867,
+    "seen": 1793991123.1077666,
+    "ast_hash": "2cfbb76cb41e6d5c63feca12760dbfc4",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-07-06_water.png": {
+    "mtime": 1793969673.7628784,
+    "seen": 1793991123.1077666,
+    "ast_hash": "cef22bc0841974ebf47dc83d2a4ce088",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-08-23_ratio.png": {
+    "mtime": 1793969672.6951654,
+    "seen": 1793991123.1077666,
+    "ast_hash": "0396c6ab97ff5ce0af981b939cf9bf71",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-08-23_rgb.png": {
+    "mtime": 1793969672.8972256,
+    "seen": 1793991123.1077666,
+    "ast_hash": "250d455b24fd76b24f6d02e56f14e82c",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-08-23_vh.png": {
+    "mtime": 1793969671.8688488,
+    "seen": 1793991123.1077666,
+    "ast_hash": "1be5530cab0947ae2124595c18a98fdc",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-08-23_vv.png": {
+    "mtime": 1793969633.2121916,
+    "seen": 1793991123.1077666,
+    "ast_hash": "f68fb2e617eebefb4a05fb3c771b0b29",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-08-23_water.png": {
+    "mtime": 1793969671.967378,
+    "seen": 1793991123.1077666,
+    "ast_hash": "31de8815d82a35227fc93dd14d05d8bd",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-09-14_optical.png": {
+    "mtime": 1793969784.911915,
+    "seen": 1793991123.1077666,
+    "ast_hash": "a70375c65e1286b564d4de674fae4c38",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-09-14_optical_context.png": {
+    "mtime": 1793970263.7644043,
+    "seen": 1793991123.1077666,
+    "ast_hash": "a3caba065f0ac2e62327578857d9d6e6",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-09-28_ratio.png": {
+    "mtime": 1793969709.3956852,
+    "seen": 1793991123.1077666,
+    "ast_hash": "4d933d4d1a5d6fdb775d9a5c9b8a90ca",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-09-28_rgb.png": {
+    "mtime": 1793969709.603554,
+    "seen": 1793991123.1077666,
+    "ast_hash": "d28d312a9775d1a5d86c7688656c9a13",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-09-28_vh.png": {
+    "mtime": 1793969708.427116,
+    "seen": 1793991123.1077666,
+    "ast_hash": "8c8f0194a4980a2c895192d458035130",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-09-28_vv.png": {
+    "mtime": 1793969644.2095895,
+    "seen": 1793991123.1077666,
+    "ast_hash": "f06ee3df925dcf6a2f23ce47e30a7b5d",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-09-28_water.png": {
+    "mtime": 1793969708.5435307,
+    "seen": 1793991123.1077666,
+    "ast_hash": "fb0887c29f1a063db9c2b5d6f4ef3ac9",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-10_ratio.png": {
+    "mtime": 1793969747.799203,
+    "seen": 1793991123.1077666,
+    "ast_hash": "933b2cdefa822b874dbc667f43250969",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-10_rgb.png": {
+    "mtime": 1793969748.2176976,
+    "seen": 1793991123.1077666,
+    "ast_hash": "60d2bae4daccef5dca78ae0b3487ee34",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-10_vh.png": {
+    "mtime": 1793969746.9002101,
+    "seen": 1793991123.1077666,
+    "ast_hash": "9343deb910678e465d4b05a2720d34bc",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-10_vv.png": {
+    "mtime": 1793969711.7469127,
+    "seen": 1793991123.1077666,
+    "ast_hash": "5cbb20d4ff940a32473079039b4229f6",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-10_water.png": {
+    "mtime": 1793969747.0092525,
+    "seen": 1793991123.1077666,
+    "ast_hash": "6d110d6d13a79cf046d7c54c55efbff0",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-12_optical.png": {
+    "mtime": 1793969733.191332,
+    "seen": 1793991123.1077666,
+    "ast_hash": "5c753f1634f4a3715b380fcaa14f2da9",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-12_optical_context.png": {
+    "mtime": 1793970278.653733,
+    "seen": 1793991123.1077666,
+    "ast_hash": "83167bb072696b5ed13e97764e50b9db",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-17_optical.png": {
+    "mtime": 1793969776.356905,
+    "seen": 1793991123.1077666,
+    "ast_hash": "81589e11a9545425ec63c7c26ec0b618",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-17_optical_context.png": {
+    "mtime": 1793970280.8497963,
+    "seen": 1793991123.1077666,
+    "ast_hash": "9ef4c46a95e975799b272e5508d8a886",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-22_optical.png": {
+    "mtime": 1793969705.206594,
+    "seen": 1793991123.1077666,
+    "ast_hash": "10968aca7843c04eab6438cb290359f9",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-22_optical_context.png": {
+    "mtime": 1793970281.276309,
+    "seen": 1793991123.1077666,
+    "ast_hash": "eee688df47bd2540d0d376ee9a09aff0",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-22_ratio.png": {
+    "mtime": 1793969676.6772244,
+    "seen": 1793991123.1077666,
+    "ast_hash": "d7440c3d9134a40a96d8bd260fbf8831",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-22_rgb.png": {
+    "mtime": 1793969676.8829608,
+    "seen": 1793991123.1077666,
+    "ast_hash": "a8eacd3d4247a8cdd4a14320eaac518a",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-22_vh.png": {
+    "mtime": 1793969675.81671,
+    "seen": 1793991123.1077666,
+    "ast_hash": "945461229e48edcef45261d15f1f1b29",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-22_vv.png": {
+    "mtime": 1793969675.3796093,
+    "seen": 1793991123.1077666,
+    "ast_hash": "728b42d3021cf73648d922a707c022d4",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-22_water.png": {
+    "mtime": 1793969675.9202256,
+    "seen": 1793991123.1077666,
+    "ast_hash": "bf2f21e7c15e87a0fd7db3b64b6c6120",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-27_optical.png": {
+    "mtime": 1793969740.4355254,
+    "seen": 1793991123.1077666,
+    "ast_hash": "da4c047d3893fd104441db952447a310",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-10-27_optical_context.png": {
+    "mtime": 1793970294.8561053,
+    "seen": 1793991123.1077666,
+    "ast_hash": "afe284dc012130e13fe02a104d150889",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-11-03_ratio.png": {
+    "mtime": 1793969678.7056668,
+    "seen": 1793991123.1077666,
+    "ast_hash": "67e9e52a68dc2f4bffd0c9677a0e8e13",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-11-03_rgb.png": {
+    "mtime": 1793969678.9216537,
+    "seen": 1793991123.1077666,
+    "ast_hash": "7c3c28ecb09229416ed64453707f609d",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-11-03_vh.png": {
+    "mtime": 1793969677.84172,
+    "seen": 1793991123.1077666,
+    "ast_hash": "2ed22e4062c3c8cceca2bcdf8248e585",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-11-03_vv.png": {
+    "mtime": 1793969677.406935,
+    "seen": 1793991123.1077666,
+    "ast_hash": "1de2ed75a13aa141403d4c34541922df",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/2026-11-03_water.png": {
+    "mtime": 1793969677.9492695,
+    "seen": 1793991123.1077666,
+    "ast_hash": "00d5271bb8c956ca6b3e497664905f48",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/change.png": {
+    "mtime": 1793964583.7349942,
+    "seen": 1793991123.1077666,
+    "ast_hash": "4c14fc029711fb47edf9013bc114c091",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-07-06_2026-08-23.png": {
+    "mtime": 1793969788.1817622,
+    "seen": 1793991123.1077666,
+    "ast_hash": "ed6af3cb82771042d233130a560132cb",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-07-06_2026-09-28.png": {
+    "mtime": 1793969791.8665206,
+    "seen": 1793991123.1077666,
+    "ast_hash": "0e146ac7cc888aaa674038521959f20c",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-07-06_2026-10-10.png": {
+    "mtime": 1793969795.202977,
+    "seen": 1793991123.1077666,
+    "ast_hash": "8cee45c967c3aae466d57bc2e10349d3",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-07-06_2026-10-22.png": {
+    "mtime": 1793969798.777025,
+    "seen": 1793991123.1077666,
+    "ast_hash": "f364ea3ef2cc40293064f7ca6452e09f",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-07-06_2026-11-03.png": {
+    "mtime": 1793969802.9251924,
+    "seen": 1793991123.1077666,
+    "ast_hash": "7174c743971615d2e1ccc80d9bc7688c",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-08-23_2026-09-28.png": {
+    "mtime": 1793969804.1547477,
+    "seen": 1793991123.1077666,
+    "ast_hash": "850acb399bc7d48f892c36ade2649b6d",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-08-23_2026-10-10.png": {
+    "mtime": 1793969805.4597487,
+    "seen": 1793991123.1077666,
+    "ast_hash": "c5259998439d30030a60a8bc1e9a7068",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-08-23_2026-10-22.png": {
+    "mtime": 1793969807.5505471,
+    "seen": 1793991123.1077666,
+    "ast_hash": "30cd0721006f794d9a07540db2c0f201",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-08-23_2026-11-03.png": {
+    "mtime": 1793969808.914474,
+    "seen": 1793991123.1077666,
+    "ast_hash": "7a5e99121fab23e1afaa9fdb25e62021",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-09-28_2026-10-10.png": {
+    "mtime": 1793969809.824011,
+    "seen": 1793991123.1077666,
+    "ast_hash": "0f7f388174c31d6da03039b555f4edfa",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-09-28_2026-10-22.png": {
+    "mtime": 1793969810.6928782,
+    "seen": 1793991123.1077666,
+    "ast_hash": "8d29ee923f661aab917fb273285b84a3",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-09-28_2026-11-03.png": {
+    "mtime": 1793969811.7095826,
+    "seen": 1793991123.1077666,
+    "ast_hash": "9dc6b50f6881b16ccc98468f5919b51f",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-10-10_2026-10-22.png": {
+    "mtime": 1793969812.979386,
+    "seen": 1793991123.1077666,
+    "ast_hash": "3b2c968aa3adc07ba5ead191298a951d",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/observations/sundarbans/pairs/2026-10-10_2026-11-03.png": {
+    "mtime": 1793969813.9753203,
+    "seen": 1793991123.1077666,
+    "ast_hash": "52412f97d4db00c03c61fb0bce318ec8",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/jamuna_optical_2026-06-23.png": {
+    "mtime": 1793456450.8601258,
+    "seen": 1793991123.1077666,
+    "ast_hash": "d2c05714764917afe277816d5d78926e",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/jamuna_optical_2026-07-17.png": {
+    "mtime": 1793456460.1932182,
+    "seen": 1793991123.1077666,
+    "ast_hash": "f08f593d097585ee39dd4c1d8a85451e",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/jamuna_optical_2026-08-10.png": {
+    "mtime": 1793456466.966249,
+    "seen": 1793991123.1077666,
+    "ast_hash": "0eb31830270a7596cd4e5ed406fea36b",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/jamuna_optical_2026-08-26.png": {
+    "mtime": 1793456477.0654635,
+    "seen": 1793991123.1077666,
+    "ast_hash": "152e96bc9c4434b39cce2b5025180251",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/jamuna_optical_2026-09-19.png": {
+    "mtime": 1793456484.4235222,
+    "seen": 1793991123.1077666,
+    "ast_hash": "276dd1cc280982e86bf020a1a759f473",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/jamuna_optical_2026-10-21.png": {
+    "mtime": 1793456499.4087262,
+    "seen": 1793991123.1077666,
+    "ast_hash": "61547f494dcbf75741eaf0bdcc01107e",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/jamuna_sar_2026-06-23.png": {
+    "mtime": 1793456451.6018856,
+    "seen": 1793991123.1077666,
+    "ast_hash": "55bb2e5b999765ea0211d2ce92b97e62",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/jamuna_sar_2026-07-17.png": {
+    "mtime": 1793456460.883648,
+    "seen": 1793991123.1077666,
+    "ast_hash": "c78911e0df6d5f385c379d34ade6e331",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/jamuna_sar_2026-08-10.png": {
+    "mtime": 1793456467.6924675,
+    "seen": 1793991123.1077666,
+    "ast_hash": "0f3e2772b2d4e8e0609ccb63f36365a0",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/jamuna_sar_2026-08-26.png": {
+    "mtime": 1793456477.6444514,
+    "seen": 1793991123.1077666,
+    "ast_hash": "d6c17ca13cf53e6b07927917093d734d",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/jamuna_sar_2026-09-19.png": {
+    "mtime": 1793456484.9922621,
+    "seen": 1793991123.1077666,
+    "ast_hash": "997eeb599869a98fafb32baa3a486747",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/jamuna_sar_2026-10-21.png": {
+    "mtime": 1793456500.0100477,
+    "seen": 1793991123.1077666,
+    "ast_hash": "2633982bd558b184e64dc3d7648ba239",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/sundarbans_optical_2026-06-23.png": {
+    "mtime": 1793457227.2388785,
+    "seen": 1793991123.1077666,
+    "ast_hash": "5e1227847649e9c218cc4370d90f6794",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/sundarbans_optical_2026-07-17.png": {
+    "mtime": 1793457233.6818774,
+    "seen": 1793991123.1077666,
+    "ast_hash": "b9651d9c587727c1983666e62d7e0821",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/sundarbans_optical_2026-08-10.png": {
+    "mtime": 1793457241.2483916,
+    "seen": 1793991123.1077666,
+    "ast_hash": "fa85cb6e23d8c5ef22ca422bea0756a3",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/sundarbans_optical_2026-08-26.png": {
+    "mtime": 1793457247.3011355,
+    "seen": 1793991123.1077666,
+    "ast_hash": "849a5eda673a6fd8e69119476a7aafd9",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/sundarbans_optical_2026-09-19.png": {
+    "mtime": 1793457252.354012,
+    "seen": 1793991123.1077666,
+    "ast_hash": "3037c88f28bd3357ba1afba480e9079e",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/sundarbans_optical_2026-10-21.png": {
+    "mtime": 1793457259.416922,
+    "seen": 1793991123.1077666,
+    "ast_hash": "6f49c7d4da9f89437cfa308a3bd93b5c",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/sundarbans_sar_2026-06-23.png": {
+    "mtime": 1793457228.012004,
+    "seen": 1793991123.1077666,
+    "ast_hash": "8ec3483ee96cf51b3116f8be1015fb04",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/sundarbans_sar_2026-07-17.png": {
+    "mtime": 1793457234.3266668,
+    "seen": 1793991123.1077666,
+    "ast_hash": "543d245c3a4ded16f66f57ed4228bd03",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/sundarbans_sar_2026-08-10.png": {
+    "mtime": 1793457241.8139727,
+    "seen": 1793991123.1077666,
+    "ast_hash": "cb314a53481e42f4fbbb5899dd9cde68",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/sundarbans_sar_2026-08-26.png": {
+    "mtime": 1793457247.9141188,
+    "seen": 1793991123.1077666,
+    "ast_hash": "a193f2e8c73634390875aaae5db0468f",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/sundarbans_sar_2026-09-19.png": {
+    "mtime": 1793457253.1198936,
+    "seen": 1793991123.1077666,
+    "ast_hash": "342ecb44e84913e9cd52879128962ec3",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/sundarbans_sar_2026-10-21.png": {
+    "mtime": 1793457259.9894786,
+    "seen": 1793991123.1077666,
+    "ast_hash": "21f1a51536fb7d8d2b61c38729153b03",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/sundarbans_sar_neap.png": {
+    "mtime": 1793457269.425312,
+    "seen": 1793991123.1077666,
+    "ast_hash": "9e081520233b2dcc676d03c6aec4f471",
+    "semantic_hash": ""
+  },
+  "fluvisar-next/apps/web/public/rasters/sundarbans_sar_spring.png": {
+    "mtime": 1793457264.462389,
+    "seen": 1793991123.1077666,
+    "ast_hash": "55e04daef40f79be0c2d780d24c1ca03",
+    "semantic_hash": ""
+  },
   "fluvisar-next/apps/web/package-lock.json": {
-    "mtime": 1793416433.8949416,
-    "seen": 1793425832.756984,
-    "ast_hash": "8e97eded043dc0ce031bf249e62df8df",
+    "mtime": 1793961852.148446,
+    "seen": 1793991123.1122954,
+    "ast_hash": "f0648761f381c2cb27ce767339ad81e3",
     "semantic_hash": ""
   }
 }

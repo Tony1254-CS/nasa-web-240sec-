@@ -12,6 +12,7 @@ import './styles/intelligence.css';
 import './styles/integration.css';
 import '../../styles/science-system.css';
 import '../../styles/observatory-restored.css';
+import '../../styles/sar-lab-consistency.css';
 
 class PageErrorBoundary extends Component<{children:ReactNode}, {error:string|null}> {
   state = { error: null as string|null };

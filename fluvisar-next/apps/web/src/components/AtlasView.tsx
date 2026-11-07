@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import '../styles/atlas.css';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   ArrowUpRight,

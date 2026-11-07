@@ -1,5 +1,6 @@
 # Environments
 .venv/
+.venv-data/
 venv/
 env/
 __pycache__/
@@ -28,3 +29,9 @@ graphify-out/cache/
 graphify-out/.rebuild.lock
 
 
+
+# Cloned legacy reference
+nasa-2026-web/
+test-results/
+playwright-report/
+fluvisar-next/data/derived/decision-cache/

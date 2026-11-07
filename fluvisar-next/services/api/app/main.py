@@ -16,6 +16,9 @@ app = FastAPI(
     description="Backend API for NASA Space Apps NISAR Web Observatory"
 )
 
+from app.assistant import router as assistant_router
+app.include_router(assistant_router)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -309,3 +312,29 @@ def review_trace_observation(obs_id: str, status: str = Query(..., pattern="^(CO
             return {"status": "success", "record": r}
     raise HTTPException(404, "Field observation not found")
 
+@app.get('/api/runs/{run_id}/evidence/{stage}')
+def review_evidence_stage(run_id: str, stage: str, finding_id: Optional[str] = None, optical_before: Optional[str] = None, optical_after: Optional[str] = None):
+    from app.evidence import build_stage
+    if stage not in ('detect','investigate','challenge','explain','field','impact'):
+        raise HTTPException(404, 'Unknown evidence stage')
+    bundle=get_run_bundle(run_id)
+    for date in (optical_before,optical_after):
+        if date and date not in {o['date'] for o in bundle.get('optical_observations',[])}:
+            raise HTTPException(400, 'Optical date is not a registered acquisition')
+    try:
+        return build_stage(bundle,stage,finding_id,optical_before,optical_after)
+    except KeyError as error:
+        raise HTTPException(404, str(error)) from error
+    except ValueError as error:
+        raise HTTPException(503, str(error)) from error
+
+@app.get('/api/runs/{run_id}/decision-context')
+def review_decision_context(run_id: str, finding_id: Optional[str] = None):
+    from app.decision import decision_context
+    get_run_bundle(run_id)
+    try:
+        return decision_context(run_id, finding_id)
+    except KeyError as error:
+        raise HTTPException(404, str(error)) from error
+    except ValueError as error:
+        raise HTTPException(503, str(error)) from error

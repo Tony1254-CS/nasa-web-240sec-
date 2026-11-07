@@ -22,5 +22,7 @@ services:
     environment:
       - HOST=0.0.0.0
       - PORT=8000
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - FLUVISAR_ASSISTANT_MODEL=${FLUVISAR_ASSISTANT_MODEL:-gemini-2.5-flash}
     restart: unless-stopped
 

@@ -9,6 +9,8 @@ import {
   Microscope,
   BookOpen,
   FileText,
+  Info,
+  MessageSquare,
   Moon,
   Sun,
   Menu
@@ -31,6 +33,7 @@ export function Navbar({ transparent = false }: { transparent?: boolean }) {
     { to: '/intelligence', label: 'ML Intelligence', icon: Brain, match: (path: string) => path.startsWith('/intelligence') },
     { to: '/sar-lab', label: 'SAR Lab', icon: Microscope, match: (path: string) => path.startsWith('/sar-lab') },
     { to: '/stories', label: 'Stories', icon: BookOpen, match: (path: string) => path.startsWith('/stories') },
+    { to: '/about', label: 'About us', icon: Info, match: (path: string) => path.startsWith('/about') },
     { to: '/reports', label: 'Report', icon: FileText, match: (path: string) => path.startsWith('/reports') }
   ];
 
@@ -70,6 +73,14 @@ export function Navbar({ transparent = false }: { transparent?: boolean }) {
       </div>
 
       <div className="navbar__right">
+        <button
+          className="navbar__btn navbar__assistant"
+          aria-label="Ask FluviSAR"
+          onClick={() => useWorkspaceStore.getState().setAgentDrawerOpen(true)}
+        >
+          <MessageSquare size={16} />
+          <span>Ask FluviSAR</span>
+        </button>
         <select
           className="navbar__reach-select"
           aria-label="Investigation region"

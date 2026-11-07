@@ -1,32 +1,61 @@
-# React + TypeScript + Vite
+# FluviSAR Web Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React/TypeScript frontend for the Jamuna and Sundarbans satellite Observatory, Evidence workflow, Decision Desk, ML Intelligence and SAR Lab.
 
-Currently, two official plugins are available:
+**Full platform guide:** [Repository README](../../../README.md)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Scientific archive:** [Real observations](../../../docs/REAL_OBSERVATIONS.md)
 
-## React Compiler
+**Six-stage analysis:** [Evidence workflow](../../../docs/EVIDENCE_WORKFLOW.md)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Run locally
 
-## Expanding the Oxlint configuration
+Prepare the Python 3.12 environment at `fluvisar-next/.venv-data` and install `fluvisar-next/requirements-data.txt` first. See the root [Quick start](../../../README.md#3-quick-start) for Windows and macOS/Linux commands.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+From this directory:
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm ci
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+The launcher starts or reuses the FastAPI service on port 8000, then starts Vite on port 5173. `/api` requests are proxied to the local service. Registered artifacts must be present for numerical sampling and Evidence calculations.
+
+## Main routes
+
+| Route | View |
+| --- | --- |
+| `/` | Landing |
+| `/atlas` | Regional atlas |
+| `/observatory/jamuna` | Jamuna satellite workspace |
+| `/observatory/sundarbans` | Sundarbans satellite workspace |
+| `/impact` | Decision Desk |
+| `/intelligence` | Generated ML sandbox and source-linked evidence |
+| `/sar-lab` | Educational SAR experiments |
+| `/stories` | Guided observation stories |
+| `/reports` | Default-pair report and provenance |
+
+## Build and browser checks
+
+```bash
+npm run build
+npx playwright install chromium
+npm run test:e2e -- --workers=1
+```
+
+The output directory is `dist/`. Hosted deep links need SPA fallback routing; deployed numerical/Evidence features also need an API reverse proxy and the registered numerical archive. See [hosting notes](../../../README.md#17-build-hosting-and-troubleshooting).
+
+## Source map
+
+- `src/App.tsx`: route composition and Observatory assembly.
+- `src/components/MapWorkspace.tsx`: registered map sources and camera synchronization.
+- `src/components/EvidenceWorkbench.tsx`: direct stages and guided Live Analysis.
+- `src/components/EvidenceStagePanels.tsx`: source-backed report content.
+- `src/data/evidence.tsx`: shared catalogue and comparison loading.
+- `src/data/fieldEvidence.ts`: browser-local field records and media export.
+- `src/store/`: workspace and Evidence workflow state.
+- `src/features/legacy/`: integrated Decision Desk, ML and SAR Lab pages.
+- `public/observations/`: source-linked static artifacts.
+- `tests/`: browser workflow, observation and readability checks.
+
+Operational radar data is Sentinel-1 VV/VH. Generated ML and NISAR/InSAR teaching examples are separate from the measured archive. Consult the root [interpretation boundaries](../../../README.md#18-current-boundaries-and-next-steps) before using results in a demonstration.

@@ -14,7 +14,7 @@ import { StoryModeView } from './components/StoryModeView';
 import { SarLabView } from './components/SarLabView';
 import { ReportsView } from './components/ReportsView';
 import { CoverageCurtainOverlay } from './components/CoverageCurtainOverlay';
-import { AgenticCopilotDrawer } from './components/AgenticCopilotDrawer';
+import { FluviAssistant } from './components/FluviAssistant';
 import { SourceProvenanceModal } from './components/SourceProvenanceModal';
 import { radarSonifier } from './utils/sonification';
 import './styles/tokens.css';
@@ -22,10 +22,12 @@ import { LegacyPageLayout } from './features/legacy/LegacyPageLayout';
 import { EvidenceProvider, currentEvidence } from './data/evidence';
 import { Navbar } from './features/legacy/components/Navbar';
 import { ObservatoryHeader } from './components/ObservatoryHeader';
+import { EvidenceWorkbench } from './components/EvidenceWorkbench';
 import './styles/observatory-redesign.css';
 
-const DecisionDesk = lazy(() => import('./features/legacy/pages/DecisionDesk').then(m=>({default:m.DecisionDesk})));
-const IntelligencePage = lazy(() => import('./features/legacy/pages/Intelligence').then(m=>({default:m.IntelligencePage})));
+const DecisionDesk = lazy(() => import('./features/legacy/pages/ImpactDesk').then(m=>({default:m.DecisionDesk})));
+const IntelligencePage = lazy(() => import('./features/legacy/pages/IntelligenceWorkspace').then(m=>({default:m.IntelligencePage})));
+const AboutPage = lazy(() => import('./features/legacy/pages/About').then(m=>({default:m.AboutPage})));
 const SARLabPage = lazy(() => import('./features/legacy/pages/SARLab').then(m=>({default:m.SARLabPage})));
 const TraceFieldApp = lazy(() => import('./features/trace/TraceFieldApp').then(m=>({default:m.TraceFieldApp})));
 
@@ -80,6 +82,7 @@ const ObservatoryRoute: React.FC = () => {
 
         {/* 2. Focused Finding Inspector Drawer (Replaces clunky RightInspector) */}
         <FindingInspectorDrawer />
+        <EvidenceWorkbench />
       </main>
 
       {/* Linked Context Tracks */}
@@ -114,7 +117,7 @@ const WorkspaceApp: React.FC = () => {
   }, [isSonificationEnabled, selectedSample]);
 
   return (
-    <div className={'workspace-shell'+(mapRoute?' observatory-shell':'')+(pathname.startsWith('/observatory')?' observatory-redesign':'')}>
+    <div className={'workspace-shell'+(pathname==='/atlas'?' atlas-shell':'')+(mapRoute?' observatory-shell':'')+(pathname.startsWith('/observatory')?' observatory-redesign':'')}>
       {/* 1. Universal Top Header Navigation & Mode Bar */}
       {mapRoute&&(pathname.startsWith('/observatory')?<ObservatoryHeader/>:<Header />)}
 
@@ -137,7 +140,6 @@ const WorkspaceApp: React.FC = () => {
       </div>
 
       {/* 3. Global Autonomous Agentic Copilot & Verified Provenance Inspector */}
-      <AgenticCopilotDrawer />
       <SourceProvenanceModal />
     </div>
   );
@@ -146,6 +148,7 @@ const WorkspaceApp: React.FC = () => {
 export const App: React.FC = () => <EvidenceProvider><LegacyPageLayout><Navbar/><Routes>
   <Route path="/" element={<LandingPageView/>}/>
   <Route path="/impact" element={<Suspense fallback={<div className="desk-standby">Loading Decision Desk…</div>}><DecisionDesk /></Suspense>} />
+  <Route path="/about" element={<Suspense fallback={<div className="desk-standby">Opening our story...</div>}><AboutPage/></Suspense>}/><Route path="/about-us" element={<Navigate to="/about" replace/>}/>
   <Route path="/imact" element={<Navigate to="/impact" replace />} />
   <Route path="/trace" element={<Suspense fallback={<div className="desk-standby">Loading TRACE Field…</div>}><TraceFieldApp /></Suspense>} />
   <Route path="/field" element={<Navigate to="/trace" replace />} />
@@ -154,6 +157,6 @@ export const App: React.FC = () => <EvidenceProvider><LegacyPageLayout><Navbar/>
   <Route path="/learn" element={<Navigate to="/sar-lab" replace/>}/>
   <Route path="/learn/:experimentId" element={<Navigate to="/sar-lab#simulations" replace/>}/>
   <Route path="*" element={<WorkspaceApp />} />
-</Routes></LegacyPageLayout></EvidenceProvider>;
+</Routes><FluviAssistant/></LegacyPageLayout></EvidenceProvider>;
 
 export default App;
