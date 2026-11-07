@@ -51,7 +51,7 @@ test('Atlas and corner chat fit desktop, laptop and phone in both themes without
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await page.screenshot({path:`test-results/atlas-${size.width}-${theme}.png`});
   await page.getByRole('button',{name:'Open FluviSAR chat',exact:true}).click();const chat=page.getByRole('dialog',{name:'FluviSAR Assistant'});await expect(chat).toHaveAttribute('aria-modal','false');expect(await page.locator('dialog.fl-assistant').count()).toBe(0);
-  const box=(await chat.boundingBox())!;expect(box.x).toBeLessThan(25);expect(box.y+box.height).toBeLessThan(size.height-60);expect(box.x+box.width).toBeLessThanOrEqual(size.width-10);
+  const box=(await chat.boundingBox())!;expect(box.x+box.width).toBeGreaterThan(size.width-25);expect(box.y+box.height).toBeLessThan(size.height-60);expect(box.x+box.width).toBeLessThanOrEqual(size.width-10);
   await page.getByRole('button',{name:'Toggle Light/Dark Theme'}).click();await expect(chat).toBeVisible();await page.getByRole('button',{name:'Toggle Light/Dark Theme'}).click();
   await page.getByRole('button',{name:'Minimize FluviSAR chat'}).click();await expect(chat).toHaveCount(0);
   await page.locator('.atlas-outlook').scrollIntoViewIfNeeded();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);

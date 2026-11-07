@@ -67,3 +67,53 @@ absence of future-data leakage, physical bounds, constant-series tie behavior,
 input immutability, both six-pass real archives, auditable export, responsive
 themes and the docked chat. The same suite verifies that an old session-level
 seen flag cannot suppress the Observatory zoom-in on a fresh visit.
+
+
+## Place watch and conditional timing
+
+`AtlasPlaceWatch` adds a spatial screening shortlist below the aggregate outlook.
+`scripts/build_place_watch.py` builds `public/place-watch.json` from unchanged
+retained OSM assets, land-to-water findings and evidence-context metadata. It
+projects complete geometries to EPSG:32645, finds the nearest observed transition
+with a spatial index, and retains the source ID, name, category, source URL,
+distance, matched finding, nearest-point connector and source SHA-256s.
+
+Eligibility is explicit: the asset representative point must lie inside the
+study bbox and geometry distance must be within 5 km. Jamuna includes named
+objects or settlement/facility records; Sundarbans includes all retained mapped
+objects. The nearest 60 eligible records are retained per region. The current
+output contains 60 of 437 eligible Jamuna objects and all 14 Sundarbans objects.
+These are shortlisted records, not counts of all people or exposed assets.
+Snapshot timestamps, OSM attribution and the selection rule appear in the UI.
+
+Users filter place type and distance, inspect actual geometry, open the OSM
+record or matched radar finding, and export the shortlist and assumptions.
+Distance is geometric separation from an observed transition, not a surveyed
+active-bank setback, probability of failure or proof of damage. The 30 m grid
+limits small-distance interpretation. A far or unmapped asset is not certified
+safe. The sketch shows the actual nearest points of the complete geometries.
+
+The timing sandbox uses a user-assumed advance rate in metres per 30 days and
+a 30/90/180-day planning window. It calculates
+`ceil(distance_m / (assumed_rate_m_per_month / 30))`. Constant advance directly
+toward the location from the observed transition is assumed, not learned.
+Changing it does not alter the water-area forecast. Exports explicitly set
+`predictedFailureDate: null`. No future erosion polygon or damage is fabricated.
+
+A defensible site forecast needs repeated bank-position transects, matched
+stage/tide, flow, bank-material properties and independent validation. The
+[USGS bank-retreat study](https://pubs.usgs.gov/publication/sir20245079/full)
+documents these inputs and uncertainty. This watchlist prioritizes field review;
+it is not that calibrated model.
+
+Rebuild from `fluvisar-next`:
+
+```powershell
+.\.venv-data\Scripts\python.exe scripts/build_place_watch.py
+```
+
+The four `place-watch.spec.ts` cases verify source hashes and IDs, scenario
+arithmetic and null failure-date semantics, filters/selection/export, responsive
+themes, Radar defaults and camera-preserving imagery changes. All 74 generated
+distances and nearest-point connectors were independently checked by scanning
+every retained land-to-water geometry rather than using the spatial index.

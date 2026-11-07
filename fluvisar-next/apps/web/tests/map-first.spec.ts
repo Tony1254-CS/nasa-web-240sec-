@@ -78,7 +78,7 @@ test('requested Jamuna overview and floating chat fit desktop, laptop and phone'
   expect(camera.zoom).toBeCloseTo(11.4);expect(camera.center[0]).toBeCloseTo(89.75);
   const rail=page.locator('.obs-sidebar');if(size.width>760)await expect(rail).toBeVisible();else await expect(rail).toBeHidden();
   const chat=page.getByRole('button',{name:'Open FluviSAR chat'}),box=(await chat.boundingBox())!;
-  expect(box.x).toBeLessThan(25);expect(box.y).toBeGreaterThan(size.height-100);
+  expect(box.x+box.width).toBeGreaterThan(size.width-25);expect(box.y).toBeGreaterThan(size.height-100);
   const last=(await page.locator('.restored-timeline-axis button').last().boundingBox())!;
   expect(Math.max(0,Math.min(box.x+box.width,last.x+last.width)-Math.max(box.x,last.x))*Math.max(0,Math.min(box.y+box.height,last.y+last.height)-Math.max(box.y,last.y))).toBe(0);
   await chat.click();await expect(page.getByRole('dialog',{name:'FluviSAR Assistant'})).toBeVisible();await page.keyboard.press('Escape');
@@ -89,6 +89,7 @@ test('requested Jamuna overview and floating chat fit desktop, laptop and phone'
 
 test('Sundarbans distinguishes detailed context, dated images and recorded clouds in split mode',async({page})=>{
  await page.emulateMedia({reducedMotion:'reduce'});await page.goto('/observatory/sundarbans');
+ await page.getByRole('button',{name:'Detailed basemap',exact:true}).click();
  await expect(page.locator('.map-pane-b')).toHaveAttribute('data-observation-id','esri-context');
  await expect(page.locator('.obs-acquisition')).toContainText('not date-matched');
  await expect(page.getByRole('button',{name:'Detailed basemap',exact:true})).toHaveAttribute('aria-pressed','true');

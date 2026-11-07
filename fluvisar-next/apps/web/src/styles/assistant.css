@@ -48,3 +48,10 @@
 .legacy-pages .observatory-redesign .restored-map-workspace[data-flyin-active=true] .restored-candidate-marker{visibility:hidden;}
 @media(max-width:760px){.legacy-pages .fl-assistant{left:12px;right:12px;bottom:76px;top:auto;width:auto;height:min(600px,calc(100dvh - 140px));max-height:calc(100dvh - 140px);max-width:none;}.legacy-pages .fl-floating-launcher{left:12px;right:auto;}.legacy-pages .observatory-redesign .restored-timeline{padding-left:76px;padding-right:12px;}}
 @media print{.legacy-pages .fl-assistant,.legacy-pages .fl-floating-launcher{display:none!important;}}
+
+/* Keep the docked conversation at the requested lower-right corner. */
+.legacy-pages .fl-assistant{left:auto;right:18px;}
+.legacy-pages .fl-floating-launcher{left:auto;right:18px;}
+.fl-floating-launcher>span{left:auto;right:66px;}
+.legacy-pages .observatory-redesign .restored-timeline{padding-right:94px;}
+@media(max-width:760px){.legacy-pages .fl-assistant{left:12px;right:12px;}.legacy-pages .fl-floating-launcher{left:auto;right:12px;}.legacy-pages .observatory-redesign .restored-timeline{padding-left:12px;padding-right:76px;}}

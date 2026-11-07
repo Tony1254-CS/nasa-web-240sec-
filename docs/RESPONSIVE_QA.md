@@ -168,3 +168,32 @@ of all 71 cases.
 The production build also passed. Its preview rendered both case cards and the
 non-modal chat without browser page errors; card and chat screenshots were
 reviewed. The temporary preview process was stopped after verification.
+
+## Radar camera continuity and place watch - 8 November 2026
+
+Observatory defaults to measured Radar in both regions at the existing
+zoom 11.4 / pitch 55 camera. Imagery switches update layers without refitting
+the camera. Recenter and comparison framing retain their explicit actions.
+The non-modal chatbot and launcher dock at bottom right, with phone timeline
+space reserved. Atlas keeps its geographic satellite overview.
+
+Atlas adds source-backed place proximity and a separately labelled conditional
+timing sandbox. Sixty Jamuna and fourteen Sundarbans records retain OSM links,
+snapshot metadata, input hashes, actual matched transition geometry and measured
+nearest-point connectors. All 74 distances were independently recomputed against
+every original land-to-water polygon. No bank-failure dates or hazard
+probabilities are inferred from water-area totals.
+
+The nine-case place-watch/outlook run passed. In the wider 22-case assistant,
+map-first, place-watch and satellite run, 21 passed; the remaining older test
+still expected Sundarbans to default to Esri. Its expectation was updated to the
+actual latest radar acquisition and the targeted fly-in test passed again.
+Together these cover all 27 distinct targeted cases. Checks include the live
+camera before/after all imagery switches, source hashes, exports and filters,
+mouse/touch swipes, retained optical dates, chat scoping and responsive themes.
+Watchlist and timing screenshots were reviewed at laptop and phone sizes;
+the UI test covers 1920, 1366 and 390 px in both themes. Original observation
+files and SAR Lab source remain unchanged. There are now 75 registered tests
+in fourteen files; this was not a fresh run of the whole suite.
+
+The production TypeScript/Vite build passed after these changes.

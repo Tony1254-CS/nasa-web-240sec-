@@ -146,7 +146,7 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
   viewId: 'J1', // Direct to Jamuna investigation by default
   mode: 'explore',
   satelliteView: 'dated',
-  basemapType: 'satellite', // Default to REAL satellite imagery!
+  basemapType: 'sar', // Open measured radar; changing imagery preserves the camera.
   overlayStyle: 'outlines', // Default to crisp OUTLINES ONLY so satellite photo is 100% visible!
   selectedPol: 'VV',
   swipePosition: 50,
@@ -196,7 +196,7 @@ export const useWorkspaceStore = create<WorkspaceState>((set) => ({
       return {
         regionId,
         satelliteView: regionId==='sundarbans'?'context':'dated',
-        basemapType: 'satellite',
+        basemapType: 'sar',
         comparisonEnabled: false,
         activeTab: 'investigate',
         caseId: def.defaultCase,

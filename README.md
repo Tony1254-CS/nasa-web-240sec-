@@ -186,7 +186,7 @@ The landing page introduces the observation-to-evidence workflow through:
 
 The atlas combines a geographic overview with two source-backed case studies. Each case preserves acquisition windows, sensor metadata, valid support and processed area, and adds dated optical previews, measured transitions, expandable quality checks and original radar-source links. Opening a region enters its Observatory.
 
-A prominent experimental water-area outlook compares persistence and elapsed-time drift using chronological rolling-origin checks. Users select the region, a 6/12/24-day horizon and a method, inspect measured history and historical errors, and export the complete inputs/calculation. This small-sample baseline estimates aggregate screened water area; it does not predict future flood boundaries or damage. See [Atlas outlook methods and limitations](docs/ATLAS_OUTLOOK.md).
+A prominent experimental water-area outlook compares persistence and elapsed-time drift using chronological rolling-origin checks. Users select the region, a 6/12/24-day horizon and a method, inspect measured history and historical errors, and export the complete inputs/calculation. This small-sample baseline estimates aggregate screened water area; it does not predict future flood boundaries or damage. A place watchlist adds source-backed proximity to observed land-to-water polygons, filters, matched-finding map links and a user-assumed gap-spanning timing scenario. It never assigns a bank-failure date or hazard probability. See [Atlas outlook methods and limitations](docs/ATLAS_OUTLOOK.md).
 
 **Implementation:** [AtlasView.tsx](fluvisar-next/apps/web/src/components/AtlasView.tsx).
 
@@ -209,12 +209,12 @@ Esri World Imagery supplies context beyond valid dated optical coverage. It is a
 Each fresh Observatory visit animates from a wide geographic view into the existing zoom 11.4 / 55-degree study-area camera, including sessions that previously viewed the area. Skip, Replay, interaction cancellation and reduced-motion support remain available; comparison views share exact study-area framing.
 
 The desktop Observatory keeps the investigation panel on the left; phones use a
-feature drawer. Both regions open at zoom 11.4 with a 55-degree tilted satellite overview. Sundarbans starts with
-the detailed Esri satellite mosaic, labelled as context without an acquisition
-date. Selecting a timeline pass or date comparison opens actual Sentinel-2
+feature drawer. Both regions open on measured radar at zoom 11.4 with a 55-degree tilted overview. Switching Radar, Satellite or Carto preserves the live camera rather than refitting the image. Sundarbans offers
+the detailed Esri satellite mosaic as an optional context view, labelled without an acquisition
+date. In Satellite mode, selecting an optical timeline pass or date comparison opens actual Sentinel-2
 observations. Initial optical comparisons use the two least-cloudy retained
 scenes, and cloud/shadow percentages remain visible. A floating launcher opens
-the source-connected assistant from the bottom left in a docked, non-modal chat window.
+the source-connected assistant from the bottom right in a docked, non-modal chat window.
 
 Dated optical detail loads from locally served lossless tiles generated from
 original 10 m Sentinel-2 sources. See [map layout, imagery provenance and rebuild
@@ -304,7 +304,7 @@ A zero mapped intersection can reflect sparse mapping or the selected geometry. 
 
 ### 6.5 Ask FluviSAR and Chat with Data
 
-A shared assistant explains the active region, radar pair and selected finding, with source links, map handoffs, English/Bengali questions and on-device conversation export/history. Ask FluviSAR in the header and the bottom-left floating launcher open the same docked, non-modal chat window. Users can minimize it and continue using the page. Contextual Chat with Data buttons appear only beside supported metrics, model explanations or the current Evidence stage; the button first highlights supported boxes, then selecting a box opens its chat. Atlas forecasts do not send unsupported prediction values to the assistant.
+A shared assistant explains the active region, radar pair and selected finding, with source links, map handoffs, English/Bengali questions and on-device conversation export/history. Ask FluviSAR in the header and the bottom-right floating launcher open the same docked, non-modal chat window. Users can minimize it and continue using the page. Contextual Chat with Data buttons appear only beside supported metrics, model explanations or the current Evidence stage; the button first highlights supported boxes, then selecting a box opens its chat. Atlas forecasts do not send unsupported prediction values to the assistant.
 
 Data-based answers use registered backend calculations. Optional Gemini function calling adds natural-language interpretation when a server-side credential is configured; provider errors and unsupported numerical output fall back to the verified data answer. Model experiments remain explicitly synthetic. See [Assistant and map implementation](docs/ASSISTANT_AND_MAP.md) for configuration, scope and limitations.
 
@@ -658,10 +658,11 @@ npm run build
 npm run test:e2e -- --workers=1
 ```
 
-The current browser suite registers **71 tests in thirteen files**:
+The current browser suite registers **75 tests in fourteen files**:
 
 | Suite | Main coverage |
 | --- | --- |
+| `place-watch.spec.ts` | Source hashes and measured place proximity, assumption-only timing and exports, responsive watchlist, tilted Radar default, camera-preserving imagery switches and right-corner chat |
 | `atlas-outlook.spec.ts` | Chronological forecasting, elapsed date gaps, physical bounds, source-linked case cards and exports, responsive themes, docked chat and repeatable automatic zoom-in |
 | `responsive-audit.spec.ts` | All ten public pages at five desktop/laptop/phone sizes in both themes; header reachability, overflow and unclipped intro content |
 | `about-lab.spec.ts` | Original crew and imagery provenance, story navigation, themes, responsive layout and preserved Lab controls/interactions |

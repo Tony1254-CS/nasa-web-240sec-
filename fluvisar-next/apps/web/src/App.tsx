@@ -38,7 +38,7 @@ const ObservatoryRoute: React.FC = () => {
   const [searchParams] = useSearchParams();
 
   useEffect(()=>{
-    useWorkspaceStore.setState({comparisonEnabled:false,basemapType:'satellite',isRightInspectorOpen:false,selectedFindingId:null});
+    useWorkspaceStore.setState({comparisonEnabled:false,basemapType:'sar',isRightInspectorOpen:false,selectedFindingId:null});
   },[]);
 
   useEffect(() => {
@@ -96,7 +96,7 @@ const ObservatoryRoute: React.FC = () => {
 // 2. Atlas Route Component (Handles /atlas)
 const AtlasRoute: React.FC = () => {
   const {setView,regionId}=useWorkspaceStore();
-  useEffect(()=>{setView('M0');},[setView,regionId]);
+  useEffect(()=>{setView('M0');useWorkspaceStore.getState().setBasemapType('satellite');},[setView,regionId]);
   return <div className="atlas-scroll-page"><section className="atlas-map-stage"><MapWorkspace/><AtlasHero/></section><AtlasView/></div>;
 };
 

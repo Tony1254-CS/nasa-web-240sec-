@@ -5,6 +5,7 @@ import {PageIntro} from './EvidenceUI';
 import {useEvidence,number,readableDate} from '../data/evidence';
 import {useWorkspaceStore} from '../store/workspaceStore';
 import {AtlasOutlook} from './AtlasOutlook';
+import {AtlasPlaceWatch} from './AtlasPlaceWatch';
 
 export function AtlasHero(){
  const {index}=useEvidence(),regions=Object.values(index.regions);
@@ -32,6 +33,7 @@ export function AtlasView(){
    })}</div>
   </section>
   <AtlasOutlook/>
+  <AtlasPlaceWatch/>
   <section className="atlas-workflow" aria-labelledby="atlas-workflow-title"><header className="atlas-section-heading"><div><span className="atlas-kicker"><Layers size={15}/>FROM SIGNAL TO REVIEW</span><h2 id="atlas-workflow-title">A finding should survive questions.</h2><p>Open the measured comparison, inspect its lineage and take the evidence into a review.</p></div><Link to="/reports" className="science-text-link">Methods & source manifests <ArrowUpRight size={15}/></Link></header><div className="atlas-workflow-grid">{[{icon:Radio,title:'01 / Observe',body:'Six same-orbit radar passes and six dated optical scenes per study area. Dates and sensor identities stay attached.'},{icon:SlidersHorizontal,title:'02 / Challenge',body:'Inspect common support and water-threshold sensitivity. Distinguish a stable signal from a fragile interpretation.'},{icon:ClipboardCheck,title:'03 / Verify',body:'Review a finding, record a field observation and export its geometry, source passport and decision brief.'}].map(step=><article key={step.title}><step.icon size={23}/><h3>{step.title}</h3><p>{step.body}</p></article>)}</div></section>
   <section className="atlas-verdict-guide"><ShieldCheck size={25}/><div><h3>How evidence status works</h3><p>Statuses below describe the retained processing checks. They do not certify a flood, permanent erosion or mangrove loss.</p><div className="atlas-verdict-items"><span><i/>QC passed · all recorded checks pass</span><span><i/>Review needed · at least one warning</span><span><i/>QC failed · a recorded check fails</span></div></div></section>
   <footer className="atlas-footer"><span>FluviSAR · NASA Space Apps Challenge 2026</span><Link to="/reports">Full methods</Link><a href="https://www.earthdata.nasa.gov/learn/earth-observation-data-basics/sar" target="_blank" rel="noreferrer">NASA SAR reference <ArrowUpRight size={13}/></a></footer>

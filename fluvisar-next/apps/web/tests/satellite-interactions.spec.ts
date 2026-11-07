@@ -40,10 +40,10 @@ test('Sundarbans phone touch grip tracks a full swipe without scrolling or movin
  const after=await cameras(page);expect(after[0].center).toEqual(before[0].center);expect(await page.evaluate(()=>scrollY)).toBe(0);
 });
 
-test('both satellite defaults use the requested camera and show source-linked changes and water masks',async({page})=>{
+test('both selected satellite views use the requested camera and show source-linked changes and water masks',async({page})=>{
  test.setTimeout(90000);await page.setViewportSize({width:1920,height:1080});
  for(const region of ['jamuna','sundarbans']){
-  await open(page,region);const record=catalogue.regions[region];
+  await open(page,region);await page.getByRole('button',{name: /Satellite$/,exact:false}).click();const record=catalogue.regions[region];
   await expect.poll(async()=>Math.abs((await cameras(page))[0].zoom-11.4)).toBeLessThan(.000001);
   await expect.poll(async()=>Math.abs((await cameras(page))[0].pitch-55)).toBeLessThan(.000001);
   await expect(page.locator('.map-pane-b')).toHaveAttribute('data-change-overlay','true');

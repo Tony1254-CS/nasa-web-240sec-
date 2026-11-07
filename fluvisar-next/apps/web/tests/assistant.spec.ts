@@ -20,7 +20,7 @@ test('region fly-in is skippable, repeatable and ends with aligned comparison ca
  await expect(page.getByRole('button',{name:'Replay fly-in',exact:true})).toBeVisible();
  const fitted=await page.locator('.radar-map-canvas').evaluate(el=>({camera:JSON.parse((el as HTMLElement).dataset.camera!),width:el.clientWidth,height:el.clientHeight}));expect(fitted.camera.pitch).toBeGreaterThanOrEqual(45);expect(fitted.camera.center[0]).toBeCloseTo(89.75);
  await page.getByRole('combobox',{name:'Study region'}).selectOption('sundarbans');
- await expect(page.locator('.radar-map-canvas')).toHaveAttribute('data-observation-id','esri-context');await expect(page.getByRole('button',{name:'Replay fly-in',exact:true})).toBeVisible();await page.getByRole('button',{name:'Replay fly-in',exact:true}).click();await page.getByRole('button',{name:'Skip intro',exact:true}).click();
+ await expect(page.locator('.radar-map-canvas')).toHaveAttribute('data-observation-id',catalog.regions.sundarbans.observations.find((o:any)=>o.date===catalog.regions.sundarbans.pair[1]).id);await expect(page.getByRole('button',{name:'Replay fly-in',exact:true})).toBeVisible();await page.getByRole('button',{name:'Replay fly-in',exact:true}).click();await page.getByRole('button',{name:'Skip intro',exact:true}).click();
 });
 
 test('assistant uses real run values, sources, history, exports and map handoff',async({page})=>{
@@ -88,7 +88,7 @@ test('Atlas theme applies to cards and controls; assistant docks without a backd
  await page.getByRole('button',{name:'Toggle Light/Dark Theme'}).click();await expect(card).toHaveCSS('background-color','rgb(255, 255, 255)');await expect(page.locator('.restored-workspace-header')).toHaveCSS('background-color','rgb(255, 255, 255)');await expect(page.locator('.navbar')).toHaveCSS('background-color','rgb(255, 255, 255)');
  await page.screenshot({path:'test-results/atlas-light.png'});
  await page.getByRole('button',{name:'Ask FluviSAR',exact:true}).click();const dialog=page.getByRole('dialog',{name:'FluviSAR Assistant'});await expect(dialog).toHaveAttribute('aria-modal','false');
- const box=await dialog.boundingBox();expect(box!.x).toBe(18);expect(box!.y+box!.height).toBeLessThanOrEqual(930);
+ const box=await dialog.boundingBox();expect(box!.x+box!.width).toBe(page.viewportSize()!.width-18);expect(box!.y+box!.height).toBeLessThanOrEqual(930);
  await page.screenshot({path:'test-results/assistant-widget.png'});await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);await expect(page.getByRole('button',{name:'Ask FluviSAR',exact:true})).toBeFocused();
  await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Toggle Light/Dark Theme'}).click();await expect(card).toHaveCSS('background-color','rgb(21, 30, 35)');
  const menu=page.getByRole('button',{name:'Toggle navigation'});await expect(menu).toBeVisible();const menuBox=await menu.boundingBox();expect(menuBox!.x+menuBox!.width).toBeLessThanOrEqual(390);await menu.click();await expect(page.locator('.navbar__nav')).toHaveClass(/navbar__nav--open/);await menu.click();

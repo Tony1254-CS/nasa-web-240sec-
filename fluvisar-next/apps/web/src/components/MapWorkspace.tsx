@@ -48,7 +48,7 @@ function updateContextVisibility(map:maplibregl.Map,evidence:RegionEvidence,side
 }
 function overviewCamera(evidence:RegionEvidence){
  const state=useWorkspaceStore.getState();
- return !state.comparisonEnabled&&state.basemapType==='satellite'?{center:(evidence.region_id==='jamuna'?[89.75,25.575]:[89.74,21.83]) as [number,number],zoom:11.4,pitch:55,bearing:0}:undefined;
+ return !state.comparisonEnabled?{center:(evidence.region_id==='jamuna'?[89.75,25.575]:[89.74,21.83]) as [number,number],zoom:11.4,pitch:55,bearing:0}:undefined;
 }
 function coverStudyArea(map:maplibregl.Map,evidence:RegionEvidence){
  map.resize();
@@ -219,7 +219,7 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
   flight.current?.(false);flight.current=null;
   if(!selectedFindingId)coverStudyArea(map,evidence);
 
- },[evidence,loaded.b,loaded.a,viewId==='M0',split,compare,basemapType]);
+ },[evidence,loaded.b,loaded.a,viewId==='M0',split,compare]);
  useEffect(()=>{
   if(!loaded.b||!selectedFindingId)return;
   const finding=evidence.findings.features.find(f=>f.properties.id===selectedFindingId);if(!finding)return;
