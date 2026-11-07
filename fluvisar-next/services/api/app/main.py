@@ -183,3 +183,19 @@ def sample_numeric_artifact(artifact_id: str, lon: float = Query(..., ge=-180, l
                 if math.isfinite(measured):
                     result.update(value=measured, masked=False, reason=None)
     return result
+
+@app.get('/api/runs/{run_id}/evidence/{stage}')
+def review_evidence_stage(run_id: str, stage: str, finding_id: Optional[str] = None, optical_before: Optional[str] = None, optical_after: Optional[str] = None):
+    from app.evidence import build_stage
+    if stage not in ('detect','investigate','challenge','explain','field','impact'):
+        raise HTTPException(404, 'Unknown evidence stage')
+    bundle=get_run_bundle(run_id)
+    for date in (optical_before,optical_after):
+        if date and date not in {o['date'] for o in bundle.get('optical_observations',[])}:
+            raise HTTPException(400, 'Optical date is not a registered acquisition')
+    try:
+        return build_stage(bundle,stage,finding_id,optical_before,optical_after)
+    except KeyError as error:
+        raise HTTPException(404, str(error)) from error
+    except ValueError as error:
+        raise HTTPException(503, str(error)) from error

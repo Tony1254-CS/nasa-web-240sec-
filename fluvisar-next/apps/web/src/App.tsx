@@ -22,6 +22,7 @@ import { LegacyPageLayout } from './features/legacy/LegacyPageLayout';
 import { EvidenceProvider, currentEvidence } from './data/evidence';
 import { Navbar } from './features/legacy/components/Navbar';
 import { ObservatoryHeader } from './components/ObservatoryHeader';
+import { EvidenceWorkbench } from './components/EvidenceWorkbench';
 import './styles/observatory-redesign.css';
 
 const DecisionDesk = lazy(() => import('./features/legacy/pages/DecisionDesk').then(m=>({default:m.DecisionDesk})));
@@ -79,6 +80,7 @@ const ObservatoryRoute: React.FC = () => {
 
         {/* 2. Focused Finding Inspector Drawer (Replaces clunky RightInspector) */}
         <FindingInspectorDrawer />
+        <EvidenceWorkbench />
       </main>
 
       {/* Linked Context Tracks */}
