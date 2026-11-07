@@ -57,6 +57,7 @@ test('radar pair changes imagery and measured candidate areas together',async({p
  await expect(page.locator('.map-pane-a')).toHaveAttribute('data-observation-id',observations[0].id);
  await expect(page.locator('.map-pane-b')).toHaveAttribute('data-observation-id',observations[5].id);
  const url=region.pair_bundles[observations[0].date+'_'+observations[5].date];const pair=await(await request.get(url)).json();
+ await page.getByRole('navigation',{name:'Investigation tools'}).getByRole('button',{name:'Explore',exact:true}).click();
  await expect(page.locator('.obs-stats')).toContainText(pair.metrics.land_to_water_ha.toLocaleString('en-US',{maximumFractionDigits:2}));
  await page.getByRole('button',{name:'Sat vs Radar',exact:true}).click();
  await page.getByRole('button',{name:'Next satellite pass'}).click();

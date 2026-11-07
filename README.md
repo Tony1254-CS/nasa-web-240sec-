@@ -206,6 +206,12 @@ Esri World Imagery supplies context beyond valid dated optical coverage. It is a
 
 The map includes a synchronized geographic fly-in with Skip, Replay, reduced-motion support and exact study-area framing.
 
+The Observatory uses a full-width map, a horizontal desktop investigation toolbar,
+on-demand feature panels and a collapsible, resizable finding inspector. Dated
+optical detail loads from locally served lossless tiles generated directly from
+the original 10 m Sentinel-2 source, while the larger context image remains beneath
+it. See [map layout, imagery provenance and rebuild instructions](docs/MAP_FIRST_OBSERVATORY.md).
+
 ### 5.2 Before/after comparison
 
 Two synchronized maps share center, zoom, bearing and pitch.
@@ -644,13 +650,14 @@ npm run build
 npm run test:e2e -- --workers=1
 ```
 
-The current browser suite registers **55 tests in ten files**:
+The current browser suite registers **61 tests in eleven files**:
 
 | Suite | Main coverage |
 | --- | --- |
 | `responsive-audit.spec.ts` | All ten public pages at five desktop/laptop/phone sizes in both themes; header reachability, overflow and unclipped intro content |
 | `about-lab.spec.ts` | Original crew and imagery provenance, story navigation, themes, responsive layout and preserved Lab controls/interactions |
 | `legacy-pages.spec.ts` | Routes, navigation, report/source consistency, exports and learning modules |
+| `map-first.spec.ts` | Full-width map, on-demand tools, collapsible inspector and source-linked tiles for every optical date |
 | `observatory-controls.spec.ts` | Study framing, camera alignment, controls, tools and region navigation |
 | `observation-history.spec.ts` | Served-image checksums, date/image mapping, pair persistence, metrics and themes |
 | `evidence-workflow.spec.ts` | Both six-stage reviews, field photo/GPS storage/export, isolation and mobile access |

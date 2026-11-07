@@ -1,0 +1,22 @@
+{
+  "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/45/Q/YE/2026/6/S2C_45QYE_20260604_0_L2A/TCI.tif",
+  "source_id": "S2C_45QYE_20260604_0_L2A",
+  "date": "2026-06-04",
+  "bbox": [
+    89.55,
+    21.75,
+    89.85,
+    22.0
+  ],
+  "source_shape": [
+    10980,
+    10980
+  ],
+  "source_gsd_m": 10,
+  "detail_tiles_url": "/observations/sundarbans/optical/2026-06-04/{z}/{x}/{y}.webp",
+  "detail_minzoom": 10,
+  "detail_maxzoom": 14,
+  "tile_count": 284,
+  "tiles_sha256": "c46f015c3bd9f300f4fdc1e907bdcc3870ef4cb372b3c4e93a2f61559cb11c7a",
+  "method": "Original dated TCI COG, Web Mercator pyramid; bilinear reprojection, lossless WebP; clouds retained."
+}

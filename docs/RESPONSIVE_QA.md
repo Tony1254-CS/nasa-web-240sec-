@@ -45,3 +45,40 @@ npx playwright test tests/responsive-audit.spec.ts --workers=2
 ```
 
 To run the full browser suite, use `npm run test:e2e -- --workers=2`.
+
+
+## Map-first Observatory follow-up - 8 November 2026
+
+The two Observatory routes now use a full-width map with horizontal desktop
+investigation controls, on-demand feature panels and a collapsible/resizable
+finding inspector. The feature panel opens below comparison controls. Six dates,
+radar layers, all six Evidence stages, Live Analysis and scoped chat are retained.
+
+The dated optical display now includes 12 source-linked detail pyramids containing
+4,116 lossless tiles generated from original 10 m Sentinel-2 TCI COGs. Date changes
+recreate the detail source, clearing cached parent tiles from the prior date.
+Image and tile readiness are recorded after rendering instead of relying solely
+on source events that precede the renderer's cache update.
+
+Verification:
+
+- The 100 page/viewport/theme layout combinations passed again.
+- Production preview: 12 map checks passed across both regions, dark/light mode,
+  and 1920 x 1080, 1366 x 768 and 390 x 844 viewports; zero page errors.
+- The final combined 27-case Observatory/history/assistant/Evidence run passed
+  26 cases and exposed one optical readiness flag failure. After fixing renderer
+  readiness tracking, that optical timeline/comparison case passed three
+  consecutive reruns. Earlier targeted checks also verified every date's detail
+  requests, provenance and absence of missing tile responses in both regions.
+- The original-data validator passed 4,254 numeric/display SHA-256 checks,
+  independently recomputed all 28 non-default selectable pairs, and retained the
+  same 759 polygon/area invariants.
+- Deep catalogue comparison verified that every original record, label, date,
+  metric and geometry is unchanged; only four optical detail metadata fields
+  were added per observation. The cached builder explicitly preserves UTF-8.
+- Production build passed. SAR Lab source retains its original SHA-256:
+  `22de17b985e87a2bb839fb99897fb76b5be900864ef95154993c17085c7998bb`.
+
+These remain Chromium viewport checks and screenshot review, rather than physical
+phone testing. The retained source detail is 10 m; zooming further enlarges those
+pixels. Context beyond retained dated coverage depends on the external basemap.

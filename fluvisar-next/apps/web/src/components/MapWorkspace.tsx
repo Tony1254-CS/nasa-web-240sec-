@@ -3,7 +3,7 @@ import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { flyToStudyArea } from '../utils/mapFlyIn';
 import { Camera, Check, Crosshair, Layers, Minus, Plus, ChevronDown, ChevronUp } from 'lucide-react';
-import { useObservatoryEvidence as useEvidence, number, type RegionEvidence } from '../data/evidence';
+import { useObservatoryEvidence as useEvidence, number, type RegionEvidence, type OpticalObservation } from '../data/evidence';
 import { useWorkspaceStore } from '../store/workspaceStore';
 maplibregl.setWorkerUrl('/maplibre-gl-worker.mjs');
 
@@ -29,11 +29,18 @@ function opticalCorners(observation:{[key:string]:unknown},fallback:Corners):Cor
  const bbox=observation.display_bbox as number[]|undefined;
  return bbox?[[bbox[0],bbox[3]],[bbox[2],bbox[3]],[bbox[2],bbox[1]],[bbox[0],bbox[1]]]:fallback;
 }
+function addOpticalDetail(map:maplibregl.Map,evidence:RegionEvidence,optical:OpticalObservation){
+ if(!optical.detail_tiles_url)return;
+ map.getContainer().dataset.opticalDetailLoaded='false';
+ map.addSource('optical-detail',{type:'raster',tiles:[String(optical.detail_tiles_url)],tileSize:256,bounds:evidence.bbox,minzoom:Number(optical.detail_minzoom),maxzoom:Number(optical.detail_maxzoom),attribution:'Copernicus Sentinel-2; original dated 10 m TCI'});
+ map.addLayer({id:'optical-detail',type:'raster',source:'optical-detail',paint:{'raster-opacity':1,'raster-resampling':'linear','raster-fade-duration':0}},'observation');
+ map.getContainer().dataset.opticalDetailUrl=String(optical.detail_tiles_url);
+}
 function coverStudyArea(map:maplibregl.Map,evidence:RegionEvidence){
  map.resize();
  const [w,s,e,n]=evidence.bbox;
  const compact=map.getContainer().clientWidth<600;
- map.fitBounds([[w,s],[e,n]],{padding:{top:compact?112:86,bottom:compact?90:80,left:compact?24:64,right:compact?24:64},maxZoom:14,duration:0,bearing:0,pitch:0});
+ map.fitBounds([[w,s],[e,n]],{padding:{top:compact?112:76,bottom:compact?90:42,left:compact?24:64,right:compact?24:64},maxZoom:14,duration:0,bearing:0,pitch:0});
 }
 export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
  const {evidence,comparisonReady}=useEvidence();
@@ -42,7 +49,7 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
  const maps=useRef<{a:maplibregl.Map|null;b:maplibregl.Map|null}>({a:null,b:null});
  const markers=useRef<maplibregl.Marker[]>([]);
  const aborts=useRef<{a:AbortController|null;b:AbortController|null}>({a:null,b:null});
- const [loaded,setLoaded]=useState({a:false,b:false}),[radarLoaded,setRadarLoaded]=useState(false),[zoom,setZoom]=useState(11.8),[saved,setSaved]=useState(false),[legend,setLegend]=useState(true);
+ const [loaded,setLoaded]=useState({a:false,b:false}),[radarLoaded,setRadarLoaded]=useState(false),[zoom,setZoom]=useState(11.8),[saved,setSaved]=useState(false),[legend,setLegend]=useState(false);
  const [flyStage,setFlyStage]=useState('');const flight=useRef<((fit?:boolean)=>void)|null>(null);const arrived=useRef('');
  const compare=comparisonEnabled&&viewId!=='M0';
  const split=compare&&comparisonLayout==='split';
@@ -72,12 +79,17 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
    map.addControl(new maplibregl.ScaleControl({unit:'metric',maxWidth:100}),'bottom-left');
    if(side==='b')map.addControl(new maplibregl.AttributionControl({compact:true,customAttribution:'Copernicus Sentinel-1 / Sentinel-2'}),'bottom-right');
    map.on('move',()=>sync(side,side==='a'?'b':'a'));
-   map.on('sourcedata',event=>{if(side==='b'&&event.sourceId==='observation'&&event.isSourceLoaded)setRadarLoaded(true);if(event.sourceId==='optical-observation'&&event.isSourceLoaded)map.getContainer().dataset.opticalLoaded='true';});
+   map.on('sourcedata',event=>{if(side==='b'&&event.sourceId==='observation'&&event.isSourceLoaded)setRadarLoaded(true);if(event.sourceId==='optical-observation'&&event.sourceDataType==='metadata'&&(map.getSource('optical-observation') as maplibregl.ImageSource)?.loaded())map.getContainer().dataset.opticalLoaded='true';});
+   map.on('movestart',()=>{map.getContainer().dataset.opticalDetailLoaded='false';});
+   // Source events precede the renderer's cache update. Readiness is measured
+   // after rendering, when all tiles required by the current camera are known.
+   map.on('render',()=>{const opticalSource=map.getSource('optical-observation') as maplibregl.ImageSource|undefined;if(opticalSource)map.getContainer().dataset.opticalLoaded=String(opticalSource.loaded());if(map.getSource('optical-detail'))map.getContainer().dataset.opticalDetailLoaded=String(map.isSourceLoaded('optical-detail'));});
    map.once('style.load',()=>{
     map.addSource('observation',{type:'image',url:actualRadarUrl(evidence,side),coordinates:corners});
     map.addLayer({id:'observation',type:'raster',source:'observation',layout:{visibility:'none'},paint:{'raster-opacity':1,'raster-resampling':'nearest'}});
     const optical=selectedOpticalObservation(evidence,side);
     if(optical){map.getContainer().dataset.opticalUrl=optical.url;map.getContainer().dataset.opticalLoaded='false';map.addSource('optical-observation',{type:'image',url:optical.url,coordinates:opticalCorners(optical,corners)});map.addLayer({id:'optical-observation',type:'raster',source:'optical-observation',paint:{'raster-opacity':1,'raster-resampling':'linear'}});map.moveLayer('optical-observation','observation');}
+    if(optical)addOpticalDetail(map,evidence,optical);
     map.addSource('water-mask',{type:'image',url:selectedObservation(evidence,side).water_url,coordinates:corners});
     map.addLayer({id:'water-mask',type:'raster',source:'water-mask',layout:{visibility:'none'},paint:{'raster-opacity':0.5,'raster-resampling':'nearest'}});
     map.addSource('findings',{type:'geojson',data:evidence.findings});
@@ -132,6 +144,15 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
     map.setLayoutProperty('optical-observation','visibility',type!=='carto'?'visible':'none');
     if(optical&&map.getContainer().dataset.opticalUrl!==optical.url){map.getContainer().dataset.opticalLoaded='false';map.getContainer().dataset.opticalUrl=optical.url;(map.getSource('optical-observation') as maplibregl.ImageSource).updateImage({url:optical.url,coordinates:opticalCorners(optical,corners)});}
    }
+   if(map.getLayer('optical-detail')){
+    map.setLayoutProperty('optical-detail','visibility',type!=='carto'?'visible':'none');
+    if(optical?.detail_tiles_url&&map.getContainer().dataset.opticalDetailUrl!==optical.detail_tiles_url){
+     // A new source clears parent tiles from the previous acquisition as well.
+     map.removeLayer('optical-detail');map.removeSource('optical-detail');
+     addOpticalDetail(map,evidence,optical);
+     map.setLayoutProperty('optical-detail','visibility',type!=='carto'?'visible':'none');
+    }
+   }
    const shown=type==='satellite'?optical:selectedObservation(evidence,side);
    map.getContainer().dataset.observationId=shown?.id??'esri-context';
    map.getContainer().dataset.observationDate=shown?.date??'';
@@ -155,7 +176,7 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
   const map=maps.current.b;if(!map||!loaded.b)return;
   flight.current?.(false);
   const compact=map.getContainer().clientWidth<600;
-  flight.current=flyToStudyArea(map,evidence.bbox,{padding:{top:compact?112:86,bottom:compact?90:80,left:compact?24:64,right:compact?24:64},maxZoom:14,bearing:0,pitch:0},setFlyStage);
+  flight.current=flyToStudyArea(map,evidence.bbox,{padding:{top:compact?112:76,bottom:compact?90:42,left:compact?24:64,right:compact?24:64},maxZoom:14,bearing:0,pitch:0},setFlyStage);
  };
  useEffect(()=>{
   const map=maps.current.b;if(!map||!loaded.b||!loaded.a)return;

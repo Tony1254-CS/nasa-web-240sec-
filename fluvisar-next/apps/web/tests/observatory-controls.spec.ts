@@ -23,8 +23,10 @@ test('both study areas open on real satellite context with the entire georeferen
   await expect(page.getByRole('button',{name:'Compare before & after'})).toBeVisible();
   await expect(page.getByRole('button',{name:'Investigate a change',exact:false})).toBeVisible();
   await footprintFits(page);await aligned(page);
-  const rail=(await page.getByRole('complementary',{name:'Observatory features'}).boundingBox())!,map=(await page.locator('.restored-map-workspace').boundingBox())!;
-  expect(rail.x+rail.width).toBeLessThanOrEqual(map.x+1);
+  await expect(page.getByRole('complementary',{name:'Observatory features'})).toBeHidden();
+  const map=(await page.locator('.restored-map-workspace').boundingBox())!;
+  expect(map.width).toBeGreaterThanOrEqual(page.viewportSize()!.width-2);
+  await expect(page.getByRole('navigation',{name:'Investigation tools'})).toBeVisible();
   await page.getByRole('button',{name:'Zoom in',exact:true}).click();
   await page.getByRole('button',{name:'Recenter study area'}).click();await footprintFits(page);
   await page.screenshot({path:'test-results/observatory-'+region+'-redesign.png'});
@@ -47,6 +49,7 @@ test('date comparison, dragged swipe and split maintain geographic alignment',as
 
 test('radar, planning, InSAR, evidence, coverage and observation pairing are discoverable',async({page})=>{
  const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));await ready(page);
+ await page.getByRole('navigation',{name:'Investigation tools'}).getByRole('button',{name:'Radar & layers',exact:true}).click();
  const categories=page.getByRole('navigation',{name:'Feature categories'});
  await categories.getByRole('button',{name:'Radar',exact:true}).click();
  const channels=page.getByRole('group',{name:'Polarization channels'});
@@ -55,9 +58,10 @@ test('radar, planning, InSAR, evidence, coverage and observation pairing are dis
  await page.getByRole('button',{name:/Ground motion experiment/}).click();await expect(page.getByRole('slider',{name:'Minimum coherence'})).toBeVisible();
  await page.getByRole('button',{name:/Scenario planner/}).click();await expect(page.getByRole('slider',{name:'Hypothetical stage change'})).toBeVisible();
  await page.getByRole('button',{name:/Service continuity/}).click();await expect(page.locator('.restored-calculator')).toBeVisible();
+ await page.getByRole('button',{name:'Close features'}).click();
  await page.getByRole('button',{name:'Toggle coverage curtain'}).click();await expect(page.getByText('Observation denominator mask',{exact:true})).toBeVisible();await page.getByRole('button',{name:'Close coverage curtain'}).click();
  await page.getByRole('button',{name:/Comparison Pair:/}).click();await expect(page.getByRole('dialog',{name:'Comparison pair selector'})).toBeVisible();await page.getByRole('button',{name:'Use this pair',exact:true}).click();
- await categories.getByRole('button',{name:'Explore',exact:true}).click();await page.getByRole('button',{name:/Investigate a change/}).click();
+ await page.getByRole('navigation',{name:'Investigation tools'}).getByRole('button',{name:'Explore',exact:true}).click();await page.getByRole('complementary',{name:'Observatory features'}).getByRole('button',{name:/Investigate a change/}).click();
  const tabs=page.getByRole('navigation',{name:'Finding inspector tabs'});await expect(tabs).toBeVisible();await tabs.getByRole('button',{name:'audit',exact:true}).click();await expect(page.getByRole('slider',{name:'Audit water threshold'})).toBeVisible();
  expect(errors).toEqual([]);
 });

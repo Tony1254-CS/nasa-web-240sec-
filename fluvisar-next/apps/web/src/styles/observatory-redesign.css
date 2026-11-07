@@ -1,4 +1,4 @@
-/* Observatory only: the feature rail and map have separate, stable spaces. */
+/* Observatory only: shared theme and investigation controls. */
 .legacy-pages .observatory-redesign .restored-comparison-toolbar{z-index:6;}
 .legacy-pages[data-theme=dark] .observatory-redesign .comparison-mode-buttons{background:#132129;}
 .obs-pair-selects{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:24px 0;}.obs-pair-selects label{font-size:12px;font-weight:650;}.obs-pair-selects select{display:block;width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:7px;margin-top:9px;background:#fff;color:#183738;}
@@ -38,3 +38,46 @@
 .legacy-pages .observatory-redesign .restored-timeline{padding:10px 26px 9px calc(var(--obs-rail) + 26px);background:#fff;border-top:1px solid #dce5e3;}.legacy-pages .observatory-redesign .context-tracks{padding-left:var(--obs-rail);background:#f4f8f5;}.observatory-redesign .obs-mobile-features{display:none;}
 @media(min-width:761px) and (max-width:1250px){.legacy-pages .observatory-redesign{--obs-rail:290px;}.obs-sidebar-body{padding:16px;}.obs-sidebar>header{padding:18px 16px;}.obs-acquisition{display:none;}.legacy-pages .observatory-redesign .restored-map-options{top:64px;}.legacy-pages .observatory-redesign .restored-map-tools{top:116px;}.legacy-pages .observatory-redesign .finding-drawer{top:110px;}.legacy-pages .observatory-redesign .satellite-context-note{display:none;}}
 @media(max-width:760px){.legacy-pages .observatory-redesign{--obs-rail:0px;}.legacy-pages .obs-header{min-height:65px;padding:9px 12px;gap:8px;}.obs-location{gap:8px;}.obs-location>svg{width:16px;}.obs-location select{font-size:15px;max-width:210px;}.obs-acquisition{display:none;}.obs-header-actions{gap:6px;}.obs-header-actions button{padding:8px;}.obs-header-actions button:first-child{display:none;}.obs-header-actions button:nth-child(2){font-size:0;gap:0;}.obs-header .obs-eyebrow{font-size:8px;}.obs-preferences{right:10px;top:60px;}.legacy-pages .obs-sidebar{display:none;width:min(350px,100%);z-index:42;box-shadow:10px 0 35px #102c3550;}.legacy-pages .obs-sidebar.is-open{display:flex;}.obs-sidebar>header>button{display:flex;background:transparent;border:0;color:#577d70;padding:5px;}.legacy-pages .observatory-redesign .obs-mobile-features{display:flex;position:absolute;top:108px;left:10px;z-index:32;align-items:center;gap:8px;background:#fff;border:1px solid #cce5db;border-radius:7px;color:#08766e;padding:9px 12px;font-size:11px;font-weight:700;box-shadow:0 3px 12px #102c3520;}.legacy-pages .observatory-redesign .restored-map-options{top:10px;left:10px;right:10px!important;}.legacy-pages .observatory-redesign .restored-map-options button{padding:6px;font-size:10px;}.legacy-pages .observatory-redesign .restored-comparison-toolbar{top:60px;left:10px;right:auto;max-width:calc(100% - 20px);gap:3px;}.legacy-pages .observatory-redesign .restored-comparison-toolbar button{font-size:9px;}.legacy-pages .observatory-redesign .restored-map-tools{top:108px;right:10px!important;}.legacy-pages .observatory-redesign .restored-map-tools input{height:48px;}.legacy-pages .observatory-redesign .restored-coverage-control{left:10px;bottom:62px;}.legacy-pages .observatory-redesign .restored-map-legend{bottom:103px;right:10px!important;}.legacy-pages .observatory-redesign .restored-map-legend>div{display:none;}.legacy-pages .observatory-redesign .restored-timeline{padding:8px 12px;}.legacy-pages .observatory-redesign .context-tracks{padding-left:0;}.legacy-pages .observatory-redesign .satellite-context-note{bottom:30px;max-width:calc(100% - 20px);font-size:8px;}.legacy-pages .observatory-redesign .finding-drawer{top:105px;right:10px;max-height:calc(100% - 125px);}.legacy-pages .observatory-redesign .restored-compare-label{font-size:8px;bottom:25px;}.legacy-pages .observatory-redesign .swipe-description{top:calc(50% + 30px);font-size:8px;}.obs-sidebar h2{font-size:16px;}}
+
+/* Map-first workspace. Controls occupy a horizontal strip; tools open on demand. */
+.legacy-pages .observatory-redesign{--obs-rail:0px;}
+.obs-commandbar{position:absolute;inset:0 0 auto;z-index:35;height:48px;display:flex;align-items:center;gap:6px;padding:6px 18px;background:var(--panel,#fff);border-bottom:1px solid var(--line,#dce5e3);color:var(--obs-ink);}
+.obs-command-label{font-size:9px;font-weight:750;letter-spacing:1.4px;margin-right:12px;color:var(--text-3,#738784);}
+.obs-commandbar button{display:flex;align-items:center;gap:7px;min-height:34px;padding:7px 12px;border:1px solid transparent;border-radius:6px;background:transparent;color:inherit;font-size:11px;font-weight:650;cursor:pointer;}
+.obs-commandbar button:hover,.obs-commandbar button[aria-expanded=true]{background:var(--bg,#f0f7f4);border-color:var(--line,#dce5e3);}
+.obs-commandbar .obs-command-primary{background:#0a7068;color:#fff;border-color:#0a7068;}
+.obs-commandbar .obs-command-primary:hover{background:#08635c;}
+.obs-command-divider{height:20px;width:1px;background:var(--line,#dce5e3);margin:0 8px;}
+.obs-commandbar>small{margin-left:auto;font-size:10px;color:var(--text-3,#738784);}
+.legacy-pages .observatory-redesign .restored-map-workspace,.legacy-pages .observatory-redesign .restored-comparison-overlay{left:0;top:48px;}
+.legacy-pages .observatory-redesign .obs-sidebar{display:none;top:110px;bottom:14px;left:14px;width:340px;max-width:calc(100% - 28px);border:1px solid var(--line,#dce5e3);border-radius:12px;box-shadow:0 12px 40px #102c3540;overflow:hidden;z-index:42;}
+.legacy-pages .observatory-redesign .obs-sidebar.is-open{display:flex;}
+.legacy-pages .observatory-redesign .obs-sidebar>header{padding:15px 18px 12px;}
+.legacy-pages .observatory-redesign .obs-sidebar>header>button{display:flex;background:transparent;border:0;color:inherit;padding:7px;cursor:pointer;}
+.legacy-pages .observatory-redesign .restored-timeline{padding:8px 26px;}
+.legacy-pages .observatory-redesign .restored-timeline-axis{height:48px;margin-top:6px;}
+.legacy-pages .observatory-redesign .restored-timeline-bottom{margin-top:3px;padding-top:4px;}
+.legacy-pages .observatory-redesign .context-tracks{padding-left:0;}
+.legacy-pages .observatory-redesign .finding-drawer{top:110px;max-height:calc(100% - 126px);width:350px;min-width:280px;max-width:min(520px,calc(100% - 90px));resize:both;overflow:auto;padding-top:58px;}
+.obs-inspector-collapse{position:absolute;left:20px;top:13px;padding:7px 10px;border:1px solid var(--line,#dce5e3);background:transparent;color:var(--text-2,#3e5b59);border-radius:6px;font-size:11px;cursor:pointer;}
+.legacy-pages .observatory-redesign .finding-drawer.is-collapsed{height:58px!important;min-height:58px;resize:none;overflow:hidden;padding:0;width:280px;}
+.finding-drawer.is-collapsed>:not(.close-panel):not(.obs-inspector-collapse){display:none;}
+@media(min-width:761px) and (max-width:1250px){.obs-commandbar>small{display:none;}.obs-command-label{display:none;}.legacy-pages .observatory-redesign .restored-map-options{top:14px;}.legacy-pages .observatory-redesign .restored-map-tools{top:76px;}}
+@media(max-width:760px){
+ .obs-commandbar{display:none;}
+ .legacy-pages .observatory-redesign .restored-map-workspace,.legacy-pages .observatory-redesign .restored-comparison-overlay{top:0;}
+ .legacy-pages .observatory-redesign .obs-sidebar{top:8px;bottom:8px;left:8px;width:340px;max-width:calc(100% - 16px);}
+ .legacy-pages .observatory-redesign .restored-timeline{padding:7px 12px;}
+ .legacy-pages .observatory-redesign .finding-drawer{top:150px;right:10px;max-width:calc(100% - 20px);max-height:calc(100% - 165px);min-width:0;resize:none;}
+ .legacy-pages .observatory-redesign .finding-drawer.is-collapsed{width:260px;}
+}
+
+@media(min-width:761px){
+ .legacy-pages .observatory-redesign .obs-header{min-height:64px;padding-block:8px;}
+ .legacy-pages .observatory-redesign .restored-timeline{position:relative;}
+ .legacy-pages .observatory-redesign .restored-timeline>header{min-height:28px;}
+ .legacy-pages .observatory-redesign .restored-timeline-bottom{border-top:0;min-height:12px;padding-top:0;}
+ .legacy-pages .observatory-redesign .restored-timeline-bottom>div{position:absolute;top:8px;left:44%;}
+ .legacy-pages .observatory-redesign .restored-timeline-bottom>span{margin-left:auto;}
+}
+@media(min-width:761px) and (max-width:1100px){.legacy-pages .observatory-redesign .restored-timeline>header>span>small{display:none;}.legacy-pages .observatory-redesign .restored-timeline-bottom>div{left:35%;}}

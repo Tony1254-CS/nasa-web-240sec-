@@ -1,0 +1,22 @@
+{
+  "source_url": "https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/45/R/YJ/2026/9/S2C_45RYJ_20260915_0_L2A/TCI.tif",
+  "source_id": "S2C_45RYJ_20260915_0_L2A",
+  "date": "2026-09-15",
+  "bbox": [
+    89.6,
+    25.4,
+    89.9,
+    25.75
+  ],
+  "source_shape": [
+    10980,
+    10980
+  ],
+  "source_gsd_m": 10,
+  "detail_tiles_url": "/observations/jamuna/optical/2026-09-15/{z}/{x}/{y}.webp",
+  "detail_minzoom": 10,
+  "detail_maxzoom": 14,
+  "tile_count": 402,
+  "tiles_sha256": "9fb15d80ffaa382c41634a63aab67e9b07b1f3b7b3da923a3020a50e005d873c",
+  "method": "Original dated TCI COG, Web Mercator pyramid; bilinear reprojection, lossless WebP; clouds retained."
+}

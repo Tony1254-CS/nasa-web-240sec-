@@ -22,7 +22,7 @@ export function SwipeCompareMap({dateA,dateB}:{dateA:string;dateB:string}){
   {comparisonEnabled&&comparisonLayout==='swipe'&&<div className="restored-swipe-handle" style={{left:swipePosition+'%'}} role="slider" aria-label="Map comparison slider" aria-valuemin={2} aria-valuemax={98} aria-valuenow={Math.round(swipePosition)} tabIndex={0} onKeyDown={keyboard} onPointerDown={pointer} onPointerUp={event=>{if(event.currentTarget.hasPointerCapture(event.pointerId))event.currentTarget.releasePointerCapture(event.pointerId);}} onPointerMove={pointer}><div className="swipe-divider-line"/><div className="swipe-knob">↔</div><div className="swipe-description">{comparisonMode==='sensors'?'Optical ↔ Radar':'Drag to compare actual acquisitions'}</div></div>}
   {comparisonEnabled&&comparisonLayout==='split'&&<div className="restored-split-divider"/>}
   {comparisonEnabled&&<><div className="restored-compare-label left">{leftLabel}</div><div className="restored-compare-label right">{rightLabel}</div></>}
-  {!comparisonEnabled&&<div className="restored-compare-label right">{optical?opticalLabel(selectedOpticalDate):radarLabel(selectedDate)}{opticalScene?' · '+Math.round(opticalScene.cloud_fraction*100)+'% ROI cloud/shadow':''}</div>}
+  {!comparisonEnabled&&<div className="restored-compare-label right">{optical?opticalLabel(selectedOpticalDate):radarLabel(selectedDate)}{opticalScene?.detail_tiles_url?' / 10 m source':''}{opticalScene?' · '+Math.round(opticalScene.cloud_fraction*100)+'% ROI cloud/shadow':''}</div>}
   <span className="comparison-source-sr">{evidence.observations[0].sensor}</span>
  </div>;
 }

@@ -45,6 +45,20 @@ def main():
                 roi_path=ROOT/'apps/web/public'/obs['roi_url'].lstrip('/')
                 assert hashlib.sha256(roi_path.read_bytes()).hexdigest()==obs['roi_display_sha256'];checksums+=1
             checksums+=1
+            if obs.get('detail_tiles_url'):
+                detail_root=ROOT/'apps/web/public/observations'/region/'optical'/obs['date']
+                detail=json.loads((detail_root/'detail.json').read_text())
+                assert detail['source_url']==obs['source_assets']['visual']
+                assert detail['source_id']==obs['id'] and detail['bbox']==record['bbox']
+                assert detail['source_gsd_m']==obs['source_gsd_m']==10
+                tiles=sorted(detail_root.glob('*/*/*.webp'),key=lambda p:tuple(int(v) for v in (p.parent.parent.name,p.parent.name,p.stem)))
+                assert len(tiles)==detail['tile_count']
+                digest=hashlib.sha256()
+                for tile in tiles:
+                    digest.update(tile.read_bytes())
+                assert digest.hexdigest()==detail['tiles_sha256']
+                assert Image.open(tiles[-1]).size==(256,256)
+                checksums+=len(tiles)
             optical_dates.add(obs['date'])
         if record.get('optical_observations'):
             assert len(optical_dates)>=6 and len(record['observations'])>=6

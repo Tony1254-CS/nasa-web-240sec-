@@ -153,5 +153,7 @@ def main():
  print('Published complete observation history',flush=True)
  from expand_optical_context import main as expand_context
  expand_context()
+ from build_optical_detail_tiles import main as build_detail
+ build_detail()
 
 if __name__=='__main__':main()
