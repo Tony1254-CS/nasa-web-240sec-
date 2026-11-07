@@ -27,6 +27,7 @@ import './styles/observatory-redesign.css';
 
 const DecisionDesk = lazy(() => import('./features/legacy/pages/ImpactDesk').then(m=>({default:m.DecisionDesk})));
 const IntelligencePage = lazy(() => import('./features/legacy/pages/IntelligenceWorkspace').then(m=>({default:m.IntelligencePage})));
+const AboutPage = lazy(() => import('./features/legacy/pages/About').then(m=>({default:m.AboutPage})));
 const SARLabPage = lazy(() => import('./features/legacy/pages/SARLab').then(m=>({default:m.SARLabPage})));
 
 // 1. Observatory Route Component (Handles /observatory and /observatory/:regionId)
@@ -150,6 +151,7 @@ const WorkspaceApp: React.FC = () => {
 export const App: React.FC = () => <EvidenceProvider><LegacyPageLayout><Navbar/><Routes>
   <Route path="/" element={<LandingPageView/>}/>
   <Route path="/impact" element={<Suspense fallback={<div className="desk-standby">Loading Decision Desk…</div>}><DecisionDesk /></Suspense>} />
+  <Route path="/about" element={<Suspense fallback={<div className="desk-standby">Opening our story...</div>}><AboutPage/></Suspense>}/><Route path="/about-us" element={<Navigate to="/about" replace/>}/>
   <Route path="/imact" element={<Navigate to="/impact" replace />} />
   <Route path="/intelligence" element={<Suspense fallback={<div className="desk-standby">Loading ML Intelligence…</div>}><IntelligencePage /></Suspense>} />
   <Route path="/sar-lab" element={<Suspense fallback={<div className="desk-standby">Loading SAR Lab…</div>}><SARLabPage /></Suspense>} />

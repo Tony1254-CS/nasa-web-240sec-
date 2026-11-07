@@ -19,6 +19,7 @@ export function Navbar({ transparent = false }: { transparent?: boolean }) {
         <NavLink to="/intelligence" className={({isActive})=>`navbar__link${isActive?' navbar__link--active':''}`} onClick={()=>setOpen(false)}><Brain size={18}/> ML Intelligence</NavLink>
         <NavLink to="/sar-lab" className={({isActive})=>`navbar__link${isActive?' navbar__link--active':''}`} onClick={()=>setOpen(false)}><Microscope size={18}/> SAR Lab</NavLink>
         <NavLink to="/stories" className="navbar__link" onClick={()=>setOpen(false)}>Stories</NavLink>
+        <NavLink to="/about" className={({isActive})=>`navbar__link${isActive?' navbar__link--active':''}`} onClick={()=>setOpen(false)}>About us</NavLink>
         <Link to="/reports" className="navbar__btn"><FileText size={16}/> Report</Link>
       </div>
     </div>

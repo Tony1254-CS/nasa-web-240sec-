@@ -402,6 +402,12 @@ Reports expose the default comparison's measurements, quality record, source lis
 
 **Implementation:** [ReportsView.tsx](fluvisar-next/apps/web/src/components/ReportsView.tsx).
 
+### 10.4 About FluviSAR - `/about`
+
+A four-chapter story follows the project question, Jamuna and Sundarbans, the evidence workflow and the original four-person team. Registered satellite imagery and source dates ground the story. The original names, roles and available profile link are retained; no fabricated biographies are added. The page supports both themes and mobile chapter navigation. `/about-us` is an alias.
+
+SAR Lab now shares the analysis workspace palette, typography and spacing through CSS only. Its page source, all content, controls, numerical logic and references remain unchanged. See [About and Lab design preservation](docs/ABOUT_AND_LAB_DESIGN.md).
+
 ## 11. Scientific method and interpretation
 
 ### 11.1 From RTC intensity to a common analysis grid
@@ -555,6 +561,7 @@ The active reproduction path uses `scripts/`, the runtime catalogue and `service
 | `/impact` | Decision Desk |
 | `/intelligence` | ML sandbox and workspace evidence |
 | `/sar-lab` | SAR science lab |
+| `/about` and `/about-us` | Project story and original team |
 | `/stories` and `/stories/:chapterId` | Observation stories |
 | `/reports` | Default-pair source-linked report |
 | `/learn` and `/learn/:experimentId` | Compatibility redirects to SAR Lab |
@@ -637,10 +644,11 @@ npm run build
 npm run test:e2e -- --workers=1
 ```
 
-The current browser suite registers **41 tests in eight files**:
+The current browser suite registers **45 tests in nine files**:
 
 | Suite | Main coverage |
 | --- | --- |
+| `about-lab.spec.ts` | Original crew and imagery provenance, story navigation, themes, responsive layout and preserved Lab controls/interactions |
 | `legacy-pages.spec.ts` | Routes, navigation, report/source consistency, exports and learning modules |
 | `observatory-controls.spec.ts` | Study framing, camera alignment, controls, tools and region navigation |
 | `observation-history.spec.ts` | Served-image checksums, date/image mapping, pair persistence, metrics and themes |
