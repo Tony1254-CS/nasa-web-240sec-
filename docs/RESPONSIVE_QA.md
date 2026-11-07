@@ -137,3 +137,34 @@ The final three interaction cases passed together after the readability/layout
 adjustment. Their checks include a 1366 x 768 viewport assertion that the expanded
 change legend leaves the zoom rail clear, plus full mouse/touch gestures and the
 measured-radar-water handoff. Radar dates in the legend use larger type.
+
+## Atlas cases, outlook and docked chat - 8 November 2026
+
+The Atlas now scrolls from its geographic introduction to two actual regional
+case studies, an experimental water-area outlook, a review workflow and quality
+verdict guidance. Source windows, support/processed area and sensor metadata are
+preserved. The outlook exposes six observations, three rolling-origin checks,
+method selection, 6/12/24-day horizons, historical errors and JSON export. It is
+explicitly uncalibrated and does not claim a spatial flood or damage forecast.
+
+The shared assistant opens above the bottom-left launcher without a modal
+backdrop, inert background or card resizing. Observatory visits repeat the wide
+view-to-study zoom-in even with an old session seen flag. Final regional camera
+values remain zoom 11.4 and pitch 55 degrees.
+
+The combined Atlas/assistant/map-first/satellite regression run passed all 23
+cases. After visual review, dark text contrast was corrected and phone Atlas
+framing was adjusted to the intro's measured height, keeping both location pins
+clear of the intro and attribution/options. The final five-case Atlas suite
+passed again, including eight viewport/theme combinations (1920, 1366, 390 and
+360 px widths, each dark/light), loaded context imagery, marker placement,
+non-modal interaction and colour checks. Forecast tests cover irregular gaps,
+chronological validation without future leakage, physical bounds and export.
+Screenshots were visually reviewed at desktop/laptop and phone sizes. Observation
+files and the original SAR Lab component remain unchanged. The suite registers
+71 tests in thirteen files; this entry reports targeted checks, not a fresh run
+of all 71 cases.
+
+The production build also passed. Its preview rendered both case cards and the
+non-modal chat without browser page errors; card and chat screenshots were
+reviewed. The temporary preview process was stopped after verification.

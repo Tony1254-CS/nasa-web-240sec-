@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, useParams, useNavigate, useSearchParams, useLo
 import { useWorkspaceStore } from './store/workspaceStore';
 import { Header } from './components/Header';
 import { LandingPageView } from './components/LandingPageView';
-import { AtlasView } from './components/AtlasView';
+import { AtlasView, AtlasHero } from './components/AtlasView';
 import { MapWorkspace } from './components/MapWorkspace';
 import { ObservatoryFeaturePanel } from './components/ObservatoryFeaturePanel';
 import { FindingInspectorDrawer } from './components/FindingInspectorDrawer';
@@ -95,17 +95,9 @@ const ObservatoryRoute: React.FC = () => {
 
 // 2. Atlas Route Component (Handles /atlas)
 const AtlasRoute: React.FC = () => {
-  const { setView } = useWorkspaceStore();
-  useEffect(() => {
-    setView('M0');
-  }, [setView]);
-
-  return (
-    <div className="relative flex-1 flex overflow-hidden w-full h-full">
-      <MapWorkspace />
-      <AtlasView />
-    </div>
-  );
+  const {setView,regionId}=useWorkspaceStore();
+  useEffect(()=>{setView('M0');},[setView,regionId]);
+  return <div className="atlas-scroll-page"><section className="atlas-map-stage"><MapWorkspace/><AtlasHero/></section><AtlasView/></div>;
 };
 
 // 3. Main App Root Component

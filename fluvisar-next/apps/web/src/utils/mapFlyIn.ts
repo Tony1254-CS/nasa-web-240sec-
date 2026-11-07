@@ -8,7 +8,7 @@ export function flyToStudyArea(map:Map,bounds:[number,number,number,number],opti
  const finish=(fit:boolean)=>{if(stopped)return;stopped=true;remove();map.stop();if(fit){map.resize();if(destination)map.jumpTo(destination);else map.fitBounds(bounds,{...options,duration:0});}onStage('');};
  const interrupt=()=>finish(false);
  const stages=[
-  ()=>{onStage('Locating Bangladesh');map.flyTo({center,zoom:1.8,pitch:0,bearing:0,duration:700},{fluvisarFlight:flight});},
+  ()=>{onStage('Locating Bangladesh');map.jumpTo({center,zoom:1.8,pitch:0,bearing:0});map.flyTo({center,zoom:2.4,pitch:0,bearing:0,duration:650},{fluvisarFlight:flight});},
   ()=>{onStage('Approaching the study region');map.flyTo({center,zoom:6.5,pitch:0,bearing:0,duration:1100},{fluvisarFlight:flight});},
   ()=>{onStage('Focusing on recorded observations');if(destination)map.flyTo({...destination,duration:1600},{fluvisarFlight:flight});else map.fitBounds(bounds,{...options,duration:1600},{fluvisarFlight:flight});},
  ];

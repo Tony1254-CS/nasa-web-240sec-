@@ -1,6 +1,7 @@
 ﻿import { useEffect, useMemo, useRef, useState } from 'react';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import {useNavigate} from 'react-router-dom';
 import { flyToStudyArea } from '../utils/mapFlyIn';
 import { Camera, Check, Crosshair, Layers, Minus, Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import { useObservatoryEvidence as useEvidence, number, type RegionEvidence, type OpticalObservation } from '../data/evidence';
@@ -56,8 +57,16 @@ function coverStudyArea(map:maplibregl.Map,evidence:RegionEvidence){
  const compact=map.getContainer().clientWidth<600;
  map.fitBounds([[w,s],[e,n]],{padding:{top:compact?112:76,bottom:compact?90:42,left:compact?24:64,right:compact?24:64},maxZoom:14,duration:0,bearing:0,pitch:0});
 }
+function fitAtlasOverview(map:maplibregl.Map){
+ const container=map.getContainer(),compact=container.clientWidth<=760;
+ const stage=container.closest('.atlas-map-stage');if(!stage)return;
+ const intro=stage.querySelector('.science-hero');
+ const top=compact?Math.max(350,Math.ceil((intro?.getBoundingClientRect().bottom??container.getBoundingClientRect().top+340)-container.getBoundingClientRect().top)+28):50;
+ if(container.clientHeight<=top+(compact?150:55)||container.clientWidth<160)return;
+ map.fitBounds([[89.55,21.75],[89.9,25.75]],{padding:{top,bottom:compact?150:55,left:compact?24:Math.min(container.clientWidth*.43,620),right:compact?70:90},duration:0});
+}
 export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
- const {evidence,comparisonReady}=useEvidence();
+ const {index,evidence,comparisonReady}=useEvidence();const navigate=useNavigate();
  const {regionId,viewId,basemapType,satelliteView,overlayStyle,comparisonMode,comparisonLayout,comparisonEnabled,swipePosition,selectedDate,selectedPair,selectedOpticalDate,selectedOpticalPair,selectedPol,activeLens,layerVisibility,isRightInspectorOpen,selectedFindingId,isAgentDrawerOpen,setBasemapType,setOverlayStyle}=useWorkspaceStore();
  const elementA=useRef<HTMLDivElement>(null),elementB=useRef<HTMLDivElement>(null);
  const maps=useRef<{a:maplibregl.Map|null;b:maplibregl.Map|null}>({a:null,b:null});
@@ -88,7 +97,7 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
   for(const side of ['b','a'] as const){
    const map=new maplibregl.Map({container:(side==='a'?elementA.current:elementB.current)!,trackResize:false,canvasContextAttributes:{preserveDrawingBuffer:true},attributionControl:false,
     style:{version:8,sources:{satellite:{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,attribution:'Imagery © Esri, Maxar, Earthstar Geographics'},carto:{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,attribution:'© OpenStreetMap contributors'}},layers:[{id:'background',type:'background',paint:{'background-color':'#0f172a'}},{id:'satellite',type:'raster',source:'satellite',paint:{'raster-opacity':1,'raster-fade-duration':0}},{id:'carto',type:'raster',source:'carto',layout:{visibility:'none'}}]},
-    center:regionId==='jamuna'?[89.75,25.575]:[89.70,21.875],zoom:viewId==='M0'?6.8:regionId==='jamuna'?11.5:11.8,minZoom:1,maxZoom:18});
+    center:regionId==='jamuna'?[89.75,25.575]:[89.70,21.875],zoom:observatory&&arrived.current!==regionId&&!useWorkspaceStore.getState().comparisonEnabled&&!useWorkspaceStore.getState().selectedFindingId&&!matchMedia('(prefers-reduced-motion: reduce)').matches?1.8:viewId==='M0'?5.8:regionId==='jamuna'?11.5:11.8,minZoom:1,maxZoom:18});
    maps.current[side]=map;
    map.addControl(new maplibregl.ScaleControl({unit:'metric',maxWidth:100}),'bottom-left');
    if(side==='b')map.addControl(new maplibregl.AttributionControl({compact:true,customAttribution:'Copernicus Sentinel-1 / Sentinel-2'}),'bottom-right');
@@ -121,6 +130,11 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
      button.title=feature.properties.id+' · inspect source-derived candidate';button.addEventListener('click',event=>{event.stopPropagation();useWorkspaceStore.getState().setSelectedFinding(feature.properties.id);});
      markers.current.push(new maplibregl.Marker({element:button}).setLngLat(feature.properties.centroid).addTo(map));
     }
+    if(side==='b'&&useWorkspaceStore.getState().viewId==='M0')for(const study of Object.values(index.regions)){
+     const button=document.createElement('button');button.className='atlas-study-pin';button.textContent=study.region_id==='jamuna'?'Jamuna River':'Sundarbans';button.setAttribute('aria-label','Open '+button.textContent+' observatory');
+     button.addEventListener('click',()=>{useWorkspaceStore.getState().setRegion(study.region_id);navigate('/observatory/'+study.region_id);});
+     const [w,s,e,n]=study.bbox;markers.current.push(new maplibregl.Marker({element:button}).setLngLat([(w+e)/2,(s+n)/2]).addTo(map));
+    }
     updateContextVisibility(map,evidence,side);recordCamera(map);
     setLoaded(previous=>({...previous,[side]:true}));
    });
@@ -145,9 +159,9 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
   }
   // Resize both views as one operation. A follower resize must not jump the
   // primary camera and interrupt its fly-in before the final study-area fit.
-  const observer=new ResizeObserver(()=>{synchronizing=true;try{for(const map of Object.values(maps.current))map?.resize();}finally{synchronizing=false;}sync('b','a');});observer.observe(elementB.current);observer.observe(elementA.current);
+  const observer=new ResizeObserver(()=>{synchronizing=true;try{for(const map of Object.values(maps.current))map?.resize();if(useWorkspaceStore.getState().viewId==='M0'&&maps.current.b?.isStyleLoaded())fitAtlasOverview(maps.current.b);}finally{synchronizing=false;}sync('b','a');});observer.observe(elementB.current);observer.observe(elementA.current);
   return()=>{flight.current?.(false);flight.current=null;observer.disconnect();for(const marker of markers.current)marker.remove();markers.current=[];for(const side of ['a','b'] as const){aborts.current[side]?.abort();maps.current[side]?.remove();maps.current[side]=null;}};
- },[evidence,corners,regionId,observatory]);
+ },[evidence,corners,regionId,observatory,index,navigate]);
 
  useEffect(()=>{
   for(const side of ['a','b'] as const){
@@ -189,7 +203,7 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
    map.getContainer().dataset.changePair=evidence.pair.join(' / ');
    map.setLayoutProperty('support-outline','visibility',layerVisibility.coverage?'visible':'none');
   }
-  for(const marker of markers.current)marker.getElement().style.display=comparisonReady&&viewId!=='M0'&&basemapType!=='carto'&&layerVisibility.transitions?'':'none';
+  for(const marker of markers.current)if(!marker.getElement().classList.contains('atlas-study-pin'))marker.getElement().style.display=comparisonReady&&viewId!=='M0'&&basemapType!=='carto'&&layerVisibility.transitions?'':'none';
  },[evidence,corners,loaded,basemapType,satelliteView,compare,comparisonMode,selectedDate,selectedPair,selectedOpticalDate,selectedOpticalPair,selectedPol,activeLens,layerVisibility,overlayStyle,comparisonReady,viewId]);
 
  const replay=()=>{
@@ -200,10 +214,11 @@ export function MapWorkspace({observatory=false}:{observatory?:boolean}={}){
  };
  useEffect(()=>{
   const map=maps.current.b;if(!map||!loaded.b||!loaded.a)return;
-  if(viewId==='M0'){map.jumpTo({center:[89.8,23.8],zoom:6.8});return;}
-  let seen=false;try{seen=sessionStorage.getItem('fluvisar-flyin:'+regionId)==='seen';}catch{/* Session storage optional. */}
-  if(observatory&&!seen&&arrived.current!==regionId){arrived.current=regionId;try{sessionStorage.setItem('fluvisar-flyin:'+regionId,'seen');}catch{}replay();}
-  else if(!flyStage)coverStudyArea(map,evidence);
+  if(viewId==='M0'){fitAtlasOverview(map);return;}
+  if(observatory&&arrived.current!==regionId){arrived.current=regionId;if(!compare&&!selectedFindingId){replay();return;}}
+  flight.current?.(false);flight.current=null;
+  if(!selectedFindingId)coverStudyArea(map,evidence);
+
  },[evidence,loaded.b,loaded.a,viewId==='M0',split,compare,basemapType]);
  useEffect(()=>{
   if(!loaded.b||!selectedFindingId)return;

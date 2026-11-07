@@ -3,7 +3,7 @@
 Both Observatory routes keep the investigation panel on the left on desktop and
 use a compact feature drawer on phones. Both regions open at zoom 11.4 and pitch 55 degrees, including phones. Jamuna
 centres on 89.75, 25.575; Sundarbans centres on the estuary at 89.74, 21.83. Comparisons use
-shared top-down framing. Recenter and Replay return to the regional default.
+shared top-down framing. Recenter and Replay return to the regional default. Each fresh Observatory visit zooms in from a wide view before arriving at that camera; previously seen sessions no longer suppress it. User interaction, Skip, comparison changes and reduced-motion preferences interrupt or bypass the introduction.
 
 Sundarbans starts on detailed Esri satellite context. This mosaic has no claimed
 acquisition date. Selecting a pass, Dated observations, or a date comparison
@@ -15,8 +15,8 @@ in the source imagery.
 
 The finding inspector can collapse and resize on desktop. All radar channels,
 coverage, six Evidence stages, Live Analysis, exports and contextual chat remain.
-A floating assistant launcher sits at bottom right, with space reserved in the
-timeline. Measured areas, numeric products and geographic study bounds are unchanged.
+A floating assistant launcher sits at bottom left and opens a docked, non-modal
+chat window. Phone playback leaves space for the launcher. Measured areas, numeric products and geographic study bounds are unchanged.
 
 ## Dated optical detail
 

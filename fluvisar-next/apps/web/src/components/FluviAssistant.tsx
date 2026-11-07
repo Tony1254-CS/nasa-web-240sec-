@@ -18,12 +18,14 @@ export function FluviAssistant(){
  const key='fluvisar-assistant-v1:'+evidence.run_id+':'+(synthetic?'models':'measured');
  const [session,setSession]=useState<{key:string;messages:Message[]}>(()=>({key,messages:readHistory(key)}));
  const messages=session.key===key?session.messages:readHistory(key);
- const controller=useRef<AbortController|null>(null),body=useRef<HTMLDivElement>(null),textbox=useRef<HTMLTextAreaElement>(null),dialog=useRef<HTMLDialogElement>(null);
+ const controller=useRef<AbortController|null>(null),body=useRef<HTMLDivElement>(null),textbox=useRef<HTMLTextAreaElement>(null),dialog=useRef<HTMLElement>(null);
  const setMessages=(next:Message[])=>{setSession({key,messages:next});try{localStorage.setItem(key,JSON.stringify(next.slice(-40)));}catch{/* Storage may be disabled. */}};
  useEffect(()=>{fetch('/api/assistant/status').then(r=>r.ok?r.json():null).then(v=>{if(v?.mode)setMode(v.mode);}).catch(()=>{});},[]);
  useEffect(()=>{const discuss=(event:Event)=>{const value=(event as CustomEvent<{subject:string;findingScope?:'study'|null}>).detail;if(!value?.subject)return;setScopeOverride(value.findingScope??null);setSubject(value.subject.slice(0,200));setQueued('Explain this evidence: '+value.subject.slice(0,200));useWorkspaceStore.getState().setAgentDrawerOpen(true);};window.addEventListener('fluvisar-chat-data',discuss);return()=>window.removeEventListener('fluvisar-chat-data',discuss);},[]);
  useEffect(()=>{controller.current?.abort();setBusy(false);setError('');setSubject('');setScopeOverride(null);setQueued('');},[key,state.selectedFindingId]);
- useEffect(()=>{if(!open)return;const element=dialog.current,opener=document.activeElement;element?.showModal();const timer=setTimeout(()=>textbox.current?.focus(),30);return()=>{clearTimeout(timer);element?.close();if(opener instanceof HTMLElement&&opener.isConnected)opener.focus({preventScroll:true});};},[open]);
+ useEffect(()=>{if(!open)return;const opener=document.activeElement;const timer=setTimeout(()=>textbox.current?.focus(),30);const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'&&dialog.current?.contains(event.target as Node)){event.preventDefault();state.setAgentDrawerOpen(false);}};window.addEventListener('keydown',escape);return()=>{clearTimeout(timer);window.removeEventListener('keydown',escape);if(opener instanceof HTMLElement&&opener.isConnected)opener.focus({preventScroll:true});};},[open]);
+ useEffect(()=>{const inspect=()=>useWorkspaceStore.getState().setAgentDrawerOpen(false);window.addEventListener('fluvisar-chat-inspect',inspect);return()=>window.removeEventListener('fluvisar-chat-inspect',inspect);},[]);
+
  useEffect(()=>{if(body.current)body.current.scrollTop=body.current.scrollHeight;},[session,busy]);
  useEffect(()=>()=>controller.current?.abort(),[]);
  const send=async(question=input)=>{
@@ -39,8 +41,9 @@ export function FluviAssistant(){
  const chips=synthetic?['How do these models work?','Are model scores real-world accuracy?','How do I use this website?']:scope?['Explain this finding','Show water area history','Is this reliable?']:['What changed?','Where is the largest candidate?','Show water area history','Which satellite sources are used?'];
  return <>
   <DataChatInspection/>
-  <button style={{display:open?'none':undefined}} className="fl-floating-launcher" aria-label="Open FluviSAR chat" title="Ask FluviSAR" onClick={()=>state.setAgentDrawerOpen(true)}><Bot size={25}/><span>Ask FluviSAR</span></button>
-  {open&&<dialog ref={dialog} className="fl-assistant" aria-modal="true" aria-label="FluviSAR Assistant" onCancel={event=>{event.preventDefault();state.setAgentDrawerOpen(false);}} onClick={event=>{if(event.target!==event.currentTarget)return;const box=event.currentTarget.getBoundingClientRect();if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)state.setAgentDrawerOpen(false);}}>
+  <button className="fl-floating-launcher" aria-label={open?'Minimize FluviSAR chat':'Open FluviSAR chat'} aria-controls="fluvisar-chat-panel" aria-expanded={open} title={open?'Minimize chat':'Ask FluviSAR'} onClick={()=>state.setAgentDrawerOpen(!open)}>{open?<X size={25}/>:<Bot size={25}/>}<span>{open?'Minimize chat':'Ask FluviSAR'}</span></button>
+  {open&&<section id="fluvisar-chat-panel" ref={dialog} className="fl-assistant" role="dialog" aria-modal="false" aria-label="FluviSAR Assistant">
+
    <header><div className="fl-avatar"><Bot size={23}/></div><div><h2>FluviSAR Assistant</h2><span><i/>{mode==='ai'?'AI + registered evidence':'Data-based answers'}</span></div><button aria-label="Close assistant" onClick={()=>state.setAgentDrawerOpen(false)}><X size={21}/></button></header>
    <div className="fl-scope"><b>{evidence.name}</b><span>{evidence.pair.join(' → ')}</span><small>{synthetic?'SYNTHETIC MODEL WORKSPACE':scope?'SELECTED FINDING · '+scope:'MEASURED · STUDY AREA'}</small></div>
    <nav><span>Conversation</span><button aria-label="Export assistant conversation" disabled={!messages.length} onClick={()=>downloadEvidence('FluviSAR-conversation.json',{exported_at:new Date().toISOString(),run_id:evidence.run_id,pair:evidence.pair,messages})}><Download size={15}/></button><button aria-label="Clear assistant conversation" disabled={!messages.length||busy} onClick={()=>setMessages([])}><Trash2 size={15}/></button></nav>
@@ -53,6 +56,6 @@ export function FluviAssistant(){
    {subject&&<div className="fl-subject-chip"><Focus size={13}/>{subject}<button onClick={()=>setSubject('')} aria-label="Clear selected subject"><X size={13}/></button></div>}
    <form onSubmit={event=>{event.preventDefault();void send();}}><label className="sr-only" htmlFor="fl-question">Ask about this evidence</label><textarea ref={textbox} id="fl-question" placeholder="Ask about this evidence…" value={input} maxLength={2000} rows={2} onChange={event=>setInput(event.target.value)} onKeyDown={event=>{if(event.key==='Enter'&&!event.shiftKey&&!event.nativeEvent.isComposing){event.preventDefault();void send();}}}/><button aria-label="Send question" disabled={busy||!input.trim()||!comparisonReady}><Send size={18}/></button></form>
    <footer>Screening evidence ≠ confirmed flood, erosion or damage.</footer>
-  </dialog>}
+  </section>}
  </>;
 }
