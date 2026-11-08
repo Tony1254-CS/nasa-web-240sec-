@@ -26,6 +26,7 @@ import { EvidenceWorkbench } from './components/EvidenceWorkbench';
 import './styles/observatory-redesign.css';
 
 const DecisionDesk = lazy(() => import('./features/legacy/pages/ImpactDesk').then(m=>({default:m.DecisionDesk})));
+const InsightsPage = lazy(() => import('./features/legacy/pages/InsightsPage').then(m=>({default:m.InsightsPage})));
 const IntelligencePage = lazy(() => import('./features/legacy/pages/IntelligenceWorkspace').then(m=>({default:m.IntelligencePage})));
 const AboutPage = lazy(() => import('./features/legacy/pages/About').then(m=>({default:m.AboutPage})));
 const SARLabPage = lazy(() => import('./features/legacy/pages/SARLab').then(m=>({default:m.SARLabPage})));
@@ -133,6 +134,7 @@ const WorkspaceApp: React.FC = () => {
           <Route path="/learn" element={<SarLabView />} />
           <Route path="/learn/:experimentId" element={<SarLabView />} />
           <Route path="/reports" element={<ReportsView />} />
+          <Route path="/insights" element={<Suspense fallback={<div className="desk-standby">Loading Insights…</div>}><InsightsPage /></Suspense>} />
           <Route path="/trace" element={<Suspense fallback={<div className="desk-standby">Loading TRACE Field…</div>}><TraceFieldApp /></Suspense>} />
           <Route path="/field" element={<Navigate to="/trace" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
@@ -148,6 +150,7 @@ const WorkspaceApp: React.FC = () => {
 export const App: React.FC = () => <EvidenceProvider><LegacyPageLayout><Navbar/><Routes>
   <Route path="/" element={<LandingPageView/>}/>
   <Route path="/impact" element={<Suspense fallback={<div className="desk-standby">Loading Decision Desk…</div>}><DecisionDesk /></Suspense>} />
+  <Route path="/insights" element={<Suspense fallback={<div className="desk-standby">Loading Insights…</div>}><InsightsPage /></Suspense>} />
   <Route path="/about" element={<Suspense fallback={<div className="desk-standby">Opening our story...</div>}><AboutPage/></Suspense>}/><Route path="/about-us" element={<Navigate to="/about" replace/>}/>
   <Route path="/imact" element={<Navigate to="/impact" replace />} />
   <Route path="/trace" element={<Suspense fallback={<div className="desk-standby">Loading TRACE Field…</div>}><TraceFieldApp /></Suspense>} />

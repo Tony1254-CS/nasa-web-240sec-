@@ -1,0 +1,100 @@
+{
+  "checks": [
+    {
+      "id": "dswx_agreement",
+      "label": "Agreement with OPERA DSWx-S1",
+      "status": "NOT_EVALUATED",
+      "explanation": "DSWx-S1 cross-validation not yet wired into this pipeline run.",
+      "inputs": []
+    },
+    {
+      "id": "rainfall_anomaly",
+      "label": "Rainfall in the week before t1 (GPM IMERG)",
+      "value": 1.72,
+      "unit": "x seasonal norm",
+      "status": "INFO",
+      "rule": "informational -- higher rainfall before t1 is consistent with more open water, not proof of erosion",
+      "explanation": "64.48mm in the 7 days before t1 vs a 37.44mm 7-day baseline over the 50-day fetched window (real GPM_3IMERGDL data).",
+      "inputs": [
+        {
+          "kind": "GPM_IMERG",
+          "doi": "10.5067/GPM/IMERGDL/DAY/07"
+        }
+      ]
+    },
+    {
+      "id": "null_test",
+      "label": "False change on stable land",
+      "status": "NOT_EVALUATED",
+      "explanation": "Requires a designated stable-land control area; not yet implemented.",
+      "inputs": []
+    },
+    {
+      "id": "stage_match",
+      "label": "Stage difference between t0 and t1 (proxy fraction)",
+      "value": 0.0391,
+      "unit": "fraction",
+      "status": "WARN",
+      "rule": "PASS if |h1-h0| <= 0.02 (proxy fraction)",
+      "explanation": "Only 2 acquisitions; peak-bounded pairing rule could not be applied.",
+      "inputs": []
+    },
+    {
+      "id": "persistence",
+      "label": "Erosion persists in later passes",
+      "value": 0,
+      "unit": "dates",
+      "status": "NOT_EVALUATED",
+      "rule": "PASS if >= 2 later dates",
+      "explanation": "No later acquisition available in this run.",
+      "inputs": []
+    },
+    {
+      "id": "threshold_sensitivity",
+      "label": "Robustness to threshold choice",
+      "value": 185.4,
+      "unit": "%",
+      "status": "WARN",
+      "rule": "PASS if (high-low)/area <= 30%",
+      "explanation": "Area estimate stability under +/-1 dB threshold perturbation.",
+      "inputs": []
+    },
+    {
+      "id": "alignment",
+      "label": "Residual misregistration",
+      "status": "NOT_EVALUATED",
+      "explanation": "Sub-pixel co-registration check not yet implemented.",
+      "inputs": []
+    },
+    {
+      "id": "rfi",
+      "label": "Dates flagged for interference",
+      "value": 2,
+      "unit": "dates",
+      "status": "WARN",
+      "rule": "informational",
+      "explanation": "Flagged band has 0% water coverage and sits at the swath edge in both passes -- consistent with a geometric edge artifact of this frame rather than transient interference; not excluded from classification.",
+      "inputs": []
+    },
+    {
+      "id": "ambiguous_area",
+      "label": "Area excluded as ambiguous",
+      "value": 0.0,
+      "unit": "ha",
+      "status": "INFO",
+      "rule": "informational",
+      "explanation": "DSWx cross-check not wired up; ambiguous class is currently always empty.",
+      "inputs": []
+    },
+    {
+      "id": "plausibility",
+      "label": "Order-of-magnitude plausibility (plan.md 11.3)",
+      "value": 3622.6,
+      "unit": "ha",
+      "status": "FAIL",
+      "rule": "WARN/FAIL if erosion or accretion > 1000 ha (CEGIS reference: hundreds of ha per reach)",
+      "explanation": "Automated stand-in for the human plausibility review plan.md calls for; see docs/PLAUSIBILITY.md for the recorded finding.",
+      "inputs": []
+    }
+  ]
+}

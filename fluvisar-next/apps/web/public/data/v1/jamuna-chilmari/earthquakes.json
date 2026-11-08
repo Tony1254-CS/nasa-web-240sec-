@@ -1,0 +1,23 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [89.7, 25.5] },
+      "properties": {
+        "mag": 5.2,
+        "date": "2026-08-26",
+        "title": "M 5.2 - Jamuna River Basin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [89.8, 25.6] },
+      "properties": {
+        "mag": 4.8,
+        "date": "2026-09-19",
+        "title": "M 4.8 - Kurigram Region"
+      }
+    }
+  ]
+}
