@@ -1,10 +1,18 @@
-import { AlertTriangle } from 'lucide-react';
+import {
+  AlertTriangle,
+  Building2,
+  DollarSign,
+  MapPin,
+  ShieldAlert,
+  Sprout,
+  Users,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { FORECAST_DATA, IMPACT_DATA } from '../data/forecastImpact';
 import '../styles/insights.css';
 
 // Counter Hook for animated numbers
-function useCounter(end: number, duration = 2000, start = 0) {
+function useCounter(end: number, duration = 1800, start = 0) {
   const [count, setCount] = useState(start);
 
   useEffect(() => {
@@ -21,6 +29,13 @@ function useCounter(end: number, duration = 2000, start = 0) {
 
   return count;
 }
+
+const REACH_LIST = [
+  { id: 'jamuna-chilmari', name: 'Jamuna · Chilmari' },
+  { id: 'glacier-bay-alaska', name: 'Glacier Bay · Alaska' },
+  { id: 'norcal-wildfire', name: 'NorCal Wildfire' },
+  { id: 'sundarbans-mangrove', name: 'Sundarbans Mangrove' },
+];
 
 export function InsightsPage() {
   const [reachId, setReachId] = useState('jamuna-chilmari');
@@ -61,7 +76,7 @@ export function InsightsPage() {
     fetchData();
   }, [reachId]);
 
-  // Counters for KPIs
+  // Animated counters for KPIs
   const popCount = useCounter(impact.populationAtRisk);
   const homeCount = useCounter(impact.homesAtRisk);
   const agCount = useCounter(impact.agriLandHa);
@@ -99,74 +114,126 @@ ${impact.emergencyActions.map((a: string, i: number) => `${i + 1}. ${a}`).join('
   };
 
   return (
-    <div className="page-container impact-dashboard-root scrollable pt-14">
-      {/* Mission Status Bar */}
-      <div className="mission-status-bar fade-in">
-        <div className="status-item badge-provisional">NISAR L2 GCOV PROVISIONAL</div>
-        <div className="status-item text-dim">ORBIT: 19 | FRAME: 76</div>
-        <div className="status-item text-bright flex-1 text-center">REACH: {reachId.toUpperCase()}</div>
-        <div className="status-item text-warn">Δh = 0.039m (WARN)</div>
-        <div className="status-item badge-inconclusive">INCONCLUSIVE</div>
-      </div>
+    <div className="insights-desk">
+      <main className="id-shell">
+        {/* ── Top Header ────────────────────────────────────────── */}
+        <header className="id-header">
+          <div>
+            <div className="id-kicker">
+              <span className="id-dot-pulse" />
+              FLUVISAR / SOCIO-ECONOMIC INSIGHTS
+            </div>
+            <h1>From spatial impact to decision intelligence</h1>
+            <p>
+              Sendai Framework metrics, World Bank DaLA loss estimates, and real-time community action response.
+            </p>
+          </div>
+          <div className="id-header-actions">
+            <button className="is-primary" onClick={() => setShowEmergencyModal(true)}>
+              <AlertTriangle size={15} />
+              Emergency Briefing
+            </button>
+          </div>
+        </header>
 
-      {/* Reach Selector */}
-      <div className="reach-selector-bar fade-in">
-        {['jamuna-chilmari', 'glacier-bay-alaska', 'norcal-wildfire', 'sundarbans-mangrove'].map(id => (
-          <button
-            key={id}
-            className={`reach-btn ${reachId === id ? 'active' : ''}`}
-            onClick={() => setReachId(id)}
-          >
-            {id.replace(/-/g, ' ')}
-          </button>
-        ))}
-      </div>
-
-      <div className="dashboard-content fade-in" style={{ animationDelay: '0.1s' }}>
-        {/* ROW 1: 3-Second KPI Strip */}
-        <div className="kpi-strip">
-          <div className="kpi-card">
-            <div className="kpi-header">
-              <span className="sendai-code">TARGET B-1</span>
-              <span className="kpi-source">SEDAC GPWv4</span>
-            </div>
-            <div className="kpi-value text-fail">{popCount.toLocaleString()}</div>
-            <div className="kpi-label">PEOPLE AT RISK</div>
+        {/* ── Runbar & Reach Selector ───────────────────────────── */}
+        <div className="insights-runbar">
+          <div className="insights-reach-pills">
+            <span className="insights-reach-label">
+              <MapPin size={14} />
+              Study Reach:
+            </span>
+            {REACH_LIST.map(reach => (
+              <button
+                key={reach.id}
+                className={`insights-reach-pill ${reachId === reach.id ? 'is-active' : ''}`}
+                onClick={() => setReachId(reach.id)}
+              >
+                {reach.name}
+              </button>
+            ))}
           </div>
-          <div className="kpi-card">
-            <div className="kpi-header">
-              <span className="sendai-code">TARGET B-3</span>
-              <span className="kpi-source">MODELED EST.</span>
-            </div>
-            <div className="kpi-value text-warn">{homeCount.toLocaleString()}</div>
-            <div className="kpi-label">HOMES THREATENED</div>
-          </div>
-          <div className="kpi-card">
-            <div className="kpi-header">
-              <span className="sendai-code">TARGET C-2</span>
-              <span className="kpi-source">SAR DETECTED</span>
-            </div>
-            <div className="kpi-value text-accretion">{agCount.toLocaleString()} ha</div>
-            <div className="kpi-label">AGRICULTURAL LOSS</div>
-          </div>
-          <div className="kpi-card">
-            <div className="kpi-header">
-              <span className="sendai-code">TARGET C-3</span>
-              <span className="kpi-source">DaLA ESTIMATE</span>
-            </div>
-            <div className="kpi-value text-water">${(econCount / 1000000).toFixed(1)}M</div>
-            <div className="kpi-label">ECONOMIC EXPOSURE</div>
+          <div className="insights-satellite-tag">
+            <span>NISAR L2 GCOV · 20 m</span>
+            <span className="id-dot" />
+            <span className="badge-provisional">PROVISIONAL</span>
+            <span className="badge-inconclusive">Δh = 0.039m</span>
           </div>
         </div>
 
-        {/* ROW 2: Sendai Framework Indicators */}
-        <div className="section-title">UNDRR SENDAI FRAMEWORK INDICATORS (2015–2030)</div>
+        {/* ── ROW 1: 4 KPI Metrics Strip (Matched with Decision Desk) */}
+        <div className="id-metrics">
+          <article>
+            <span>
+              <Users size={14} style={{ color: 'var(--id-loss)' }} />
+              Target B-1 · People at Risk
+            </span>
+            <strong>
+              {popCount.toLocaleString()}
+              <small>people</small>
+            </strong>
+            <p>SEDAC GPWv4 Global Population Grid</p>
+            <div className="insights-metric-tag is-rose">Direct Exposure</div>
+          </article>
+
+          <article>
+            <span>
+              <Building2 size={14} style={{ color: 'var(--id-warn)' }} />
+              Target B-3 · Homes Threatened
+            </span>
+            <strong>
+              {homeCount.toLocaleString()}
+              <small>units</small>
+            </strong>
+            <p>Modeled Dwellings & Settlement Grid</p>
+            <div className="insights-metric-tag is-amber">High Vulnerability</div>
+          </article>
+
+          <article>
+            <span>
+              <Sprout size={14} style={{ color: 'var(--id-gain)' }} />
+              Target C-2 · Agricultural Loss
+            </span>
+            <strong>
+              {agCount.toLocaleString()}
+              <small>ha</small>
+            </strong>
+            <p>SAR-detected Cropland Inundation</p>
+            <div className="insights-metric-tag is-emerald">Food Security</div>
+          </article>
+
+          <article>
+            <span>
+              <DollarSign size={14} style={{ color: 'var(--id-water)' }} />
+              Target C-3 · Economic Exposure
+            </span>
+            <strong>
+              ${(econCount / 1000000).toFixed(1)}
+              <small>M USD</small>
+            </strong>
+            <p>World Bank DaLA Baseline Ledger</p>
+            <div className="insights-metric-tag is-cyan">Total Assessment</div>
+          </article>
+        </div>
+
+        {/* ── ROW 2: UNDRR Sendai Framework Indicators ───────────── */}
+        <div className="insights-section-title">
+          <h2>
+            <ShieldAlert size={16} style={{ color: 'var(--id-accent)' }} />
+            UNDRR Sendai Framework Indicators (2015–2030)
+          </h2>
+          <span>Global Disaster Risk Reduction Benchmark</span>
+        </div>
+
         <div className="sendai-grid">
           <div className="sendai-panel">
-            <div className="sendai-title">TARGET B: Affected Population</div>
+            <div className="sendai-title">
+              <span>TARGET B: Affected Population</span>
+              <span style={{ fontSize: '11px', color: 'var(--id-muted)', fontWeight: 500 }}>Direct & Indirect</span>
+            </div>
             <div className="indicator-row">
               <div className="ind-code">B-3</div>
-              <div className="ind-desc">Dwellings damaged/destroyed</div>
+              <div className="ind-desc">Dwellings damaged / destroyed</div>
               <div className="ind-val">{impact.homesAtRisk.toLocaleString()}</div>
               <div className="ind-bar-container">
                 <div className="ind-bar bg-warn" style={{ width: '75%' }}></div>
@@ -181,8 +248,12 @@ ${impact.emergencyActions.map((a: string, i: number) => `${i + 1}. ${a}`).join('
               </div>
             </div>
           </div>
+
           <div className="sendai-panel">
-            <div className="sendai-title">TARGET C: Direct Economic Loss</div>
+            <div className="sendai-title">
+              <span>TARGET C: Direct Economic Loss</span>
+              <span style={{ fontSize: '11px', color: 'var(--id-muted)', fontWeight: 500 }}>Productive Assets</span>
+            </div>
             <div className="indicator-row">
               <div className="ind-code">C-2</div>
               <div className="ind-desc">Agricultural loss</div>
@@ -202,14 +273,17 @@ ${impact.emergencyActions.map((a: string, i: number) => `${i + 1}. ${a}`).join('
           </div>
         </div>
 
-        {/* ROW 3: DaLA Ledger & Erosion Risk */}
-        <div className="split-grid mt-4">
+        {/* ── ROW 3: DaLA Ledger & Erosion Risk ─────────────────── */}
+        <div className="split-grid">
           <div className="glass-panel dala-ledger">
-            <div className="panel-header">World Bank DaLA Economic Ledger</div>
+            <div className="panel-header">
+              <span>World Bank DaLA Economic Ledger</span>
+              <span style={{ fontSize: '11px', color: 'var(--id-muted)' }}>Damage & Loss Assessment</span>
+            </div>
 
             <div className="dala-section">
               <div className="dala-header">
-                DIRECT PHYSICAL DAMAGE (Replacement Cost){' '}
+                <span>DIRECT PHYSICAL DAMAGE (Replacement Cost)</span>
                 <span className="dala-subtotal">${(totalDamage / 1000000).toFixed(1)}M</span>
               </div>
               <div className="dala-item">
@@ -232,7 +306,7 @@ ${impact.emergencyActions.map((a: string, i: number) => `${i + 1}. ${a}`).join('
 
             <div className="dala-section">
               <div className="dala-header">
-                ECONOMIC FLOW LOSSES (Foregone Revenue){' '}
+                <span>ECONOMIC FLOW LOSSES (Foregone Revenue)</span>
                 <span className="dala-subtotal">${(totalLoss / 1000000).toFixed(1)}M</span>
               </div>
               <div className="dala-item">
@@ -256,7 +330,10 @@ ${impact.emergencyActions.map((a: string, i: number) => `${i + 1}. ${a}`).join('
           </div>
 
           <div className="glass-panel">
-            <div className="panel-header">Erosion Risk Zones (NISAR Detected)</div>
+            <div className="panel-header">
+              <span>Erosion Risk Zones (NISAR Detected)</span>
+              <span style={{ fontSize: '11px', color: 'var(--id-muted)' }}>Cross-Sectional Dynamics</span>
+            </div>
             <div className="risk-zones">
               {forecast.erosionRisk.map((zone, i) => (
                 <div key={i} className="risk-zone-item">
@@ -272,52 +349,54 @@ ${impact.emergencyActions.map((a: string, i: number) => `${i + 1}. ${a}`).join('
               ))}
             </div>
             <button className="emergency-alert-btn" onClick={() => setShowEmergencyModal(true)}>
-              <AlertTriangle size={18} style={{ display: 'inline', verticalAlign: 'text-bottom', margin: '0 4px' }} /> GENERATE
-              EMERGENCY BRIEFING
+              <AlertTriangle size={16} /> GENERATE EMERGENCY BRIEFING
             </button>
           </div>
         </div>
 
-        {/* ROW 4: Temporal Decay & Community Action */}
-        <div className="split-grid mt-4">
+        {/* ── ROW 4: Temporal Decay & Community Action ─────────── */}
+        <div className="split-grid">
           <div className="glass-panel">
-            <div className="panel-header">Temporal Economic Decay Trajectory</div>
+            <div className="panel-header">
+              <span>Temporal Economic Decay Trajectory</span>
+              <span style={{ fontSize: '11px', color: 'var(--id-muted)' }}>Projected Flow Cascades</span>
+            </div>
             <div className="temporal-chart-container">
               <svg width="100%" height="200" viewBox="0 0 800 200" preserveAspectRatio="none">
                 {/* Grid */}
-                <line x1="0" y1="50" x2="800" y2="50" stroke="rgba(var(--fg-rgb), 0.05)" strokeDasharray="4 4" />
-                <line x1="0" y1="100" x2="800" y2="100" stroke="rgba(var(--fg-rgb), 0.05)" strokeDasharray="4 4" />
-                <line x1="0" y1="150" x2="800" y2="150" stroke="rgba(var(--fg-rgb), 0.05)" strokeDasharray="4 4" />
+                <line x1="0" y1="50" x2="800" y2="50" stroke="rgba(255, 255, 255, 0.08)" strokeDasharray="4 4" />
+                <line x1="0" y1="100" x2="800" y2="100" stroke="rgba(255, 255, 255, 0.08)" strokeDasharray="4 4" />
+                <line x1="0" y1="150" x2="800" y2="150" stroke="rgba(255, 255, 255, 0.08)" strokeDasharray="4 4" />
 
                 {/* Labels */}
-                <text x="50" y="190" fill="var(--text-3)" fontSize="15" fontFamily="monospace">
+                <text x="50" y="190" fill="var(--id-muted)" fontSize="13" fontFamily="monospace">
                   AUG (t0)
                 </text>
-                <text x="250" y="190" fill="#39c4d9" fontSize="15" fontFamily="monospace">
+                <text x="250" y="190" fill="#22d3ee" fontSize="13" fontFamily="monospace" fontWeight="bold">
                   SEP (t1)
                 </text>
-                <text x="450" y="190" fill="var(--text-3)" fontSize="15" fontFamily="monospace">
+                <text x="450" y="190" fill="var(--id-muted)" fontSize="13" fontFamily="monospace">
                   OCT
                 </text>
-                <text x="650" y="190" fill="#e4572e" fontSize="15" fontFamily="monospace">
+                <text x="650" y="190" fill="#f43f5e" fontSize="13" fontFamily="monospace" fontWeight="bold">
                   NOV (HARVEST)
                 </text>
 
                 {/* Confidence Polygon */}
                 <polygon
                   points="250,150 450,120 650,40 800,20 800,100 650,120 450,160 250,150"
-                  fill="rgba(228,87,46,0.1)"
+                  fill="rgba(244, 63, 94, 0.12)"
                 />
 
                 {/* Physical Damage Line */}
-                <path d="M 0 150 L 250 150 L 255 60 L 800 60" fill="none" stroke="#e4572e" strokeWidth="2" />
+                <path d="M 0 150 L 250 150 L 255 60 L 800 60" fill="none" stroke="#f43f5e" strokeWidth="2.5" />
 
                 {/* Economic Loss Line (Cascading) */}
-                <path d="M 0 150 L 250 150 L 450 140 L 650 80 L 800 60" fill="none" stroke="#39c4d9" strokeWidth="3" />
+                <path d="M 0 150 L 250 150 L 450 140 L 650 80 L 800 60" fill="none" stroke="#22d3ee" strokeWidth="3" />
 
-                <circle cx="250" cy="150" r="5" fill="#39c4d9" />
-                <circle cx="255" cy="60" r="5" fill="#e4572e" />
-                <circle cx="650" cy="80" r="5" fill="#e0b34a" />
+                <circle cx="250" cy="150" r="5" fill="#22d3ee" />
+                <circle cx="255" cy="60" r="5" fill="#f43f5e" />
+                <circle cx="650" cy="80" r="5" fill="#fbbf24" />
               </svg>
             </div>
             <div className="chart-legend">
@@ -331,7 +410,10 @@ ${impact.emergencyActions.map((a: string, i: number) => `${i + 1}. ${a}`).join('
           </div>
 
           <div className="glass-panel">
-            <div className="panel-header">Community Action Matrix</div>
+            <div className="panel-header">
+              <span>Community Action Matrix</span>
+              <span style={{ fontSize: '11px', color: 'var(--id-muted)' }}>Field Protocols</span>
+            </div>
             <div className="action-matrix">
               {impact.emergencyActions.map((action, i) => {
                 const priority = i === 0 ? 'P1' : i === 1 ? 'P2' : 'P3';
@@ -340,7 +422,7 @@ ${impact.emergencyActions.map((a: string, i: number) => `${i + 1}. ${a}`).join('
 
                 return (
                   <div key={i} className="action-row">
-                    <div className="action-col-priority bg-dim">{priority}</div>
+                    <div className="action-col-priority">{priority}</div>
                     <div className="action-col-desc">{action}</div>
                     <div className={`action-col-status ${statusColor}`}>{status}</div>
                   </div>
@@ -350,9 +432,12 @@ ${impact.emergencyActions.map((a: string, i: number) => `${i + 1}. ${a}`).join('
           </div>
         </div>
 
-        {/* ROW 5: Scientific Provenance */}
-        <div className="provenance-footer mt-4">
-          <div className="prov-header">SCIENTIFIC PROVENANCE & AUDIT TRAIL</div>
+        {/* ── ROW 5: Scientific Provenance & Audit Trail ───────── */}
+        <div className="provenance-footer">
+          <div className="prov-header">
+            <ShieldAlert size={15} />
+            SCIENTIFIC PROVENANCE & AUDIT TRAIL
+          </div>
           <div className="prov-grid">
             <div className="prov-item">
               <div className="prov-label">NISAR t0 Granule (Pre)</div>
@@ -385,13 +470,14 @@ ${impact.emergencyActions.map((a: string, i: number) => `${i + 1}. ${a}`).join('
             </div>
           </div>
         </div>
-      </div>
+      </main>
 
+      {/* ── Emergency Modal ────────────────────────────────────── */}
       {showEmergencyModal && (
-        <div className="emergency-modal-overlay">
-          <div className="emergency-modal">
+        <div className="emergency-modal-overlay" onClick={() => setShowEmergencyModal(false)}>
+          <div className="emergency-modal" onClick={e => e.stopPropagation()}>
             <h2>
-              <AlertTriangle size={24} style={{ display: 'inline', verticalAlign: 'text-bottom', margin: '0 4px' }} />{' '}
+              <AlertTriangle size={22} style={{ color: '#fbbf24' }} />
               EMERGENCY BRIEFING
             </h2>
             <p>
@@ -412,7 +498,7 @@ ${impact.emergencyActions.map((a: string, i: number) => `${i + 1}. ${a}`).join('
             </ul>
 
             <h3>Data Confidence Assessment:</h3>
-            <p style={{ color: qc?.pipeline_passed ? 'var(--pass)' : 'var(--warn)' }}>
+            <p style={{ color: qc?.pipeline_passed ? 'var(--id-gain)' : 'var(--id-warn)' }}>
               {qc?.pipeline_passed
                 ? 'High Confidence: SAR pipeline reported no anomalies. Plausibility checks passed.'
                 : 'Warning: SAR pipeline flagged potential anomalies or inconclusive checks.'}
@@ -432,4 +518,3 @@ ${impact.emergencyActions.map((a: string, i: number) => `${i + 1}. ${a}`).join('
     </div>
   );
 }
-
