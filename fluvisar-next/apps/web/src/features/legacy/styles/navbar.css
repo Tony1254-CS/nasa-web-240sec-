@@ -105,7 +105,8 @@
 .legacy-pages .navbar__nav {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  margin-left: clamp(28px, 5vw, 84px);
 }
 
 .legacy-pages .navbar__link {
@@ -585,7 +586,8 @@
     pointer-events: auto !important;
     flex-direction: row !important;
     align-items: center !important;
-    gap: 4px;
+    gap: 6px;
+    margin-left: clamp(28px, 5vw, 84px);
   }
 }
 
@@ -597,7 +599,8 @@
     gap: 10px;
   }
   .legacy-pages .navbar__nav {
-    gap: 2px;
+    gap: 3px;
+    margin-left: 14px;
   }
   .legacy-pages .navbar__link {
     font-size: 0.77rem;
