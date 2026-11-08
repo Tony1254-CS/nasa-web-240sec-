@@ -10,13 +10,146 @@ A dual-region Earth-observation application for exploring Bangladesh's **Jamuna 
 
 **Current observation sources:** Copernicus Sentinel-1D RTC and Sentinel-2 L2A
 
-[Quick start](#3-quick-start) · [Observatory](#5-observatory-workspace) · [Live Analysis](#6-evidence-and-live-analysis) · [Methods](#11-scientific-method-and-interpretation) · [API](#14-api-reference) · [Testing](#16-testing-and-verification)
+[Feature guide](#feature-guide--what-can-i-do-here) · [Judge walkthrough](#a-five-minute-project-walkthrough) · [Quick start](#3-quick-start) · [Live Analysis](#6-evidence-and-live-analysis) · [Methods](#11-scientific-method-and-interpretation) · [Testing](#16-testing-and-verification)
 
-> **Current implementation — 7 November 2026**
+> **Current implementation — 9 November 2026**
 >
 > The operational observation catalogue uses **Sentinel-1 C-band VV/VH**, not NISAR L-band measurements. Each region has six radar and six optical acquisitions. NISAR, interferometry and generated ML experiments are included as educational material. Mapped transitions are **screening candidates**, not confirmed erosion, flooding, habitat loss or damage.
 
----
+## Why FluviSAR?
+
+**A coloured change on a map is a question. FluviSAR helps people investigate it.**
+
+On the Jamuna, a newly dark radar patch might reflect water-level change, exposed
+sediment becoming inundated, or a moving channel. In the Sundarbans, tide,
+vegetation and surface conditions complicate the same comparison. Decision-makers
+need to know where to look, which observations support the result and what still
+needs a visit on the ground.
+
+FluviSAR brings that investigation into one workspace: compare real acquisitions,
+inspect numerical evidence, challenge the classification, identify mapped assets,
+record field observations and take a source-linked brief into a discussion.
+The intended benefit is **better targeted review with an auditable handoff**;
+community deployment and avoided-loss outcomes have not yet been measured.
+
+![Jamuna Observatory with the geographic satellite view, feature rail, recorded timeline and measured radar-change overlay](docs/assets/readme-observatory.png)
+
+*Current application capture, 9 November 2026. The satellite acquisition and radar
+comparison have separate dates, shown on the map; coloured polygons are measured
+radar-transition candidates rather than confirmed erosion.*
+
+| Current project at a glance | What is available |
+| --- | --- |
+| Two contrasting Bangladesh landscapes | Jamuna braided river and Sundarbans tidal mangroves |
+| 24 source acquisitions | Six radar + six optical dates in each region |
+| 30 registered radar comparisons | Fifteen chronological pairs per region |
+| Six-stage evidence workflow | Detect → Investigate → Challenge → Explain → Field → Impact |
+| One connected investigation | Region, dates and finding travel with supported reports, exports and map handoffs |
+| Real evidence alongside learning tools | Observations, calculations, generated experiments and user assumptions are labelled separately |
+
+## Feature guide — what can I do here?
+
+Use this table as a product tour. The numbered chapters below explain controls,
+methods, outputs and setup in more detail.
+
+| Feature / where to open it | What you can do | What you get |
+| --- | --- | --- |
+| **Regional Atlas** · `/atlas` | Explore two case studies, dated previews, acquisition windows, measured transitions and expandable quality checks | A geographic starting point with original source links and a direct route into either Observatory |
+| **Satellite & Radar Observatory** · `/observatory/jamuna`, `/observatory/sundarbans` | Fly into the study area; switch detailed context, dated optical, VV/VH radar and Carto; zoom, recenter and inspect outlines | Georeferenced observations with visible sensor, date, coverage and attribution |
+| **Time machine & comparison** · Observatory → Dates / Swipe / Split | Select actual dates, play the six-pass timeline, drag the before/after divider or compare synchronized maps | A visual comparison of recorded acquisitions, with separate optical and radar dates |
+| **Pixel & channel inspection** · Observatory → Radar | Read VV, VH and ratio values; toggle water masks and transitions; click supported pixels | Numerical GeoTIFF samples, coordinates, units and valid-support information |
+| **Evidence workbench** · Evidence menu | Open any of the six stages and examine the current run or selected finding | Histograms, quality checks, sensitivity, interpretation, field tasks and exposure in one scoped review |
+| **Live Analysis** · Observatory toolbar | Start at Detect and move through the stages one by one | An on-demand evidence review with visible progress, stage results and an exportable receipt |
+| **Threshold challenge** · Evidence → Challenge | Compare −18, −17 and −16 dB water screens | Threshold-stable core and sensitive fringe; a test of robustness rather than a probability |
+| **Finding inspector & Change Passport** · select a map outline | Inspect area, source pixels, geometry, lineage and audit information | A specific candidate that can be reopened, reviewed or exported with its provenance |
+| **Decision Desk** · `/impact` | Search findings, choose a review order, examine repeated observations, mapped assets and NASA context | A practical queue for investigation and field follow-up, scoped to the selected comparison |
+| **Executive Insights** · `/insights` | Read regional KPIs, area-ranked candidates, six-pass water history and the Sendai evidence bridge | A compact overview that connects measured screening results to the evidence still needed for impact reporting |
+| **Economic planning scenario** · Insights | Enter local building/road/cropland rates, duration and an assumed affected share | Conditional BDT physical-cost and revenue-interruption calculations, chart and explicit assumption export |
+| **Experimental water-area outlook** · Atlas | Compare persistence and elapsed-time drift over 6/12/24 days; inspect historical errors | An aggregate screened-water-area baseline with three chronological validation checks and an auditable export |
+| **Place watch & timing sandbox** · Atlas | Filter retained mapped places by type/distance; inspect the nearest observed change; enter an assumed advance rate | A field-review shortlist and conditional gap-spanning time, without a predicted bank-failure date |
+| **Field notebook** · Evidence → Field / Decision Desk | Write a dated note, request GPS and attach a real photo | Device-local, context-bound records with timestamps, optional accuracy/photo hash and export |
+| **Ask FluviSAR** · header / bottom-right launcher | Ask English or Bengali questions about supported data, methods and the active finding | Source-linked data answers, supported map handoffs and local conversation history/export |
+| **Chat with Data** · supported data sections | Activate selection, see eligible boxes highlighted, then choose one | A conversation scoped to that metric, Evidence stage or model explanation |
+| **ML Intelligence** · `/intelligence` | Inspect real registered observations, then explore RF/MLP scenarios, robustness and evaluation | Four workspaces that keep measured evidence separate from reproducible generated-data diagnostics |
+| **Interactive SAR Lab** · `/sar-lab` | Explore radar physics, scattering, speckle, geometry, dielectric response and phase models | Hands-on explanations and teaching experiments, with their input/model limits visible |
+| **Stories, reports & team** · `/stories`, `/reports`, `/about` | Follow the evidence narrative, print a decision brief and meet the team | An accessible explanation of the project, source-linked reporting and a one-page PDF/QR handoff |
+
+**Reading “prediction” correctly:** the Atlas outlook estimates aggregate water
+area from a small archive; the place-timing sandbox uses a rate supplied by the
+user. Neither predicts where or on which day a riverbank will fail. See
+[outlook methods and limitations](docs/ATLAS_OUTLOOK.md).
+
+### Who is it for?
+
+| Intended user | A useful task | Relevant output |
+| --- | --- | --- |
+| Government / disaster-management staff | Shortlist changes for inspection and discuss service continuity | Decision Desk, mapped road/facility intersections, printable brief |
+| NGO / field teams | Visit a selected finding and preserve what was actually observed | Field task, GPS/photo notebook and portable evidence packet |
+| Researchers | Reproduce a comparison and test parameter sensitivity | Numerical samples, source IDs/hashes, threshold results and JSON exports |
+| Resource managers | Review wetland, mangrove or cropland-reference overlap | Historical land-cover inventory with explicit reference year and scope |
+| Union / community leaders | Understand the selected change and prepare questions for technical teams | Map, source-linked explanation, local notes and a shareable comparison QR |
+| Students / educators | Learn why a radar signal or model output needs careful interpretation | SAR Lab, observation stories and generated ML experiments |
+
+These are intended workflows, not claims of government adoption, surveyed
+beneficiaries or an operational emergency-response deployment.
+
+## A five-minute project walkthrough
+
+This is a suggested product demonstration, not an event submission-duration rule.
+Start the local application using [Quick start](#3-quick-start).
+
+1. **Locate the question — Atlas.** Open `/atlas`, choose Jamuna and identify the
+   study box, sensor and recorded dates. Explain why Sundarbans needs a different
+   tidal/vegetation interpretation of the same workflow.
+2. **See the evidence — Observatory.** Let the geographic fly-in complete, switch
+   from Satellite to Radar and compare the default pair with Swipe. Select an
+   outline and read its measured area and original acquisition IDs.
+3. **Challenge the result — Live Analysis.** Begin at Detect, inspect the measured
+   histogram, then review optical offsets/clouds and threshold sensitivity.
+   Explain what survives the tests and what still needs independent confirmation.
+4. **Plan the follow-up — Decision Desk / Insights.** Review mapped asset overlap,
+   open the matched finding, and inspect the six recorded water-area observations.
+   If demonstrating an economic scenario, supply explicit example rates and call
+   the result a conditional scenario.
+5. **Make the handoff — Field / Report.** Save a clearly labelled demo field note,
+   export its context and print the source-linked one-page brief with comparison
+   QR. Show that the exported dates/finding match the map.
+6. **Explain the learning layer — Intelligence / SAR Lab.** Contrast real VV/VH
+   observations with a generated RF/MLP experiment or speckle simulation. Close
+   with the data gap and validation needed before an operational forecast.
+
+The differentiator is the **connected evidence trail**: an image, its numerical
+inputs, the challenge to its interpretation and the next human action remain
+linked throughout the demonstration.
+
+### Hackathon context and evidence for reviewers
+
+The project's stated theme is **Dancing with the SARs**. The earlier prototype
+provided the product concept; this build centres two retained Sentinel-1 case
+archives and makes their investigation reproducible. NASA POWER precipitation
+and NISAR catalogue records provide additional context. The quantitative change
+algorithm currently uses Copernicus Sentinel-1, **not numerical NISAR GCOV**.
+
+The official [2025 Space Apps judging guidance](https://spaceapps-v2-staging.s3.amazonaws.com/media/documents/Final_Space_Apps_2025_Judging_Guidelines_for_web.pdf)
+is a useful presentation reference for impact, creativity, validity, relevance
+and communication. It is cited as prior-year guidance, not as confirmed 2026
+submission rules. Review the current event's official instructions separately.
+
+| Review question | Evidence to inspect in this repository |
+| --- | --- |
+| Who could benefit, and how? | Intended-user workflows above; scoped field tasks and decision briefs rather than unmeasured beneficiary claims |
+| What is distinctive? | Six-stage challenge/review, context-preserving handoffs, supported-box data chat and separate learning experiments |
+| Is the method inspectable? | Retained acquisition IDs, numerical GeoTIFFs, declared thresholds, source checksums and reproducible exports |
+| How are NASA resources used? | The source-role table, archived POWER context and NISAR acquisition metadata; numerical NISAR processing remains a gap |
+| Can someone understand and reproduce it? | The demo walkthrough, per-feature instructions, installation commands, API reference and dated QA records |
+
+**AI use disclosure:** AI coding assistance was used for implementation,
+documentation and research support. The optional in-app language model explains
+allowed backend data-tool results; its presence is distinct from the deterministic
+numerical pipeline. Generated ML datasets and physics experiments are labelled
+as such. The team remains responsible for code, scientific interpretation,
+attribution and the final submission. No AI-generated satellite observation is
+substituted for a registered acquisition.
 
 ## Table of contents
 
@@ -190,7 +323,29 @@ A prominent experimental water-area outlook compares persistence and elapsed-tim
 
 **Implementation:** [AtlasView.tsx](fluvisar-next/apps/web/src/components/AtlasView.tsx).
 
+#### Outlook and place-watch controls
+
+| Control / view | How it works | Why it is useful |
+| --- | --- | --- |
+| Regional case card | Shows actual optical preview, radar dates, support, transition metrics and QC | Establishes what data exists before entering an investigation |
+| Forecast horizon | Select 6, 12 or 24 days after the latest recorded radar observation | Makes the forecast origin and target explicit |
+| Method comparison | Inspect persistence, elapsed-time drift and automatic selection by historical absolute error | Makes the small baseline understandable and challengeable |
+| Measured/projected chart | Separates six measurements from the continuation and historical-error envelope | Avoids presenting projected values as observed imagery |
+| Place filters | Filter retained OSM records by category and geometric distance to observed land → water | Helps select places for field review |
+| Matched-finding link | Opens the actual nearest transition with its evidence context | Connects a place to the measurement behind its shortlist position |
+| Assumed-rate sandbox | Calculates time to span the measured gap at a user-entered constant rate | Supports a disclosed planning exercise; the rate is not learned from bank retreat |
+| Export | Includes observations, source IDs, method checks, geometry/proximity and assumptions | Allows another person to inspect the calculation outside the UI |
+
+The current place shortlist contains 60 Jamuna and 14 Sundarbans records, selected
+from the archived map using the documented eligibility rules. These are mapped
+records, not counts of all important places or people at risk.
+
 ### 4.3 Decision insights - `/insights`
+
+![Insights showing the selected Jamuna comparison, transition area and actual mapped building, road and historical cropland-reference overlaps](docs/assets/readme-insights.png)
+
+*Current application capture, 9 November 2026. Mapped exposure remains distinct
+from confirmed damage or people affected.*
 
 The executive overview adapts the previous project's Insights concepts to actual
 registered data: transition area, mapped building/road exposure, historical
@@ -205,6 +360,23 @@ steps persist by run; exact-comparison map links, a scope-correct brief and a JS
 packet preserve observations, sources, quality, assumptions and user status.
 
 See [Insights analysis, methods and research](docs/INSIGHTS.md).
+
+#### What the Insights sections communicate
+
+- **Measured overview:** land → water area, intersected building ways, road metres
+  and relevant historical land-cover overlap for the selected radar pair.
+- **Review priorities:** the largest land → water components with coordinates,
+  measured area and exact finding links. Bar lengths represent area, not risk.
+- **Observation history:** all six radar passes, with original acquisition links
+  and gaps kept visible rather than filled with invented daily values.
+- **Sendai evidence bridge:** six cards covering B-3/B-4, B-5, C-2, C-4, C-5 and
+  D-2/D-3 explain which screening inputs are available and which confirmed human,
+  damage or monetary records would still be needed.
+- **Planning economics:** explicit local rates, affected share and duration feed
+  separate physical-cost and revenue-flow terms. No total appears before all
+  required rates are supplied; an explicit zero excludes a term.
+- **Review and handoff:** four run-local review steps, quality/source details,
+  current-comparison brief and a JSON packet containing assumptions and lineage.
 
 ## 5. Observatory workspace
 
@@ -257,6 +429,17 @@ The feature rail organizes controls into **Explore**, **Radar** and **More tools
 
 Radar displays include **VV**, **VH**, **VV/VH ratio** and a declared **RGB display composite**. That composite is not a full-polarimetric Pauli decomposition.
 
+| Left-panel tab | What to try | Expected result |
+| --- | --- | --- |
+| **Explore** | Choose Detailed basemap or Dated observations; open Compare before & after, Investigate a change or Read the radar signal | A clear starting action, current-pair transition summary, source access and decision-brief entry point |
+| **Radar** | Switch polarization/channel, display VV/VH amplitude, water mask or transitions, then click the map | The active layer and valid numerical pixel sample, with coordinates and units |
+| **More tools** | Open the region's investigation tools, declared scenario planner or ground-motion teaching experiment | Specialized views whose evidence and hypothetical inputs remain distinct |
+
+The full-height rail uses the space beside the map and timeline; its footer
+reports the actual radar-pass count and valid support. Phones expose the same
+features through **Explore features**, with a closable drawer rather than a
+permanently narrow map.
+
 ### 5.4 Numerical inspection and support
 
 - Clicking a visible radar pixel samples its retained GeoTIFF through the API.
@@ -274,6 +457,14 @@ Jamuna includes river/floodplain evidence and service-continuity planning. Sunda
 InSAR phase/coherence controls are teaching models: the RTC intensity archive does not contain interferometric phase. Budgets, stage changes and other user assumptions remain separate from satellite observations.
 
 **Key implementation:** [MapWorkspace](fluvisar-next/apps/web/src/components/MapWorkspace.tsx), [SwipeCompareMap](fluvisar-next/apps/web/src/components/SwipeCompareMap.tsx), [TimelinePlayer](fluvisar-next/apps/web/src/components/TimelinePlayer.tsx), [feature rail](fluvisar-next/apps/web/src/components/ObservatoryFeaturePanel.tsx), [finding inspector](fluvisar-next/apps/web/src/components/FindingInspectorDrawer.tsx).
+
+| Regional / planning tool | Available interaction | Meaning |
+| --- | --- | --- |
+| River change / Wetland change evidence | Open the current pair's inspector | Measured evidence for the active region |
+| Floodplain & farmland / Mangrove response | Inspect recorded channels and reference context | A regional interpretation lens, not a crop-loss or habitat-loss verdict |
+| Jamuna Service continuity | Set an inspection-team budget, declare a ferry interruption and enter an assumed isolated population; open area-ranked candidates | A field-planning shortlist; entered population and crossing status are assumptions |
+| Scenario planner | Set hypothetical stage change, ferry/breach assumptions and review cost per hectare; export the receipt | A disclosed scenario budget based on candidate reference area, not hydraulic flood depth |
+| Ground motion experiment | Explore phase, coherence and line-of-sight concepts | Educational InSAR controls rather than measured displacement from the RTC archive |
 
 ## 6. Evidence and Live Analysis
 
@@ -323,6 +514,16 @@ A zero mapped intersection can reflect sparse mapping or the selected geometry. 
 A shared assistant explains the active region, radar pair and selected finding, with source links, map handoffs, English/Bengali questions and on-device conversation export/history. Ask FluviSAR in the header and the bottom-right floating launcher open the same docked, non-modal chat window. Users can minimize it and continue using the page. Contextual Chat with Data buttons appear only beside supported metrics, model explanations or the current Evidence stage; the button first highlights supported boxes, then selecting a box opens its chat. Atlas forecasts do not send unsupported prediction values to the assistant.
 
 Data-based answers use registered backend calculations. Optional Gemini function calling adds natural-language interpretation when a server-side credential is configured; provider errors and unsupported numerical output fall back to the verified data answer. Model experiments remain explicitly synthetic. See [Assistant and map implementation](docs/ASSISTANT_AND_MAP.md) for configuration, scope and limitations.
+
+**Example questions to demonstrate:** “What changed in this comparison?”, “Which
+are the largest candidates?”, “How sensitive is the result to the threshold?”
+and “What mapped assets intersect this finding?” Select the finding first when
+asking a local question. Answers retain their own region, pair and finding
+context even if later questions move to another scope.
+
+The assistant reads allowed backend tools, not arbitrary values supplied by the
+browser. It does not send local field photographs to the model, generate a
+verified erosion forecast or turn a synthetic model score into real-case accuracy.
 
 ## 7. Field observations and exports
 
@@ -375,6 +576,26 @@ Actual exposure and the **What-if scenario** are distinct outputs. Exposure is s
 
 **Implementation:** [ImpactDesk.tsx](fluvisar-next/apps/web/src/features/legacy/pages/ImpactDesk.tsx). See [Decision Desk methods and workflow](docs/DECISION_DESK.md).
 
+### 8.1 From candidate list to review task
+
+| Feature | Interaction | Interpretation / output |
+| --- | --- | --- |
+| Pair-specific map | Change region or actual Before/After dates; compare radar and optical context | All candidate geometry, metrics and exports follow the registered run |
+| Searchable candidate ledger | Find a component and choose largest area, awaiting review, mapped overlap or threshold-sensitive ordering | A transparent review queue; order is not a hazard probability |
+| Candidate details | Read area, source pixels, coordinates, follow-up observations and stable-core fraction | Evidence for deciding what to inspect next |
+| Assets & land use / Habitat & assets | Select one finding for local intersections, or clear it for study-wide results | Mapped-object counts, projected road length and historical class overlap |
+| Evidence & context | Inspect optical offsets/clouds, rainfall series and NISAR catalogue entries | Context with provider, time, missing-data and sensor limitations preserved |
+| Field queue | Set browser-local review status and author dated notes/GPS/photos | A task and record tied to the same candidate, awaiting independent review |
+| What-if corridor | Set length, depth and orientation; inspect the hypothetical envelope and queried assets | Assumption-only service-continuity planning, exported separately from measured exposure |
+| Case handoff | Export JSON or print the brief | Matching region/pair/finding, geometry, sources, QC and review context |
+
+### 8.2 Decision Desk versus Insights
+
+Use **Decision Desk** to work through individual findings and field tasks. Use
+**Insights** to communicate the selected comparison's overall evidence, priorities
+and conditional planning assumptions. Both use the same registered observations
+and numerical context; switching presentation does not create a new measurement.
+
 ## 9. ML Intelligence
 
 **Route:** `/intelligence`.
@@ -398,6 +619,22 @@ Scores describe the generated exercise. They are not real-case accuracy, calibra
 
 Four visible workspaces organize all tools: **Real observations**, **Model playground**, **Robustness & review**, and **Model evaluation**. Diagnostic controls persist across tabs and saved experiment snapshots. A guided walkthrough explains scenario selection, pixel inspection, model comparison, speckle and review decisions. Desktop/mobile and both themes share a consistent container grid.
 
+### 9.3 What each Intelligence workspace lets you explore
+
+| Workspace | Features and controls | What the output means |
+| --- | --- | --- |
+| **Real observations** | Region/pair selection, six-pass history, VV/VH imagery, masks, candidate filters, largest patches, QC, source details and numerical summaries | Actual registered measurements and screening candidates |
+| **Model playground** | Random Forest / Temporal MLP, presets and input sliders, linked generated pixels/feature-space points, three-step schematic, score/entropy maps and perturbation controls | How two models respond to the same generated example; disagreement is made visible |
+| **Robustness & review** | Gamma-speckle Monte Carlo resampling, CUSUM onset/duration, novelty/domain-distance checks, component filtering, IoU/Dice/precision/recall and coverage/error trade-offs | Controlled generated-data stress tests and review choices, not field-validated confidence |
+| **Model evaluation** | Both models' holdout confusion matrices and class metrics, MLP training/validation curves and epoch slider, RF description, permutation sensitivity and architecture/data card | Reproducible diagnostics of the generated training exercise |
+
+Named experiments can be saved and restored locally (up to eight), compared with
+the original settings, reset and exported as JSON with seeds, inputs and outputs.
+Model playground uses 720 generated examples: 500 training, 112 validation and
+108 held-out test examples. The 31-tree forest and 4 → 16 → 8 → 4 MLP are
+demonstration models, not a deployed satellite erosion classifier. Real-evidence
+handoffs to Observatory and Decision Desk retain the selected pair and finding.
+
 **Implementation:** [IntelligenceWorkspace.tsx](fluvisar-next/apps/web/src/features/legacy/pages/IntelligenceWorkspace.tsx), retaining the scientific modules in [Intelligence.tsx](fluvisar-next/apps/web/src/features/legacy/pages/Intelligence.tsx). See [Intelligence workspace methods and preservation map](docs/INTELLIGENCE_WORKSPACE.md).
 
 ## 10. SAR Lab, stories and reports
@@ -419,6 +656,28 @@ The science lab combines source-backed image exploration with explicitly educati
 NISAR, HH/HV and full-polarimetric examples belong to the educational material. The operational archive is Sentinel-1 **VV/VH**. Simulated phase or decomposition controls do not turn RTC intensity into a measured interferogram or quad-polarimetric product.
 
 **Implementation:** [SARLab.tsx](fluvisar-next/apps/web/src/features/legacy/pages/SARLab.tsx).
+
+#### Hands-on experiments
+
+| Lab module | What you change or inspect | Learning objective |
+| --- | --- | --- |
+| Change Detection Explorer / Water and Change Map Lens | Inspect the retained project image pair and classified overlays | Separate a display image, a classified mask and a geospatial area result |
+| SAR and Optical in Cloudy Conditions | Compare radar/optical observation concepts | Understand why microwave sensing complements cloud-limited optical views |
+| Flood Signal Mechanism Simulator | Choose land cover and toggle inundation | Smooth open water can darken while some flooded vegetation can brighten |
+| Speckle Statistics & Lee Filtering Lab | Adjust looks/noise and inspect a local Lee estimate | Understand Gamma intensity speckle and the smoothing/detail trade-off |
+| Radar Geometry Cross-Section | Adjust incidence angle | Explore foreshortening, layover and shadow |
+| H/α Eigenvalue Decomposition | Change a synthetic three-component coherency model | Explore entropy and mean scattering angle without claiming quad-pol measurements |
+| SweepSAR animation | Compare conceptual antenna operation | Connect wide-swath coverage with scan-on-receive geometry |
+| Dielectric Interface | Change representative permittivity and incidence angle | Distinguish idealized Fresnel reflection from actual SAR backscatter |
+| L-/S-band Target-Scale Simulator | Change effective scatterer size | Compare wavelength and dimensionless target scale; avoid fixed penetration-depth claims |
+| Temporal Coherence Model | Change time separation and decay constant | Read a parameterized exponential model rather than a measured coherence product |
+| Synthetic histogram threshold | Move the threshold across generated distributions | See how a classification rule changes the split |
+| InSAR Fringe Synthesizer | Adjust displacement controls | Explore phase/fringe relationships without presenting simulated phase as measured motion |
+
+The Lab retains legacy case-specific explanatory material and teaching pipeline
+examples. Its HH, Otsu, filtering and HAND examples are not a description of the
+active Observatory's VV-based −17 dB production method. Use
+[Scientific method](#11-scientific-method-and-interpretation) for that method.
 
 ### 10.2 Observation stories — `/stories`
 
@@ -499,6 +758,11 @@ The archive does not provide a continuous daily/three-day flood history. Acquisi
 | [ESA WorldCover 2021 v200](https://esa-worldcover.org/en/data-access) | Historical inventory and transition overlap | Reference year and aligned categorical GeoTIFF retained |
 | Esri World Imagery | Context beyond dated optical coverage | Context mosaic, not a selected acquisition date |
 | OpenStreetMap raster tiles | Cartographic display mode | Map attribution retained |
+
+| NASA / NASA–ISRO resource | Actual role in this build | What it does not establish |
+| --- | --- | --- |
+| [NASA POWER](https://power.larc.nasa.gov/docs/methodology/data/sources_meteorology/) | Archived daily precipitation context in Decision Desk; IMERG where supplied, separately labelled MERRA-2/GEOS-IT model values for gaps | Acquisition-matched river/tide level or parcel-scale flood causation |
+| [NISAR GCOV via ASF](https://nisar-docs.asf.alaska.edu/gcov/) | Identified catalogue acquisitions, metadata and product links; mission concepts in SAR Lab | A numerical NISAR change result or a replacement for the Sentinel-1 analysis |
 
 The current asset archive contains **180,474 mapped records in Jamuna** and **14 in the configured Sundarbans footprint**. These counts describe the extract, not all real assets in either landscape.
 
@@ -598,7 +862,7 @@ The active reproduction path uses `scripts/`, the runtime catalogue and `service
 | `/learn` and `/learn/:experimentId` | Compatibility redirects to SAR Lab |
 | `/imact` | Compatibility redirect to `/impact` |
 
-**Route source:** [App.tsx](fluvisar-next/apps/web/src/App.tsx). The earlier project's `/app`, `/cases`, `/methods`, `/about` and authentication routes are not the active structure documented here.
+**Route source:** [App.tsx](fluvisar-next/apps/web/src/App.tsx). The earlier project's `/app`, `/cases`, `/methods` and authentication flows are not the active structure documented here; this build provides its own `/about` page.
 
 ## 14. API reference
 
@@ -789,6 +1053,14 @@ The checked-in Dockerfile/Compose setup is an earlier scaffold. It references a 
 | --- | --- |
 | [Real observations](docs/REAL_OBSERVATIONS.md) | Current archive, processing method and reproduction |
 | [Evidence workflow](docs/EVIDENCE_WORKFLOW.md) | Six stages, context, field storage and verification |
+| [Decision Desk](docs/DECISION_DESK.md) | Candidate review, exact mapped intersections, NASA context and handoffs |
+| [Executive Insights](docs/INSIGHTS.md) | Legacy-to-current feature mapping, Sendai definitions and conditional valuation |
+| [Atlas outlook and place watch](docs/ATLAS_OUTLOOK.md) | Baselines, chronological checks, source-backed proximity and assumption-only timing |
+| [Intelligence workspace](docs/INTELLIGENCE_WORKSPACE.md) | Real evidence, generated models, saved experiments and diagnostic boundaries |
+| [Assistant and map](docs/ASSISTANT_AND_MAP.md) | Supported chat tools, optional model configuration and camera behaviour |
+| [About and Lab design](docs/ABOUT_AND_LAB_DESIGN.md) | Team story and preservation of existing Lab content/controls |
+| [Responsive QA](docs/RESPONSIVE_QA.md) | Dated browser, viewport, theme and report checks |
+| [Read-only raster runtime](docs/READ_ONLY_RASTER_RUNTIME.md) | Restricted numerical fallback, setup and parity verification |
 | [Legacy integration](docs/LEGACY_PAGE_INTEGRATION.md) | Imported page integration context |
 | [Architecture](docs/ARCHITECTURE.md) | Broader/historical design; check active integrations against code |
 | [Developer guide](docs/DEVELOPER_GUIDE.md) | Existing conventions; use this README's current setup commands |
@@ -805,6 +1077,21 @@ The checked-in Dockerfile/Compose setup is an earlier scaffold. It references a 
 5. Review both study regions and relevant desktop/mobile interactions.
 
 Use `requirements-data.txt` and the frontend lockfile for the active environment. Do not commit access signatures, private field exports or a local virtual environment. Identify reference/prototype files explicitly when reused.
+
+### 19.3 Team
+
+The names and roles below match the current [About page](fluvisar-next/apps/web/src/features/legacy/pages/About.tsx).
+
+| Team member | Role |
+| --- | --- |
+| [Sabbir Ahmed](https://github.com/Tony1254-CS) | Mission Commander |
+| Sanjid Talukder | Data Scientist |
+| Sakibul Hassan Shovon | AI/ML Engineer |
+| Yasin Arafat | Hydro Analyst |
+
+The `/about` story follows the question, the two landscapes, the evidence-first
+approach and the people behind the project. It does not invent field testimony,
+partnerships or deployment achievements.
 
 ## 20. Licensing and attribution
 
