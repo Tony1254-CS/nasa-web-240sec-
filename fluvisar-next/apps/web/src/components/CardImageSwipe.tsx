@@ -96,7 +96,7 @@ export function CardImageSwipe({
   }, []);
 
   return (
-    <div className="relative w-full rounded-t-2xl overflow-hidden bg-slate-950 select-none">
+    <div className="relative w-full rounded-t-2xl overflow-hidden bg-[#0f171b] select-none">
       {/* 1. Main Interactive Image Swipe Area */}
       <div
         ref={containerRef}
@@ -131,11 +131,11 @@ export function CardImageSwipe({
         </div>
 
         {/* Subtle Dark Vignette Bottom & Top for Label Readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/40 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0f171b] via-transparent to-[#0f171b]/40 pointer-events-none" />
 
         {/* Floating Category Badge (Top Left) */}
         <div className="absolute top-3 left-3 pointer-events-none z-10">
-          <span className="px-2.5 py-1 rounded-lg bg-slate-950/90 backdrop-blur-md border border-slate-700 text-[10px] font-mono font-bold text-cyan-300 uppercase tracking-wide flex items-center gap-1.5 shadow-lg">
+          <span className="px-2.5 py-1 rounded-lg bg-[#0f171b]/90 backdrop-blur-md border border-[#2a383e] text-[10px] font-mono font-bold text-cyan-300 uppercase tracking-wide flex items-center gap-1.5 shadow-lg">
             <MapPin size={11} className="text-cyan-400" />
             {categoryTag}
           </span>
@@ -178,24 +178,24 @@ export function CardImageSwipe({
           style={{ left: `${sliderPos}%` }}
         >
           {/* Draggable luminous pill handle */}
-          <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-slate-950 border-2 border-cyan-400 shadow-[0_0_16px_rgba(34,211,238,0.9)] flex items-center justify-center text-cyan-300 pointer-events-none transition-transform group-hover:scale-110">
+          <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-[#0f171b] border-2 border-cyan-400 shadow-[0_0_16px_rgba(34,211,238,0.9)] flex items-center justify-center text-cyan-300 pointer-events-none transition-transform group-hover:scale-110">
             <span className="text-[10px] font-bold font-mono tracking-tighter">◀▶</span>
           </div>
         </div>
 
         {/* Bottom Metadata Ribbon Overlay */}
         <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-[11px] font-mono text-slate-200 pointer-events-none z-10">
-          <span className="bg-slate-950/85 backdrop-blur-sm px-2.5 py-0.5 rounded border border-slate-800">
+          <span className="bg-[#0f171b]/85 backdrop-blur-sm px-2.5 py-0.5 rounded border border-[#2a383e]">
             {coordsStr}
           </span>
-          <span className="bg-slate-950/85 backdrop-blur-sm px-2.5 py-0.5 rounded border border-slate-800 text-cyan-300 font-semibold">
+          <span className="bg-[#0f171b]/85 backdrop-blur-sm px-2.5 py-0.5 rounded border border-[#2a383e] text-cyan-300 font-semibold">
             {scenesCount} Registered Scenes · 12d Revisit
           </span>
         </div>
       </div>
 
       {/* 2. Interactive Comparison Control Bar (Presets + Sonification) */}
-      <div className="bg-slate-950/95 border-b border-slate-800 px-3.5 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
+      <div className="bg-[#0f171b] border-b border-[#2a383e] px-3.5 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
         {/* Preset quick buttons */}
         <div className="flex items-center gap-1.5 font-mono text-[11px]">
           <span className="text-slate-400 text-[10px] mr-1 hidden sm:inline">Compare:</span>
@@ -205,7 +205,7 @@ export function CardImageSwipe({
             className={`px-2 py-0.5 rounded transition-all cursor-pointer ${
               sliderPos >= 90
                 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50 font-semibold'
-                : 'text-slate-400 hover:text-white bg-slate-900 border border-slate-800'
+                : 'text-slate-400 hover:text-white bg-[#151e22] border border-[#2a383e]'
             }`}
           >
             Optical (Clouds)
@@ -216,7 +216,7 @@ export function CardImageSwipe({
             className={`px-2 py-0.5 rounded transition-all cursor-pointer ${
               sliderPos > 35 && sliderPos < 65
                 ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 font-semibold'
-                : 'text-slate-400 hover:text-white bg-slate-900 border border-slate-800'
+                : 'text-slate-400 hover:text-white bg-[#151e22] border border-[#2a383e]'
             }`}
           >
             50/50 Split
@@ -227,7 +227,7 @@ export function CardImageSwipe({
             className={`px-2 py-0.5 rounded transition-all cursor-pointer ${
               sliderPos <= 10
                 ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 font-semibold'
-                : 'text-slate-400 hover:text-white bg-slate-900 border border-slate-800'
+                : 'text-slate-400 hover:text-white bg-[#151e22] border border-[#2a383e]'
             }`}
           >
             SAR Penetration
@@ -241,7 +241,7 @@ export function CardImageSwipe({
           className={`px-2.5 py-1 rounded-lg text-[11px] font-mono flex items-center gap-1.5 transition-all cursor-pointer border ${
             isPlayingAudio
               ? 'bg-cyan-500/25 text-cyan-300 border-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)] animate-pulse'
-              : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white'
+              : 'bg-[#151e22] text-slate-300 border-[#2a383e] hover:border-slate-500 hover:text-white'
           }`}
           title="Play real-time acoustic pitch mapped from calibrated radar backscatter"
         >

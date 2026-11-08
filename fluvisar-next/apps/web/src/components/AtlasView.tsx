@@ -269,17 +269,17 @@ export function AtlasView() {
       <div className="w-full max-w-[1340px] space-y-8 flex-1">
 
         {/* 1. COMPACT ELEGANT MISSION CONTROL HEADER */}
-        <header className="rounded-2xl bg-[#151e22] border border-[#2a383e] p-7 sm:p-8 shadow-2xl backdrop-blur-md space-y-6">
+        <header className="space-y-6 pt-2">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
             <div className="space-y-2.5 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800/80 text-cyan-300 text-[11px] font-mono tracking-wider">
+              <div className="inline-flex items-center gap-2 text-cyan-400 text-xs font-mono tracking-wider font-semibold">
                 <Satellite size={13} className="text-cyan-400 animate-pulse" />
                 <span>NASA SPACE APPS 2026 · PLANETARY RADAR ATLAS</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Earth Change Atlas & Regional Observatory
               </h1>
-              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+              <p className="text-slate-400 text-xs sm:text-sm leading-relaxed">
                 Operational multi-temporal SAR ingestion mathematically validated across Jamuna and Sundarbans. Comparative global hazard sites are preserved as attributed educational benchmarks with declared validation status.
               </p>
             </div>
@@ -291,8 +291,8 @@ export function AtlasView() {
                 onClick={() => setShowPlanetaryMap(!showPlanetaryMap)}
                 className={`inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                   showPlanetaryMap
-                    ? 'bg-cyan-950/90 text-cyan-300 border-cyan-500/70 shadow-lg shadow-cyan-950/40'
-                    : 'bg-slate-800/90 hover:bg-slate-700 text-slate-300 border-slate-700'
+                    ? 'bg-cyan-500/15 text-cyan-300 border-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.25)]'
+                    : 'bg-[#151e22] hover:bg-[#1c272d] text-slate-300 border-[#2a383e]'
                 }`}
                 title="Toggle Planetary Orbital Telemetry Grid Map"
               >
@@ -303,7 +303,7 @@ export function AtlasView() {
               <button
                 type="button"
                 onClick={() => setShowSensorRace(true)}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-cyan-700 hover:from-cyan-500 hover:to-cyan-600 text-white font-semibold text-xs shadow-lg shadow-cyan-950/50 transition-all cursor-pointer border border-cyan-400/40"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-500 hover:brightness-110 text-slate-950 font-bold text-xs shadow-md shadow-cyan-950/40 transition-all cursor-pointer border border-cyan-400"
               >
                 <Layers size={15} />
                 <span>Sensor Race Benchmark</span>
@@ -311,7 +311,7 @@ export function AtlasView() {
 
               <Link
                 to="/reports"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white font-semibold text-xs border border-slate-700 transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#151e22] hover:bg-[#1c272d] text-slate-200 hover:text-white font-semibold text-xs border border-[#2a383e] transition-all cursor-pointer"
               >
                 <FileText size={15} className="text-slate-400" />
                 <span>Methods & Proofs</span>
@@ -321,7 +321,7 @@ export function AtlasView() {
 
           {/* Interactive Planetary Telemetry Map (Integrated inside Mission Control Header) */}
           {showPlanetaryMap && (
-            <div className="pt-2 animate-in fade-in duration-300">
+            <div className="pt-2 animate-in fade-in duration-300 rounded-2xl overflow-hidden border border-[#2a383e] bg-[#151e22] p-3 shadow-xl">
               <PlanetaryTelemetryMap
                 sites={telemetrySites}
                 selectedSiteId={selectedStationId}
@@ -331,9 +331,9 @@ export function AtlasView() {
           )}
 
           {/* Symmetrical 4-Metric Telemetry Ribbon */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-5 border-t border-slate-800/80 font-mono text-xs">
-            <div className="bg-slate-950/80 rounded-xl p-3.5 border border-slate-800/70 flex items-center gap-3.5">
-              <div className="p-2 rounded-lg bg-emerald-950/80 border border-emerald-800 text-emerald-400 shrink-0">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2 font-mono text-xs">
+            <div className="bg-[#151e22] rounded-xl p-3.5 border border-[#2a383e] flex items-center gap-3.5 shadow-md">
+              <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shrink-0">
                 <CheckCircle2 size={16} />
               </div>
               <div className="min-w-0">
@@ -342,8 +342,8 @@ export function AtlasView() {
               </div>
             </div>
 
-            <div className="bg-slate-950/80 rounded-xl p-3.5 border border-slate-800/70 flex items-center gap-3.5">
-              <div className="p-2 rounded-lg bg-cyan-950/80 border border-cyan-800 text-cyan-400 shrink-0">
+            <div className="bg-[#151e22] rounded-xl p-3.5 border border-[#2a383e] flex items-center gap-3.5 shadow-md">
+              <div className="p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 shrink-0">
                 <Activity size={16} />
               </div>
               <div className="min-w-0">
@@ -352,8 +352,8 @@ export function AtlasView() {
               </div>
             </div>
 
-            <div className="bg-slate-950/80 rounded-xl p-3.5 border border-slate-800/70 flex items-center gap-3.5">
-              <div className="p-2 rounded-lg bg-purple-950/80 border border-purple-800 text-purple-400 shrink-0">
+            <div className="bg-[#151e22] rounded-xl p-3.5 border border-[#2a383e] flex items-center gap-3.5 shadow-md">
+              <div className="p-2 rounded-lg bg-teal-500/10 border border-teal-500/30 text-teal-400 shrink-0">
                 <Sliders size={16} />
               </div>
               <div className="min-w-0">
@@ -362,8 +362,8 @@ export function AtlasView() {
               </div>
             </div>
 
-            <div className="bg-slate-950/80 rounded-xl p-3.5 border border-slate-800/70 flex items-center gap-3.5">
-              <div className="p-2 rounded-lg bg-emerald-950/80 border border-emerald-800 text-emerald-400 shrink-0">
+            <div className="bg-[#151e22] rounded-xl p-3.5 border border-[#2a383e] flex items-center gap-3.5 shadow-md">
+              <div className="p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 shrink-0">
                 <ShieldCheck size={16} />
               </div>
               <div className="min-w-0">
@@ -386,13 +386,13 @@ export function AtlasView() {
                   onClick={() => setSelectedFilter(chip.id)}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap cursor-pointer transition-all flex items-center gap-2 ${
                     selectedFilter === chip.id
-                      ? 'bg-cyan-600 text-white shadow-md shadow-cyan-950'
-                      : 'bg-slate-800/90 hover:bg-slate-700 text-slate-300 border border-slate-700'
+                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.25)]'
+                      : 'bg-[#0f171b] hover:bg-[#1a242a] text-slate-400 hover:text-slate-200 border border-[#2a383e]'
                   }`}
                 >
                   <span>{chip.label}</span>
                   <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                    selectedFilter === chip.id ? 'bg-cyan-800 text-cyan-100' : 'bg-slate-950 text-slate-400'
+                    selectedFilter === chip.id ? 'bg-cyan-500/30 text-cyan-100' : 'bg-[#151e22] text-slate-400'
                   }`}>
                     {chip.count}
                   </span>
@@ -408,7 +408,7 @@ export function AtlasView() {
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Filter by name, sensor, or physics..."
-                className="w-full pl-9 pr-8 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500 transition-colors"
+                className="w-full pl-9 pr-8 py-1.5 rounded-xl bg-[#0f171b] border border-[#2a383e] text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors"
               />
               {searchQuery && (
                 <button
@@ -509,7 +509,7 @@ export function AtlasView() {
                       </div>
 
                       {/* Symmetrical 3-Column Fact Grid */}
-                      <div className="grid grid-cols-3 gap-2 bg-slate-950 p-3.5 rounded-xl border border-slate-800 font-mono text-xs">
+                      <div className="grid grid-cols-3 gap-2 bg-[#0f171b] p-3.5 rounded-xl border border-[#2a383e] font-mono text-xs">
                         <div>
                           <span className="text-[10px] text-slate-400 uppercase tracking-wider block">Valid Support</span>
                           <strong className="text-cyan-300 font-bold text-sm block mt-0.5">
@@ -538,7 +538,7 @@ export function AtlasView() {
                             useWorkspaceStore.getState().setRegion(region.region_id);
                             navigate('/observatory/' + region.region_id);
                           }}
-                          className="flex-1 py-2.5 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer border border-cyan-400/40"
+                          className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-500 hover:brightness-110 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer border border-cyan-400 shadow-[0_4px_16px_rgba(34,211,238,0.2)]"
                         >
                           <span>Launch Interactive Observatory</span>
                           <ArrowUpRight size={15} />
@@ -550,7 +550,7 @@ export function AtlasView() {
                             useWorkspaceStore.getState().setRegion(region.region_id);
                             setShowPassport(true);
                           }}
-                          className="py-2.5 px-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-slate-700"
+                          className="py-2.5 px-3.5 rounded-xl bg-[#0f171b] hover:bg-[#1c272d] text-slate-200 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border border-[#2a383e]"
                           title="View Change Passport & Traceable Manifest"
                         >
                           <ShieldCheck size={14} className="text-emerald-400" />
@@ -593,7 +593,7 @@ export function AtlasView() {
                   className="group relative flex flex-col justify-between rounded-2xl bg-[#151e22] border border-[#2a383e] hover:border-slate-700 shadow-xl overflow-hidden transition-all duration-300"
                 >
                   {/* Schematic Visual Header */}
-                  <div className="relative h-44 w-full overflow-hidden bg-slate-950 flex items-center justify-center border-b border-slate-800">
+                  <div className="relative h-44 w-full overflow-hidden bg-[#0f171b] flex items-center justify-center border-b border-[#2a383e]">
                     <div className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px]" />
 
                     {site.iconType === 'mountain' && (
@@ -604,9 +604,9 @@ export function AtlasView() {
                     )}
 
                     {site.iconType === 'droplet' && (
-                      <div className="relative flex flex-col items-center justify-center text-purple-400">
+                      <div className="relative flex flex-col items-center justify-center text-teal-400">
                         <Droplets size={44} className="stroke-[1.5]" />
-                        <span className="text-[9px] font-mono mt-1 text-purple-300 tracking-wider">InSAR FRINGE PHASE · 19.4°N</span>
+                        <span className="text-[9px] font-mono mt-1 text-teal-300 tracking-wider">InSAR FRINGE PHASE · 19.4°N</span>
                       </div>
                     )}
 
@@ -617,11 +617,11 @@ export function AtlasView() {
                       </div>
                     )}
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#151e22] via-transparent to-transparent" />
 
                     {/* Top Badges */}
                     <div className="absolute top-3 left-3">
-                      <span className="px-2.5 py-1 rounded bg-slate-950/90 border border-slate-700 text-[9px] font-mono font-bold text-slate-300 uppercase">
+                      <span className="px-2.5 py-1 rounded bg-[#0f171b]/90 border border-[#2a383e] text-[9px] font-mono font-bold text-slate-300 uppercase">
                         {site.categoryTag}
                       </span>
                     </div>
@@ -654,7 +654,7 @@ export function AtlasView() {
                     </div>
 
                     {/* Symmetrical 3-Column Fact Grid */}
-                    <div className="grid grid-cols-3 gap-2 bg-slate-950 p-2.5 rounded-xl border border-slate-800 font-mono text-[10px]">
+                    <div className="grid grid-cols-3 gap-2 bg-[#0f171b] p-2.5 rounded-xl border border-[#2a383e] font-mono text-[10px]">
                       <div>
                         <span className="text-slate-400 block text-[9px]">{site.metric1.label}</span>
                         <strong className="text-cyan-300 font-bold text-xs">{site.metric1.value}</strong>
@@ -669,7 +669,7 @@ export function AtlasView() {
                       </div>
                     </div>
 
-                    <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 text-[10px] font-mono text-slate-400 space-y-1">
+                    <div className="p-2.5 rounded-xl bg-[#0f171b] border border-[#2a383e] text-[10px] font-mono text-slate-400 space-y-1">
                       <div className="truncate">Phenomenon: <span className="text-slate-200">{site.phenomenon}</span></div>
                       <div className="truncate">Method: <span className="text-cyan-300">{site.processingMethod}</span></div>
                     </div>
@@ -678,7 +678,7 @@ export function AtlasView() {
                     <button
                       type="button"
                       onClick={() => setPreviewCase(site)}
-                      className="w-full py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 hover:text-white text-xs font-semibold cursor-pointer flex items-center justify-center gap-2 transition-colors"
+                      className="w-full py-2.5 px-3 rounded-xl bg-[#0f171b] hover:bg-[#1c272d] border border-[#2a383e] text-slate-200 hover:text-white text-xs font-semibold cursor-pointer flex items-center justify-center gap-2 transition-colors"
                     >
                       <Eye size={13} className="text-cyan-400" />
                       <span>Inspect Scientific Preview</span>
