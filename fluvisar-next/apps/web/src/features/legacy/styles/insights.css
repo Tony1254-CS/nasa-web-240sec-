@@ -17,6 +17,7 @@
   --id-warn: #fbbf24;
   --id-gain: #34d399;
   --id-water: #38bdf8;
+  background: var(--id-bg);
   color: var(--id-text);
   font-family: var(--font-text, system-ui, -apple-system, sans-serif);
   min-height: 100vh;
