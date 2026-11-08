@@ -432,3 +432,4 @@ ${impact.emergencyActions.map((a: string, i: number) => `${i + 1}. ${a}`).join('
     </div>
   );
 }
+

@@ -113,3 +113,4 @@ export const IMPACT_DATA: Record<string, {
     vulnerabilityIndex: 79,
   },
 };
+
