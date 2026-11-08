@@ -98,7 +98,7 @@ const ObservatoryRoute: React.FC = () => {
 // 2. Atlas Route Component (Handles /atlas)
 const AtlasRoute: React.FC = () => {
   return (
-    <div className="relative flex-1 w-full h-full overflow-hidden bg-[#080d14]">
+    <div className="relative flex-1 w-full h-full overflow-hidden bg-[#0f171b]">
       <AtlasView />
     </div>
   );

@@ -264,12 +264,12 @@ export function AtlasView() {
   };
 
   return (
-    <div className="atlas-panel min-h-full w-full bg-[#080d14] text-slate-100 flex flex-col items-center overflow-y-auto">
+    <div className="atlas-panel min-h-full w-full bg-[#0f171b] text-slate-100 flex flex-col items-center overflow-y-auto">
       {/* Inner centered container with generous horizontal space */}
       <div className="w-full max-w-[1340px] space-y-8 flex-1">
 
         {/* 1. COMPACT ELEGANT MISSION CONTROL HEADER */}
-        <header className="rounded-2xl bg-gradient-to-r from-slate-900/95 via-slate-900/85 to-slate-950 border border-slate-800/90 p-7 sm:p-8 shadow-2xl backdrop-blur-md space-y-6">
+        <header className="rounded-2xl bg-[#151e22] border border-[#2a383e] p-7 sm:p-8 shadow-2xl backdrop-blur-md space-y-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
             <div className="space-y-2.5 max-w-2xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800/80 text-cyan-300 text-[11px] font-mono tracking-wider">
@@ -376,7 +376,7 @@ export function AtlasView() {
 
         {/* 2. CATEGORY CHIPS & LIVE SEARCH ROW */}
         <div className="space-y-2">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900/70 p-2.5 rounded-2xl border border-slate-800">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#151e22] p-2.5 rounded-2xl border border-[#2a383e]">
             {/* YouTube-style Filter Pills */}
             <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
               {filterChips.map(chip => (
@@ -471,7 +471,7 @@ export function AtlasView() {
                   <article
                     key={region.region_id}
                     id={`card-${region.region_id}`}
-                    className="group relative flex flex-col justify-between rounded-2xl bg-slate-900 border border-slate-800 hover:border-cyan-500/50 shadow-2xl overflow-hidden transition-all duration-300"
+                    className="group relative flex flex-col justify-between rounded-2xl bg-[#151e22] border border-[#2a383e] hover:border-cyan-500/50 shadow-2xl overflow-hidden transition-all duration-300"
                   >
                     {/* Visual Interactive Before/After Radar Swipe Component */}
                     <CardImageSwipe
@@ -590,7 +590,7 @@ export function AtlasView() {
                 <article
                   key={site.id}
                   id={`card-${site.id}`}
-                  className="group relative flex flex-col justify-between rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 shadow-xl overflow-hidden transition-all duration-300"
+                  className="group relative flex flex-col justify-between rounded-2xl bg-[#151e22] border border-[#2a383e] hover:border-slate-700 shadow-xl overflow-hidden transition-all duration-300"
                 >
                   {/* Schematic Visual Header */}
                   <div className="relative h-44 w-full overflow-hidden bg-slate-950 flex items-center justify-center border-b border-slate-800">
@@ -693,7 +693,7 @@ export function AtlasView() {
         {/* 5. INTERACTIVE SCIENTIFIC PREVIEW MODAL */}
         {previewCase && (
           <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 pt-16 sm:pt-20 pb-6 select-text animate-in fade-in duration-150">
-            <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-xl w-full text-xs space-y-4 text-slate-100 shadow-2xl animate-in zoom-in-95 duration-150 max-h-[84vh] flex flex-col overflow-hidden">
+            <div className="bg-[#151e22] border border-[#2a383e] rounded-2xl p-6 max-w-xl w-full text-xs space-y-4 text-slate-100 shadow-2xl animate-in zoom-in-95 duration-150 max-h-[84vh] flex flex-col overflow-hidden">
               <div className="flex justify-between items-start border-b border-slate-800 pb-3 shrink-0">
                 <div>
                   <span className={`text-[10px] font-mono px-2 py-0.5 rounded border font-semibold ${previewCase.statusBadge}`}>
