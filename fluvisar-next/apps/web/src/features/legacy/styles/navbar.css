@@ -354,8 +354,8 @@
   height: var(--navbar-height);
 }
 
-/* ── Responsive ── */
-@media (max-width: 768px) {
+/* ── Responsive Mobile (<= 850px) ── */
+@media (max-width: 850px) {
   .legacy-pages .navbar__nav {
     position: fixed;
     top: var(--navbar-height);
@@ -394,7 +394,12 @@
   }
 
   .legacy-pages .navbar__right {
-    display: none;
+    display: flex;
+    gap: 6px;
+  }
+
+  .legacy-pages .navbar .navbar__mobile-toggle {
+    display: inline-flex !important;
   }
 }
 
@@ -416,4 +421,71 @@
   background: linear-gradient(to bottom, rgba(6, 10, 14, 0.78) 0%, rgba(6, 10, 14, 0.35) 70%, transparent 100%);
 }
 
-@media (min-width:769px) and (max-width:1320px){.legacy-pages .navbar__nav{display:none;position:fixed;top:var(--navbar-height);left:0;right:0;padding:14px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap;justify-content:center;gap:8px}.legacy-pages .navbar__nav.navbar__nav--open{display:flex;visibility:visible;opacity:1;pointer-events:auto}.legacy-pages .navbar .navbar__mobile-toggle{display:inline-flex;align-items:center;justify-content:center;background:transparent;border:0;padding:8px}}
+/* ── Clean Single-Row Navbar across Laptop & Desktop (851px+) ── */
+@media (min-width: 851px) {
+  .legacy-pages .navbar .navbar__mobile-toggle {
+    display: none !important;
+  }
+  .legacy-pages .navbar__nav {
+    display: flex !important;
+    position: static !important;
+    transform: none !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 4px;
+  }
+}
+
+@media (min-width: 851px) and (max-width: 1280px) {
+  .legacy-pages .navbar {
+    padding: 0 12px;
+  }
+  .legacy-pages .navbar__left {
+    gap: 10px;
+  }
+  .legacy-pages .navbar__nav {
+    gap: 2px;
+  }
+  .legacy-pages .navbar__link {
+    font-size: 0.77rem;
+    padding: 0 7px;
+    height: 30px;
+    gap: 4px;
+    width: auto !important;
+  }
+  .legacy-pages .navbar__link-icon {
+    width: 13px;
+    height: 13px;
+  }
+  .legacy-pages .navbar__right {
+    gap: 6px;
+  }
+  .legacy-pages .navbar__btn {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+  }
+  .legacy-pages .navbar__reach-select {
+    padding: 3px 8px;
+    font-size: 0.75rem;
+    max-width: 110px;
+  }
+}
+
+@media (min-width: 851px) and (max-width: 1040px) {
+  .legacy-pages .navbar__link-icon {
+    display: none !important; /* Conceal small icons on tight viewports to guarantee 100% single-row fit */
+  }
+  .legacy-pages .navbar__link {
+    padding: 0 5px;
+    font-size: 0.74rem;
+  }
+  .legacy-pages .navbar__btn.navbar__assistant span {
+    display: inline;
+  }
+}

@@ -9,7 +9,7 @@
 .legacy-pages .ml-shell { padding-top: calc(var(--navbar-height) + 26px); }
 .legacy-pages .workspace-data-note summary { cursor: pointer; }
 .legacy-pages .workspace-data-note p { margin: 8px 0 0; }
-@media(max-width: 980px) { .legacy-pages .navbar__mobile-toggle { display: inline-flex; } .legacy-pages .navbar__reach-select { max-width: 125px; } }
+@media(max-width: 850px) { .legacy-pages .navbar__mobile-toggle { display: inline-flex; } .legacy-pages .navbar__reach-select { max-width: 125px; } }
 @media(max-width: 768px) {
   .legacy-pages .navbar__right { display:flex; gap:8px; }
   .legacy-pages .navbar__nav { z-index: 100; visibility: hidden; }
