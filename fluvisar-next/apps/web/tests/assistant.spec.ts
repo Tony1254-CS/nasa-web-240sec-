@@ -77,21 +77,21 @@ test('reduced motion bypasses animation and connection errors allow retry',async
  await page.unroute('**/api/assistant/ask');await page.getByRole('button',{name:'Send question'}).click();await expect(page.locator('.fl-message.is-assistant')).toBeVisible();
 });
 
-test('Atlas theme applies to cards and controls; assistant is centred and data actions stay local',async({page})=>{
+test('Atlas theme applies to cards and controls; assistant docks without a backdrop and data actions stay local',async({page})=>{
  await page.goto('/atlas');await expect(page.locator('.atlas-cards>article')).toHaveCount(2);
  await expect(page.locator('.fl-launcher')).toHaveCount(0);await expect(page.getByRole('button',{name:/Chat with Data/})).toHaveCount(0);
  const card=page.locator('.atlas-cards>article').first();
  await expect(card).toHaveCSS('background-color','rgb(21, 30, 35)');
  await expect(page.locator('.restored-workspace-header')).toHaveCSS('background-color','rgb(21, 30, 35)');await expect(page.locator('.navbar')).toHaveCSS('background-color','rgb(17, 26, 32)');
- const hero=await page.locator('.atlas-panel .science-hero').boundingBox(),tools=await page.locator('.restored-map-options').boundingBox();expect(tools!.y+tools!.height).toBeLessThanOrEqual(hero!.y);
+ const hero=await page.locator('.atlas-map-stage .science-hero').boundingBox(),tools=await page.locator('.restored-map-options').boundingBox();expect(tools!.x).toBeGreaterThanOrEqual(hero!.x+hero!.width);
  await page.screenshot({path:'test-results/atlas-dark.png'});
  await page.getByRole('button',{name:'Toggle Light/Dark Theme'}).click();await expect(card).toHaveCSS('background-color','rgb(255, 255, 255)');await expect(page.locator('.restored-workspace-header')).toHaveCSS('background-color','rgb(255, 255, 255)');await expect(page.locator('.navbar')).toHaveCSS('background-color','rgb(255, 255, 255)');
  await page.screenshot({path:'test-results/atlas-light.png'});
- await page.getByRole('button',{name:'Ask FluviSAR',exact:true}).click();const dialog=page.getByRole('dialog',{name:'FluviSAR Assistant'});await expect(dialog).toHaveAttribute('aria-modal','true');
- const box=await dialog.boundingBox();expect(Math.abs(box!.x+box!.width/2-720)).toBeLessThan(2);expect(Math.abs(box!.y+box!.height/2-500)).toBeLessThan(2);
- await page.screenshot({path:'test-results/assistant-centred.png'});await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);await expect(page.getByRole('button',{name:'Ask FluviSAR',exact:true})).toBeFocused();
+ await page.getByRole('button',{name:'Ask FluviSAR',exact:true}).click();const dialog=page.getByRole('dialog',{name:'FluviSAR Assistant'});await expect(dialog).toHaveAttribute('aria-modal','false');
+ const box=await dialog.boundingBox();expect(box!.x+box!.width).toBe(page.viewportSize()!.width-18);expect(box!.y+box!.height).toBeLessThanOrEqual(930);
+ await page.screenshot({path:'test-results/assistant-widget.png'});await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);await expect(page.getByRole('button',{name:'Ask FluviSAR',exact:true})).toBeFocused();
  await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Toggle Light/Dark Theme'}).click();await expect(card).toHaveCSS('background-color','rgb(21, 30, 35)');
  const menu=page.getByRole('button',{name:'Toggle navigation'});await expect(menu).toBeVisible();const menuBox=await menu.boundingBox();expect(menuBox!.x+menuBox!.width).toBeLessThanOrEqual(390);await menu.click();await expect(page.locator('.navbar__nav')).toHaveClass(/navbar__nav--open/);await menu.click();
- await expect(page.locator('.navbar')).toHaveCSS('background-color','rgb(17, 26, 32)');const mobileHero=await page.locator('.atlas-panel .science-hero').boundingBox(),heading=await page.getByRole('heading',{level:1}).boundingBox();expect(heading!.y+heading!.height).toBeLessThan(mobileHero!.y+mobileHero!.height);
- expect(await page.locator('.atlas-panel').evaluate(el=>el.scrollWidth-el.clientWidth)).toBeLessThanOrEqual(1);await page.screenshot({path:'test-results/atlas-mobile.png'});
+ await expect(page.locator('.navbar')).toHaveCSS('background-color','rgb(17, 26, 32)');const mobileHero=await page.locator('.atlas-map-stage .science-hero').boundingBox(),heading=await page.getByRole('heading',{level:1}).boundingBox();expect(heading!.y+heading!.height).toBeLessThan(mobileHero!.y+mobileHero!.height);
+ expect(await page.locator('.atlas-scroll-page').evaluate(el=>el.scrollWidth-el.clientWidth)).toBeLessThanOrEqual(1);await page.screenshot({path:'test-results/atlas-mobile.png'});
 });

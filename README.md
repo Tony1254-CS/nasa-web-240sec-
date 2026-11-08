@@ -184,7 +184,9 @@ The landing page introduces the observation-to-evidence workflow through:
 
 ### 4.2 Regional atlas — `/atlas`
 
-The atlas presents the two regions, their acquisition windows, sensor metadata, valid support and processed area. Opening a region enters its Observatory.
+The atlas combines a geographic overview with two source-backed case studies. Each case preserves acquisition windows, sensor metadata, valid support and processed area, and adds dated optical previews, measured transitions, expandable quality checks and original radar-source links. Opening a region enters its Observatory.
+
+A prominent experimental water-area outlook compares persistence and elapsed-time drift using chronological rolling-origin checks. Users select the region, a 6/12/24-day horizon and a method, inspect measured history and historical errors, and export the complete inputs/calculation. This small-sample baseline estimates aggregate screened water area; it does not predict future flood boundaries or damage. A place watchlist adds source-backed proximity to observed land-to-water polygons, filters, matched-finding map links and a user-assumed gap-spanning timing scenario. It never assigns a bank-failure date or hazard probability. See [Atlas outlook methods and limitations](docs/ATLAS_OUTLOOK.md).
 
 **Implementation:** [AtlasView.tsx](fluvisar-next/apps/web/src/components/AtlasView.tsx).
 
@@ -204,15 +206,15 @@ The MapLibre workspace opens on the configured study areas and fits shared study
 
 Esri World Imagery supplies context beyond valid dated optical coverage. It is a context mosaic, not another date-matched observation. Optical clouds remain in the original images.
 
-The map includes a synchronized geographic fly-in with Skip, Replay, reduced-motion support and exact study-area framing.
+Each fresh Observatory visit animates from a wide geographic view into the existing zoom 11.4 / 55-degree study-area camera, including sessions that previously viewed the area. Skip, Replay, interaction cancellation and reduced-motion support remain available; comparison views share exact study-area framing.
 
 The desktop Observatory keeps the investigation panel on the left; phones use a
-feature drawer. Jamuna opens in an angled river overview. Sundarbans starts with
-the detailed Esri satellite mosaic, labelled as context without an acquisition
-date. Selecting a timeline pass or date comparison opens actual Sentinel-2
+feature drawer. Both regions open on Satellite at zoom 11.4 with a 55-degree tilted overview. Switching Radar, Satellite or Carto preserves the live camera rather than refitting the image. Sundarbans offers
+the detailed Esri satellite mosaic as an optional context view, labelled without an acquisition
+date. In Satellite mode, selecting an optical timeline pass or date comparison opens actual Sentinel-2
 observations. Initial optical comparisons use the two least-cloudy retained
 scenes, and cloud/shadow percentages remain visible. A floating launcher opens
-the source-connected assistant from the bottom right.
+the source-connected assistant from the bottom right in a docked, non-modal chat window.
 
 Dated optical detail loads from locally served lossless tiles generated from
 original 10 m Sentinel-2 sources. See [map layout, imagery provenance and rebuild
@@ -302,7 +304,7 @@ A zero mapped intersection can reflect sparse mapping or the selected geometry. 
 
 ### 6.5 Ask FluviSAR and Chat with Data
 
-A shared assistant explains the active region, radar pair and selected finding, with source links, map handoffs, English/Bengali questions and on-device conversation export/history. Ask FluviSAR opens a centred modal from the header. Contextual Chat with Data buttons appear only beside supported metrics, model explanations or the current Evidence stage; the button first highlights supported boxes, then selecting a box opens its chat. There is no floating launcher covering map controls.
+A shared assistant explains the active region, radar pair and selected finding, with source links, map handoffs, English/Bengali questions and on-device conversation export/history. Ask FluviSAR in the header and the bottom-right floating launcher open the same docked, non-modal chat window. Users can minimize it and continue using the page. Contextual Chat with Data buttons appear only beside supported metrics, model explanations or the current Evidence stage; the button first highlights supported boxes, then selecting a box opens its chat. Atlas forecasts do not send unsupported prediction values to the assistant.
 
 Data-based answers use registered backend calculations. Optional Gemini function calling adds natural-language interpretation when a server-side credential is configured; provider errors and unsupported numerical output fall back to the verified data answer. Model experiments remain explicitly synthetic. See [Assistant and map implementation](docs/ASSISTANT_AND_MAP.md) for configuration, scope and limitations.
 
@@ -410,7 +412,7 @@ Five chapters explain the active region's bundle: start with the signal, classif
 
 ### 10.3 Source-linked reports — `/reports`
 
-Reports expose the default comparison's measurements, quality record, source list, interpretation and manifest export. For a custom radar pair or selected finding, use the context-bound Evidence report and Change Passport.
+Reports expose the default comparison's measurements, quality record, source list, interpretation and manifest export. The shared one-page brief opens in an isolated, scrollable paper dialog, prints to A4 with working comparison QR and uses actual source-linked exposure rather than legacy demo figures. For a custom radar pair or selected finding, use the context-bound Evidence report and Change Passport.
 
 **Implementation:** [ReportsView.tsx](fluvisar-next/apps/web/src/components/ReportsView.tsx).
 
@@ -656,13 +658,17 @@ npm run build
 npm run test:e2e -- --workers=1
 ```
 
-The current browser suite registers **63 tests in eleven files**:
+The current browser suite registers **79 tests in fifteen files**:
 
 | Suite | Main coverage |
 | --- | --- |
+| `decision-brief.spec.ts` | Shared report entry points in both regions, source-bound metrics and QR, isolated responsive layout, A4 printing and region-change fly-in continuity |
+| `place-watch.spec.ts` | Source hashes and measured place proximity, assumption-only timing and exports, responsive watchlist, restored tilted Satellite default, camera-preserving imagery switches and right-corner chat |
+| `atlas-outlook.spec.ts` | Chronological forecasting, elapsed date gaps, physical bounds, source-linked case cards and exports, responsive themes, docked chat and repeatable automatic zoom-in |
 | `responsive-audit.spec.ts` | All ten public pages at five desktop/laptop/phone sizes in both themes; header reachability, overflow and unclipped intro content |
 | `about-lab.spec.ts` | Original crew and imagery provenance, story navigation, themes, responsive layout and preserved Lab controls/interactions |
 | `legacy-pages.spec.ts` | Routes, navigation, report/source consistency, exports and learning modules |
+| `satellite-interactions.spec.ts` | Mouse capture-loss recovery, phone touch swipe, full-range keyboard controls, both regional cameras and source-labelled satellite overlays |
 | `map-first.spec.ts` | Left panel, regional camera defaults, floating chat, cloud/context labels, split alignment and source-linked tiles for every optical date |
 | `observatory-controls.spec.ts` | Study framing, camera alignment, controls, tools and region navigation |
 | `observation-history.spec.ts` | Served-image checksums, date/image mapping, pair persistence, metrics and themes |
@@ -736,7 +742,7 @@ The checked-in Dockerfile/Compose setup is an earlier scaffold. It references a 
 - Field records are browser-local and await review; there is no automatic remote-team verification.
 - WorldCover is historical and OSM is incomplete. No source-backed exposed-population or financial-loss estimate is supplied by Evidence.
 - The interface is English-first. Language/audience controls and some Bangla content exist, but reviewed end-to-end bilingual coverage is incomplete.
-- The separate **Govt Brief / PDF + QR template modal** still contains illustrative values and historical sensor wording. Use the source-linked Evidence report, Change Passport and `/reports` for measured results; the template is not an authoritative analytical brief.
+- **Govt Brief / PDF + QR** uses the current registered comparison and, when opened from the finding inspector, its actual finding scope. It reports measured transition areas, sensitivity and mapped intersections without claiming affected population or confirmed damage. Its QR reopens that comparison; a local development address must be deployed before phone sharing.
 - Older architecture, feature catalogues and milestone documents describe a broader target design. Use this README's source-linked runtime sections when describing the current build.
 
 ### 18.2 Next integration work
@@ -744,7 +750,7 @@ The checked-in Dockerfile/Compose setup is an earlier scaffold. It references a 
 - Independent stage/tide, water-reference and temporal-persistence validation.
 - Real-product NISAR or interferometric integration after appropriate inputs are acquired and verified.
 - Reviewed field synchronization, consent and human revision workflows.
-- Complete bilingual coverage and replacement of remaining illustrative brief templates.
+- Complete bilingual coverage and extend independently reviewed report interpretation.
 - Production packaging, reverse-proxy setup and deployment validation.
 
 ## 19. Documentation and contribution

@@ -64,7 +64,7 @@ const ObservatoryRoute: React.FC = () => {
   }, [searchParams, urlRegionId]);
 
   return (
-    <div className="flex flex-col flex-1 h-full overflow-hidden">
+    <div className="observatory-layout relative flex flex-col flex-1 h-full overflow-hidden">
       <main className="observatory-stage flex-1 relative flex flex-col overflow-hidden w-full h-full">
         {/* Full Viewport Map Canvas */}
         <MapWorkspace observatory />
@@ -77,13 +77,13 @@ const ObservatoryRoute: React.FC = () => {
           <SwipeCompareMap dateA={selectedPair[0]} dateB={selectedPair[1]} />
         )}
 
-        {/* 1. Sleek Active Lens Guide & Explainer (Replaces clunky LeftPanel) */}
-        <ObservatoryFeaturePanel />
-
         {/* 2. Focused Finding Inspector Drawer (Replaces clunky RightInspector) */}
         <FindingInspectorDrawer />
         <EvidenceWorkbench />
       </main>
+
+      {/* Full-height investigation rail, including the area beside the timeline. */}
+      <ObservatoryFeaturePanel />
 
       {/* Linked Context Tracks */}
       <ContextTracks />

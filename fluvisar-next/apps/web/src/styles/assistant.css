@@ -15,9 +15,7 @@
 @media(max-width:700px){.legacy-pages .fl-assistant{top:76px;right:8px;bottom:8px;width:calc(100vw - 16px);max-width:none;border-radius:12px}.legacy-pages .fl-assistant header{padding:13px 16px}.legacy-pages .fl-scope{padding:11px 16px}.legacy-pages .fl-welcome{padding-top:10px}.legacy-pages .map-flyin-controls{top:110px;font-size:11px}}
 
 
-/* Native modal centres the conversation and handles focus/inert background. */
-.legacy-pages dialog.fl-assistant{inset:0;margin:auto;width:min(720px,calc(100vw - 40px));max-width:none;height:min(800px,calc(100dvh - 48px));max-height:calc(100dvh - 48px);padding:0}
-.legacy-pages dialog.fl-assistant::backdrop{background:rgba(4,15,21,.62);backdrop-filter:blur(3px)}
+/* Contextual conversation controls. */
 .legacy-pages .fl-assistant nav>span{margin-right:auto;align-self:center;color:var(--text-3);font-size:12px}
 .legacy-pages button.fl-data-chat{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;color:var(--water);background:var(--panel);font-size:11px;line-height:1.4;cursor:pointer;white-space:nowrap}
 .legacy-pages button.fl-data-chat:hover{border-color:var(--water);background:var(--water-dim)}
@@ -26,7 +24,7 @@
 .legacy-pages .obs-sidebar-body>.fl-data-chat{margin-bottom:10px}
 .legacy-pages .navbar__assistant{white-space:nowrap}
 @media(max-width:980px){.legacy-pages .navbar__assistant span{display:none}}
-@media(max-width:700px){.legacy-pages dialog.fl-assistant{inset:0;width:calc(100vw - 20px);height:calc(100dvh - 24px);max-height:calc(100dvh - 24px);margin:auto}.legacy-pages .fl-data-toolbar{flex-wrap:wrap}}
+@media(max-width:700px){.legacy-pages .fl-data-toolbar{flex-wrap:wrap}}
 @media(max-width:700px){.legacy-pages .navbar{padding-inline:12px;gap:8px}.legacy-pages .navbar__brand{gap:6px}.legacy-pages .navbar__right{display:flex;gap:6px;flex-shrink:0}.legacy-pages .navbar__right .navbar__reach-select{width:92px;max-width:92px;padding-inline:6px}.legacy-pages .navbar__right .navbar__btn{padding:7px 8px}.legacy-pages .navbar__right .navbar__mobile-toggle{display:inline-flex;align-items:center;justify-content:center;padding:6px;border:0;background:transparent;color:var(--text);flex-shrink:0}}
 @media(max-width:360px){.legacy-pages .navbar__brand-text{display:none}}
 @media print{.legacy-pages dialog.fl-assistant,.legacy-pages button.fl-data-chat{display:none!important}}
@@ -41,3 +39,19 @@
 .fl-floating-launcher>span{position:absolute;right:66px;white-space:nowrap;background:var(--panel,#132129);color:var(--text,#e8f2f0);border:1px solid var(--line,#2a3e46);padding:9px 12px;border-radius:8px;font-size:12px;font-weight:700;opacity:0;pointer-events:none;}
 .fl-floating-launcher:hover>span,.fl-floating-launcher:focus-visible>span{opacity:1;}
 @media(max-width:760px){.legacy-pages .fl-floating-launcher{width:48px;height:48px;right:12px;bottom:12px;}}
+
+/* A normal nonmodal chat widget: no scrim and no inert page behind it. */
+.legacy-pages .fl-assistant{inset:auto auto 88px 18px;width:410px;height:min(620px,calc(100dvh - 170px));max-height:calc(100dvh - 170px);max-width:calc(100vw - 36px);margin:0;z-index:1200;padding:0;border-radius:14px;}
+.legacy-pages .fl-assistant header{padding:15px 16px;}.legacy-pages .fl-assistant .fl-scope{padding:11px 16px;}.legacy-pages .fl-assistant .fl-welcome{padding-top:10px;}.legacy-pages .fl-assistant .fl-welcome h3{font-size:21px;}
+.legacy-pages .fl-floating-launcher{right:auto;left:18px;z-index:1201;}.fl-floating-launcher>span{right:auto;left:66px;}
+.legacy-pages .observatory-redesign .restored-timeline{padding-right:26px;}
+.legacy-pages .observatory-redesign .restored-map-workspace[data-flyin-active=true] .restored-candidate-marker{visibility:hidden;}
+@media(max-width:760px){.legacy-pages .fl-assistant{left:12px;right:12px;bottom:76px;top:auto;width:auto;height:min(600px,calc(100dvh - 140px));max-height:calc(100dvh - 140px);max-width:none;}.legacy-pages .fl-floating-launcher{left:12px;right:auto;}.legacy-pages .observatory-redesign .restored-timeline{padding-left:76px;padding-right:12px;}}
+@media print{.legacy-pages .fl-assistant,.legacy-pages .fl-floating-launcher{display:none!important;}}
+
+/* Keep the docked conversation at the requested lower-right corner. */
+.legacy-pages .fl-assistant{left:auto;right:18px;}
+.legacy-pages .fl-floating-launcher{left:auto;right:18px;}
+.fl-floating-launcher>span{left:auto;right:66px;}
+.legacy-pages .observatory-redesign .restored-timeline{padding-right:94px;}
+@media(max-width:760px){.legacy-pages .fl-assistant{left:12px;right:12px;}.legacy-pages .fl-floating-launcher{left:auto;right:12px;}.legacy-pages .observatory-redesign .restored-timeline{padding-left:12px;padding-right:76px;}}

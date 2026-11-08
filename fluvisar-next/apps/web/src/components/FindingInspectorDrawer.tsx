@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowUpRight, Download, FileJson, Sliders, X, QrCode, ShieldCheck, Microscope, Users, BookOpen, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { DecisionBriefModal } from './DecisionBriefModal';
 import { BreakMyFindingModal } from './BreakMyFindingModal';
@@ -10,6 +10,9 @@ import { useWorkspaceStore } from '../store/workspaceStore';
 export function FindingInspectorDrawer() {
   const { evidence, comparisonReady } = useEvidence();
   const { selectedFindingId, setSelectedFinding, setRightInspectorOpen, isRightInspectorOpen, regionId } = useWorkspaceStore();
+
+  const [collapsed, setCollapsed] = useState(false);
+  useEffect(() => setCollapsed(false), [selectedFindingId, isRightInspectorOpen]);
 
   const [tab, setTab] = useState<'overview' | 'physics' | 'audit' | 'trace' | 'actions'>('overview');
   const [threshold, setThreshold] = useState(-17);
@@ -43,13 +46,20 @@ export function FindingInspectorDrawer() {
   const variant = sensitivity.find(item => item.threshold_db === threshold);
 
   return (
-    <aside className="finding-drawer science-card restored-finding-inspector">
+    <aside className={"finding-drawer science-card restored-finding-inspector" + (collapsed ? " is-collapsed" : "")}>
       <button
         className="science-icon-button close-panel"
         aria-label="Close finding"
         onClick={() => { setSelectedFinding(null); setRightInspectorOpen(false); }}
       >
         <X size={18} />
+      </button>
+      <button
+        className="obs-inspector-collapse"
+        aria-expanded={!collapsed}
+        onClick={() => setCollapsed(!collapsed)}
+      >
+        {collapsed ? "Expand finding details" : "Collapse details"}
       </button>
 
       <div className="flex items-center justify-between pr-6">
@@ -300,7 +310,7 @@ export function FindingInspectorDrawer() {
       )}
 
       {/* Modals */}
-      <DecisionBriefModal isOpen={showBrief} onClose={() => setShowBrief(false)} />
+      <DecisionBriefModal findingId={p.id} isOpen={showBrief} onClose={() => setShowBrief(false)} />
       <BreakMyFindingModal isOpen={showBreak} onClose={() => setShowBreak(false)} />
       <ChangePassportModal isOpen={showPassport} onClose={() => setShowPassport(false)} />
     </aside>

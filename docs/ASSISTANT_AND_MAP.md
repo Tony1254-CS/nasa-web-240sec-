@@ -4,18 +4,18 @@ The Observatory fly-in and shared assistant preserve the current study-area data
 
 ## Geographic camera sequence
 
-`MapWorkspace` uses one camera to drive the synchronized before/after views. The sequence moves from a wide view through Bangladesh into the registered observation bounding box. Final padding accounts for map controls and the compact viewport; image-source coordinates never change.
+`MapWorkspace` uses one camera to drive the synchronized before/after views. The sequence moves from a wide view through Bangladesh into the registered observation bounding box. The final camera retains zoom 11.4 and pitch 55 degrees in both regions; comparison views use shared study bounds. Satellite is the restored default; imagery switches retain the current center, zoom, pitch and bearing. Image-source coordinates never change.
 
-- Runs once per region per browser session, with Replay and Skip controls.
+- Runs once per region on each fresh Observatory mount, with Replay and Skip controls. A previous session-level seen flag no longer suppresses the introduction.
 - Dragging, scrolling, touching or using the keyboard interrupts the flight.
-- Reduced-motion users go straight to the final bounds.
+- Reduced-motion users go straight to the final study-area camera.
 - Animation uses camera completion events, with listener cleanup when a map unmounts.
-- Only tagged fly-in events advance the sequence. Both comparison maps resize together before camera synchronization resumes, so a follower resize cannot interrupt the primary flight. The final fit measures the current viewport.
+- Only tagged fly-in events advance the sequence. Both comparison maps resize together before camera synchronization resumes, so a follower resize cannot interrupt the primary flight. The final destination preserves the requested camera; comparison fitting measures the current viewport.
 - Date/layer changes do not replay the introduction. Map handoffs focus the selected candidate centroid.
 
 ## One assistant, two entry points
 
-**Ask FluviSAR** lives in the primary navigation and opens a centred native modal with focus containment, Escape dismissal and focus restoration. **Chat with Data** appears beside supported metrics, model workspace explanations and the active Evidence report stage; it activates selection mode and highlights the supported data boxes first. Clicking a highlighted box, or focusing it and pressing Enter, opens the centred chat with that box as its subject. Escape or Cancel leaves selection mode and removes the highlights. Report selection stays inside the report. There is no persistent floating launcher. Atlas and other unsupported surfaces do not show a Chat with Data action. Opening the assistant does not resize the underlying cards.
+**Ask FluviSAR** in the primary navigation and the bottom-right floating launcher open the same docked chat window. It is a non-modal `section` with dialog semantics: no separate popup, backdrop, background blur or inert page. The launcher minimizes the conversation, and Escape inside the panel closes it with focus restoration. Background controls remain usable. **Chat with Data** appears beside supported metrics, model workspace explanations and the active Evidence report stage; it highlights supported boxes before opening a conversation. Clicking a highlighted box, or pressing Enter on it, opens chat scoped to that box. Escape or Cancel leaves selection mode. Report selection stays inside the report, and opening chat does not resize underlying cards. Atlas and other unsupported surfaces do not show a Chat with Data action; the experimental Atlas outlook is not part of the assistant data tools.
 
 The panel displays the active region, registered comparison dates and selected finding. Model workspaces have a separate synthetic context. Conversations persist on the device by run and measured/model context. Each answer retains its own pair and finding metadata, sources and map handoff, including when a later question uses another scope. Users can clear or export the conversation. Local field photos are not read or sent.
 

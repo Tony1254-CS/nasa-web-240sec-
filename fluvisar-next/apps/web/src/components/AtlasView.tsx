@@ -25,6 +25,9 @@ import { SensorRaceModal } from './SensorRaceModal';
 import { ChangePassportModal } from './ChangePassportModal';
 import { CardImageSwipe } from './CardImageSwipe';
 import { PlanetaryTelemetryMap, type TelemetrySite } from './PlanetaryTelemetryMap';
+import { PageIntro } from './EvidenceUI';
+import { AtlasOutlook } from './AtlasOutlook';
+import { AtlasPlaceWatch } from './AtlasPlaceWatch';
 
 interface GlobalCase {
   id: string;
@@ -757,6 +760,12 @@ export function AtlasView() {
         <SensorRaceModal isOpen={showSensorRace} onClose={() => setShowSensorRace(false)} />
         <ChangePassportModal isOpen={showPassport} onClose={() => setShowPassport(false)} />
 
+        {/* Look Ahead Outlook & Place Watch */}
+        <div className="pt-6 border-t border-slate-800/80 space-y-8">
+          <AtlasOutlook />
+          <AtlasPlaceWatch />
+        </div>
+
         {/* FOOTER */}
         <footer className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-400 border-t border-slate-800/80 pt-5 pb-3">
           <Link to="/reports" className="text-cyan-400 hover:underline flex items-center gap-1 font-medium">
@@ -772,3 +781,25 @@ export function AtlasView() {
     </div>
   );
 }
+
+export function AtlasHero() {
+  const { index } = useEvidence();
+  const regions = Object.values(index.regions);
+  return (
+    <PageIntro
+      eyebrow="REGIONAL ATLAS"
+      title="Two landscapes. Real observations."
+      description="Choose a study area to inspect downloaded radar scenes, processing results and source records."
+    >
+      <div className="atlas-hero-stats">
+        <div><b>{regions.length}</b><span>study areas</span></div>
+        <div><b>{regions.reduce((n, r) => n + r.observations.length, 0)}</b><span>radar passes</span></div>
+        <div><b>{regions.reduce((n, r) => n + (r.optical_observations?.length ?? 0), 0)}</b><span>optical scenes</span></div>
+      </div>
+      <a className="atlas-hero-scroll" href="#atlas-investigations">
+        Choose your investigation <ArrowUpRight size={15} />
+      </a>
+    </PageIntro>
+  );
+}
+

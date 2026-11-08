@@ -79,6 +79,17 @@
 .obs-cloud-note{position:absolute;top:114px;left:14px;max-width:320px;padding:10px 12px;border:1px solid #bda971;border-radius:8px;background:#fff6dc;color:#51421e;box-shadow:0 4px 12px #0002;font-size:11px;line-height:1.5;}
 .obs-cloud-note b,.obs-cloud-note span{display:block;}.obs-cloud-note span{margin-top:3px;font-size:10px;}
 .observatory-stage:has([data-flyin-active=true]) .obs-cloud-note{display:none;}
+
+/* The rail belongs to the full workspace, including the timeline's left edge. */
+.legacy-pages .observatory-layout{min-height:0;position:relative;}
+.legacy-pages .observatory-redesign .obs-sidebar-footer{display:block;padding:14px 18px 16px;}
+.legacy-pages .obs-footer-provenance{display:flex;align-items:center;gap:8px;font-size:10px;line-height:1.5;}
+.legacy-pages .obs-footer-provenance svg{flex:none;}
+.legacy-pages .obs-footer-summary{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0 0;padding-top:12px;border-top:1px solid var(--line,#dce5e3);}
+.legacy-pages .obs-footer-summary div{min-width:0;}
+.legacy-pages .obs-footer-summary dt{font-size:9px;line-height:1.5;color:var(--text-3,#6b807a);}
+.legacy-pages .obs-footer-summary dd{margin:4px 0 0;font:650 13px/1.4 var(--font-num);color:var(--text,#183738);}
+@media(max-width:760px){.legacy-pages .observatory-redesign .obs-sidebar-footer{padding:12px 14px;}.legacy-pages .obs-footer-summary{margin-top:9px;padding-top:9px;}.legacy-pages .obs-footer-provenance{font-size:9px;}}
 @media(min-width:761px) and (max-width:1250px){.legacy-pages .observatory-redesign{--obs-rail:280px;}}
 @media(max-width:760px){.legacy-pages .observatory-redesign{--obs-rail:0px;}.legacy-pages .observatory-redesign .obs-sidebar.is-open{display:flex;}.legacy-pages .observatory-redesign .obs-sidebar>header>button{display:flex;}.obs-cloud-note{top:154px;left:10px;max-width:calc(100% - 74px);}}
 
@@ -90,3 +101,15 @@
  .obs-feature-card{padding:10px;margin-bottom:6px;}.obs-feature-card small{font-size:9px;line-height:1.4;margin-top:3px;}
  .obs-sidebar-footer{padding:10px 14px;}
 }
+
+/* A drag continues beyond the grip; its label and SVG never intercept input. */
+.legacy-pages .restored-swipe-handle{width:52px;user-select:none;-webkit-user-select:none;touch-action:none;}
+.legacy-pages .restored-swipe-handle>*{pointer-events:none;user-select:none;-webkit-user-select:none;}
+.legacy-pages .restored-swipe-handle[data-dragging=true] .swipe-knob{background:#d8fbff;box-shadow:0 0 0 5px #30bfd144,0 5px 14px #0005;}
+.legacy-pages .obs-radar-pair,.legacy-pages .obs-overlay-reference{display:block;margin:7px 0;line-height:1.5;}
+.legacy-pages .obs-find-change{display:block;width:100%;padding:8px 10px;margin:8px 0;border:1px solid var(--line,#cbd5e1);border-radius:6px;background:var(--water-dim,#e7f6f2);color:var(--water,#087e78);font-size:10px;font-weight:700;cursor:pointer;text-align:left;}
+@media(max-width:760px){.legacy-pages .observatory-redesign .restored-map-legend>div{display:block;max-height:160px;overflow-y:auto;}}
+
+.legacy-pages .observatory-redesign .restored-map-legend:has(>div){right:64px!important;}
+.legacy-pages .restored-map-legend .obs-radar-pair{font-size:11px;font-weight:650;color:var(--text-2,#3e5b59);}
+.legacy-pages .restored-map-legend .obs-overlay-reference{font-size:10px;color:var(--text-2,#3e5b59);}
