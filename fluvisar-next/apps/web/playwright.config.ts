@@ -4,6 +4,7 @@ export default defineConfig({
   timeout: 45000,
   expect: { timeout: 12000 },
   use: {
+    channel: process.env.PLAYWRIGHT_BROWSER_CHANNEL,
     baseURL: 'http://127.0.0.1:5173',
     viewport: { width: 1440, height: 1000 },
     screenshot: 'only-on-failure',

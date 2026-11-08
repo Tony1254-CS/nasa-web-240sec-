@@ -9,7 +9,7 @@ export interface NasaContext {
  rainfall:{name:string;parameter:string;units:string;time_standard:string;grid_degrees:number;point:[number,number];source_products:string[];source_url:string;fallback_source_url:string;fallback_sha256:string;documentation_url:string;sha256:string;rows:{date:string;mm:number|null;source?:string;imerg_mm?:number|null}[]};
  nisar:{name:string;record_count:number;records:NisarRecord[];preview_pair:NisarRecord[];query_url:string;documentation_url:string;interpretation:string;sha256:string};
 }
-export interface DecisionContext {run_id:string;region_id:string;pair:[string,string];finding_id:string|null;scope:string;threshold_db:number;history:HistoryRow[];exposure:EvidenceResult&{map_assets:GeoJSON.FeatureCollection};nasa:NasaContext|null;interpretation:string;candidate_review:Record<string,{building:number;road:number;facility:number;settlement:number;asset_count:number;robust_core_ha:number;robust_fraction:number}>}
+export interface DecisionContext {numerical_runtime?:string;run_id:string;region_id:string;pair:[string,string];finding_id:string|null;scope:string;threshold_db:number;history:HistoryRow[];exposure:EvidenceResult&{map_assets:GeoJSON.FeatureCollection};nasa:NasaContext|null;interpretation:string;candidate_review:Record<string,{building:number;road:number;facility:number;settlement:number;asset_count:number;robust_core_ha:number;robust_fraction:number}>}
 const cache=new Map<string,DecisionContext>();
 export const changeLabels={'land-to-water':'Land → water','water-to-land':'Water → land'};
 export function useDecisionContext(run:string,finding:string|null,enabled=true){

@@ -7,8 +7,7 @@ import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 import numpy as np
-from rasterio.features import rasterize
-from rasterio.warp import transform_geom
+from app.raster_runtime import rasterize, transform_geom, RUNTIME
 from app.evidence import ROOT, PUBLIC, features, read_registered, impact, numerical, filtered
 
 
@@ -20,6 +19,9 @@ def decision_context(run_id, finding_id=None):
     fingerprint = hashlib.sha256()
     fingerprint.update(Path(__file__).read_bytes())
     fingerprint.update((Path(__file__).parent/'evidence.py').read_bytes())
+    for filename in ('raster_runtime.py', 'portable_raster.py'):
+        fingerprint.update((Path(__file__).parent/filename).read_bytes())
+    fingerprint.update(RUNTIME.encode())
     fingerprint.update(json.dumps(bundle, sort_keys=True).encode())
     for path in [PUBLIC/'observations'/bundle['region_id']/'evidence-context.json', PUBLIC/'observations'/bundle['region_id']/'nasa-context.json']:
         if path.exists():
@@ -105,7 +107,7 @@ def decision_context(run_id, finding_id=None):
                 'robust_fraction': core_pixels / max(1, props['pixel_count'])}
     nasa_path = PUBLIC / 'observations' / bundle['region_id'] / 'nasa-context.json'
     nasa = json.loads(nasa_path.read_text(encoding='utf8')) if nasa_path.exists() else None
-    result = {'run_id': run_id, 'region_id': bundle['region_id'], 'pair': bundle['pair'],
+    result = {'run_id': run_id, 'region_id': bundle['region_id'], 'pair': bundle['pair'], 'numerical_runtime': RUNTIME,
             'finding_id': finding_id, 'scope': 'selected finding' if finding_id else 'study footprint',
             'threshold_db': bundle['threshold_db'], 'history': rows, 'exposure': exposure,
             'nasa': nasa, 'candidate_review': candidate_review,

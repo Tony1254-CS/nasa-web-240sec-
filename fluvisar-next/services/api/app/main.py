@@ -160,8 +160,7 @@ def get_run_bundle(run_id: str):
 @app.get("/api/artifacts/{artifact_id}/sample")
 def sample_numeric_artifact(artifact_id: str, lon: float = Query(..., ge=-180, le=180), lat: float = Query(..., ge=-90, le=90), channel: str = Query("vv", pattern="^(vv|vh)$")):
     import math
-    import rasterio
-    from rasterio.warp import transform
+    from app.raster_runtime import rasterio, transform
     observation = None
     region_entry = None
     for region in read_catalog()["regions"].values():
@@ -330,10 +329,12 @@ def review_evidence_stage(run_id: str, stage: str, finding_id: Optional[str] = N
 
 @app.get('/api/runs/{run_id}/decision-context')
 def review_decision_context(run_id: str, finding_id: Optional[str] = None):
-    from app.decision import decision_context
     get_run_bundle(run_id)
     try:
+        from app.decision import decision_context
         return decision_context(run_id, finding_id)
+    except ImportError as error:
+        raise HTTPException(503, 'The numerical analysis runtime could not load. Restore its dependencies or compute this comparison on a supported host.') from error
     except KeyError as error:
         raise HTTPException(404, str(error)) from error
     except ValueError as error:

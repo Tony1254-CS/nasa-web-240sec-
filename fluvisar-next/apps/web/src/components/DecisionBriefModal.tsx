@@ -9,7 +9,7 @@ import '../styles/decision-brief.css';
 interface DecisionBriefModalProps {
   isOpen: boolean;
   onClose: () => void;
-  scope?: 'study' | 'selection';
+  scope?: 'study' | 'selection' | 'comparison';
   findingId?: string;
 }
 

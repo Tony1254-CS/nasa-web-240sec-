@@ -252,3 +252,31 @@ including full-height desktop bounds, the mobile drawer, real footer values and
 absence of horizontal overflow or page errors. Expanding signal tracks also
 retained full-height rail alignment. Screenshots were reviewed and the temporary
 preview was stopped. No additional tests were added for this layout adjustment.
+
+## Executive Insights - 9 November 2026
+
+Added `/insights` using the registered regional comparison, measured transition
+areas, mapped exposure, source records and acquisition history. Sendai cards
+distinguish screening evidence from confirmed damage. Economic values require
+explicit user-supplied rates and remain conditional planning scenarios.
+
+The 13-case Insights, Decision Brief and Decision Desk run passed. The responsive
+audit and existing Evidence workflows passed all 14 cases, covering eleven pages
+at five viewport sizes in both themes (110 layout combinations). Four Insights
+cases passed again after the chart-axis refinement. These were targeted runs;
+the complete registered suite contains 83 tests in sixteen files.
+
+The host blocked the native GDAL DLL through Windows Application Control. A
+restricted read-only GeoTIFF runtime recomputed the original files without
+changing OS policy or accepting stale cache signatures. All eight comparison
+and selected-finding parity checks matched the earlier native results exactly;
+four Python tests passed for georeferencing, masks, coordinate conversion and
+both regions' actual context/pixel responses. Ingestion still requires GDAL.
+
+Browser checks used installed Chrome through the optional Playwright channel;
+bundled Chromium could not initialize WebGL on this host. The production build
+passed. Production preview checked real regional data, scenario arithmetic,
+briefs and export availability at 1920, 1366 and 390 px, including both themes.
+The final chart, six indicator cards and malformed local-storage recovery were
+also verified. Screenshots were reviewed without page errors. Observatory data
+assets and SAR Lab source were unchanged.
