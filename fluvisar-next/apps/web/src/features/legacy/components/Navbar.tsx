@@ -16,6 +16,7 @@ export function Navbar({ transparent = false }: { transparent?: boolean }) {
         <NavLink to="/observatory" className="navbar__link" onClick={()=>setOpen(false)}>Observatory</NavLink>
         <NavLink to="/atlas" className="navbar__link" onClick={()=>setOpen(false)}>Atlas</NavLink>
         <NavLink to="/impact" className={({isActive})=>`navbar__link${isActive?' navbar__link--active':''}`} onClick={()=>setOpen(false)}><ClipboardList size={17}/> Decision Desk</NavLink>
+        <NavLink to="/insights" className={({isActive})=>`navbar__link${isActive?' navbar__link--active':''}`} onClick={()=>setOpen(false)}>Insights</NavLink>
         <NavLink to="/intelligence" className={({isActive})=>`navbar__link${isActive?' navbar__link--active':''}`} onClick={()=>setOpen(false)}><Brain size={18}/> ML Intelligence</NavLink>
         <NavLink to="/sar-lab" className={({isActive})=>`navbar__link${isActive?' navbar__link--active':''}`} onClick={()=>setOpen(false)}><Microscope size={18}/> SAR Lab</NavLink>
         <NavLink to="/stories" className="navbar__link" onClick={()=>setOpen(false)}>Stories</NavLink>

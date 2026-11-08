@@ -25,6 +25,7 @@ import { ObservatoryHeader } from './components/ObservatoryHeader';
 import { EvidenceWorkbench } from './components/EvidenceWorkbench';
 import './styles/observatory-redesign.css';
 
+const InsightsPage = lazy(() => import('./components/InsightsPage').then(m=>({default:m.InsightsPage})));
 const DecisionDesk = lazy(() => import('./features/legacy/pages/ImpactDesk').then(m=>({default:m.DecisionDesk})));
 const IntelligencePage = lazy(() => import('./features/legacy/pages/IntelligenceWorkspace').then(m=>({default:m.IntelligencePage})));
 const AboutPage = lazy(() => import('./features/legacy/pages/About').then(m=>({default:m.AboutPage})));
@@ -142,6 +143,7 @@ const WorkspaceApp: React.FC = () => {
 
 export const App: React.FC = () => <EvidenceProvider><LegacyPageLayout><Navbar/><Routes>
   <Route path="/" element={<LandingPageView/>}/>
+  <Route path="/insights" element={<Suspense fallback={<div className="desk-standby">Reading insights...</div>}><InsightsPage/></Suspense>}/>
   <Route path="/impact" element={<Suspense fallback={<div className="desk-standby">Loading Decision Desk…</div>}><DecisionDesk /></Suspense>} />
   <Route path="/about" element={<Suspense fallback={<div className="desk-standby">Opening our story...</div>}><AboutPage/></Suspense>}/><Route path="/about-us" element={<Navigate to="/about" replace/>}/>
   <Route path="/imact" element={<Navigate to="/impact" replace />} />

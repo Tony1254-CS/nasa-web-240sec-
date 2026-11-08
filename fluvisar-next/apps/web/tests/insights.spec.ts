@@ -1,0 +1,35 @@
+import {test,expect} from '@playwright/test';
+import {readFile} from 'node:fs/promises';
+import {valueExposure} from '../src/data/insightScenario';
+const catalogue=JSON.parse(await readFile(new URL('../public/observations/index.json',import.meta.url),'utf8'));
+test('valuation requires explicit rates, respects physical inputs and never invents a loss split',()=>{
+ const exposure={buildings:4,roadM:120,croplandHa:2},rates={buildingBdt:1000,roadBdtM:10,flowBdtHaDay:50,days:30,affectedShare:.5};
+ const before=JSON.stringify({exposure,rates}),result=valueExposure(exposure,rates)!;expect(result.building).toBe(2000);expect(result.road).toBe(600);expect(result.direct).toBe(2600);expect(result.flow).toBe(1500);expect(result.total).toBe(4100);expect(result.curve[0].total).toBe(result.direct);expect(result.curve.at(-1)!.total).toBe(result.total);expect(JSON.stringify({exposure,rates})).toBe(before);
+ expect(valueExposure(exposure,{...rates,buildingBdt:null})).toBeNull();expect(valueExposure(exposure,{...rates,buildingBdt:-1})).toBeNull();expect(valueExposure(exposure,{...rates,buildingBdt:Number.MAX_VALUE})).toBeNull();expect(valueExposure(exposure,{...rates,days:366})).toBeNull();expect(valueExposure(exposure,{...rates,affectedShare:2})).toBeNull();expect(valueExposure(exposure,{...rates,affectedShare:0})!.total).toBe(0);expect(valueExposure(exposure,{...rates,buildingBdt:0,roadBdtM:0,flowBdtHaDay:0})!.total).toBe(0);
+});
+test('Insights uses each region source context, explicit assumptions and auditable export',async({page,request})=>{
+ test.setTimeout(90000);for(const id of ['jamuna','sundarbans']){
+  const r=catalogue.regions[id],response=await request.get('/api/runs/'+encodeURIComponent(r.run_id)+'/decision-context');expect(response.ok()).toBe(true);const context=await response.json();
+  await page.goto('/insights');await page.getByRole('combobox',{name:'Investigation region'}).selectOption(id);await expect(page.getByRole('button',{name:'Export insights',exact:true})).toBeEnabled();await expect(page.getByTestId('insights-change')).toContainText(r.metrics.land_to_water_ha.toLocaleString('en-US',{maximumFractionDigits:2}));await expect(page.locator('.in-kpis article').nth(1).locator('strong')).toHaveText(String(context.exposure.assets['land-to-water'].building));
+  await expect(page.locator('.in-history a')).toHaveCount(6);await expect(page.getByTestId('insights-scenario-total')).toHaveCount(0);
+  await page.getByRole('spinbutton',{name:'Per mapped building way',exact:true}).fill('100000');await page.getByRole('spinbutton',{name:'Per intersected road metre',exact:true}).fill('1000');await page.getByRole('spinbutton',{name:'Daily net revenue per cropland hectare',exact:true}).fill('500');await page.getByRole('slider',{name:'Scenario affected share'}).fill('50');
+  const expected=valueExposure({buildings:context.exposure.assets['land-to-water'].building,roadM:context.exposure.assets['land-to-water'].road_length_m,croplandHa:context.exposure.landcover['land-to-water'].Cropland??0},{buildingBdt:100000,roadBdtM:1000,flowBdtHaDay:500,days:30,affectedShare:.5})!;
+  await expect(page.getByTestId('insights-scenario-total')).toContainText(expected.total.toLocaleString('en-US',{maximumFractionDigits:0}));
+  const pending=page.waitForEvent('download');await page.getByRole('button',{name:'Export insights',exact:true}).click();const packet=JSON.parse(await readFile((await(await pending).path())!,'utf8'));expect(packet.run_id).toBe(r.run_id);expect(packet.scenario.total).toBeCloseTo(expected.total);expect(packet.scenario.assumptions.affectedShare).toBe(.5);expect(packet.observations).toHaveLength(6);expect(packet.framework.some((f:any)=>f.code==='B-5')).toBe(true);expect(packet.exposure.source.osm_timestamp).toBeTruthy();
+ }
+});
+test('comparison changes scope the brief and isolate saved workflow steps',async({page,request})=>{
+ test.setTimeout(90000);await page.goto('/insights');await expect(page.getByRole('button',{name:'Decision brief',exact:true})).toBeEnabled();const check=page.getByRole('checkbox',{name:'Check the source comparison'});await check.check();await page.reload();await expect(check).toBeChecked();
+ const r=catalogue.regions.jamuna,t0=[...r.observations].sort((a:any,b:any)=>a.date.localeCompare(b.date))[0].date,t1=r.pair[1],response=await request.get(r.pair_bundles[t0+'_'+t1]);expect(response.ok()).toBe(true);const bundle=await response.json();
+ await page.getByRole('combobox',{name:'Insights before date'}).selectOption(t0);await expect(page.getByTestId('insights-change')).toContainText(bundle.metrics.land_to_water_ha.toLocaleString('en-US',{maximumFractionDigits:2}));await expect(check).not.toBeChecked();await page.getByRole('button',{name:'Decision brief',exact:true}).click();const brief=page.getByRole('dialog',{name:'Source-linked regional decision brief'});await expect(brief.getByRole('button',{name:'Print / Export PDF'})).toBeEnabled();await expect(brief.getByTestId('brief-land-water')).toContainText(bundle.metrics.land_to_water_ha.toLocaleString('en-US',{maximumFractionDigits:2}));await expect(brief.locator('.db-qr a')).toHaveAttribute('href',new RegExp('t0='+t0));await page.keyboard.press('Escape');
+ await page.getByRole('combobox',{name:'Investigation region'}).selectOption('sundarbans');await expect(page.locator('.insights-hero h2')).toContainText('Sundarbans');await expect(check).not.toBeChecked();
+});
+test('Insights is reachable and readable in both themes on desktop, laptop and phones',async({page})=>{
+ test.setTimeout(150000);const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+ for(const size of [{width:1920,height:1080},{width:1366,height:768},{width:390,height:844},{width:360,height:800}])for(const theme of ['dark','light']){
+  await page.setViewportSize(size);await page.addInitScript(t=>localStorage.setItem('fluvisar-page-theme',t),theme);await page.goto('/insights');await expect(page.getByRole('heading',{level:1})).toContainText('From satellite signal');await expect(page.getByRole('button',{name:'Export insights',exact:true})).toBeEnabled();await page.evaluate(()=>document.fonts.ready);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);const nav=page.getByRole('navigation',{name:'Primary',exact:true}),menu=nav.getByRole('button',{name:'Toggle navigation'});if(await menu.isVisible())await menu.click();await expect(nav.getByRole('link',{name:'Insights',exact:true})).toBeVisible();if(await menu.isVisible())await menu.click();const left=(await page.locator('.navbar__left').boundingBox())!,right=(await page.locator('.navbar__right').boundingBox())!;expect(left.x+left.width).toBeLessThanOrEqual(right.x+1);await page.screenshot({path:`test-results/insights-${size.width}-${theme}.png`});
+  await page.locator('.in-valuation').scrollIntoViewIfNeeded();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:`test-results/insights-scenario-${size.width}-${theme}.png`});
+ }
+ expect(errors).toEqual([]);
+});

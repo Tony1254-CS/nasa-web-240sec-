@@ -6,7 +6,7 @@ import {useEvidence,useObservatoryEvidence,number,readableDate} from '../data/ev
 import {useDecisionContext} from '../features/legacy/data/decision';
 import '../styles/decision-brief.css';
 
-interface DecisionBriefModalProps {isOpen:boolean;onClose:()=>void;scope?:'study'|'selection';findingId?:string}
+interface DecisionBriefModalProps {isOpen:boolean;onClose:()=>void;scope?:'study'|'selection'|'comparison';findingId?:string}
 
 /** Shared paper surface isolated from page resets, transforms and clipping. */
 export function DecisionBriefModal({isOpen,onClose,scope='selection',findingId}:DecisionBriefModalProps){

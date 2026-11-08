@@ -190,6 +190,22 @@ A prominent experimental water-area outlook compares persistence and elapsed-tim
 
 **Implementation:** [AtlasView.tsx](fluvisar-next/apps/web/src/components/AtlasView.tsx).
 
+### 4.3 Decision insights - `/insights`
+
+The executive overview adapts the previous project's Insights concepts to actual
+registered data: transition area, mapped building/road exposure, historical
+land-cover overlap, area-ranked candidates and six-pass water history. A Sendai
+evidence bridge uses the official indicator meanings while separating screening
+inputs from confirmed people affected, damaged facilities and monetary losses.
+
+A conditional BDT scenario accepts explicit local unit rates, affected share and
+interruption duration. It separates physical-cost assumptions from cumulative
+revenue interruption, with no hidden prices or fixed damage/loss split. Review
+steps persist by run; exact-comparison map links, a scope-correct brief and a JSON
+packet preserve observations, sources, quality, assumptions and user status.
+
+See [Insights analysis, methods and research](docs/INSIGHTS.md).
+
 ## 5. Observatory workspace
 
 **Routes:** `/observatory/jamuna` and `/observatory/sundarbans`.
@@ -573,6 +589,7 @@ The active reproduction path uses `scripts/`, the runtime catalogue and `service
 | `/observatory/jamuna` | Jamuna workspace |
 | `/observatory/sundarbans` | Sundarbans workspace |
 | `/impact` | Decision Desk |
+| `/insights` | Executive insights, Sendai evidence bridge and conditional economic planning |
 | `/intelligence` | ML sandbox and workspace evidence |
 | `/sar-lab` | SAR science lab |
 | `/about` and `/about-us` | Project story and original team |
@@ -658,14 +675,15 @@ npm run build
 npm run test:e2e -- --workers=1
 ```
 
-The current browser suite registers **79 tests in fifteen files**:
+The current browser suite registers **83 tests in sixteen files**:
 
 | Suite | Main coverage |
 | --- | --- |
+| `insights.spec.ts` | Explicit valuation arithmetic, real regional exposure, pair-scoped brief/export, review persistence, themes and responsive navigation |
 | `decision-brief.spec.ts` | Shared report entry points in both regions, source-bound metrics and QR, isolated responsive layout, A4 printing and region-change fly-in continuity |
 | `place-watch.spec.ts` | Source hashes and measured place proximity, assumption-only timing and exports, responsive watchlist, restored tilted Satellite default, camera-preserving imagery switches and right-corner chat |
 | `atlas-outlook.spec.ts` | Chronological forecasting, elapsed date gaps, physical bounds, source-linked case cards and exports, responsive themes, docked chat and repeatable automatic zoom-in |
-| `responsive-audit.spec.ts` | All ten public pages at five desktop/laptop/phone sizes in both themes; header reachability, overflow and unclipped intro content |
+| `responsive-audit.spec.ts` | All eleven public pages at five desktop/laptop/phone sizes in both themes; header reachability, overflow and unclipped intro content |
 | `about-lab.spec.ts` | Original crew and imagery provenance, story navigation, themes, responsive layout and preserved Lab controls/interactions |
 | `legacy-pages.spec.ts` | Routes, navigation, report/source consistency, exports and learning modules |
 | `satellite-interactions.spec.ts` | Mouse capture-loss recovery, phone touch swipe, full-range keyboard controls, both regional cameras and source-labelled satellite overlays |
@@ -677,6 +695,8 @@ The current browser suite registers **79 tests in fifteen files**:
 | `impact-desk.spec.ts` | Both regions, history, divider alignment, pair-specific metrics/exports, exposure, scenarios, deep links and mobile/light theme |
 | `assistant.spec.ts` | Geographic fly-in/alignment, scoped source-linked chat, map handoffs/export, card inspection, mobile/light theme and connection retry |
 | `intelligence-workspace.spec.ts` | Real-data identity/pairs/handoffs, linked model experiments and save/restore, retained diagnostics, walkthrough, panel alignment and mobile/light theme |
+
+For an installed approved Chrome runtime, set `$env:PLAYWRIGHT_BROWSER_CHANNEL = 'chrome'` before the test command. The default browser remains unchanged.
 
 The latest [cross-device audit](docs/RESPONSIVE_QA.md) records desktop, laptop and phone coverage, fixes and production-preview checks.
 
@@ -692,6 +712,14 @@ From `fluvisar-next/`:
 These API/Evidence suites currently contain **18 tests**. They check stored numerical samples, histogram counts, retained threshold results, finding scope, source-date rejection, exposure records, historical inventories, actual water-area histories, review statistics and NASA archive integrity. Artifact validation checks all selectable radar comparisons and optical/radar display lineage.
 
 Additional milestone tests live in `tests/`. The older `run_all_tests.py` runs a fixed milestone list and is not a substitute for the active pytest/browser suites above. Passing implementation tests does not establish independent ground-truth validation or real-data ML accuracy.
+
+### Read-only numerical runtime
+
+The numerical review API prefers Rasterio/GDAL. When that import cannot load, a
+restricted read-only GeoTIFF/UTM runtime supports the retained registered grids.
+It does not modify system security settings or source data. See [runtime scope,
+validation and setup](docs/READ_ONLY_RASTER_RUNTIME.md); the ingestion pipeline
+still requires its normal supported GDAL environment.
 
 ## 17. Build, hosting and troubleshooting
 

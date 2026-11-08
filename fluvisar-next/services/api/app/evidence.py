@@ -5,9 +5,7 @@ from datetime import datetime, timezone
 from functools import lru_cache
 from pathlib import Path
 import numpy as np
-import rasterio
-from rasterio.features import rasterize
-from rasterio.warp import transform_geom
+from app.raster_runtime import rasterio, rasterize, transform_geom
 from scipy import ndimage
 
 ROOT=Path(__file__).resolve().parents[3]

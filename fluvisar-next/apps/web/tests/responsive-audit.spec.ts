@@ -2,7 +2,7 @@ import {test,expect} from '@playwright/test';
 test.describe.configure({mode:'parallel'});
 
 const devices=[{name:'desktop',width:1920,height:1080},{name:'laptop',width:1366,height:768},{name:'compact-laptop',width:1280,height:720},{name:'phone',width:390,height:844},{name:'small-phone',width:360,height:800}];
-const routes=['/','/atlas','/observatory/jamuna','/observatory/sundarbans','/impact','/intelligence','/sar-lab','/about','/stories','/reports'];
+const routes=['/','/insights','/atlas','/observatory/jamuna','/observatory/sundarbans','/impact','/intelligence','/sar-lab','/about','/stories','/reports'];
 for(const device of devices)for(const theme of ['dark','light']){
  test(`${device.name} ${theme}: all pages fit and navigation stays reachable`,async({page})=>{
   test.setTimeout(150000);await page.setViewportSize(device);await page.emulateMedia({reducedMotion:'reduce'});await page.addInitScript(value=>localStorage.setItem('fluvisar-page-theme',value),theme);
