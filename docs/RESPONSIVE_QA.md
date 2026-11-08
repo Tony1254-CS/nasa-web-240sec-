@@ -235,3 +235,20 @@ The production build passed. Production preview loaded the generated QR chunk
 and source-linked briefs in both regions without page errors. Both exported A4
 PDFs were again confirmed as one complete page with lineage/footer text present;
 their rasterized layouts were reviewed. The temporary preview was stopped.
+
+## Full-height Observatory rail - 8 November 2026
+
+The feature panel now belongs to the full Observatory workspace rather than
+only the map stage. This fills the former empty strip beside the signal tracks
+and timeline without changing the map's frame or camera. Its body has more
+scrollable room; a compact footer presents actual radar-pass count and valid
+support alongside the existing provenance message. Phones retain the feature
+drawer and its close control.
+
+All three targeted map-first cases passed (both regional feature panels and the
+desktop/laptop/phone camera/chat check). The production build passed. Production
+preview verified both regions in dark/light at 1920, 1366 and 390 px widths,
+including full-height desktop bounds, the mobile drawer, real footer values and
+absence of horizontal overflow or page errors. Expanding signal tracks also
+retained full-height rail alignment. Screenshots were reviewed and the temporary
+preview was stopped. No additional tests were added for this layout adjustment.

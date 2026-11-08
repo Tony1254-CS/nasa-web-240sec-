@@ -1,7 +1,7 @@
 # Map-first Observatory
 
 Both Observatory routes keep the investigation panel on the left on desktop and
-use a compact feature drawer on phones. Both regions open at zoom 11.4 and pitch 55 degrees, including phones. Jamuna
+use a compact feature drawer on phones. The desktop rail spans the full workspace height, including the area beside the signal tracks and timeline; its scrollable controls and source-summary footer remain inside that rail. Both regions open at zoom 11.4 and pitch 55 degrees, including phones. Jamuna
 centres on 89.75, 25.575; Sundarbans centres on the estuary at 89.74, 21.83. Comparisons use
 shared top-down framing. Recenter and Replay return to the regional default. Each fresh Observatory visit zooms in from a wide view before arriving at that camera; previously seen sessions no longer suppress it. User interaction, Skip, comparison changes and reduced-motion preferences interrupt or bypass the introduction.
 
