@@ -280,3 +280,51 @@ briefs and export availability at 1920, 1366 and 390 px, including both themes.
 The final chart, six indicator cards and malformed local-storage recovery were
 also verified. Screenshots were reviewed without page errors. Observatory data
 assets and SAR Lab source were unchanged.
+
+## Evidence Focus Mode - 12 November 2026
+
+Live Analysis now opens in a viewport-sized reading workspace. Compact toolbar,
+collapsible context, six-stage navigation and a small action bar leave the main
+content one independent vertical scroll area. View map / Focus analysis preserves
+the stage and mounted map; the radar handoff also reveals the map. Presentation
+mode uses optional browser fullscreen with a readable fallback on rejection.
+Floating chat is hidden in Focus Mode; supported Chat with Data remains available.
+
+Five initial focus/readability cases passed, followed by all seven focus/workflow
+cases after the final layout refinement. Both regions completed all six stages at
+1366 x 768; 1536 x 864 and 390 x 844 light layouts also passed. Tests checked
+content height, footer separation, scroll reachability, state continuity, field
+GPS/photo save/export and mobile close behaviour. Actual Chrome fullscreen entry
+and exit plus supported-box chat were verified separately without page errors.
+Screenshots were visually reviewed. The production build passed. The local web
+and numerical API services remain running for review.
+The final five focus/readability cases passed again after compact map-view
+actions and accessible Chat with Data controls were refined.
+
+The follow-up layout retains the same mounted live map in a narrow left column
+(25% viewport, bounded to 280-400 px) beside the Focus report on laptops/desktops.
+Preview hide/show restores full-width reading without recreating the map canvas.
+Phones retain full-width reading. Both regional six-stage laptop tests verify
+column alignment, visible context and canvas continuity; the mobile case remains
+covered. No acquisition, numerical method or camera target changed.
+
+### Step dashboards - 12 November 2026
+
+Detect, Investigate, Challenge, Explain, Field and Impact now use stage-specific
+two-column dashboards on laptop/desktop Focus Mode. The primary step content,
+including the complete empty field form and save action, fits at 1366 x 768.
+Long source lineage, intersected records, saved observations and audit logs remain
+available through separate detail panels; Reading view restores flowing content.
+Phones retain the stacked reading layout. Both regional six-stage tests assert
+that body scrollHeight does not exceed clientHeight, alongside map continuity,
+footer boundaries and unchanged workflow. Field GPS/photo persistence/export and
+mobile workflows passed. Screenshots of all six steps were inspected.
+
+### Desktop density correction - 12 November 2026
+
+The compact dashboard density is retained for laptop heights. At desktop
+recording height (1920 x 944), typography, cards, tables, preview labels and
+spacing expand to use the available screen. The large-screen Impact cards use
+15 px labels instead of the compact 12 px labels. A dedicated regression case
+checks all six stages still fit without body scrolling and verifies larger
+Impact text/card bounds. Laptop and phone layout checks remain in the same run.

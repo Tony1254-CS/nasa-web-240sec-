@@ -1,0 +1,79 @@
+/* Focus on readable evidence; keep the original map workspace mounted. */
+.legacy-pages .evidence-workbench.is-focus{position:fixed;inset:0;width:100%;height:100dvh;max-height:none;z-index:1050;border:0;box-shadow:none;}
+.legacy-pages:has(.evidence-workbench.is-focus){overflow:hidden;}
+.legacy-pages:has(.evidence-workbench.is-focus) .navbar{visibility:hidden;}
+.legacy-pages:has(.evidence-workbench.is-focus) .fl-assistant{z-index:1080;}
+.legacy-pages:has(.evidence-workbench.is-focus) .fl-floating-launcher{visibility:hidden;}
+.legacy-pages:has(.evidence-workbench.is-presenting) :is(.fl-assistant,.fl-inspection-guide){display:none;}
+.evidence-workbench .ew-context{display:block;}
+.evidence-workbench .ew-context summary{cursor:pointer;display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;}
+.evidence-workbench .ew-context summary::after{content:'Details';font-size:11px;margin-left:auto;color:var(--water);}
+.evidence-workbench .ew-context[open] summary{margin-bottom:6px;}
+.evidence-workbench .ew-context code{margin-right:16px;}
+.evidence-workbench .ew-context small{font-size:11px;}
+.evidence-workbench:not(.is-focus) .ew-report-actions button span{display:none;}
+.evidence-workbench:not(.is-focus) .ew-toolbar h2{font-size:18px;}
+.evidence-workbench .ew-scroll-hint{font-size:11px;color:var(--text-3);margin-right:auto;margin-left:12px;order:1;}
+.evidence-workbench .ew-footer>button{order:2;}
+.evidence-workbench .ew-footer>button:first-of-type{margin-right:0;order:0;}
+.evidence-workbench.is-focus .ew-toolbar{min-height:56px;padding:9px 24px;gap:12px;}
+.evidence-workbench.is-focus .ew-toolbar h2{font-size:18px;letter-spacing:.6px;}
+.evidence-workbench.is-focus .ew-report-actions{flex-wrap:wrap;}
+.evidence-workbench.is-focus .ew-context{padding:6px 24px;}
+.evidence-workbench.is-focus .ew-tabs{padding:0 max(24px,calc((100vw - 1180px)/2));}
+.evidence-workbench.is-focus .ew-tabs button{padding:9px 4px;}
+.evidence-workbench.is-focus .ew-body{padding:18px max(24px,calc((100vw - 1180px)/2)) 32px;overscroll-behavior:contain;scrollbar-gutter:stable;scroll-padding-block:20px;}
+.evidence-workbench.is-focus .ew-footer{min-height:58px;padding:8px 24px;}
+.evidence-workbench.is-focus .ew-footer button{min-height:38px;}
+.evidence-workbench.is-focus .ew-stage-heading{margin-bottom:8px;}
+.evidence-workbench.is-focus .ew-panel-heading h3{margin-top:8px;}
+.evidence-workbench.is-focus .ew-description{margin-bottom:12px;}
+.evidence-workbench.is-focus .ew-previews img{object-fit:contain;background:var(--ew-soft);}
+@media(max-width:1000px){
+ .evidence-workbench .ew-scroll-hint{display:none;}
+ .evidence-workbench .ew-report-actions button{min-width:34px;}
+ .evidence-workbench .ew-report-actions button span{display:none;}
+ .evidence-workbench.is-focus .ew-toolbar h2{font-size:16px;}
+}
+@media(max-width:600px){
+ .evidence-workbench.is-focus .ew-toolbar{padding:10px 12px;align-items:flex-start;}
+ .evidence-workbench.is-focus .ew-toolbar h2{font-size:15px;max-width:130px;}
+ .evidence-workbench.is-focus .ew-report-actions{gap:4px;justify-content:flex-end;}
+ .evidence-workbench.is-focus .ew-context{padding:7px 14px;}
+ .evidence-workbench.is-focus .ew-context summary{font-size:11px;}
+ .evidence-workbench.is-focus .ew-tabs{padding:0 12px;}
+ .evidence-workbench.is-focus .ew-tabs button{font-size:13px;padding:8px 2px;}
+ .evidence-workbench.is-focus .ew-body{padding:16px 16px 28px;}
+ .evidence-workbench.is-focus .ew-footer{padding:8px 12px;}
+}
+@media print{
+ .legacy-pages .evidence-workbench.is-focus{position:static;height:auto;overflow:visible;width:100%;}
+ .evidence-workbench .ew-scroll-hint{display:none;}
+}
+
+.evidence-workbench .ew-footer>button:first-of-type:last-of-type{margin-right:auto;}
+
+/* A narrow live map stays beside the reading workspace on laptops/desktops. */
+.ew-map-caption{display:none;}
+@media(min-width:1101px){
+ .legacy-pages:has(.evidence-workbench.is-focus.has-map-context){--ew-map-width:clamp(280px,25vw,400px);}
+ .legacy-pages .evidence-workbench.is-focus.has-map-context{left:var(--ew-map-width);width:calc(100% - var(--ew-map-width));}
+ .legacy-pages .observatory-redesign:has(.evidence-workbench.is-focus.has-map-context) .restored-map-workspace{position:fixed;inset:0 auto 0 0;width:var(--ew-map-width);height:100dvh;z-index:1051;border-right:1px solid var(--line);}
+ .evidence-workbench.is-focus.has-map-context .ew-body{padding:18px 26px 32px;}
+ .evidence-workbench.is-focus.has-map-context .ew-tabs{padding:0 16px;}
+ .evidence-workbench.is-focus.has-map-context .ew-toolbar{padding:9px 18px;}
+ .observatory-redesign:has(.evidence-workbench.is-focus.has-map-context) .ew-map-caption{display:flex;position:fixed;left:12px;top:12px;width:calc(var(--ew-map-width) - 24px);z-index:1053;flex-direction:column;gap:5px;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);box-shadow:0 3px 18px #0003;pointer-events:none;}
+ .ew-map-caption>span{font-size:10px;color:var(--water);letter-spacing:1px;font-weight:700;}
+ .ew-map-caption>b{font-size:14px;}
+ .ew-map-caption>small{font-size:11px;color:var(--text-2);}
+ .legacy-pages .observatory-redesign:has(.evidence-workbench.is-focus.has-map-context) .restored-map-options{top:112px;left:10px;right:10px!important;flex-wrap:wrap;gap:6px;}
+ .legacy-pages .observatory-redesign:has(.evidence-workbench.is-focus.has-map-context) .restored-map-tools{top:198px;right:10px!important;}
+ .legacy-pages .observatory-redesign:has(.evidence-workbench.is-focus.has-map-context) :is(.map-flyin-controls,.restored-map-tools input,.restored-map-tools>span){display:none;}
+ .legacy-pages .observatory-redesign:has(.evidence-workbench.is-focus.has-map-context) .maplibregl-ctrl-attrib{max-width:calc(var(--ew-map-width) - 12px);font-size:9px;white-space:normal;}
+}
+@media(min-width:1101px) and (max-width:1650px){
+ .evidence-workbench.is-focus.has-map-context .ew-report-actions button span{display:none;}
+ .evidence-workbench.is-focus.has-map-context .ew-report-actions{gap:6px;}
+}
+@media(max-width:1100px){.evidence-workbench .ew-map-preview-toggle{display:none;}}
+@media print{.ew-map-caption,.ew-map-preview-toggle{display:none!important;}.legacy-pages .evidence-workbench.is-focus.has-map-context{position:static;width:100%;}}
