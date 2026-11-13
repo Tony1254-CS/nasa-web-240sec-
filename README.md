@@ -12,7 +12,7 @@ A dual-region Earth-observation application for exploring Bangladesh's **Jamuna 
 
 [Feature guide](#feature-guide--what-can-i-do-here) · [Judge walkthrough](#a-five-minute-project-walkthrough) · [Quick start](#3-quick-start) · [Live Analysis](#6-evidence-and-live-analysis) · [Methods](#11-scientific-method-and-interpretation) · [Testing](#16-testing-and-verification)
 
-> **Current implementation — 9 November 2026**
+> **Current implementation — 12 November 2026**
 >
 > The operational observation catalogue uses **Sentinel-1 C-band VV/VH**, not NISAR L-band measurements. Each region has six radar and six optical acquisitions. NISAR, interferometry and generated ML experiments are included as educational material. Mapped transitions are **screening candidates**, not confirmed erosion, flooding, habitat loss or damage.
 
@@ -491,7 +491,7 @@ Processing details describe operations performed against retained artifacts. Thi
 
 ### 6.3 Full Analysis Report
 
-On larger displays, the map and report occupy separate panes. Large metrics, a measured histogram and detection parameters appear before the source previews. Processing logs sit in expandable audit details.
+Live Analysis opens in **Focus Mode** with a narrow live map on the left and the main reading workspace on the right on laptops/desktops. **Hide preview / Show preview** toggles that map without recreating it; phones retain the full-width report. Each stage uses a two-column dashboard so its primary content fits at 1366 x 768 without scrolling. Longer source, audit and saved-record lists open in separate detail panels; **Reading view** restores the flowing layout. The workspace has a compact header, collapsible context, visible six-step navigation, one scrolling content area and a compact action bar. **Present** optionally enters browser fullscreen for recording. **View map** restores adjacent map/report panes without losing the active stage; **Focus analysis** expands it again. Individual Evidence stages retain the map/report view by default. Large metrics, a measured histogram and detection parameters appear before source previews; processing logs remain expandable.
 
 The report supports dark/light presentation, mobile layouts, JSON export, browser printing/Save PDF and a completion summary. Completing the workflow records that the review finished; it does not independently verify a scientific claim.
 
@@ -939,7 +939,7 @@ npm run build
 npm run test:e2e -- --workers=1
 ```
 
-The current browser suite registers **83 tests in sixteen files**:
+The current browser suite registers **87 tests in seventeen files**:
 
 | Suite | Main coverage |
 | --- | --- |
@@ -955,6 +955,7 @@ The current browser suite registers **83 tests in sixteen files**:
 | `observatory-controls.spec.ts` | Study framing, camera alignment, controls, tools and region navigation |
 | `observation-history.spec.ts` | Served-image checksums, date/image mapping, pair persistence, metrics and themes |
 | `evidence-workflow.spec.ts` | Both six-stage reviews, field photo/GPS storage/export, isolation and mobile access |
+| `evidence-focus.spec.ts` | Both six-stage laptop reviews, content/footer bounds, map/focus continuity, mobile/light layouts and fullscreen rejection fallback |
 | `evidence-readability.spec.ts` | Adjacent report/map panes, typography and mobile tab layout |
 | `impact-desk.spec.ts` | Both regions, history, divider alignment, pair-specific metrics/exports, exposure, scenarios, deep links and mobile/light theme |
 | `assistant.spec.ts` | Geographic fly-in/alignment, scoped source-linked chat, map handoffs/export, card inspection, mobile/light theme and connection retry |

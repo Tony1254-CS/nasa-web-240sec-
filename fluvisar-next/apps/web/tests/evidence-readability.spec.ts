@@ -4,6 +4,8 @@ test('analysis uses adjacent map/report panes and readable results before option
  await page.setViewportSize({width:1920,height:1080});await page.goto('/observatory/jamuna');
  await page.getByRole('button',{name:'Live Analysis',exact:true}).click();
  await expect(page.locator('.ew-processing')).toHaveCount(0,{timeout:45000});
+ await expect(page.locator('.evidence-workbench')).toHaveClass(/is-focus/);
+ await page.getByRole('button',{name:'View map alongside analysis'}).click();
  const report=(await page.locator('.evidence-workbench').boundingBox())!,map=(await page.locator('.restored-map-workspace').boundingBox())!;
  expect(report.width).toBeGreaterThanOrEqual(900);expect(map.x+map.width).toBeLessThanOrEqual(report.x+1);
  expect(await page.locator('.ew-description').evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(14);
