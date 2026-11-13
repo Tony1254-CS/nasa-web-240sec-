@@ -24,7 +24,7 @@ export function Navbar({ transparent = false }: { transparent?: boolean }) {
   const [moreOpen, setMoreOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useContext(LegacyThemeContext);
-  const { regionId, setRegion } = useWorkspaceStore();
+  const { regionId, setRegion, isAgentDrawerOpen } = useWorkspaceStore();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -143,12 +143,14 @@ export function Navbar({ transparent = false }: { transparent?: boolean }) {
 
       <div className="navbar__right">
         <button
-          className="navbar__btn navbar__assistant"
+          className={`navbar__btn navbar__assistant${isAgentDrawerOpen ? ' navbar__assistant--active' : ''}`}
           aria-label="Ask FluviSAR"
-          onClick={() => useWorkspaceStore.getState().setAgentDrawerOpen(true)}
+          onClick={() => useWorkspaceStore.getState().setAgentDrawerOpen(!isAgentDrawerOpen)}
         >
           <MessageSquare size={16} />
           <span>Ask FluviSAR</span>
+          {/* Live mode dot */}
+          <span className="navbar__assistant-dot" aria-hidden="true" />
         </button>
         <select
           className="navbar__reach-select"
