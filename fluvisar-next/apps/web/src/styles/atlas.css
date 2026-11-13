@@ -1,7 +1,7 @@
 /* Atlas UI follows the page theme; satellite pixel colours stay unchanged. */
 .legacy-pages[data-theme] .atlas-shell{--bg:#f4f7fa;--panel:#fff;--text:#102a43;--text-2:#475569;--text-3:#64748b;--line:#cbd5e1;--water:#155e75;--water-rgb:21,94,117;--glass-bg:#fff;--science-border:#cbd5e1}
-.legacy-pages[data-theme="dark"] .atlas-shell{--bg:#0e1418;--panel:#151e23;--text:#edf4f5;--text-2:#bdcbd1;--text-3:#93a8b0;--line:#30434b;--water:#57d6d6;--water-rgb:87,214,214;--glass-bg:#151e23;--science-border:#30434b;--glass-shadow:0 12px 30px #0004}
-.legacy-pages[data-theme] .atlas-shell .atlas-panel{inset:72px 5% 22px}
+.legacy-pages[data-theme="dark"] .atlas-shell{--bg:#0f171b;--panel:#151e22;--text:#edf4f5;--text-2:#bdcbd1;--text-3:#93a8b0;--line:#2a383e;--water:#57d6d6;--water-rgb:87,214,214;--glass-bg:rgba(18, 22, 26, 0.72);--science-border:#2a383e;--glass-shadow:0 12px 30px #0004}
+.legacy-pages[data-theme] .atlas-shell .atlas-panel{inset:0!important;width:100%!important;background:var(--bg)!important}
 .legacy-pages[data-theme] .atlas-shell .atlas-panel>:is(.science-hero,.atlas-cards,.science-text-link){flex-shrink:0}
 .legacy-pages[data-theme] .atlas-shell .science-hero,.legacy-pages[data-theme] .atlas-shell .science-card{background:var(--panel);color:var(--text);border-color:var(--line)}
 .legacy-pages[data-theme] .atlas-shell .science-facts dt{color:var(--text-3)}
@@ -15,8 +15,8 @@
 .legacy-pages[data-theme] .atlas-shell .restored-map-options{top:12px}
 .legacy-pages[data-theme] .atlas-shell .restored-map-tools{top:72px}
 .legacy-pages[data-theme="light"]:has(.atlas-shell) .navbar{background:#fff;border-color:#d8e2e7}
-.legacy-pages[data-theme="dark"]:has(.atlas-shell) .navbar{background:#111a20;border-color:#30434b}
-@media(max-width:760px){.legacy-pages[data-theme] .atlas-shell .atlas-panel{inset:102px 12px 16px}.legacy-pages[data-theme] .atlas-shell .restored-map-tools{top:49px;right:12px!important;flex-direction:row;gap:2px;padding:4px}.legacy-pages[data-theme] .atlas-shell .restored-map-tools hr{display:none}.legacy-pages[data-theme] .atlas-shell .restored-map-tools button{padding:5px}.legacy-pages[data-theme] .atlas-shell .science-card{padding:22px}}
+.legacy-pages[data-theme="dark"]:has(.atlas-shell) .navbar{background:var(--glass-bg);border-color:var(--glass-border)}
+@media(max-width:760px){.legacy-pages[data-theme] .atlas-shell .atlas-panel{inset:0!important}.legacy-pages[data-theme] .atlas-shell .restored-map-tools{top:49px;right:12px!important;flex-direction:row;gap:2px;padding:4px}.legacy-pages[data-theme] .atlas-shell .restored-map-tools hr{display:none}.legacy-pages[data-theme] .atlas-shell .restored-map-tools button{padding:5px}.legacy-pages[data-theme] .atlas-shell .science-card{padding:22px}}
 
 /* Scrollable case atlas: a real map first, then investigations and outlook. */
 .legacy-pages .atlas-scroll-page{flex:1;min-width:0;height:100%;overflow-y:auto;overflow-x:hidden;background:var(--bg);color:var(--text);scroll-behavior:smooth;}

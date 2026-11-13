@@ -1,40 +1,360 @@
-import {useEffect,useRef,useState} from 'react';
-import {createPortal} from 'react-dom';
-import {X,Printer,FileText,ShieldCheck,CheckCircle2,ExternalLink} from 'lucide-react';
-import {useWorkspaceStore} from '../store/workspaceStore';
-import {useEvidence,useObservatoryEvidence,number,readableDate} from '../data/evidence';
-import {useDecisionContext} from '../features/legacy/data/decision';
+import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { X, Printer, FileText, ShieldCheck, CheckCircle2, ExternalLink } from 'lucide-react';
+import { useWorkspaceStore } from '../store/workspaceStore';
+import { useEvidence, useObservatoryEvidence, number, readableDate } from '../data/evidence';
+import { useDecisionContext } from '../features/legacy/data/decision';
 import '../styles/decision-brief.css';
 
-interface DecisionBriefModalProps {isOpen:boolean;onClose:()=>void;scope?:'study'|'selection'|'comparison';findingId?:string}
+interface DecisionBriefModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  scope?: 'study' | 'selection' | 'comparison';
+  findingId?: string;
+}
 
 /** Shared paper surface isolated from page resets, transforms and clipping. */
-export function DecisionBriefModal({isOpen,onClose,scope='selection',findingId}:DecisionBriefModalProps){
- const base=useEvidence(),observatory=useObservatoryEvidence(),state=useWorkspaceStore();
- const evidence=scope==='study'?base.evidence:observatory.evidence;
- const finding=scope==='selection'?evidence.findings.features.find(f=>f.properties.id===(findingId??state.selectedFindingId)):undefined;
- const context=useDecisionContext(evidence.run_id,finding?.properties.id??null,isOpen&&(scope==='study'||observatory.comparisonReady));
- const dialog=useRef<HTMLDialogElement>(null),[qr,setQr]=useState('');
- const pairSources=evidence.pair.map(date=>evidence.observations.find(o=>o.date===date)!);
- const url=new URL('/observatory/'+evidence.region_id,window.location.origin);
- url.search=new URLSearchParams({run:evidence.run_id,t0:evidence.pair[0],t1:evidence.pair[1],...(finding?{finding:finding.properties.id}:{})}).toString();
- const link=url.toString(),data=context.data;
- useEffect(()=>{if(!isOpen)return;const opener=document.activeElement;dialog.current?.showModal();document.body.classList.add('decision-brief-active');return()=>{dialog.current?.close();document.body.classList.remove('decision-brief-active');if(opener instanceof HTMLElement&&opener.isConnected)opener.focus({preventScroll:true});};},[isOpen]);
- useEffect(()=>{if(!isOpen)return;let active=true;setQr('');import('qrcode').then(module=>module.toDataURL(link,{errorCorrectionLevel:'M',margin:4,width:320,color:{dark:'#102a43',light:'#ffffff'}})).then(value=>{if(active)setQr(value);}).catch(()=>{});return()=>{active=false;};},[isOpen,link]);
- if(!isOpen)return null;
- const passed=evidence.qc.filter(q=>q.status==='pass').length;
- const sensitivity=(evidence.threshold_sensitivity??[]) as {threshold_db:number;land_to_water_ha:number;water_to_land_ha:number}[];
- const field=regionField(evidence.region_id==='sundarbans');
- return createPortal(<dialog ref={dialog} className="decision-brief-dialog" aria-label="Source-linked regional decision brief" onCancel={event=>{event.preventDefault();onClose();}} onClick={event=>{if(event.target===event.currentTarget){const b=event.currentTarget.getBoundingClientRect();if(event.clientX<b.left||event.clientX>b.right||event.clientY<b.top||event.clientY>b.bottom)onClose();}}}>
-  <header className="db-toolbar"><div><FileText size={18}/><span>{evidence.region_id==='jamuna'?'Jamuna':'Sundarbans'} decision brief</span></div><nav aria-label="Brief actions"><button onClick={async()=>{await document.fonts.ready;window.print();}} disabled={(!data&&!context.error)||!qr}><Printer size={15}/>Print / Export PDF</button><button aria-label="Close decision brief" onClick={onClose}><X size={20}/></button></nav></header>
-  <div className="db-scroll"><article className="db-paper">
-   <header className="db-heading"><div><div className="db-brand">FLUVISAR <span>RAPID DECISION BRIEF</span></div><h1>{evidence.name}</h1><p lang="bn">{evidence.region_id==='jamuna'?'যমুনা নদী পর্যবেক্ষণ ও মাঠ যাচাই সারসংক্ষেপ':'সুন্দরবন পর্যবেক্ষণ ও মাঠ যাচাই সারসংক্ষেপ'}</p><p>NASA Space Apps project · source-linked satellite screening</p></div><dl><div><dt>Recorded comparison</dt><dd>{evidence.pair.map(readableDate).join(' → ')}</dd></div><div><dt>Scope</dt><dd>{finding?'Selected finding':'Study area'}</dd></div><div><dt>Evidence status</dt><dd className="db-review">Independent review required</dd></div></dl></header>
-   <section className="db-section"><h2><span>01</span>Scientific observation</h2><div className="db-observation"><div><p>Sentinel-1 C-band VV/VH observations identify land–water transition candidates on a common 30 m grid. These are screening results, not confirmed erosion, flood damage or habitat loss.</p><div className="db-metrics"><div><span>Land → water</span><strong data-testid="brief-land-water">{number(evidence.metrics.land_to_water_ha,2)} <small>ha</small></strong></div><div><span>Water → land</span><strong>{number(evidence.metrics.water_to_land_ha,2)} <small>ha</small></strong></div><div><span>Common valid support</span><strong>{number(evidence.metrics.common_valid_fraction*100,1)}<small>%</small></strong><p>{number(evidence.metrics.common_valid_area_ha,1)} ha</p></div></div>{finding&&<p className="db-selected"><b>Selected candidate:</b> {finding.properties.category.replaceAll('-',' ')} · {number(finding.properties.area_ha,2)} ha · {number(finding.properties.pixel_count,0)} classified pixels<br/><code>{finding.properties.id}</code></p>}</div><aside className="db-quality"><h3><ShieldCheck size={14}/>Quality & sensitivity</h3><p><b>{passed} / {evidence.qc.length}</b> recorded checks pass</p><p>{evidence.qc.length-passed} checks require interpretation/review.</p>{sensitivity.length>0&&<p>Land → water range<br/><b>{number(Math.min(...sensitivity.map(s=>s.land_to_water_ha)),2)}–{number(Math.max(...sensitivity.map(s=>s.land_to_water_ha)),2)} ha</b><br/>across recorded −18 / −17 / −16 dB masks; not a confidence interval.</p>}</aside></div></section>
-   <section className="db-section"><h2><span>02</span>Mapped exposure ledger</h2><p className="db-caption">Intersection with recorded change geometry · {finding?'selected finding':'study area'} · potential exposure, not confirmed damage or affected population.</p>{data?<><div className="db-table-wrap"><table><thead><tr><th>Observed transition</th><th>Buildings</th><th>Road ways</th><th>Road overlap</th><th>Facilities</th><th>Settlements</th></tr></thead><tbody>{(['land-to-water','water-to-land'] as const).map(category=>{const row=data.exposure.assets?.[category];return <tr key={category}><th>{category.replaceAll('-',' ')}</th><td>{row?.building??0}</td><td>{row?.road??0}</td><td>{number(row?.road_length_m??0,1)} m</td><td>{row?.facility??0}</td><td>{row?.settlement??0}</td></tr>;})}</tbody></table></div><p className="db-caption">{data.exposure.source?.osm_attribution??'© OpenStreetMap contributors'} · archived mapped objects; incomplete coverage. {data.exposure.intersections?.length??0} intersecting records in this scope. <a href="/impact">Review source records in Decision Desk.</a></p></>:<div className="db-context-status" role="status">{context.error?<><p>Exposure analysis could not be read. No asset counts are claimed in this brief.</p><button onClick={context.retry}>Retry exposure analysis</button></>:<p>Reading source-linked exposure analysis…</p>}</div>}</section>
-   <section className="db-section db-field"><div><h2><span>03</span>Field verification & handoff</h2><ul>{field.map(item=><li key={item}><CheckCircle2 size={14}/><span>{item}</span></li>)}</ul><p className="db-caption">Use dated location/photo records and human review before making a permanent-change or damage claim. No future overpass date is asserted.</p></div><aside className="db-qr">{qr?<img src={qr} width="120" height="120" alt="QR code to reopen this exact comparison"/>:<span>Preparing comparison QR…</span>}<b>Reopen the exact comparison</b><a href={link}>Open source-linked map <ExternalLink size={10}/></a>{['localhost','127.0.0.1'].includes(window.location.hostname)&&<small>Local address: deploy the site before sharing this QR with a phone.</small>}</aside></section>
-   <section className="db-section db-lineage"><h2><span>04</span>Source lineage</h2><div className="db-source-grid">{pairSources.map(source=><div key={source.id}><a href={source.source_url} target="_blank" rel="noreferrer">{source.datetime} · {source.sensor}</a><code>{source.id}</code><p>VV SHA-256: <code>{String(typeof source.numeric_sha256==='string'?source.numeric_sha256:(source.numeric_sha256 as Record<string,string>)?.vv??'')}</code></p></div>)}</div><p className="db-run">Run: <code>{evidence.run_id}</code></p></section>
-   <footer className="db-footer"><span>FluviSAR · screening evidence for independent review</span><span>Recorded data · no approval or emergency warning implied</span></footer>
-  </article></div>
- </dialog>,document.body);
+export function DecisionBriefModal({ isOpen, onClose, scope = 'selection', findingId }: DecisionBriefModalProps) {
+  const base = useEvidence();
+  const observatory = useObservatoryEvidence();
+  const state = useWorkspaceStore();
+  const evidence = scope === 'study' ? base.evidence : observatory.evidence;
+  const finding =
+    scope === 'selection'
+      ? evidence.findings.features.find(f => f.properties.id === (findingId ?? state.selectedFindingId))
+      : undefined;
+  const context = useDecisionContext(evidence.run_id, finding?.properties.id ?? null, isOpen && (scope === 'study' || observatory.comparisonReady));
+  const dialog = useRef<HTMLDialogElement>(null);
+  const [qr, setQr] = useState('');
+  const pairSources = evidence.pair.map(date => evidence.observations.find(o => o.date === date)!);
+  const url = new URL('/observatory/' + evidence.region_id, window.location.origin);
+  url.search = new URLSearchParams({
+    run: evidence.run_id,
+    t0: evidence.pair[0],
+    t1: evidence.pair[1],
+    ...(finding ? { finding: finding.properties.id } : {}),
+  }).toString();
+  const link = url.toString();
+  const data = context.data;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const opener = document.activeElement;
+    dialog.current?.showModal();
+    document.body.classList.add('decision-brief-active');
+    return () => {
+      dialog.current?.close();
+      document.body.classList.remove('decision-brief-active');
+      if (opener instanceof HTMLElement && opener.isConnected) opener.focus({ preventScroll: true });
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    let active = true;
+    setQr('');
+    import('qrcode')
+      .then(module =>
+        module.toDataURL(link, {
+          errorCorrectionLevel: 'M',
+          margin: 4,
+          width: 320,
+          color: { dark: '#102a43', light: '#ffffff' },
+        })
+      )
+      .then(value => {
+        if (active) setQr(value);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [isOpen, link]);
+
+  if (!isOpen) return null;
+  const passed = evidence.qc.filter(q => q.status === 'pass').length;
+  const sensitivity = (evidence.threshold_sensitivity ?? []) as {
+    threshold_db: number;
+    land_to_water_ha: number;
+    water_to_land_ha: number;
+  }[];
+  const field = regionField(evidence.region_id === 'sundarbans');
+
+  return createPortal(
+    <dialog
+      ref={dialog}
+      className="decision-brief-dialog"
+      aria-label="Source-linked regional decision brief"
+      onCancel={event => {
+        event.preventDefault();
+        onClose();
+      }}
+      onClick={event => {
+        if (event.target === event.currentTarget) {
+          const b = event.currentTarget.getBoundingClientRect();
+          if (event.clientX < b.left || event.clientX > b.right || event.clientY < b.top || event.clientY > b.bottom) {
+            onClose();
+          }
+        }
+      }}
+    >
+      <header className="db-toolbar">
+        <div>
+          <FileText size={18} />
+          <span>{evidence.region_id === 'jamuna' ? 'Jamuna' : 'Sundarbans'} decision brief</span>
+        </div>
+        <nav aria-label="Brief actions">
+          <button
+            onClick={async () => {
+              await document.fonts.ready;
+              window.print();
+            }}
+            disabled={(!data && !context.error) || !qr}
+          >
+            <Printer size={15} />
+            Print / Export PDF
+          </button>
+          <button aria-label="Close decision brief" onClick={onClose}>
+            <X size={20} />
+          </button>
+        </nav>
+      </header>
+      <div className="db-scroll">
+        <article className="db-paper">
+          <header className="db-heading">
+            <div>
+              <div className="db-brand">
+                FLUVISAR <span>RAPID DECISION BRIEF</span>
+              </div>
+              <h1>{evidence.name}</h1>
+              <p lang="bn">
+                {evidence.region_id === 'jamuna'
+                  ? 'যমুনা নদী পর্যবেক্ষণ ও মাঠ যাচাই সারসংক্ষেপ'
+                  : 'সুন্দরবন পর্যবেক্ষণ ও মাঠ যাচাই সারসংক্ষেপ'}
+              </p>
+              <p>NASA Space Apps project · source-linked satellite screening</p>
+            </div>
+            <dl>
+              <div>
+                <dt>Recorded comparison</dt>
+                <dd>{evidence.pair.map(readableDate).join(' → ')}</dd>
+              </div>
+              <div>
+                <dt>Scope</dt>
+                <dd>{finding ? 'Selected finding' : 'Study area'}</dd>
+              </div>
+              <div>
+                <dt>Evidence status</dt>
+                <dd className="db-review">Independent review required</dd>
+              </div>
+            </dl>
+          </header>
+          <section className="db-section">
+            <h2>
+              <span>01</span>Scientific observation
+            </h2>
+            <div className="db-observation">
+              <div>
+                <p>
+                  Sentinel-1 C-band VV/VH observations identify land–water transition candidates on a common 30 m grid.
+                  These are screening results, not confirmed erosion, flood damage or habitat loss.
+                </p>
+                <div className="db-metrics">
+                  <div>
+                    <span>Land → water</span>
+                    <strong data-testid="brief-land-water">
+                      {number(evidence.metrics.land_to_water_ha, 2)} <small>ha</small>
+                    </strong>
+                  </div>
+                  <div>
+                    <span>Water → land</span>
+                    <strong>
+                      {number(evidence.metrics.water_to_land_ha, 2)} <small>ha</small>
+                    </strong>
+                  </div>
+                  <div>
+                    <span>Common valid support</span>
+                    <strong>
+                      {number(evidence.metrics.common_valid_fraction * 100, 1)}
+                      <small>%</small>
+                    </strong>
+                    <p>{number(evidence.metrics.common_valid_area_ha, 1)} ha</p>
+                  </div>
+                </div>
+                {finding && (
+                  <p className="db-selected">
+                    <b>Selected candidate:</b> {finding.properties.category.replaceAll('-', ' ')} ·{' '}
+                    {number(finding.properties.area_ha, 2)} ha ·{' '}
+                    {number(finding.properties.pixel_count, 0)} classified pixels
+                    <br />
+                    <code>{finding.properties.id}</code>
+                  </p>
+                )}
+              </div>
+              <aside className="db-quality">
+                <h3>
+                  <ShieldCheck size={14} />
+                  Quality & sensitivity
+                </h3>
+                <p>
+                  <b>{passed} / {evidence.qc.length}</b> recorded checks pass
+                </p>
+                <p>{evidence.qc.length - passed} checks require interpretation/review.</p>
+                {sensitivity.length > 0 && (
+                  <p>
+                    Land → water range
+                    <br />
+                    <b>
+                      {number(Math.min(...sensitivity.map(s => s.land_to_water_ha)), 2)}–
+                      {number(Math.max(...sensitivity.map(s => s.land_to_water_ha)), 2)} ha
+                    </b>
+                    <br />
+                    across recorded −18 / −17 / −16 dB masks; not a confidence interval.
+                  </p>
+                )}
+              </aside>
+            </div>
+          </section>
+          <section className="db-section">
+            <h2>
+              <span>02</span>Mapped exposure ledger
+            </h2>
+            <p className="db-caption">
+              Intersection with recorded change geometry · {finding ? 'selected finding' : 'study area'} · potential
+              exposure, not confirmed damage or affected population.
+            </p>
+            {data ? (
+              <>
+                <div className="db-table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Observed transition</th>
+                        <th>Buildings</th>
+                        <th>Road ways</th>
+                        <th>Road overlap</th>
+                        <th>Facilities</th>
+                        <th>Settlements</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(['land-to-water', 'water-to-land'] as const).map(category => {
+                        const row = data.exposure.assets?.[category];
+                        return (
+                          <tr key={category}>
+                            <th>{category.replaceAll('-', ' ')}</th>
+                            <td>{row?.building ?? 0}</td>
+                            <td>{row?.road ?? 0}</td>
+                            <td>{number(row?.road_length_m ?? 0, 1)} m</td>
+                            <td>{row?.facility ?? 0}</td>
+                            <td>{row?.settlement ?? 0}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="db-caption">
+                  {data.exposure.source?.osm_attribution ?? '© OpenStreetMap contributors'} · archived mapped objects;
+                  incomplete coverage. {data.exposure.intersections?.length ?? 0} intersecting records in this scope.{' '}
+                  <a href="/impact">Review source records in Decision Desk.</a>
+                </p>
+              </>
+            ) : (
+              <div className="db-context-status" role="status">
+                {context.error ? (
+                  <>
+                    <p>Exposure analysis could not be read. No asset counts are claimed in this brief.</p>
+                    <button onClick={context.retry}>Retry exposure analysis</button>
+                  </>
+                ) : (
+                  <p>Reading source-linked exposure analysis…</p>
+                )}
+              </div>
+            )}
+          </section>
+          <section className="db-section db-field">
+            <div>
+              <h2>
+                <span>03</span>Field verification & handoff
+              </h2>
+              <ul>
+                {field.map(item => (
+                  <li key={item}>
+                    <CheckCircle2 size={14} />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="db-caption">
+                Use dated location/photo records and human review before making a permanent-change or damage claim. No
+                future overpass date is asserted.
+              </p>
+            </div>
+            <aside className="db-qr">
+              {qr ? (
+                <img src={qr} width="120" height="120" alt="QR code to reopen this exact comparison" />
+              ) : (
+                <span>Preparing comparison QR…</span>
+              )}
+              <b>Reopen the exact comparison</b>
+              <a href={link}>
+                Open source-linked map <ExternalLink size={10} />
+              </a>
+              {['localhost', '127.0.0.1'].includes(window.location.hostname) && (
+                <small>Local address: deploy the site before sharing this QR with a phone.</small>
+              )}
+            </aside>
+          </section>
+          <section className="db-section db-lineage">
+            <h2>
+              <span>04</span>Source lineage
+            </h2>
+            <div className="db-source-grid">
+              {pairSources.map(source => (
+                <div key={source.id}>
+                  <a href={source.source_url} target="_blank" rel="noreferrer">
+                    {source.datetime} · {source.sensor}
+                  </a>
+                  <code>{source.id}</code>
+                  <p>
+                    VV SHA-256:{' '}
+                    <code>
+                      {String(
+                        typeof source.numeric_sha256 === 'string'
+                          ? source.numeric_sha256
+                          : (source.numeric_sha256 as Record<string, string>)?.vv ?? ''
+                      )}
+                    </code>
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="db-run">
+              Run: <code>{evidence.run_id}</code>
+            </p>
+          </section>
+          <footer className="db-footer">
+            <span>FluviSAR · screening evidence for independent review</span>
+            <span>Recorded data · no approval or emergency warning implied</span>
+          </footer>
+        </article>
+      </div>
+    </dialog>,
+    document.body
+  );
 }
-function regionField(tidal:boolean){return tidal?['Record the acquisition-matched tide/water condition and shoreline location.','Photograph vegetation and water conditions; distinguish tidal inundation from persistent habitat change.','Verify nearby mapped assets and record dated field evidence for independent review.']:['Record river stage and inspect whether the mapped transition is inundation, exposed sediment or visible bank retreat.','Check the actual condition of intersecting roads, facilities and access routes.','Record dated GPS/photo evidence and review against both source acquisitions.'];}
+
+function regionField(tidal: boolean) {
+  return tidal
+    ? [
+        'Record the acquisition-matched tide/water condition and shoreline location.',
+        'Photograph vegetation and water conditions; distinguish tidal inundation from persistent habitat change.',
+        'Verify nearby mapped assets and record dated field evidence for independent review.',
+      ]
+    : [
+        'Record river stage and inspect whether the mapped transition is inundation, exposed sediment or visible bank retreat.',
+        'Check the actual condition of intersecting roads, facilities and access routes.',
+        'Record dated GPS/photo evidence and review against both source acquisitions.',
+      ];
+}

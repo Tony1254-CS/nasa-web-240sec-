@@ -1,0 +1,145 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "risk_score": 0.95,
+        "risk_category": "CRITICAL",
+        "time_to_impact_months": 1
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              89.815,
+              25.545
+            ],
+            [
+              89.82,
+              25.545
+            ],
+            [
+              89.82,
+              25.555000000000003
+            ],
+            [
+              89.8125,
+              25.552500000000002
+            ],
+            [
+              89.815,
+              25.545
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "risk_score": 0.75,
+        "risk_category": "HIGH",
+        "time_to_impact_months": 3
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              89.819,
+              25.545
+            ],
+            [
+              89.825,
+              25.545
+            ],
+            [
+              89.825,
+              25.557000000000002
+            ],
+            [
+              89.816,
+              25.554000000000002
+            ],
+            [
+              89.819,
+              25.545
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "risk_score": 0.45,
+        "risk_category": "MODERATE",
+        "time_to_impact_months": 6
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              89.823,
+              25.545
+            ],
+            [
+              89.83,
+              25.545
+            ],
+            [
+              89.83,
+              25.559
+            ],
+            [
+              89.81949999999999,
+              25.555500000000002
+            ],
+            [
+              89.823,
+              25.545
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "risk_score": 0.2,
+        "risk_category": "LOW",
+        "time_to_impact_months": 12
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              89.827,
+              25.545
+            ],
+            [
+              89.835,
+              25.545
+            ],
+            [
+              89.835,
+              25.561
+            ],
+            [
+              89.823,
+              25.557000000000002
+            ],
+            [
+              89.827,
+              25.545
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

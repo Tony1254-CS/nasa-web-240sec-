@@ -1,0 +1,65 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [89.70, 25.50],
+            [89.72, 25.50],
+            [89.72, 25.55],
+            [89.70, 25.55],
+            [89.70, 25.50]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "erosion_risk",
+        "probability": 85,
+        "reason": "High curvature and historical migration rate of 12m/month."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [89.75, 25.60],
+            [89.78, 25.60],
+            [89.78, 25.63],
+            [89.75, 25.63],
+            [89.75, 25.60]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "accretion_risk",
+        "probability": 70,
+        "reason": "Inner bend point bar development."
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [89.65, 25.45],
+            [89.68, 25.45],
+            [89.68, 25.48],
+            [89.65, 25.48],
+            [89.65, 25.45]
+          ]
+        ]
+      },
+      "properties": {
+        "type": "ambiguity",
+        "probability": 40,
+        "reason": "Inconsistent historical data. Needs manual field verification."
+      }
+    }
+  ]
+}

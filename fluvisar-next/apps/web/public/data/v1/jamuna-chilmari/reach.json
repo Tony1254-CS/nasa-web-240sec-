@@ -1,0 +1,47 @@
+{
+  "reach_id": "jamuna-chilmari",
+  "name": "Chilmari\u2013Roumari reach",
+  "river": "Jamuna",
+  "bbox": [
+    89.6,
+    25.4,
+    89.9,
+    25.75
+  ],
+  "crs_analysis": "EPSG:32645",
+  "track": {
+    "relative_orbit": 19,
+    "direction": "D",
+    "frame": 76
+  },
+  "dates": [
+    {
+      "date": "20260826",
+      "acq_utc": "2026-08-26T12:42:40Z",
+      "status": "ok",
+      "stage_m": 0.45987469555448035,
+      "stage_source": "proxy"
+    },
+    {
+      "date": "20260919",
+      "acq_utc": "2026-09-19T12:42:40Z",
+      "status": "ok",
+      "stage_m": 0.4989995325684951,
+      "stage_source": "proxy"
+    }
+  ],
+  "primary_pair": {
+    "t0": "20260826",
+    "t1": "20260919",
+    "type": "later_lower",
+    "dh_m": 0.03912483701401476
+  },
+  "verdict": "INCONCLUSIVE",
+  "verdict_reasons": [
+    "Erosion (3623 ha) / accretion (2505 ha) are an order of magnitude above CEGIS reference figures (hundreds of ha per reach) for a 24-day gap -- likely per-date Otsu threshold instability over a large, heterogeneous AOI rather than real bank migration. Not shipped as a confident number; see docs/PLAUSIBILITY.md.",
+    "Only 2 acquisitions available; cannot confirm a pre/post seasonal-peak pairing per methodology (Section 10.5 needs a stage peak strictly between t0 and t1).",
+    "No later acquisition available to confirm erosion/accretion persistence.",
+    "RFI screening flagged a swath-edge band on both dates; it falls outside the water channel and was not excluded from classification (see qc.json)."
+  ],
+  "headline_metric_id": "erosion_area"
+}

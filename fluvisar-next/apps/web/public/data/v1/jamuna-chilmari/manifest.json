@@ -1,0 +1,96 @@
+{
+  "reach_id": "jamuna-chilmari",
+  "generated_at": "2026-09-19T12:42:40Z",
+  "code_commit": "real-data-run",
+  "metrics": [
+    {
+      "id": "erosion_area",
+      "label": "Land lost to the river",
+      "value": 3622.64,
+      "low": 1759.0,
+      "high": 8476.6,
+      "unit": "ha",
+      "definition": "Land at t0, water at t1; river stage at t1 within tolerance of t0.",
+      "inputs": [
+        {
+          "kind": "NISAR_GCOV",
+          "granule": "NISAR_L2_PR_GCOV_029_019_D_076_2005_QPDH_A_20260826T124240_20260826T124315_P05023_N_F_J_001",
+          "acq_utc": "2026-08-26T12:42:40Z",
+          "layer": "HHHH"
+        },
+        {
+          "kind": "NISAR_GCOV",
+          "granule": "NISAR_L2_PR_GCOV_031_019_D_076_2005_QPDH_A_20260919T124240_20260919T124314_P05023_F_F_J_001",
+          "acq_utc": "2026-09-19T12:42:40Z",
+          "layer": "HHHH"
+        }
+      ],
+      "params": {
+        "threshold_db_t0": -15.064589500427246,
+        "threshold_db_t1": -14.525918006896973,
+        "median_filter": 5,
+        "mmu_px": 12,
+        "hand_max_m": 15
+      },
+      "pixel_area_m2": 400.0,
+      "pixel_count": 90566,
+      "qc_refs": [
+        "stage_match",
+        "persistence",
+        "threshold_sensitivity",
+        "rfi",
+        "plausibility"
+      ]
+    },
+    {
+      "id": "accretion_area",
+      "label": "New land formed",
+      "value": 2504.72,
+      "unit": "ha",
+      "inputs": [
+        {
+          "kind": "NISAR_GCOV",
+          "granule": "NISAR_L2_PR_GCOV_029_019_D_076_2005_QPDH_A_20260826T124240_20260826T124315_P05023_N_F_J_001",
+          "acq_utc": "2026-08-26T12:42:40Z",
+          "layer": "HHHH"
+        },
+        {
+          "kind": "NISAR_GCOV",
+          "granule": "NISAR_L2_PR_GCOV_031_019_D_076_2005_QPDH_A_20260919T124240_20260919T124314_P05023_F_F_J_001",
+          "acq_utc": "2026-09-19T12:42:40Z",
+          "layer": "HHHH"
+        }
+      ],
+      "params": {
+        "threshold_db_t0": -15.064589500427246,
+        "threshold_db_t1": -14.525918006896973,
+        "median_filter": 5,
+        "mmu_px": 12,
+        "hand_max_m": 15
+      },
+      "pixel_area_m2": 400.0,
+      "pixel_count": 62618
+    },
+    {
+      "id": "ambiguous_area",
+      "label": "Ambiguous classification",
+      "value": 0.0,
+      "unit": "ha",
+      "inputs": [
+        {
+          "kind": "NISAR_GCOV",
+          "granule": "NISAR_L2_PR_GCOV_029_019_D_076_2005_QPDH_A_20260826T124240_20260826T124315_P05023_N_F_J_001",
+          "acq_utc": "2026-08-26T12:42:40Z",
+          "layer": "HHHH"
+        },
+        {
+          "kind": "NISAR_GCOV",
+          "granule": "NISAR_L2_PR_GCOV_031_019_D_076_2005_QPDH_A_20260919T124240_20260919T124314_P05023_F_F_J_001",
+          "acq_utc": "2026-09-19T12:42:40Z",
+          "layer": "HHHH"
+        }
+      ],
+      "pixel_count": 0
+    }
+  ]
+}

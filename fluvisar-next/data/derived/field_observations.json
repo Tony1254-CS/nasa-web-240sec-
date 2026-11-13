@@ -1,0 +1,34 @@
+[
+  {
+    "id": "OBS-TRACE-2026-CHILMARI-001",
+    "finding_id": "FINDING-JAMUNA-2026-CHILMARI-01",
+    "region_id": "jamuna",
+    "verdict": "SUPPORTS",
+    "gps_lat": 25.565,
+    "gps_lon": 89.664,
+    "gps_accuracy_m": 4.8,
+    "notes": "Western embankment edge actively eroding into main river channel. Waterline advanced ~18m inland.",
+    "observer_name": "S. Rahman (Chilmari Field Survey Unit)",
+    "photo_data_url": null,
+    "timestamp": "2026-11-01T09:30:00Z",
+    "review_status": "AWAITING_REVIEW",
+    "sample_type": "VERIFIED_FIELD_RECORD"
+  },
+  {
+    "id": "OBS-TEST-VERIFY-001",
+    "finding_id": "FINDING-JAMUNA-2026-CHILMARI-01",
+    "region_id": "jamuna",
+    "verdict": "SUPPORTS",
+    "gps_lat": 25.5652,
+    "gps_lon": 89.6641,
+    "gps_accuracy_m": 3.8,
+    "notes": "Verified active bankline slump along Chilmari western bend. Water is cutting through silt.",
+    "observer_name": "Field Unit Alpha",
+    "photo_data_url": null,
+    "timestamp": "2026-11-07T03:30:00Z",
+    "sample_type": "VERIFIED_FIELD_RECORD",
+    "review_status": "CONFIRMED",
+    "synced_at": "2026-11-07T03:30:00Z",
+    "reviewed_by": "Chief Geomorphologist"
+  }
+]

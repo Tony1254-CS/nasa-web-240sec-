@@ -238,7 +238,13 @@ function ScenarioLab({ forest, neural, history, bestEpoch, testSamples, trainSam
   ];
   const trajectory = [effectiveFeatures[0], effectiveFeatures[1], blendGamma0Db(effectiveFeatures[0],effectiveFeatures[1],effectiveFeatures[3])];
   return <>
-    <section className="ml-sim-banner"><div className="ml-sim-badge"><BrainCircuit size={15} /> SCENARIO MODE</div><p><strong>Scenario mode</strong> — explore generated SAR-like inputs and model responses.</p><button className="ml-sim-link" onClick={onShowReal}>View Workspace evidence <ArrowRight size={13}/></button></section>
+    <section className="ml-sim-banner">
+      <div className="ml-sim-badge"><BrainCircuit size={15} /> EDUCATIONAL SIMULATION</div>
+      <p>
+        <strong>DECLARED EDUCATIONAL TEACHING SANDBOX:</strong> The Random Forest and Temporal MLP classifiers below are educational demonstrations trained on synthetic scenario samples to illustrate SAR feature sensitivity. They are <strong>NOT</strong> operational flood forecasts, and do not represent verified ground truth.
+      </p>
+      <button className="ml-sim-link" onClick={onShowReal}>View Calibrated Satellite Evidence <ArrowRight size={13}/></button>
+    </section>
     <div className="ml-model-selector" role="tablist" aria-label="Choose model"><button role="tab" aria-selected={mode==='neural'} className={mode==='neural'?'is-active':''} onClick={()=>setMode('neural')}><BrainCircuit size={17}/><span><b>Temporal MLP</b><small>4 → 16 → 8 → 4 · trained with SGD</small></span></button><button role="tab" aria-selected={mode==='forest'} className={mode==='forest'?'is-active':''} onClick={()=>setMode('forest')}><Radio size={17}/><span><b>Random Forest</b><small>31 trees · bootstrap voting</small></span></button></div>
     <SceneControls scene={scene} onChange={setScene}/>
     <div className="ml-visual-grid"><ScenarioCube samples={testSamples} model={model} modelName={mode==='neural'?'Temporal MLP':'Random Forest'} selected={effectiveFeatures} onSelect={setFeatures} scene={scene}/><FeatureSpace samples={testSamples} selected={features} onSelect={setFeatures} scene={scene}/></div>

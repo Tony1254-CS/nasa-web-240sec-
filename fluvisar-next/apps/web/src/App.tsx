@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, useParams, useNavigate, useSearchParams, useLo
 import { useWorkspaceStore } from './store/workspaceStore';
 import { Header } from './components/Header';
 import { LandingPageView } from './components/LandingPageView';
-import { AtlasView, AtlasHero } from './components/AtlasView';
+import { AtlasView } from './components/AtlasView';
 import { MapWorkspace } from './components/MapWorkspace';
 import { ObservatoryFeaturePanel } from './components/ObservatoryFeaturePanel';
 import { FindingInspectorDrawer } from './components/FindingInspectorDrawer';
@@ -25,11 +25,12 @@ import { ObservatoryHeader } from './components/ObservatoryHeader';
 import { EvidenceWorkbench } from './components/EvidenceWorkbench';
 import './styles/observatory-redesign.css';
 
-const InsightsPage = lazy(() => import('./components/InsightsPage').then(m=>({default:m.InsightsPage})));
 const DecisionDesk = lazy(() => import('./features/legacy/pages/ImpactDesk').then(m=>({default:m.DecisionDesk})));
+const InsightsPage = lazy(() => import('./features/legacy/pages/InsightsPage').then(m=>({default:m.InsightsPage})));
 const IntelligencePage = lazy(() => import('./features/legacy/pages/IntelligenceWorkspace').then(m=>({default:m.IntelligencePage})));
 const AboutPage = lazy(() => import('./features/legacy/pages/About').then(m=>({default:m.AboutPage})));
 const SARLabPage = lazy(() => import('./features/legacy/pages/SARLab').then(m=>({default:m.SARLabPage})));
+const TraceFieldApp = lazy(() => import('./features/trace/TraceFieldApp').then(m=>({default:m.TraceFieldApp})));
 
 // 1. Observatory Route Component (Handles /observatory and /observatory/:regionId)
 const ObservatoryRoute: React.FC = () => {
@@ -96,15 +97,17 @@ const ObservatoryRoute: React.FC = () => {
 
 // 2. Atlas Route Component (Handles /atlas)
 const AtlasRoute: React.FC = () => {
-  const {setView,regionId}=useWorkspaceStore();
-  useEffect(()=>{setView('M0');useWorkspaceStore.getState().setBasemapType('satellite');},[setView,regionId]);
-  return <div className="atlas-scroll-page"><section className="atlas-map-stage"><MapWorkspace/><AtlasHero/></section><AtlasView/></div>;
+  return (
+    <div className="relative flex-1 w-full h-full overflow-hidden bg-[#0f171b]">
+      <AtlasView />
+    </div>
+  );
 };
 
 // 3. Main App Root Component
 const WorkspaceApp: React.FC = () => {
   const {pathname}=useLocation();
-  const mapRoute=pathname.startsWith('/observatory')||pathname==='/atlas';
+  const mapRoute=pathname.startsWith('/observatory');
   const { isSonificationEnabled, selectedSample } = useWorkspaceStore();
 
   // Sonification effect on sample update (E22)
@@ -131,6 +134,9 @@ const WorkspaceApp: React.FC = () => {
           <Route path="/learn" element={<SarLabView />} />
           <Route path="/learn/:experimentId" element={<SarLabView />} />
           <Route path="/reports" element={<ReportsView />} />
+          <Route path="/insights" element={<Suspense fallback={<div className="desk-standby">Loading Insights…</div>}><InsightsPage /></Suspense>} />
+          <Route path="/trace" element={<Suspense fallback={<div className="desk-standby">Loading TRACE Field…</div>}><TraceFieldApp /></Suspense>} />
+          <Route path="/field" element={<Navigate to="/trace" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
@@ -143,10 +149,12 @@ const WorkspaceApp: React.FC = () => {
 
 export const App: React.FC = () => <EvidenceProvider><LegacyPageLayout><Navbar/><Routes>
   <Route path="/" element={<LandingPageView/>}/>
-  <Route path="/insights" element={<Suspense fallback={<div className="desk-standby">Reading insights...</div>}><InsightsPage/></Suspense>}/>
   <Route path="/impact" element={<Suspense fallback={<div className="desk-standby">Loading Decision Desk…</div>}><DecisionDesk /></Suspense>} />
+  <Route path="/insights" element={<Suspense fallback={<div className="desk-standby">Loading Insights…</div>}><InsightsPage /></Suspense>} />
   <Route path="/about" element={<Suspense fallback={<div className="desk-standby">Opening our story...</div>}><AboutPage/></Suspense>}/><Route path="/about-us" element={<Navigate to="/about" replace/>}/>
   <Route path="/imact" element={<Navigate to="/impact" replace />} />
+  <Route path="/trace" element={<Suspense fallback={<div className="desk-standby">Loading TRACE Field…</div>}><TraceFieldApp /></Suspense>} />
+  <Route path="/field" element={<Navigate to="/trace" replace />} />
   <Route path="/intelligence" element={<Suspense fallback={<div className="desk-standby">Loading ML Intelligence…</div>}><IntelligencePage /></Suspense>} />
   <Route path="/sar-lab" element={<Suspense fallback={<div className="desk-standby">Loading SAR Lab…</div>}><SARLabPage /></Suspense>} />
   <Route path="/learn" element={<Navigate to="/sar-lab" replace/>}/>

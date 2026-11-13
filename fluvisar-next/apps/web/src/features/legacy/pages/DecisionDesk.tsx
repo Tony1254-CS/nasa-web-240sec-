@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { analysisImage, reachForRegion, isoDate } from '../../../data/analysisRegistry';
 import { useWorkspaceStore } from '../../../store/workspaceStore';
 import type * as GeoJSON from 'geojson';
@@ -6,7 +7,7 @@ import {
   ArrowUpRight, BookOpen, Check, ChevronRight, CircleHelp, ClipboardList,
   Copy, Crosshair, ExternalLink, Eye, FileJson2, GitCompareArrows,
   Layers3, Pause, Play, Search, ShieldAlert, SlidersHorizontal,
-  Sparkles, Target, TrendingDown, Waves, Workflow,
+  Sparkles, Target, TrendingDown, Waves, Workflow, Smartphone,
 } from 'lucide-react';
 
 import { DecisionMap, featureCentroid } from '../map/DecisionMap';
@@ -629,11 +630,14 @@ export function DecisionDesk() {
                     )}
                     {evidenceTab === 'actions' && (
                       <div className="desk-evid-actions">
+                        <Link to={`/trace?finding=${encodeURIComponent(String(selected.properties.id))}&region=${regionId}`} className="desk-btn primary">
+                          <Smartphone size={13} /> Open in TRACE Field (Mobile Mission)
+                        </Link>
                         <button className="desk-btn" onClick={() => updateReview(String(selected.properties.id), 'Field review queued')}><ClipboardList size={13} /> Queue for field review</button>
                         <button className="desk-btn" onClick={exportCasePacket}><FileJson2 size={14} /> Export case packet (JSON)</button>
                         <button className="desk-btn" onClick={() => setActiveView('scenario')}><Target size={13} /> Screen in scenario view</button>
                         <button className="desk-btn" onClick={copyCaseLink}><Copy size={13} /> Copy deep link</button>
-                        <p className="desk-note"><CircleHelp size={13} /> Status stays in this browser; it is not synced to TRACE Field. Field records are independent evidence — they never auto-verify a satellite finding.</p>
+                        <p className="desk-note"><CircleHelp size={13} /> Field records are independent evidence awaiting human review — they never auto-verify a satellite finding.</p>
                       </div>
                     )}
                     <div className="desk-actions">
