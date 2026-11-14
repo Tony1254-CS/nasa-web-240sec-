@@ -31,6 +31,16 @@ FluviSAR connects spaceborne radar intelligence with boots-on-the-ground verific
 1. **Detect from Orbit (FluviSAR Web Observatory):** Multi-temporal Sentinel-1 C-band and NISAR L-band simulation algorithms screen floodwaters, sandbar shifts, and riverbank slumping across the Jamuna and Sundarbans.
 2. **Verify in the Field (TRACE Companion App):** Field volunteers, researchers, and local responders receive screened candidate coordinates on their mobile devices, capture georeferenced field photos, log riverbank stability stages, and submit ground-truth telemetry directly back into the scientific verification loop.
 
+<p align="center">
+  <img src="docs/assets/trace-app-missions.png" width="46%" alt="TRACE Field Missions Overview" />
+  &nbsp; &nbsp;
+  <img src="docs/assets/trace-app-capture.png" width="46%" alt="TRACE On-Site Evidence Capture" />
+</p>
+
+<p align="center">
+  <em>Figure: TRACE Mobile Companion App — (Left) Field mission inbox with real-time radar hazard tasks; (Right) On-site ground-truth observation capture with GPS and verification telemetry.</em>
+</p>
+
 ---
 
 ## Why FluviSAR?
