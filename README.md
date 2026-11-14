@@ -24,7 +24,7 @@ FluviSAR connects spaceborne radar intelligence with boots-on-the-ground verific
 
 | Component | Platform | Live URL | Source Repository |
 | :--- | :--- | :--- | :--- |
-| **🛰️ FluviSAR Web Observatory** | Desktop / Web GIS | *Local / Active Deployment* | [Current Repository](https://github.com/Tony1254-CS/nasa-web-240sec-) |
+| **🛰️ FluviSAR Web Observatory** | Desktop / Web GIS | [Active Deployment*](https://nasa-web-240sec-chi.vercel.app/) | [Current Repository](https://github.com/Tony1254-CS/nasa-web-240sec-) |
 | **📱 TRACE Field Companion App** | Mobile / Web PWA | [🚀 Live App (Vercel)](https://nasa-space-apps-2026-trace.vercel.app/) | [💻 TRACE Repository](https://github.com/sanjidtalukder/Nasa-Space-Apps-2026-TRACE) |
 
 ### 🔄 Space-to-Ground Synergy (How They Work Together)
