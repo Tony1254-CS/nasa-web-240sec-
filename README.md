@@ -16,6 +16,33 @@ A dual-region Earth-observation application for exploring Bangladesh's **Jamuna 
 >
 > The operational observation catalogue uses **Sentinel-1 C-band VV/VH**, not NISAR L-band measurements. Each region has six radar and six optical acquisitions. NISAR, interferometry and generated ML experiments are included as educational material. Mapped transitions are **screening candidates**, not confirmed erosion, flooding, habitat loss or damage.
 
+---
+
+## 🌐 The Integrated Dual-Platform Ecosystem
+
+FluviSAR connects spaceborne radar intelligence with boots-on-the-ground verification through two dedicated, interconnected applications:
+
+| Component | Platform | Live URL | Source Repository |
+| :--- | :--- | :--- | :--- |
+| **🛰️ FluviSAR Web Observatory** | Desktop / Web GIS | *Local / Active Deployment* | [Current Repository](https://github.com/Tony1254-CS/nasa-web-240sec-) |
+| **📱 TRACE Field Companion App** | Mobile / Web PWA | [🚀 Live App (Vercel)](https://nasa-space-apps-2026-trace.vercel.app/) | [💻 TRACE Repository](https://github.com/sanjidtalukder/Nasa-Space-Apps-2026-TRACE) |
+
+### 🔄 Space-to-Ground Synergy (How They Work Together)
+1. **Detect from Orbit (FluviSAR Web Observatory):** Multi-temporal Sentinel-1 C-band and NISAR L-band simulation algorithms screen floodwaters, sandbar shifts, and riverbank slumping across the Jamuna and Sundarbans.
+2. **Verify in the Field (TRACE Companion App):** Field volunteers, researchers, and local responders receive screened candidate coordinates on their mobile devices, capture georeferenced field photos, log riverbank stability stages, and submit ground-truth telemetry directly back into the scientific verification loop.
+
+<p align="center">
+  <img src="docs/assets/trace-app-missions.png" width="46%" alt="TRACE Field Missions Overview" />
+  &nbsp; &nbsp;
+  <img src="docs/assets/trace-app-capture.png" width="46%" alt="TRACE On-Site Evidence Capture" />
+</p>
+
+<p align="center">
+  <em>Figure: TRACE Mobile Companion App — (Left) Field mission inbox with real-time radar hazard tasks; (Right) On-site ground-truth observation capture with GPS and verification telemetry.</em>
+</p>
+
+---
+
 ## Why FluviSAR?
 
 **A coloured change on a map is a question. FluviSAR helps people investigate it.**
@@ -68,6 +95,7 @@ methods, outputs and setup in more detail.
 | **Experimental water-area outlook** · Atlas | Compare persistence and elapsed-time drift over 6/12/24 days; inspect historical errors | An aggregate screened-water-area baseline with three chronological validation checks and an auditable export |
 | **Place watch & timing sandbox** · Atlas | Filter retained mapped places by type/distance; inspect the nearest observed change; enter an assumed advance rate | A field-review shortlist and conditional gap-spanning time, without a predicted bank-failure date |
 | **Field notebook** · Evidence → Field / Decision Desk | Write a dated note, request GPS and attach a real photo | Device-local, context-bound records with timestamps, optional accuracy/photo hash and export |
+| **TRACE Field Companion App** · [Open Live App](https://nasa-space-apps-2026-trace.vercel.app/) | Mobile field mission inbox, on-site GPS verification, rapid photo logging and community hazard alerts | Ground-truth validation receipts that feed back into the 6-stage Evidence Workbench |
 | **Ask FluviSAR** · header / bottom-right launcher | Ask English or Bengali questions about supported data, methods and the active finding | Source-linked data answers, supported map handoffs and local conversation history/export |
 | **Chat with Data** · supported data sections | Activate selection, see eligible boxes highlighted, then choose one | A conversation scoped to that metric, Evidence stage or model explanation |
 | **ML Intelligence** · `/intelligence` | Inspect real registered observations, then explore RF/MLP scenarios, robustness and evaluation | Four workspaces that keep measured evidence separate from reproducible generated-data diagnostics |
